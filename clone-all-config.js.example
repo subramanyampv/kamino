@@ -7,5 +7,15 @@ exports.servers = [
 		headers : {
 			'User-Agent' : 'clone-all.js'
 		}
+	},
+
+	{
+		hostname : 'sourceforge.net',
+		port : 443,
+		path : '/rest/u/ngeor/profile',
+		method : 'GET',
+		headers : {
+			'User-Agent' : 'clone-all.js'
+		}
 	}
 ];

@@ -3,22 +3,7 @@
 var https = require('https'),
     cfg = require('./clone-all-config');
 
-/**
- * Consumes the JSON response containing GitHub repositories
- * and prints the corresponding git clone commands.
- */
-function processRepositories(jsonRepositories) {
-	var repositories = JSON.parse(jsonRepositories);
-	for (var i = repositories.length - 1; i >= 0; i--) {
-		var repository = repositories[i];
-		console.log('git clone ' + repository.clone_url);
-	}
-}
-
-/**
- * Fetches repository information from GitHub.
- */
-function getRepositoryInfo(requestOptions) {
+function dohttps(requestOptions, fn) {
 	var req = https.request(requestOptions, function(res) {
 		if (res.statusCode === 200) {
 			var message = '';
@@ -26,7 +11,7 @@ function getRepositoryInfo(requestOptions) {
 				message += chunk;
 			});
 			res.on('end', function() {
-				processRepositories(message);
+				fn(message);
 			});
 		} else {
 			console.error(res.statusCode);
@@ -40,6 +25,80 @@ function getRepositoryInfo(requestOptions) {
 
 	req.on('error', function(e) {
 		console.error(e);
+	});
+}
+
+function getSourceForgeProject(projectUrl) {
+	var request = 	{
+		hostname : 'sourceforge.net',
+		port : 443,
+		path : '/rest' + projectUrl,
+		method : 'GET',
+		headers : {
+			'User-Agent' : 'clone-all.js'
+		}
+	};
+
+	dohttps(request, function(message) {
+		var project = JSON.parse(message);
+		var tools = project.tools;
+		var shortname = project.shortname;
+		var mount_point = '';
+		for (var i = tools.length - 1; i >= 0; i--) {
+			if (tools[i].name === "git") {
+				mount_point = tools[i].mount_point;
+				break;
+			}
+		};
+
+		if (!mount_point) {
+			return;
+		}
+
+		// RO git://git.code.sf.net/p/imagehelper/code
+		// RW ssh://ngeor@git.code.sf.net/p/imagehelper/code
+
+		var url = "git://git.code.sf.net/p/" + shortname + "/" + mount_point;
+
+		console.log("git clone " + url + " " + shortname);
+	});
+}
+
+function processSourceForge(jsonRepositories) {
+	var profile = JSON.parse(jsonRepositories);
+	var projects = profile.projects;
+	for (var i = projects.length - 1; i >= 0; i--) {
+		var projectUrl = projects[i].url;
+		getSourceForgeProject(projectUrl);
+	};
+}
+
+function processGitHub(jsonRepositories) {
+	var repositories = JSON.parse(jsonRepositories);
+	for (var i = repositories.length - 1; i >= 0; i--) {
+		var repository = repositories[i];
+		console.log('git clone ' + repository.clone_url);
+	}
+}
+
+/**
+ * Consumes the JSON response containing GitHub repositories
+ * and prints the corresponding git clone commands.
+ */
+function processRepositories(requestOptions, jsonRepositories) {
+	if (requestOptions.hostname === "sourceforge.net") {
+		processSourceForge(jsonRepositories);
+	} else {
+		processGitHub(jsonRepositories);
+	}
+}
+
+/**
+ * Fetches repository information from GitHub.
+ */
+function getRepositoryInfo(requestOptions) {
+	dohttps(requestOptions, function(message) {
+		processRepositories(requestOptions, message);
 	});
 }
 
