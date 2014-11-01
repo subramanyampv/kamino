@@ -1,0 +1,11 @@
+exports.servers = [
+	{
+		hostname : 'api.github.com',
+		port : 443,
+		path : '/users/ngeor/repos',
+		method : 'GET',
+		headers : {
+			'User-Agent' : 'clone-all.js'
+		}
+	}
+];
