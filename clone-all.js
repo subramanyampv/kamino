@@ -77,7 +77,9 @@ function processGitHub(jsonRepositories) {
 	var repositories = JSON.parse(jsonRepositories);
 	for (var i = repositories.length - 1; i >= 0; i--) {
 		var repository = repositories[i];
-		console.log('git clone ' + repository.clone_url);
+		var url = repository.ssh_url;
+		// var url = repository.clone_url;
+		console.log('git clone ' + url);
 	}
 }
 
