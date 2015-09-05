@@ -10,9 +10,76 @@ module.exports = yeoman.generators.Base.extend({
 			message: 'Your project name',
 			default: this.appname // default to current folder name
 		}, function (answers) {
-			this.log(answers.name);
+			this.props = answers;
 			done();
 		}.bind(this));
+	},
+
+	writing: function() {
+		var name = this.props.name,
+			testName = name + '.Tests',
+			options = {
+				name: name,
+				testName: testName
+			};
+
+		// copy .gitignore
+		this.fs.copy(
+			this.templatePath('_gitignore'),
+			this.destinationPath('.gitignore'));
+
+		// copy .nuget folder
+		this.fs.copy(
+			this.templatePath('_nuget'),
+			this.destinationPath('.nuget'));
+
+		// copy solution file
+		this.fs.copyTpl(
+			this.templatePath('MyApp.sln'),
+			this.destinationPath(name + '.sln'),
+			options);
+
+		// copy packages/repositories.config
+		this.fs.copyTpl(
+			this.templatePath('packages/repositories.config'),
+			this.destinationPath('packages/repositories.config'),
+			options);
+
+		// copy MyApp *.cs files
+		this.fs.copyTpl(
+			this.templatePath('MyApp/**/*.cs'),
+			this.destinationPath(name),
+			options);
+
+		// copy MyApp *.config files
+		this.fs.copyTpl(
+			this.templatePath('MyApp/**/*.config'),
+			this.destinationPath(name),
+			options);
+
+		// copy MyApp.csproj file
+		this.fs.copyTpl(
+			this.templatePath('MyApp/MyApp.csproj'),
+			this.destinationPath(name + '/' + name + '.csproj'),
+			options);
+
+		// copy MyApp.Tests *.cs files
+		this.fs.copyTpl(
+			this.templatePath('MyApp.Tests/**/*.cs'),
+			this.destinationPath(testName),
+			options);
+
+		// copy MyApp.Tests *.config files
+		this.fs.copyTpl(
+			this.templatePath('MyApp.Tests/**/*.config'),
+			this.destinationPath(testName),
+			options);
+
+		// copy MyApp.Tests.csproj file
+		this.fs.copyTpl(
+			this.templatePath('MyApp.Tests/MyApp.Tests.csproj'),
+			this.destinationPath(testName + '/' + testName + '.csproj'),
+			options);
 	}
 });
 
