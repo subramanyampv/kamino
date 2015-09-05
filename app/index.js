@@ -1,5 +1,6 @@
 'use strict';
 var yeoman = require('yeoman-generator');
+var uuid = require('node-uuid');
 
 module.exports = yeoman.generators.Base.extend({
 	prompting: function() {
@@ -20,7 +21,10 @@ module.exports = yeoman.generators.Base.extend({
 			testName = name + '.Tests',
 			options = {
 				name: name,
-				testName: testName
+				testName: testName,
+				cliUUID: uuid.v1().toUpperCase(),
+				nugetUUID: uuid.v1().toUpperCase(),
+				testsUUID: uuid.v1().toUpperCase()
 			};
 
 		// copy .gitignore

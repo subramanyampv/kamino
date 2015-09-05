@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3D51892C-2C88-4023-8ABB-F1780E4A2052}</ProjectGuid>
+    <ProjectGuid>{<%= testsUUID %>}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace><%= testName %></RootNamespace>
@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\<%= name %>\<%= name %>.csproj">
-      <Project>{1b248a7f-af89-44a0-9da2-49de7aede14f}</Project>
+      <Project>{<%= cliUUID %>}</Project>
       <Name><%= name %></Name>
     </ProjectReference>
   </ItemGroup>
