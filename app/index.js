@@ -5,12 +5,19 @@ var uuid = require('node-uuid');
 module.exports = yeoman.generators.Base.extend({
 	prompting: function() {
 		var done = this.async();
-		this.prompt({
-			type: 'input',
-			name: 'name',
-			message: 'Your project name',
-			default: this.appname // default to current folder name
-		}, function (answers) {
+		this.prompt([
+			{
+				type: 'input',
+				name: 'name',
+				message: 'Your project name',
+				default: this.appname // default to current folder name
+			},
+			{
+				type: 'input',
+				name: 'companyName',
+				message: 'Company name (for AssemblyInfo.cs copyright fields)'
+			}
+		], function (answers) {
 			this.props = answers;
 			done();
 		}.bind(this));
@@ -22,6 +29,7 @@ module.exports = yeoman.generators.Base.extend({
 			options = {
 				name: name,
 				testName: testName,
+				companyName: this.props.companyName,
 				cliUUID: uuid.v1().toUpperCase(),
 				nugetUUID: uuid.v1().toUpperCase(),
 				testsUUID: uuid.v1().toUpperCase()
