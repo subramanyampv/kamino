@@ -32,4 +32,4 @@ node_modules
 
 # Avoid accidentally committing the configuration file
 clone-all-config.js
-
+clone-all-config.json

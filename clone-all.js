@@ -1,7 +1,6 @@
 #!/usr/bin/node
 
 var https = require('https');
-var cfg = require('./clone-all-config');
 
 function dohttps(requestOptions, fn) {
 	var req = https.request(requestOptions, function(res) {
@@ -86,20 +85,9 @@ function processGitHub(jsonRepositories) {
 	for (i = repositories.length - 1; i >= 0; i--) {
 		repository = repositories[i];
 		url = repository.ssh_url;
+
 		// var url = repository.clone_url;
 		console.log('git clone ' + url);
-	}
-}
-
-/**
- * Consumes the JSON response containing GitHub repositories
- * and prints the corresponding git clone commands.
- */
-function processRepositories(requestOptions, jsonRepositories) {
-	if (requestOptions.hostname === 'sourceforge.net') {
-		processSourceForge(jsonRepositories);
-	} else {
-		processGitHub(jsonRepositories);
 	}
 }
 
@@ -107,17 +95,33 @@ function processRepositories(requestOptions, jsonRepositories) {
  * Fetches repository information from GitHub.
  */
 function getRepositoryInfo(requestOptions) {
-	dohttps(requestOptions, function(message) {
-		processRepositories(requestOptions, message);
+	dohttps(requestOptions, function(jsonRepositories) {
+		if (requestOptions.hostname === 'sourceforge.net') {
+			processSourceForge(jsonRepositories);
+		} else {
+			processGitHub(jsonRepositories);
+		}
 	});
 }
 
 (function() {
 	'use strict';
 
-	// process every server in configuration
-	var i;
-	for (i = cfg.servers.length - 1; i >= 0; i--) {
-		getRepositoryInfo(cfg.servers[i]);
-	}
+	var fs = require('fs');
+	fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
+		var servers;
+		var i;
+
+		if (err) {
+			throw err;
+		}
+
+		servers = JSON.parse(data);
+
+		// process every server in configuration
+		for (i = servers.length - 1; i >= 0; i--) {
+			getRepositoryInfo(servers[i]);
+		}
+	});
+
 }());

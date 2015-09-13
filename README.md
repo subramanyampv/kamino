@@ -11,17 +11,17 @@ This is a simple script that requires [Node.js](http://nodejs.org/).
 Configuration
 -------------
 
-First you have to rename the file `clone-all-config.js.example` to
-`clone-all-config.js` (so just remove the .example extension).
+First you have to rename the file `clone-all-config.json.example` to
+`clone-all-config.json` (so just remove the .example extension).
 
-The file exports a `servers` array containing [https requests](http://nodejs.org/api/https.html#https_https_request_options_callback).
+The file defines an array of "servers", containing [https requests](http://nodejs.org/api/https.html#https_https_request_options_callback).
 
 Configuration Example
 ---------------------
 
 With this configuration:
 
-    exports.servers = [
+    [
         {
             hostname : 'api.github.com',
             port : 443,
@@ -31,20 +31,28 @@ With this configuration:
                 'User-Agent' : 'clone-all.js'
             }
         }
-    ];
+    ]
 
 the script will clone all the GitHub repositories of the user ngeor.
+
+You can bypass self-signed certificates by adding:
+
+    "rejectUnauthorized": false
+
+and you can use basic authentication with:
+
+    "auth": "username:password"
 
 Installation
 ------------
 
-Place clone-all.js and clone-all-config.js in a directory that is in your PATH.
-Make sure that clone-all.js is marked as executable.
+Place clone-all.js and clone-all-config.json in a directory that is in your
+PATH. Make sure that clone-all.js is marked as executable.
 
 Usage
 -----
 
-If you run clone-all.js, it will simply output the clone commands:
+If you run clone-all.js, it will **only output** the clone commands:
 
     $ clone-all.js
     git clone https://github.com/ngeor/clone-all.git
