@@ -23,12 +23,12 @@ With this configuration:
 
     [
         {
-            hostname : 'api.github.com',
-            port : 443,
-            path : '/users/ngeor/repos',
-            method : 'GET',
-            headers : {
-                'User-Agent' : 'clone-all.js'
+            "hostname": "api.github.com",
+            "port": 443,
+            "path": "/users/ngeor/repos",
+            "method": "GET",
+            "headers": {
+                "User-Agent": "clone-all.js"
             }
         }
     ]
@@ -42,6 +42,21 @@ You can bypass self-signed certificates by adding:
 and you can use basic authentication with:
 
     "auth": "username:password"
+
+### Extra Options
+
+Extra options go into the key 'clone-all'.
+
+    [
+        {
+            "hostname", "somehost",
+            "clone-all": {
+                "forceUsername": "otheruser"
+            }
+        }
+    ]
+
+`forceUsername` will override the username provided in the clone URL.
 
 Installation
 ------------
