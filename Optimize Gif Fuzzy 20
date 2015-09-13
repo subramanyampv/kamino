@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# input file
+IN="$@"
+
+filename=$(basename "$IN")
+extension="${filename##*.}"
+filename="${filename%.*}"
+
+# output file
+OUTPUT="$filename-optimized-fuzz-20.gif"
+
+convert $IN -fuzz 20% -layers Optimize $OUTPUT
+
+zenity --info --text="Finished converting $IN, result is at $OUTPUT"
+

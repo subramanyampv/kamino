@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# input file
+echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS" | while read filename; do
+	if [ -n "$filename" ]; then
+		zenity --info --text "$filename"
+	fi
+done
+

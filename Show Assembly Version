@@ -1,0 +1,28 @@
+#!/bin/bash
+MONODIS=/tank/opt/mono/bin/monodis
+
+function process {
+	local filename="$1"
+	
+	# separate initialization because local sets the $? to zero
+	local version=""
+	version=$($MONODIS --assembly "$filename" | grep Version)
+	if [ $? -eq 0 ]; then
+		zenity --info --text="Version of $filename: $version"
+	else
+		zenity --error --text="Could not determine version of $filename"
+	fi
+}
+
+while read filename; do
+	if [ -n "$filename" ]; then
+		if [ ! -f "$filename" ]; then
+			zenity --error --text "File $filename not found or not a file."
+		elif [ ! -s "$filename" ]; then
+			zenity --error --text "File $filename is empty."
+		else
+			process "$filename"
+		fi
+	fi
+done < <(echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS")
+
