@@ -17,16 +17,16 @@ module.exports = yeoman.generators.Base.extend({
 				name: 'companyName',
 				message: 'Company name (for AssemblyInfo.cs copyright fields)'
 			}
-		], function (answers) {
+		], function(answers) {
 			this.props = answers;
 			done();
 		}.bind(this));
 	},
 
 	writing: function() {
-		var name = this.props.name,
-			testName = name + '.Tests',
-			options = {
+		var name = this.props.name;
+		var testName = name + '.Tests';
+		var options = {
 				name: name,
 				testName: testName,
 				companyName: this.props.companyName,
@@ -94,4 +94,3 @@ module.exports = yeoman.generators.Base.extend({
 			options);
 	}
 });
-
