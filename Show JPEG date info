@@ -1,16 +1,15 @@
 #!/bin/bash
-MONODIS=/tank/opt/mono/bin/monodis
 
 function process {
 	local filename="$1"
 
 	# separate initialization because local sets the $? to zero
-	local version=""
-	version=$($MONODIS --assembly "$filename" | grep Version)
+	local dates=""
+	dates=$(exiftool -G -s "$filename" | grep Date)
 	if [ $? -eq 0 ]; then
-		zenity --info --text="Version of $filename: $version"
+		zenity --info --text="dates of $filename:\n$dates"
 	else
-		zenity --error --text="Could not determine version of $filename"
+		zenity --error --text="Could not determine dates of $filename"
 	fi
 }
 
@@ -25,4 +24,3 @@ while read filename; do
 		fi
 	fi
 done < <(echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS")
-
