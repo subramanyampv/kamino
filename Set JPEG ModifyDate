@@ -11,21 +11,43 @@ function process {
 }
 
 newDate=$(zenity --entry --title="Change date" \
-	--text="Enter date time for the JPEG images" \
-	--entry-text="YYYY-MM-dd HH:mm:ss")
+	--text="Enter date time for the JPEG images (seconds will be added automatically)" \
+	--entry-text="YYYY-MM-dd HH:mm or HHmm")
 
 if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+if [[ ! "$newDate" =~ ^[0-9][0-9][0-9][0-9]\-[0-9][0-9]\-[0-9][0-9]\ [0-9][0-9](:)?[0-9][0-9]$ ]]; then
+	zenity --error --text="Invalid date time"
+	exit 1
+fi
+
+seconds=0
+newDateWithSeconds=""
+
 while read filename; do
+	# zero-padd seconds
+	printf -v formattedSeconds "%02d" $seconds
+
+	# are we using HHmmss or HH:mm:ss?
+	if [[ "$newDate" == *":"* ]]; then
+		newDateWithSeconds="$newDate:$formattedSeconds"
+	else
+		newDateWithSeconds="$newDate$formattedSeconds"
+	fi
+
+	# process the loop
 	if [ -n "$filename" ]; then
 		if [ ! -f "$filename" ]; then
 			zenity --error --text "File $filename not found or not a file."
 		elif [ ! -s "$filename" ]; then
 			zenity --error --text "File $filename is empty."
 		else
-			process "$filename" "$newDate"
+			process "$filename" "$newDateWithSeconds"
 		fi
 	fi
+
+	# increment seconds
+	seconds=`expr $seconds + 1`
 done < <(echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS")
