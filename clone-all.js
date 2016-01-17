@@ -35,6 +35,9 @@ function processSourceForge(requestOptions, jsonRepositories) {
 	var projects = profile.projects;
 	var projectUrl;
 	var i;
+	var cloneAllOptions = requestOptions['clone-all'] || {};
+	var forceUsername = cloneAllOptions.forceUsername || '';
+	var localFolder = cloneAllOptions.localFolder || '';
 
 	function getSourceForgeProject(projectUrl) {
 		var request = {
@@ -68,8 +71,8 @@ function processSourceForge(requestOptions, jsonRepositories) {
 			// RO git://git.code.sf.net/p/imagehelper/code
 			// RW ssh://ngeor@git.code.sf.net/p/imagehelper/code
 
-			url = 'git://git.code.sf.net/p/' + shortname + '/' + mountPoint;
-			console.log('git clone ' + url + ' ' + shortname);
+			url = 'ssh://' + forceUsername + '@git.code.sf.net/p/' + shortname + '/' + mountPoint;
+			console.log('git clone ' + url + ' ' + localFolder + shortname);
 		});
 	}
 
@@ -85,11 +88,12 @@ function processGitHub(requestOptions, jsonRepositories) {
 	var url;
 	var i;
 	var cloneAllOptions = requestOptions['clone-all'] || {};
-	var forceUsername = cloneAllOptions.forceUsername;
+	var forceUsername = cloneAllOptions.forceUsername || '';
+	var localFolder = cloneAllOptions.localFolder || '';
 
 	for (i = repositories.length - 1; i >= 0; i--) {
 		repository = repositories[i];
-		url = repository.ssh_url;
+		url = repository.ssh_url; // jscs: ignore
 
 		// var url = repository.clone_url;
 
@@ -97,7 +101,11 @@ function processGitHub(requestOptions, jsonRepositories) {
 			url = url.replace('ssh://', 'ssh://' + forceUsername + '@');
 		}
 
-		console.log('git clone ' + url);
+		if (localFolder) {
+			console.log('git clone ' + url + ' ' + localFolder + repository.name);
+		} else {
+			console.log('git clone ' + url);
+		}
 	}
 }
 

@@ -51,7 +51,8 @@ Extra options go into the key 'clone-all'.
         {
             "hostname", "somehost",
             "clone-all": {
-                "forceUsername": "otheruser"
+                "forceUsername": "otheruser", // force a username in the clone URL
+                "localFolder": "../projects/" // folder to checkout into
             }
         }
     ]
