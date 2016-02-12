@@ -3,6 +3,9 @@ clone-all
 
 Automatically clone all your github repositories.
 
+[![Build Status](https://travis-ci.org/ngeor/clone-all.svg?branch=master)](https://travis-ci.org/ngeor/clone-all)
+
+
 Requirements
 ------------
 
