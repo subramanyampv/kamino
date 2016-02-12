@@ -1,6 +1,8 @@
 # generator-csharp-cli-app
 Yeoman generator for a C# command line app with NuGet package restore, log4net and unit tests.
 
+[![Build Status](https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master)](https://travis-ci.org/ngeor/generator-csharp-cli-app)
+
 ## Installation
 
 You can install via npm:
