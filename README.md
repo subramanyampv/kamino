@@ -1,7 +1,8 @@
 # generator-csharp-cli-app
-Yeoman generator for a C# command line app with NuGet package restore, log4net and unit tests.
 
-[![Build Status](https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master)](https://travis-ci.org/ngeor/generator-csharp-cli-app)
+[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url] [![Dependency Status][deps-image]][deps-url]
+
+Yeoman generator for a C# command line app with NuGet package restore, log4net and unit tests.
 
 ## Installation
 
@@ -53,3 +54,11 @@ What you'll also get:
 - NUnit and Moq for the test library
 - the console app internals are visible to the test library
 - the copyright information is filled in in the AssemblyInfo.cs files
+
+
+[npm-image]: https://img.shields.io/npm/v/generator-csharp-cli-app.svg
+[npm-url]: https://npmjs.org/package/generator-csharp-cli-app
+[travis-image]: https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master
+[travis-url]: https://travis-ci.org/ngeor/generator-csharp-cli-app
+[deps-image]: https://david-dm.org/ngeor/generator-csharp-cli-app.svg
+[deps-url]: https://david-dm.org/ngeor/generator-csharp-cli-app
