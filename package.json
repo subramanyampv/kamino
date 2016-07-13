@@ -1,6 +1,6 @@
 {
   "name": "generator-csharp-cli-app",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Yeoman generator for a C# command line app with NuGet package restore, log4net and unit tests.",
   "main": "app/index.js",
   "repository": "ngeor/generator-csharp-cli-app",
