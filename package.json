@@ -1,0 +1,22 @@
+{
+  "name": "clone-all",
+  "version": "1.0.0",
+  "description": "Clones all public git repositories",
+  "main": "clone-all.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/clone-all.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/clone-all/issues"
+  },
+  "homepage": "https://github.com/ngeor/clone-all#readme",
+  "dependencies": {
+    "promise": "^7.1.1"
+  }
+}
