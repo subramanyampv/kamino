@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ngeor/clone-all#readme",
   "dependencies": {
+    "lodash": "^4.15.0",
     "promise": "^7.1.1"
   }
 }
