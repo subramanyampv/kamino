@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 var fs = require('fs');
 var https = require('https');
@@ -106,6 +106,19 @@ function getRepositoryInfo(requestOptions, pageNumber, totalRepositories) {
     });
 }
 
+/**
+ * Sets the default values for a GitHub server.
+ */
+function setDefaultValues(server) {
+    var result = _.cloneDeep(server);
+    result.hostname = result.hostname || 'api.github.com';
+    result.port = result.port || 443;
+    result.method = result.method || 'GET';
+    result.headers = result.headers || {};
+    result.headers['User-Agent'] = result.headers['User-Agent'] || 'clone-all.js';
+    return result;
+}
+
 fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
     var servers;
 
@@ -115,6 +128,7 @@ fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
 
     servers = JSON.parse(data);
     var promises = servers.map(function(server) {
+        server = setDefaultValues(server);
         return getRepositoryInfo(server).then(function(repositories) {
             return processGitHub(server, repositories);
         });
