@@ -40,8 +40,9 @@ Additional HTTPS options include:
 - rejectUnauthorized: Allows bypassing self-signed certificates by setting to `false`
 - auth: Allows basic authentication (set it to `username:password`)
 
-Cloning options:
+Cloning options (placed inside custom `clone-all` object in JSON as shown in the example file):
 
 - forceUsername: Allows to force a username inside the clone URL. Use it for SSH URLs that no implicit user can be derived.
 - localFolder: A folder in which the repositories will be cloned in. Relative to the current path (e.g. `../Projects/`)
 - fetchAllPages: By default, this script will only fetch the first 30 GitHub repositories. Set this to `true` to fetch all.
+- useHTTPS: By default, the script will use the SSH protocol for cloning. Set this to `true` if you want to use HTTPS instead.

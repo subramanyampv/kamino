@@ -65,11 +65,9 @@ function processGitHub(requestOptions, repositories) {
     var cloneAllOptions = requestOptions['clone-all'] || {};
     var forceUsername = cloneAllOptions.forceUsername || '';
     var localFolder = cloneAllOptions.localFolder || '';
+    var useHTTPS = cloneAllOptions.useHTTPS;
     return Promise.all(repositories.map(function(repository) {
-        var url = repository.ssh_url; // jscs: ignore
-
-        // var url = repository.clone_url;
-
+        var url = useHTTPS ? repository.clone_url : repository.ssh_url; // jscs: ignore
         if (forceUsername) {
             url = url.replace('ssh://', 'ssh://' + forceUsername + '@');
         }
