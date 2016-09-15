@@ -21,10 +21,10 @@ module.exports = function(grunt) {
             default: {
                 options: {
                     check: {
-                        lines: 50,
-                        statements: 50,
-                        branches: 50,
-                        functions: 50
+                        lines: 80,
+                        statements: 80,
+                        branches: 80,
+                        functions: 80
                     }
                 }
             }

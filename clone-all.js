@@ -72,11 +72,7 @@ function processGitHub(requestOptions, repositories) {
             url = url.replace('ssh://', 'ssh://' + forceUsername + '@');
         }
 
-        var cloneLocation = '';
-        if (localFolder) {
-            cloneLocation = localFolder + repository.name;
-        }
-
+        var cloneLocation = (localFolder || '') + repository.name;
         return cloneRepo(url, cloneLocation);
     }));
 }
