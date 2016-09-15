@@ -3,6 +3,8 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 
+chai.use(require('chai-as-promised'));
+
 function StubHttpsRequest() {
 }
 
@@ -55,14 +57,15 @@ describe('clone-all', function() {
         sandbox.stub(fs, 'readFile').withArgs('clone-all-config.json', 'utf8')
             .callsArgWith(2, 'oops', null);
 
-        // act and assert
-        expect(function() {
-            cloneAll = proxyquire('../clone-all', {
-                fs: fs,
-                https: https,
-                child_process: child_process
-            });
-        }).to.throw('oops');
+        // act
+        cloneAll = proxyquire('../clone-all', {
+            fs: fs,
+            https: https,
+            child_process: child_process
+        });
+
+        // assert
+        expect(cloneAll).to.eventually.throw('oops');
     });
 
     it('should not clone when the folder exists', function() {
@@ -109,8 +112,10 @@ describe('clone-all', function() {
             child_process: child_process
         });
 
-        // assert
-        expect(child_process.exec.called).to.be.false;
+        return cloneAll.then(function() {
+            // assert
+            expect(child_process.exec.called).to.be.false;
+        });
     });
 
     it('should clone when the folder does not exist', function() {
@@ -156,6 +161,11 @@ describe('clone-all', function() {
             fs: fs,
             https: https,
             child_process: child_process
+        });
+
+        return cloneAll.then(function() {
+            // assert
+            expect(child_process.exec.called).to.be.true;
         });
     });
 });

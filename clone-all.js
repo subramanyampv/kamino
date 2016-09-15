@@ -113,27 +113,34 @@ function setDefaultValues(server) {
     return result;
 }
 
-fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
-    var servers;
+var mainPromise = new Promise(function(fullfill, reject) {
+    fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
+        var servers;
 
-    if (err) {
-        throw err;
-    }
+        if (err) {
+            reject(err);
+            return;
+        }
 
-    servers = JSON.parse(data);
+        fullfill(JSON.parse(data));
+    });
+}).then(function(servers) {
     var promises = servers.map(function(server) {
         server = setDefaultValues(server);
         return getRepositoryInfo(server).then(function(repositories) {
             return processGitHub(server, repositories);
         });
     });
-    Promise.all(promises).then(function(data) {
-        data.forEach(function(d) {
-            d.forEach(function(repositoryResult) {
-                console.log('Cloned ' + repositoryResult.cloneLocation + ', success = ' + repositoryResult.success);
-            });
+
+    return Promise.all(promises);
+}).then(function(data) {
+    data.forEach(function(d) {
+        d.forEach(function(repositoryResult) {
+            console.log('Cloned ' + repositoryResult.cloneLocation + ', success = ' + repositoryResult.success);
         });
-    }).catch(function(err) {
-        console.error(err);
     });
+}).catch(function(err) {
+    console.error(err);
 });
+
+module.exports = mainPromise;
