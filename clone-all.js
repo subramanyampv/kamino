@@ -5,6 +5,7 @@ var Promise = require('promise');
 var exec = require('child_process').exec;
 var jsonReader = require('./lib/json_reader');
 var GitServer = require('./lib/GitServer');
+var console = require('./lib/logger');
 
 function cloneRepo(cloneUrl, cloneLocation) {
     return new Promise(function(fullfill) {
@@ -15,14 +16,13 @@ function cloneRepo(cloneUrl, cloneLocation) {
                     console.log('finished cloning ' + cloneLocation);
                     fullfill({
                         cloneLocation: cloneLocation,
-                        success: !error
+                        error: error
                     });
                 });
             } else {
-                console.error(cloneLocation + ' already exists');
                 fullfill({
                     cloneLocation: cloneLocation,
-                    success: false
+                    skip: true
                 });
             }
         });
@@ -68,7 +68,11 @@ var mainPromise = jsonReader('clone-all-config.json')
     .then(function(data) {
         data.forEach(function(d) {
             d.forEach(function(repositoryResult) {
-                console.log('Cloned ' + repositoryResult.cloneLocation + ', success = ' + repositoryResult.success);
+                if (repositoryResult.error) {
+                    console.error('Cloned ' + repositoryResult.cloneLocation + ', error = ' + repositoryResult.error);
+                } else if (repositoryResult.skip) {
+                    console.log('Skipped ' + repositoryResult.cloneLocation);
+                }
             });
         });
     }).catch(function(err) {
