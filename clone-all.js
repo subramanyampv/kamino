@@ -1,43 +1,10 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
-var https = require('https');
 var Promise = require('promise');
 var exec = require('child_process').exec;
-var _ = require('lodash');
 var jsonReader = require('./lib/json_reader');
-
-/**
- * Performs an HTTPS request and returns a promise that resolves to the
- * body of the response.
- */
-function dohttps(requestOptions) {
-    return new Promise(function(fullfill, reject) {
-        var req = https.request(requestOptions, function(res) {
-            var message = '';
-            if (res.statusCode === 200) {
-                res.on('data', function(chunk) {
-                    message += chunk;
-                });
-
-                res.on('end', function() {
-                    fullfill(message);
-                });
-            } else {
-                reject(res.statusCode);
-                res.on('data', function(d) {
-                    process.stdout.write(d);
-                });
-            }
-        });
-
-        req.end();
-
-        req.on('error', function(e) {
-            reject(e);
-        });
-    });
-}
+var GitServer = require('./lib/GitServer');
 
 function cloneRepo(cloneUrl, cloneLocation) {
     return new Promise(function(fullfill) {
@@ -62,8 +29,8 @@ function cloneRepo(cloneUrl, cloneLocation) {
     });
 }
 
-function processGitHub(requestOptions, repositories) {
-    var cloneAllOptions = requestOptions['clone-all'] || {};
+function processGitHub(cloneAllOptions, repositories) {
+    cloneAllOptions = cloneAllOptions || {};
     var forceUsername = cloneAllOptions.forceUsername || '';
     var localFolder = cloneAllOptions.localFolder || '';
     var useHTTPS = cloneAllOptions.useHTTPS;
@@ -78,59 +45,34 @@ function processGitHub(requestOptions, repositories) {
     }));
 }
 
-/**
- * Fetches repository information from GitHub.
- */
-function getRepositoryInfo(requestOptions, pageNumber, totalRepositories) {
-    var ro = _.cloneDeep(requestOptions);
-    pageNumber = pageNumber || 1;
-    totalRepositories = totalRepositories || [];
-    if (pageNumber > 1) {
-        ro.path = ro.path + '?page=' + pageNumber;
-    }
-
-    return dohttps(ro).then(function(jsonRepositories) {
-        return JSON.parse(jsonRepositories);
-    }).then(function(repositories) {
-        totalRepositories = totalRepositories.concat(repositories);
-        if (repositories.length <= 0 || !requestOptions['clone-all'].fetchAllPages) {
-            return totalRepositories; // last page of results
-        }
-
-        return getRepositoryInfo(requestOptions, pageNumber + 1, totalRepositories);
-    });
-}
-
-/**
- * Sets the default values for a GitHub server.
- */
-function setDefaultValues(server) {
-    var result = _.cloneDeep(server);
-    result.hostname = result.hostname || 'api.github.com';
-    result.port = result.port || 443;
-    result.method = result.method || 'GET';
-    result.headers = result.headers || {};
-    result.headers['User-Agent'] = result.headers['User-Agent'] || 'clone-all.js';
-    return result;
-}
-
-var mainPromise = jsonReader('clone-all-config.json').then(function(servers) {
-    var promises = servers.map(function(server) {
-        server = setDefaultValues(server);
-        return getRepositoryInfo(server).then(function(repositories) {
-            return processGitHub(server, repositories);
+var mainPromise = jsonReader('clone-all-config.json')
+    .then(function(servers) {
+        return servers.map(function(server) {
+            return new GitServer(server);
         });
-    });
-
-    return Promise.all(promises);
-}).then(function(data) {
-    data.forEach(function(d) {
-        d.forEach(function(repositoryResult) {
-            console.log('Cloned ' + repositoryResult.cloneLocation + ', success = ' + repositoryResult.success);
+    })
+    .then(function(serverDefinitions) {
+        var promises = serverDefinitions.map(function(serverDefinition) {
+            return serverDefinition.getRepositories();
         });
+
+        return Promise.all(promises);
+    })
+    .then(function(repositoryResults) {
+        var promises = repositoryResults.map(function(repositoryResult) {
+            return processGitHub(repositoryResult.requestOptions['clone-all'], repositoryResult.repositories);
+        });
+
+        return Promise.all(promises);
+    })
+    .then(function(data) {
+        data.forEach(function(d) {
+            d.forEach(function(repositoryResult) {
+                console.log('Cloned ' + repositoryResult.cloneLocation + ', success = ' + repositoryResult.success);
+            });
+        });
+    }).catch(function(err) {
+        console.error(err);
     });
-}).catch(function(err) {
-    console.error(err);
-});
 
 module.exports = mainPromise;

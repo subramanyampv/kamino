@@ -6,45 +6,30 @@ var expect = chai.expect;
 chai.use(require('chai-as-promised'));
 require('sinon-as-promised');
 
-function StubHttpsRequest() {
-
-}
-
-StubHttpsRequest.prototype.end = function() {};
-StubHttpsRequest.prototype.on = function() {};
-
-function StubHttpsResponse(data) {
-    this.statusCode = 200;
-    this._data = data;
-}
-
-StubHttpsResponse.prototype.on = function(eventName, handler) {
-    if (eventName === 'data') {
-        handler(this._data);
-    } else if (eventName === 'end') {
-        handler();
-    }
-};
-
 describe('clone-all', function() {
     var cloneAll;
     var sandbox;
     var fs;
-    var https;
+    var GitServer;
     var child_process;
     var jsonReader;
+    var gitServer;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
 
         fs = require('fs');
 
-        https = {
-            request: function() {}
-        };
+        GitServer = sandbox.stub();
 
         child_process = {
             exec: function() {}
+        };
+
+        gitServer = {
+            getRepositories: function() {
+
+            }
         };
     });
 
@@ -52,7 +37,7 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should throw an error when the config file is missing', function() {
+    it('should not throw an error when the config file is missing', function() {
         // arrange
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
             .rejects('oops');
@@ -60,13 +45,13 @@ describe('clone-all', function() {
         // act
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
-            https: https,
             child_process: child_process,
-            './lib/json_reader': jsonReader
+            './lib/json_reader': jsonReader,
+            './lib/GitServer': GitServer
         });
 
         // assert
-        expect(cloneAll).to.eventually.throw('oops');
+        return expect(cloneAll).to.not.be.rejected;
     });
 
     it('should not clone when the folder exists', function() {
@@ -78,8 +63,6 @@ describe('clone-all', function() {
             }
         }];
 
-        var request = new StubHttpsRequest();
-
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
             .resolves(data);
 
@@ -89,18 +72,11 @@ describe('clone-all', function() {
             name: 'repoName'
         }];
 
-        sandbox.stub(https, 'request').withArgs({
-            hostname: 'api.github.com',
-            path: '/users/ngeor/repos',
-            port: 443,
-            method: 'GET',
-            headers: {
-                'User-Agent': 'clone-all.js'
-            },
-            'clone-all': {
-                fetchAllPages: false
-            }
-        }).returns(request).callsArgWith(1, new StubHttpsResponse(JSON.stringify(repositories)));
+        GitServer.withArgs(data[0]).returns(gitServer);
+        sandbox.stub(gitServer, 'getRepositories').resolves({
+            requestOptions: {},
+            repositories: repositories
+        });
 
         sandbox.stub(fs, 'stat').withArgs('repoName').callsArgWith(1, null, {});
 
@@ -109,9 +85,9 @@ describe('clone-all', function() {
         // act
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
-            https: https,
             child_process: child_process,
-            './lib/json_reader': jsonReader
+            './lib/json_reader': jsonReader,
+            './lib/GitServer': GitServer
         });
 
         return cloneAll.then(function() {
@@ -129,8 +105,6 @@ describe('clone-all', function() {
             }
         }];
 
-        var request = new StubHttpsRequest();
-
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
             .resolves(data);
 
@@ -140,18 +114,15 @@ describe('clone-all', function() {
             name: 'repoName'
         }];
 
-        sandbox.stub(https, 'request').withArgs({
-            hostname: 'api.github.com',
-            path: '/users/ngeor/repos',
-            port: 443,
-            method: 'GET',
-            headers: {
-                'User-Agent': 'clone-all.js'
+        GitServer.withArgs(data[0]).returns(gitServer);
+        sandbox.stub(gitServer, 'getRepositories').resolves({
+            requestOptions: {
+                'clone-all': {
+                    fetchAllPages: false
+                }
             },
-            'clone-all': {
-                fetchAllPages: false
-            }
-        }).returns(request).callsArgWith(1, new StubHttpsResponse(JSON.stringify(repositories)));
+            repositories: repositories
+        });
 
         sandbox.stub(fs, 'stat').withArgs('repoName').callsArgWith(1, 'folder does not exist', null);
 
@@ -161,9 +132,9 @@ describe('clone-all', function() {
         // act
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
-            https: https,
             child_process: child_process,
-            './lib/json_reader': jsonReader
+            './lib/json_reader': jsonReader,
+            './lib/GitServer': GitServer
         });
 
         return cloneAll.then(function() {
