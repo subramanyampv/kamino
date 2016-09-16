@@ -28,11 +28,26 @@ module.exports = function(grunt) {
                     }
                 }
             }
+        },
+
+        watch: {
+            default: {
+                files: [
+                    '*.js',
+                    'lib/**/*.js',
+                    'test/**/*.js'
+                ],
+                tasks: ['default'],
+                options: {
+                    spawn: false
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-mocha-istanbul');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('default', ['mochaTest', 'mocha_istanbul', 'istanbul_check_coverage']);
 };

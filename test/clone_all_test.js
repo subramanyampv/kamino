@@ -4,8 +4,10 @@ var sinon = require('sinon');
 var expect = chai.expect;
 
 chai.use(require('chai-as-promised'));
+require('sinon-as-promised');
 
 function StubHttpsRequest() {
+
 }
 
 StubHttpsRequest.prototype.end = function() {};
@@ -30,14 +32,12 @@ describe('clone-all', function() {
     var fs;
     var https;
     var child_process;
+    var jsonReader;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
 
-        fs = {
-            readFile: function() {},
-            stat: function() {}
-        };
+        fs = require('fs');
 
         https = {
             request: function() {}
@@ -54,14 +54,15 @@ describe('clone-all', function() {
 
     it('should throw an error when the config file is missing', function() {
         // arrange
-        sandbox.stub(fs, 'readFile').withArgs('clone-all-config.json', 'utf8')
-            .callsArgWith(2, 'oops', null);
+        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
+            .rejects('oops');
 
         // act
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
             https: https,
-            child_process: child_process
+            child_process: child_process,
+            './lib/json_reader': jsonReader
         });
 
         // assert
@@ -70,17 +71,17 @@ describe('clone-all', function() {
 
     it('should not clone when the folder exists', function() {
         // arrange
-        var data = JSON.stringify([{
+        var data = [{
             path: '/users/ngeor/repos',
             'clone-all': {
                 fetchAllPages: false
             }
-        }]);
+        }];
 
         var request = new StubHttpsRequest();
 
-        sandbox.stub(fs, 'readFile').withArgs('clone-all-config.json', 'utf8')
-            .callsArgWith(2, null, data);
+        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
+            .resolves(data);
 
         var repositories = [{
             clone_url: 'https://something',
@@ -109,7 +110,8 @@ describe('clone-all', function() {
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
             https: https,
-            child_process: child_process
+            child_process: child_process,
+            './lib/json_reader': jsonReader
         });
 
         return cloneAll.then(function() {
@@ -120,17 +122,17 @@ describe('clone-all', function() {
 
     it('should clone when the folder does not exist', function() {
         // arrange
-        var data = JSON.stringify([{
+        var data = [{
             path: '/users/ngeor/repos',
             'clone-all': {
                 fetchAllPages: false
             }
-        }]);
+        }];
 
         var request = new StubHttpsRequest();
 
-        sandbox.stub(fs, 'readFile').withArgs('clone-all-config.json', 'utf8')
-            .callsArgWith(2, null, data);
+        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
+            .resolves(data);
 
         var repositories = [{
             clone_url: 'https://something',
@@ -160,7 +162,8 @@ describe('clone-all', function() {
         cloneAll = proxyquire('../clone-all', {
             fs: fs,
             https: https,
-            child_process: child_process
+            child_process: child_process,
+            './lib/json_reader': jsonReader
         });
 
         return cloneAll.then(function() {

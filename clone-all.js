@@ -5,6 +5,7 @@ var https = require('https');
 var Promise = require('promise');
 var exec = require('child_process').exec;
 var _ = require('lodash');
+var jsonReader = require('./lib/json_reader');
 
 /**
  * Performs an HTTPS request and returns a promise that resolves to the
@@ -113,18 +114,7 @@ function setDefaultValues(server) {
     return result;
 }
 
-var mainPromise = new Promise(function(fullfill, reject) {
-    fs.readFile('clone-all-config.json', 'utf8', function(err, data) {
-        var servers;
-
-        if (err) {
-            reject(err);
-            return;
-        }
-
-        fullfill(JSON.parse(data));
-    });
-}).then(function(servers) {
+var mainPromise = jsonReader('clone-all-config.json').then(function(servers) {
     var promises = servers.map(function(server) {
         server = setDefaultValues(server);
         return getRepositoryInfo(server).then(function(repositories) {
