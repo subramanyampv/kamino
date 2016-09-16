@@ -1,7 +1,0 @@
-{
-  "preset": "airbnb",
-  "validateIndentation": "\t",
-  "disallowMultipleLineBreaks": true,
-  "requireTrailingComma": null,
-  "requireVarDeclFirst": true
-}

@@ -40,11 +40,11 @@ function dohttps(requestOptions) {
 }
 
 function cloneRepo(cloneUrl, cloneLocation) {
-    return new Promise(function(fullfill, reject) {
-        fs.stat(cloneLocation, function(err, stats) {
+    return new Promise(function(fullfill) {
+        fs.stat(cloneLocation, function(err) {
             if (err) {
                 console.log('cloning ' + cloneLocation);
-                exec('git clone ' + cloneUrl + ' ' + cloneLocation, function(error, stdout, stderr) {
+                exec('git clone ' + cloneUrl + ' ' + cloneLocation, function(error) {
                     console.log('finished cloning ' + cloneLocation);
                     fullfill({
                         cloneLocation: cloneLocation,

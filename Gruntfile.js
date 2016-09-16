@@ -1,5 +1,13 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        eslint: {
+            default: [
+                '*.js',
+                'lib/**/*.js',
+                'test/**/*.js'
+            ]
+        },
+
         mochaTest: {
             default: {
                 src: 'test/**/*.js',
@@ -45,9 +53,10 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-eslint');
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-mocha-istanbul');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['mochaTest', 'mocha_istanbul', 'istanbul_check_coverage']);
+    grunt.registerTask('default', ['eslint', 'mochaTest', 'mocha_istanbul', 'istanbul_check_coverage']);
 };
