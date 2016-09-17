@@ -50,6 +50,12 @@ module.exports = function(grunt) {
                     spawn: false
                 }
             }
+        },
+
+        coveralls: {
+            default: {
+                src: 'coverage/*.info'
+            }
         }
     });
 
@@ -57,6 +63,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-mocha-istanbul');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-coveralls');
 
     grunt.registerTask('default', ['eslint', 'mochaTest', 'mocha_istanbul', 'istanbul_check_coverage']);
 };

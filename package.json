@@ -25,6 +25,7 @@
     "chai-as-promised": "^5.3.0",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-coveralls": "^1.0.1",
     "grunt-eslint": "^19.0.0",
     "grunt-mocha-istanbul": "^5.0.2",
     "grunt-mocha-test": "^0.13.0",
