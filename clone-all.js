@@ -70,12 +70,14 @@ var mainPromise = jsonReader('clone-all-config.json')
             d.forEach(function(repositoryResult) {
                 if (repositoryResult.error) {
                     console.error('Cloned ' + repositoryResult.cloneLocation + ', error = ' + repositoryResult.error);
+                    process.exitCode = 1;
                 } else if (repositoryResult.skip) {
                     console.log('Skipped ' + repositoryResult.cloneLocation);
                 }
             });
         });
     }).catch(function(err) {
+        process.exitCode = 2;
         console.error(err);
     });
 
