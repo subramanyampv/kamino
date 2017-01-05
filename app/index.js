@@ -1,11 +1,11 @@
 'use strict';
-var yeoman = require('yeoman-generator');
-var uuid = require('node-uuid');
+var Generator = require('yeoman-generator');
+var uuid = require('uuid');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = Generator.extend({
 	prompting: function() {
-		var done = this.async();
-		this.prompt([
+		var that = this;
+		return this.prompt([
 			{
 				type: 'input',
 				name: 'name',
@@ -17,10 +17,9 @@ module.exports = yeoman.generators.Base.extend({
 				name: 'companyName',
 				message: 'Company name (for AssemblyInfo.cs copyright fields)'
 			}
-		], function(answers) {
-			this.props = answers;
-			done();
-		}.bind(this));
+		]).then(function(answers) {
+			that.props = answers;
+		});
 	},
 
 	writing: function() {
