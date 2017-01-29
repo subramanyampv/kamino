@@ -17,104 +17,18 @@
         android:text="Hello World!"
         android:id="@+id/header"/>
 
-    <GridLayout
+    <net.ngeor.t3.BoardView
+        android:id="@+id/board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:rowCount="3"
-        android:columnCount="3">
+        android:layout_below="@+id/button"/>
 
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile00"
-            android:layout_row="0"
-            android:layout_column="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile01"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile02"
-            android:layout_row="0"
-            android:layout_column="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile10"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile11"
-            android:layout_row="1"
-            android:layout_column="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile12"
-            android:layout_row="1"
-            android:layout_column="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile20"
-            android:layout_row="2"
-            android:layout_column="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile21"
-            android:layout_row="2"
-            android:layout_column="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-
-        <net.ngeor.t3.TileImageView
-            android:id="@+id/tile22"
-            android:layout_row="2"
-            android:layout_column="2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            />
-    </GridLayout>
+    <Button
+        android:text="Restart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button"/>
 
 </RelativeLayout>

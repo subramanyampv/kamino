@@ -1,5 +1,6 @@
 package net.ngeor.t3;
 
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,122 +8,87 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
-    private int[][] tileIds;
-    private View.OnTouchListener tileTouchListener;
+    private static final TileState HUMAN_STATE = TileState.X;
+    private static final TileState CPU_STATE = TileState.O;
+
+    private final GameModel model = new GameModel();
+
     private GameState gameState = GameState.WaitingHuman;
+    private BoardView boardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boardView = (BoardView)findViewById(R.id.board);
+        boardView.setModel(model);
 
-        tileIds = new int[][] {
-                new int[]{
-                        R.id.tile00,
-                        R.id.tile01,
-                        R.id.tile02
-                },
-                new int[]{
-                        R.id.tile10,
-                        R.id.tile11,
-                        R.id.tile12
-                },
-                new int[]{
-                        R.id.tile20,
-                        R.id.tile21,
-                        R.id.tile22
-                }
-        };
-
-        tileTouchListener = new View.OnTouchListener() {
+        // create and touch listener
+        boardView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (gameState != GameState.WaitingHuman) {
+                    // ignore event if it's not human's turn
                     return false;
                 }
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    ((TileImageView)v).setState(TileState.O);
+                    int col = (int) (3 * event.getX() / v.getWidth());
+                    int row = (int) (3 * event.getY() / v.getHeight());
+                    model.setState(row, col, HUMAN_STATE);
                     v.invalidate();
                     humanPlayed();
                 }
 
                 return true;
             }
-        };
+        });
 
-        // add touch listener
-        visitTiles(new TileImageViewVisitor() {
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void visit(TileImageView view) {
-                view.setOnTouchListener(tileTouchListener);
+            public void onClick(View v) {
+                gameState = GameState.WaitingHuman;
+                model.clear();
+                boardView.invalidate();
             }
         });
     }
 
     private void humanPlayed() {
-        final List<TileState> states = new ArrayList<>();
-        visitTiles(new TileImageViewVisitor() {
-            @Override
-            public void visit(TileImageView view) {
-                states.add(view.getState());
-            }
-        });
-
-        if (states.contains(TileState.Empty)) {
+        if (model.isBoardFull()) {
+            gameState = GameState.Finished;
+        } else {
             gameState = GameState.WaitingCPU;
             ((TextView)findViewById(R.id.header)).setText("Waiting for CPU...");
-            cpuThink(states);
-        } else {
-            gameState = GameState.Finished;
+            cpuThink();
         }
     }
 
     private void cpuPlayed() {
-        final List<TileState> states = new ArrayList<>();
-        visitTiles(new TileImageViewVisitor() {
-            @Override
-            public void visit(TileImageView view) {
-                states.add(view.getState());
-            }
-        });
-
-        if (states.contains(TileState.Empty)) {
+        if (model.isBoardFull()) {
+            gameState = GameState.Finished;
+        } else {
             gameState = GameState.WaitingHuman;
             ((TextView)findViewById(R.id.header)).setText("Waiting for player...");
-        } else {
-            gameState = GameState.Finished;
         }
     }
 
-    interface TileImageViewVisitor {
-        void visit(TileImageView view);
+    private void cpuThink() {
+        new AI().execute(model);
     }
 
-    private void visitTiles(TileImageViewVisitor visitor) {
-        for (int[] ids : tileIds) {
-            for (int id : ids) {
-                visitor.visit((TileImageView)findViewById(id));
-            }
-        }
-    }
-
-    private void cpuThink(List<TileState> tileStates) {
-        new AI().execute(tileStates);
-    }
-
-    class AI extends AsyncTask<List<TileState>, Void, Integer> {
+    class AI extends AsyncTask<GameModel, Void, Point> {
 
         @Override
-        protected Integer doInBackground(List<TileState>... params) {
-            List<TileState> tileStates = params[0];
-            for (int i = 0; i < tileStates.size(); i++) {
-                if (tileStates.get(i) == TileState.Empty) {
-                    return i;
+        protected Point doInBackground(GameModel... params) {
+            GameModel model = params[0];
+
+            for (int row = 0; row < GameModel.ROWS; row++) {
+                for (int col = 0; col < GameModel.COLS; col++) {
+                    if (model.getState(row, col) == TileState.Empty) {
+                        return new Point(col, row);
+                    }
                 }
             }
 
@@ -130,19 +96,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Integer aVoid) {
-            super.onPostExecute(aVoid);
-            if (aVoid == null) {
+        protected void onPostExecute(Point point) {
+            super.onPostExecute(point);
+            if (point == null) {
                 // TODO: fail
                 return;
             }
 
-            int tileIndex = aVoid;
-            int tileRow = tileIndex / 3;
-            int tileCol = tileIndex % 3;
-            TileImageView selectedTileView = (TileImageView) findViewById(tileIds[tileRow][tileCol]);
-            selectedTileView.setState(TileState.X);
-            selectedTileView.invalidate();
+            int row = point.y;
+            int col = point.x;
+            model.setState(row, col, CPU_STATE);
+            boardView.invalidate();
             cpuPlayed();
         }
     }
