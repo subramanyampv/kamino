@@ -35,12 +35,12 @@ public class BoardView extends ImageView {
 
         xPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         xPaint.setStyle(Paint.Style.STROKE);
-        xPaint.setStrokeWidth(4);
+        xPaint.setStrokeWidth(8);
         xPaint.setColor(Color.BLUE);
 
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         oPaint.setStyle(Paint.Style.STROKE);
-        oPaint.setStrokeWidth(4);
+        oPaint.setStrokeWidth(8);
         oPaint.setColor(Color.RED);
 
         linesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

@@ -36,9 +36,11 @@ public class MainActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     int col = (int) (3 * event.getX() / v.getWidth());
                     int row = (int) (3 * event.getY() / v.getHeight());
-                    model.setState(row, col, HUMAN_STATE);
-                    v.invalidate();
-                    humanPlayed();
+                    if (model.getState(row, col) == TileState.Empty) {
+                        model.setState(row, col, HUMAN_STATE);
+                        v.invalidate();
+                        humanPlayed();
+                    }
                 }
 
                 return true;
@@ -55,23 +57,53 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void humanPlayed() {
-        if (model.isBoardFull()) {
-            gameState = GameState.Finished;
-        } else {
+    interface StateHandler {
+        void stateComplete();
+    }
+
+    abstract class PlayerPlayedStateHandler implements StateHandler {
+        public void stateComplete() {
+            TileState winner = model.getWinner();
+            if (winner != TileState.Empty) {
+                gameState = GameState.Finished;
+                ((TextView)findViewById(R.id.header)).setText("Game over! " + winner + " wins!");
+            } else if (model.isBoardFull()) {
+                gameState = GameState.Finished;
+                ((TextView)findViewById(R.id.header)).setText("Game over! Draw!");
+            } else {
+                waitForOpponent();
+            }
+        }
+
+        protected abstract void waitForOpponent();
+    }
+
+    class HumanPlayedStateHandler extends PlayerPlayedStateHandler {
+        @Override
+        protected void waitForOpponent() {
             gameState = GameState.WaitingCPU;
             ((TextView)findViewById(R.id.header)).setText("Waiting for CPU...");
             cpuThink();
         }
     }
 
-    private void cpuPlayed() {
-        if (model.isBoardFull()) {
-            gameState = GameState.Finished;
-        } else {
+    class CPUPlayedStateHandler extends PlayerPlayedStateHandler {
+        @Override
+        protected void waitForOpponent() {
             gameState = GameState.WaitingHuman;
             ((TextView)findViewById(R.id.header)).setText("Waiting for player...");
         }
+    }
+
+    private final StateHandler humanPlayedStateHandler = new HumanPlayedStateHandler();
+    private final StateHandler cpuPlayedStateHandler = new CPUPlayedStateHandler();
+
+    private void humanPlayed() {
+        humanPlayedStateHandler.stateComplete();
+    }
+
+    private void cpuPlayed() {
+        cpuPlayedStateHandler.stateComplete();
     }
 
     private void cpuThink() {
