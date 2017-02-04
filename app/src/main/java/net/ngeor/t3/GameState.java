@@ -6,14 +6,14 @@ package net.ngeor.t3;
  */
 public enum GameState {
     /**
-     * Waiting for the human player to play.
+     * The game has not started yet.
      */
-    WaitingHuman,
+    NotStarted,
 
     /**
-     * Waiting for the CPU to play.
+     * Waiting for a player to play.
      */
-    WaitingCpu,
+    WaitingPlayer,
 
     /**
      * The game is finished with someone winning.

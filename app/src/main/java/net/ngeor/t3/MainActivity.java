@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (result == null) {
-            result = new GameModel();
+            result = new GameModel(new GameParameters());
         }
 
         return result;
@@ -45,21 +45,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void stateChanged(GameModel model) {
                 updateHeaderText();
+                getBoardView().invalidate();
 
-                if (model.getState() == GameState.WaitingCpu) {
+                if (!model.isHumanTurn() && model.getState() == GameState.WaitingPlayer) {
                     cpuThink(model);
                 }
-            }
-
-            @Override
-            public void humanPlayed(GameModel model) {
-                getBoardView().invalidate();
-
-            }
-
-            @Override
-            public void cpuPlayed(GameModel model) {
-                getBoardView().invalidate();
             }
         });
     }
@@ -78,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         getBoardView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (model.getState() != GameState.WaitingHuman) {
+                if (model.getState() != GameState.WaitingPlayer || !model.isHumanTurn()) {
                     return false;
                 }
 
@@ -101,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 getBoardView().invalidate();
             }
         });
+
+        if (model.getState() == GameState.NotStarted) {
+            model.start();
+        }
     }
 
     @Override
@@ -125,19 +119,19 @@ public class MainActivity extends AppCompatActivity {
                 resourceId = R.string.state_game_over_draw;
                 break;
             case Victory:
-                TileState winner = model.getTurn();
-                if (winner == model.getHumanState()) {
+                Player winner = model.getTurn();
+                if (model.isHuman(winner)) {
                     resourceId = R.string.state_game_over_human_wins;
                 } else {
                     resourceId = R.string.state_game_over_cpu_wins;
                 }
 
                 break;
-            case WaitingHuman:
-                resourceId = R.string.state_waiting_for_human;
+            case WaitingPlayer:
+                resourceId = model.isHumanTurn() ? R.string.state_waiting_for_human : R.string.state_waiting_for_cpu;
                 break;
-            case WaitingCpu:
-                resourceId = R.string.state_waiting_for_cpu;
+            case NotStarted:
+                resourceId = R.string.state_not_started;
                 break;
             default:
                 throw new IndexOutOfBoundsException();

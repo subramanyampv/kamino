@@ -10,27 +10,34 @@ import java.util.List;
  */
 public class GameModel implements Serializable {
     private final TileState[][] tiles;
+    private final GameParameters gameParameters;
     private GameState state;
-    private int rows = 3;
-    private int cols = 3;
-    private TileState humanState = TileState.X;
-    private TileState cpuState = TileState.O;
 
     // TODO somehow this gets serialized
     // that's why there is a setGameModelListener instead of addGameModelListener
     private final transient List<GameModelListener> gameModelListeners = new ArrayList<>();
-    private TileState turn;
+    private Player turn;
 
-    public GameModel() {
-        tiles = new TileState[rows][cols];
-        state = GameState.WaitingHuman;
-        turn = getHumanState();
+    public GameModel(GameParameters gameParameters) {
+        // store game parameters
+        this.gameParameters = gameParameters;
+
+        // initialize and clear tiles
+        tiles = new TileState[getRows()][getCols()];
         clearTiles();
+
+        // first player plays next
+        turn = gameParameters.getFirstPlayer();
+        state = GameState.NotStarted;
+    }
+
+    public void start() {
+        setState(GameState.WaitingPlayer);
     }
 
     private void clearTiles() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
                 tiles[row][col] = TileState.Empty;
             }
         }
@@ -38,33 +45,33 @@ public class GameModel implements Serializable {
 
     public void reset() {
         clearTiles();
-        turn = getHumanState();
+        turn = gameParameters.getFirstPlayer();
 
         // this will trigger an event
-        setState(GameState.WaitingHuman);
+        setState(GameState.WaitingPlayer);
     }
 
     public int getRows() {
-        return rows;
+        return gameParameters.getRows();
     }
 
     public int getCols() {
-        return cols;
-    }
-
-    public TileState getHumanState() {
-        return humanState;
-    }
-
-    public TileState getCpuState() {
-        return cpuState;
+        return gameParameters.getCols();
     }
 
     public GameState getState() {
         return state;
     }
 
-    public TileState getTurn() { return turn; }
+    public boolean isHumanTurn() {
+        return isHuman(turn);
+    }
+
+    public boolean isHuman(Player player) {
+        return player == gameParameters.getHumanPlayer();
+    }
+
+    public Player getTurn() { return turn; }
 
     private void setState(GameState state) {
         this.state = state;
@@ -76,17 +83,7 @@ public class GameModel implements Serializable {
     }
 
     public void play(int row, int col) {
-        tiles[row][col] = turn;
-
-        TileState nextTurn = TileState.Empty;
-        // notify that someone played
-        if (turn == getHumanState()) {
-            fireHumanPlayed();
-            nextTurn = getCpuState();
-        } else if (turn == getCpuState()) {
-            fireCpuPlayed();
-            nextTurn = getHumanState();
-        }
+        tiles[row][col] = TileState.fromPlayer(turn);
 
         // move to next state
         TileState winner = getWinner();
@@ -95,18 +92,14 @@ public class GameModel implements Serializable {
         } else if (isBoardFull()) {
             setState(GameState.Draw);
         } else {
-            turn = nextTurn;
-            if (turn == getHumanState()) {
-                setState(GameState.WaitingHuman);
-            } else {
-                setState(GameState.WaitingCpu);
-            }
+            turn = turn.opponent();
+            setState(GameState.WaitingPlayer);
         }
     }
 
     public boolean isBoardFull() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < getRows(); row++) {
+            for (int col = 0; col < getCols(); col++) {
                 if (getState(row, col) == TileState.Empty) {
                     return false;
                 }
@@ -120,12 +113,12 @@ public class GameModel implements Serializable {
         List<SequenceProvider> sequenceProviders = new ArrayList<>();
 
         // check horizontal matches
-        for (int row = 0; row < rows; row++) {
+        for (int row = 0; row < getRows(); row++) {
             sequenceProviders.add(new HorizontalSequenceProvider(row));
         }
 
         // check vertical matches
-        for (int col = 0; col < cols; col++) {
+        for (int col = 0; col < getCols(); col++) {
             sequenceProviders.add(new VerticalSequenceProvider(col));
         }
 
@@ -160,7 +153,7 @@ public class GameModel implements Serializable {
         @Override
         public List<TileState> getSequence() {
             List<TileState> result = new ArrayList<>();
-            for (int col = 0; col < cols; col++) {
+            for (int col = 0; col < getCols(); col++) {
                 result.add(getState(row, col));
             }
 
@@ -178,7 +171,7 @@ public class GameModel implements Serializable {
         @Override
         public List<TileState> getSequence() {
             List<TileState> result = new ArrayList<>();
-            for (int row = 0; row < rows; row++) {
+            for (int row = 0; row < getRows(); row++) {
                 result.add(getState(row, col));
             }
 
@@ -190,7 +183,7 @@ public class GameModel implements Serializable {
         @Override
         public List<TileState> getSequence() {
             List<TileState> result = new ArrayList<>();
-            for (int row = 0; row < rows; row++) {
+            for (int row = 0; row < getRows(); row++) {
                 result.add(getState(row, row));
             }
 
@@ -202,8 +195,8 @@ public class GameModel implements Serializable {
         @Override
         public List<TileState> getSequence() {
             List<TileState> result = new ArrayList<>();
-            for (int row = 0; row < rows; row++) {
-                result.add(getState(rows - row - 1, row));
+            for (int row = 0; row < getRows(); row++) {
+                result.add(getState(getRows() - row - 1, row));
             }
 
             return result;
@@ -230,18 +223,6 @@ public class GameModel implements Serializable {
     private void fireStateChanged() {
         for (GameModelListener gameModelListener : gameModelListeners) {
             gameModelListener.stateChanged(this);
-        }
-    }
-
-    private void fireHumanPlayed() {
-        for (GameModelListener gameModelListener : gameModelListeners) {
-            gameModelListener.humanPlayed(this);
-        }
-    }
-
-    private void fireCpuPlayed() {
-        for (GameModelListener gameModelListener : gameModelListeners) {
-            gameModelListener.cpuPlayed(this);
         }
     }
 }

@@ -18,5 +18,16 @@ public enum TileState {
     /**
      * The tile is marked O.
      */
-    O
+    O;
+
+    public static TileState fromPlayer(Player player) {
+        switch (player) {
+            case X:
+                return TileState.X;
+            case O:
+                return TileState.O;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 }

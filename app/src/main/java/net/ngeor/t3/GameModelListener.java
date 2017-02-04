@@ -6,8 +6,4 @@ package net.ngeor.t3;
  */
 public interface GameModelListener {
     void stateChanged(GameModel model);
-
-    void humanPlayed(GameModel model);
-
-    void cpuPlayed(GameModel model);
 }
