@@ -1,6 +1,5 @@
 package net.ngeor.t3;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,78 +7,26 @@ import java.util.List;
  * Represents the state of the board.
  * Created by ngeor on 1/29/2017.
  */
-public class GameModel implements Serializable {
-    private final TileState[][] tiles;
-    private final GameParameters gameParameters;
-    private GameState state;
-
+public class GameModel extends GameDto {
     // TODO somehow this gets serialized
-    // that's why there is a setGameModelListener instead of addGameModelListener
-    private final transient List<GameModelListener> gameModelListeners = new ArrayList<>();
-    private Player turn;
+    // that's why there's the split to GameDto
+    private transient GameModelListener gameModelListener = new NullGameModelListener();
 
     public GameModel(GameParameters gameParameters) {
-        // store game parameters
-        this.gameParameters = gameParameters;
+        super(gameParameters);
+    }
 
-        // initialize and clear tiles
-        tiles = new TileState[getRows()][getCols()];
-        clearTiles();
-
-        // first player plays next
-        turn = gameParameters.getFirstPlayer();
-        state = GameState.NotStarted;
+    public GameModel(GameDto savedState) {
+        super(savedState);
     }
 
     public void start() {
         setState(GameState.WaitingPlayer);
     }
 
-    private void clearTiles() {
-        for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getCols(); col++) {
-                tiles[row][col] = TileState.Empty;
-            }
-        }
-    }
-
-    public void reset() {
-        clearTiles();
-        turn = gameParameters.getFirstPlayer();
-
-        // this will trigger an event
-        setState(GameState.WaitingPlayer);
-    }
-
-    public int getRows() {
-        return gameParameters.getRows();
-    }
-
-    public int getCols() {
-        return gameParameters.getCols();
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public boolean isHumanTurn() {
-        return isHuman(turn);
-    }
-
-    public boolean isHuman(Player player) {
-        return player == gameParameters.getHumanPlayer();
-    }
-
-    public Player getTurn() { return turn; }
-
     private void setState(GameState state) {
         this.state = state;
         fireStateChanged();
-    }
-
-    public TileState getState(int row, int col) {
-        return tiles[row][col];
     }
 
     public void play(int row, int col) {
@@ -97,7 +44,7 @@ public class GameModel implements Serializable {
         }
     }
 
-    public boolean isBoardFull() {
+    private boolean isBoardFull() {
         for (int row = 0; row < getRows(); row++) {
             for (int col = 0; col < getCols(); col++) {
                 if (getState(row, col) == TileState.Empty) {
@@ -109,7 +56,7 @@ public class GameModel implements Serializable {
         return true;
     }
 
-    public TileState getWinner() {
+    private TileState getWinner() {
         List<SequenceProvider> sequenceProviders = new ArrayList<>();
 
         // check horizontal matches
@@ -216,13 +163,14 @@ public class GameModel implements Serializable {
     }
 
     public void setGameModelListener(GameModelListener gameModelListener) {
-        gameModelListeners.clear();
-        gameModelListeners.add(gameModelListener);
+        if (gameModelListener == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.gameModelListener = gameModelListener;
     }
 
     private void fireStateChanged() {
-        for (GameModelListener gameModelListener : gameModelListeners) {
-            gameModelListener.stateChanged(this);
-        }
+        gameModelListener.stateChanged(this);
     }
 }
