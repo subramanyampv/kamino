@@ -18,7 +18,7 @@ public class GameListener implements GameModelListener {
     }
 
     private void cpuThink(GameModel model) {
-        new AI(model).execute();
+        new SmartAI(model).execute();
     }
 
     public void updateHeaderText(GameModel model) {
