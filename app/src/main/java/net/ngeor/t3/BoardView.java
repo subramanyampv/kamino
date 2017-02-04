@@ -71,15 +71,15 @@ public class BoardView extends ImageView {
             return;
         }
 
-        final float rowHeight = getHeight() / GameModel.ROWS;
-        final float colWidth = getWidth() / GameModel.COLS;
+        final float rowHeight = getHeight() / model.getRows();
+        final float colWidth = getWidth() / model.getCols();
         final float radius = Math.min(colWidth, rowHeight) / 2;
 
-        for (int row = 0; row < GameModel.ROWS; row++) {
+        for (int row = 0; row < model.getRows(); row++) {
             final float top = row * rowHeight;
             final float bottom = top + rowHeight;
 
-            for (int col = 0; col < GameModel.COLS; col++) {
+            for (int col = 0; col < model.getCols(); col++) {
                 final TileState state = model.getState(row, col);
                 final float left = col * colWidth;
                 final float right = left + colWidth;

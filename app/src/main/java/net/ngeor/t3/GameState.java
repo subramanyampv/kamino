@@ -11,12 +11,17 @@ public enum GameState {
     WaitingHuman,
 
     /**
-     * Waiting for the computer to play.
+     * Waiting for the CPU to play.
      */
-    WaitingCPU,
+    WaitingCpu,
 
     /**
-     * The game is finished.
+     * The game is finished with someone winning.
      */
-    Finished
+    Victory,
+
+    /**
+     * The game resulted in a draw.
+     */
+    Draw
 }

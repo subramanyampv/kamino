@@ -9,37 +9,84 @@ import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private static final TileState HUMAN_STATE = TileState.X;
-    private static final TileState CPU_STATE = TileState.O;
+    // bundle key for storing the model
+    private static final String BUNDLE_KEY_MODEL = "model";
 
-    private final GameModel model = new GameModel();
+    // model
+    private GameModel model;
 
-    private GameState gameState = GameState.WaitingHuman;
-    private BoardView boardView;
+    private static GameModel loadModel(Bundle savedInstanceState) {
+        GameModel result = null;
+        if (savedInstanceState != null) {
+            result = (GameModel) savedInstanceState.getSerializable(BUNDLE_KEY_MODEL);
+        }
+
+        if (result == null) {
+            result = new GameModel();
+        }
+
+        return result;
+    }
+
+    private BoardView getBoardView() {
+        return (BoardView) findViewById(R.id.board);
+    }
+
+    private void setModel(GameModel model) {
+        if (model == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.model = model;
+        getBoardView().setModel(model);
+        updateHeaderText();
+
+        model.setGameModelListener(new GameModelListener() {
+            @Override
+            public void stateChanged(GameModel model) {
+                updateHeaderText();
+
+                if (model.getState() == GameState.WaitingCpu) {
+                    cpuThink(model);
+                }
+            }
+
+            @Override
+            public void humanPlayed(GameModel model) {
+                getBoardView().invalidate();
+
+            }
+
+            @Override
+            public void cpuPlayed(GameModel model) {
+                getBoardView().invalidate();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // load UI
         setContentView(R.layout.activity_main);
-        boardView = (BoardView)findViewById(R.id.board);
-        boardView.setModel(model);
+
+        // restore model
+        setModel(loadModel(savedInstanceState));
 
         // create and touch listener
-        boardView.setOnTouchListener(new View.OnTouchListener() {
+        getBoardView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (gameState != GameState.WaitingHuman) {
-                    // ignore event if it's not human's turn
+                if (model.getState() != GameState.WaitingHuman) {
                     return false;
                 }
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int col = (int) (3 * event.getX() / v.getWidth());
-                    int row = (int) (3 * event.getY() / v.getHeight());
+                    int col = (int) (model.getCols() * event.getX() / v.getWidth());
+                    int row = (int) (model.getRows() * event.getY() / v.getHeight());
                     if (model.getState(row, col) == TileState.Empty) {
-                        model.setState(row, col, HUMAN_STATE);
-                        v.invalidate();
-                        humanPlayed();
+                        model.play(row, col);
                     }
                 }
 
@@ -50,63 +97,56 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameState = GameState.WaitingHuman;
-                model.clear();
-                boardView.invalidate();
+                model.reset();
+                getBoardView().invalidate();
             }
         });
     }
 
-    interface StateHandler {
-        void stateComplete();
-    }
-
-    abstract class PlayerPlayedStateHandler implements StateHandler {
-        public void stateComplete() {
-            TileState winner = model.getWinner();
-            if (winner != TileState.Empty) {
-                gameState = GameState.Finished;
-                ((TextView)findViewById(R.id.header)).setText("Game over! " + winner + " wins!");
-            } else if (model.isBoardFull()) {
-                gameState = GameState.Finished;
-                ((TextView)findViewById(R.id.header)).setText("Game over! Draw!");
-            } else {
-                waitForOpponent();
-            }
-        }
-
-        protected abstract void waitForOpponent();
-    }
-
-    class HumanPlayedStateHandler extends PlayerPlayedStateHandler {
-        @Override
-        protected void waitForOpponent() {
-            gameState = GameState.WaitingCPU;
-            ((TextView)findViewById(R.id.header)).setText("Waiting for CPU...");
-            cpuThink();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (model == null) {
+            outState.remove(BUNDLE_KEY_MODEL);
+        } else {
+            outState.putSerializable(BUNDLE_KEY_MODEL, model);
         }
     }
 
-    class CPUPlayedStateHandler extends PlayerPlayedStateHandler {
-        @Override
-        protected void waitForOpponent() {
-            gameState = GameState.WaitingHuman;
-            ((TextView)findViewById(R.id.header)).setText("Waiting for player...");
+    private TextView getHeaderView() {
+        return (TextView) findViewById(R.id.header);
+    }
+
+    private void updateHeaderText() {
+        int resourceId;
+
+        switch (model.getState()) {
+            case Draw:
+                resourceId = R.string.state_game_over_draw;
+                break;
+            case Victory:
+                TileState winner = model.getTurn();
+                if (winner == model.getHumanState()) {
+                    resourceId = R.string.state_game_over_human_wins;
+                } else {
+                    resourceId = R.string.state_game_over_cpu_wins;
+                }
+
+                break;
+            case WaitingHuman:
+                resourceId = R.string.state_waiting_for_human;
+                break;
+            case WaitingCpu:
+                resourceId = R.string.state_waiting_for_cpu;
+                break;
+            default:
+                throw new IndexOutOfBoundsException();
         }
+
+        getHeaderView().setText(resourceId);
     }
 
-    private final StateHandler humanPlayedStateHandler = new HumanPlayedStateHandler();
-    private final StateHandler cpuPlayedStateHandler = new CPUPlayedStateHandler();
-
-    private void humanPlayed() {
-        humanPlayedStateHandler.stateComplete();
-    }
-
-    private void cpuPlayed() {
-        cpuPlayedStateHandler.stateComplete();
-    }
-
-    private void cpuThink() {
+    private void cpuThink(GameModel model) {
         new AI().execute(model);
     }
 
@@ -116,8 +156,14 @@ public class MainActivity extends AppCompatActivity {
         protected Point doInBackground(GameModel... params) {
             GameModel model = params[0];
 
-            for (int row = 0; row < GameModel.ROWS; row++) {
-                for (int col = 0; col < GameModel.COLS; col++) {
+            // pause just for effect
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+            }
+
+            for (int row = 0; row < model.getRows(); row++) {
+                for (int col = 0; col < model.getCols(); col++) {
                     if (model.getState(row, col) == TileState.Empty) {
                         return new Point(col, row);
                     }
@@ -137,9 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
             int row = point.y;
             int col = point.x;
-            model.setState(row, col, CPU_STATE);
-            boardView.invalidate();
-            cpuPlayed();
+            model.play(row, col);
         }
     }
 }
