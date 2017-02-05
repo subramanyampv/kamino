@@ -1,14 +1,19 @@
 package net.ngeor.t3;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import net.ngeor.t3.ai.AIPlayer;
+import net.ngeor.t3.models.*;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
     // bundle key for storing the model
     private static final String BUNDLE_KEY_MODEL = "model";
+    private static final int SETTINGS_REQUEST_CODE = 1;
 
     // model
     private GameModel model;
@@ -52,11 +57,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             }
         });
 
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final GameModel newModel = new GameModel(new GameParameters());
+                final GameModel newModel = new GameModel(model.getGameParameters());
                 setModel(newModel);
+            }
+        });
+
+        findViewById(R.id.btn_settings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                SettingsIntent settingsIntent = new SettingsIntent(intent);
+                settingsIntent.setAILevel(model.getGameParameters().getAILevel());
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
             }
         });
     }
@@ -65,6 +80,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(BUNDLE_KEY_MODEL, new GameDto(model));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            SettingsIntent settingsIntent = new SettingsIntent(data);
+            AILevel aiLevel = settingsIntent.getAILevel();
+            GameParameters gameParameters = new GameParameters(3, 3, Player.X, Player.X, aiLevel);
+            final GameModel newModel = new GameModel(gameParameters);
+            setModel(newModel);
+        }
     }
 
     @Override
@@ -89,7 +116,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         this.model = model;
         getBoardView().setModel(model);
         GameListener gameListener = new GameListener(this);
-        model.setGameModelListener(gameListener);
+        model.addGameModelListener(gameListener);
+        AIPlayer ai = new AIPlayer();
+        model.addGameModelListener(ai);
+
         if (model.getState() == GameState.NotStarted) {
             model.start();
         } else {

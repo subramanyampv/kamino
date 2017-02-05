@@ -1,4 +1,4 @@
-package net.ngeor.t3;
+package net.ngeor.t3.models;
 
 /**
  * Receives events from GameModel.

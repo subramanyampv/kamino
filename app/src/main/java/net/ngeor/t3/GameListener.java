@@ -1,5 +1,9 @@
 package net.ngeor.t3;
 
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameModelListener;
+import net.ngeor.t3.models.Player;
+
 public class GameListener implements GameModelListener {
     private final MainActivityView view;
 
@@ -11,14 +15,6 @@ public class GameListener implements GameModelListener {
     public void stateChanged(GameModel model) {
         updateHeaderText(model);
         view.invalidateBoardView();
-
-        if (!model.isHumanTurn() && model.getState() == GameState.WaitingPlayer) {
-            cpuThink(model);
-        }
-    }
-
-    private void cpuThink(GameModel model) {
-        new SmartAI(model).execute();
     }
 
     public void updateHeaderText(GameModel model) {
@@ -49,5 +45,4 @@ public class GameListener implements GameModelListener {
 
         view.setHeaderText(resourceId);
     }
-
 }

@@ -1,4 +1,4 @@
-package net.ngeor.t3;
+package net.ngeor.t3.models;
 
 import org.junit.Test;
 

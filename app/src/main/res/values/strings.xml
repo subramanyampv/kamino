@@ -6,4 +6,5 @@
     <string name="state_game_over_draw">Game over! It\'s a draw!</string>
     <string name="state_game_over_human_wins">Game over! You win!</string>
     <string name="state_game_over_cpu_wins">Game over! You lost!</string>
+    <string name="restart">Restart</string>
 </resources>

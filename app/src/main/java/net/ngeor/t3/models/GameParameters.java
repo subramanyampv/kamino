@@ -1,4 +1,4 @@
-package net.ngeor.t3;
+package net.ngeor.t3.models;
 
 import java.io.Serializable;
 
@@ -12,16 +12,18 @@ public class GameParameters implements Serializable {
     private final int cols;
     private final Player firstPlayer;
     private final Player humanPlayer;
+    private final AILevel aiLevel;
 
-    public GameParameters(int rows, int cols, Player firstPlayer, Player humanPlayer) {
+    public GameParameters(int rows, int cols, Player firstPlayer, Player humanPlayer, AILevel aiLevel) {
         this.rows = rows;
         this.cols = cols;
         this.firstPlayer = firstPlayer;
         this.humanPlayer = humanPlayer;
+        this.aiLevel = aiLevel;
     }
 
     public GameParameters() {
-        this(3, 3, Player.X, Player.X);
+        this(3, 3, Player.X, Player.X, AILevel.Easy);
     }
 
     public int getRows() {
@@ -38,5 +40,9 @@ public class GameParameters implements Serializable {
 
     public Player getHumanPlayer() {
         return humanPlayer;
+    }
+
+    public AILevel getAILevel() {
+        return aiLevel;
     }
 }

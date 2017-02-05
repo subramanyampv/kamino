@@ -1,18 +1,16 @@
-package net.ngeor.t3;
-
-import android.service.quicksettings.Tile;
+package net.ngeor.t3.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameDto implements Serializable {
-    protected final GameParameters gameParameters;
+    private final GameParameters gameParameters;
     private final TileState[][] tiles;
     private GameState state;
-    protected Player turn;
+    private Player turn;
 
-    public GameDto(GameParameters gameParameters) {
+    GameDto(GameParameters gameParameters) {
         // store game parameters
         this.gameParameters = gameParameters;
 
@@ -33,17 +31,15 @@ public class GameDto implements Serializable {
         // deep copy tiles
         this.tiles = new TileState[getRows()][getCols()];
         for (int row = 0; row < getRows(); row++) {
-            for (int col = 0; col < getCols(); col++) {
-                this.tiles[row][col] = other.tiles[row][col];
-            }
+            System.arraycopy(other.tiles[row], 0, this.tiles[row], 0, getCols());
         }
 
         this.state = other.state;
         this.turn = other.turn;
     }
 
-    interface BoardCoordinateAction {
-        void act(BoardCoordinates boardCoordinates);
+    public GameParameters getGameParameters() {
+        return gameParameters;
     }
 
     private void clearTiles() {
@@ -78,7 +74,9 @@ public class GameDto implements Serializable {
         return player == gameParameters.getHumanPlayer();
     }
 
-    public Player getTurn() { return turn; }
+    public Player getTurn() {
+        return turn;
+    }
 
     public TileState getState(int row, int col) {
         return tiles[row][col];
@@ -111,7 +109,7 @@ public class GameDto implements Serializable {
         return true;
     }
 
-    private TileState getWinner() {
+    protected List<SequenceProvider> sequenceProviders() {
         List<SequenceProvider> sequenceProviders = new ArrayList<>();
 
         // check horizontal matches
@@ -129,8 +127,11 @@ public class GameDto implements Serializable {
 
         // check left-bottom -> right-top diagonal
         sequenceProviders.add(new LeftBottomRightTopSequenceProvider());
+        return sequenceProviders;
+    }
 
-        for (SequenceProvider sequenceProvider : sequenceProviders) {
+    private TileState getWinner() {
+        for (SequenceProvider sequenceProvider : sequenceProviders()) {
             List<TileState> sequence = sequenceProvider.getSequence();
             TileState winner = getWinner(sequence);
             if (winner != TileState.Empty) {
@@ -139,10 +140,6 @@ public class GameDto implements Serializable {
         }
 
         return TileState.Empty;
-    }
-
-    interface SequenceProvider {
-        List<TileState> getSequence();
     }
 
     class HorizontalSequenceProvider implements SequenceProvider {

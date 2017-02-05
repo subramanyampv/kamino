@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.TileState;
 
 /**
  * Draws the board.
