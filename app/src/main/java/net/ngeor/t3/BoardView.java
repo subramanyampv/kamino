@@ -12,10 +12,11 @@ import android.widget.ImageView;
  * Created by ngeor on 1/29/2017.
  */
 public class BoardView extends ImageView {
-    private Paint backgroundPaint;
-    private Paint xPaint;
-    private Paint oPaint;
-    private Paint linesPaint;
+    private final static int LETTER_THICKNESS = 8;
+    private final Paint backgroundPaint;
+    private final Paint xPaint;
+    private final Paint oPaint;
+    private final Paint linesPaint;
     private GameModel model;
 
     public GameModel getModel() {
@@ -35,12 +36,12 @@ public class BoardView extends ImageView {
 
         xPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         xPaint.setStyle(Paint.Style.STROKE);
-        xPaint.setStrokeWidth(8);
+        xPaint.setStrokeWidth(LETTER_THICKNESS);
         xPaint.setColor(Color.BLUE);
 
         oPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         oPaint.setStyle(Paint.Style.STROKE);
-        oPaint.setStrokeWidth(8);
+        oPaint.setStrokeWidth(LETTER_THICKNESS);
         oPaint.setColor(Color.RED);
 
         linesPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -53,19 +54,8 @@ public class BoardView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // clear entire board
         canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
-
-        // left vertical line
-        canvas.drawLine(getWidth() / 3, 0, getWidth() / 3, getHeight(), linesPaint);
-
-        // right vertical line
-        canvas.drawLine(2 * getWidth() / 3, 0, 2 * getWidth() / 3, getHeight(), linesPaint);
-
-        // top horizontal line
-        canvas.drawLine(0, getHeight() / 3, getWidth(), getHeight() / 3, linesPaint);
-
-        // bottom horizontal line
-        canvas.drawLine(0, 2 * getHeight() / 3, getWidth(), 2 * getHeight() / 3, linesPaint);
 
         if (model == null) {
             return;
@@ -73,7 +63,18 @@ public class BoardView extends ImageView {
 
         final float rowHeight = getHeight() / model.getRows();
         final float colWidth = getWidth() / model.getCols();
-        final float radius = Math.min(colWidth, rowHeight) / 2;
+
+        // vertical lines
+        for (int col = 1; col < model.getCols(); col++) {
+            canvas.drawLine(col * colWidth, 0, col * colWidth, getHeight(), linesPaint);
+        }
+
+        // horizontal lines
+        for (int row = 1; row < model.getRows(); row++) {
+            canvas.drawLine(0, row * rowHeight, getWidth(), row * rowHeight, linesPaint);
+        }
+
+        final float radius = Math.min(colWidth, rowHeight) / 2 - LETTER_THICKNESS;
 
         for (int row = 0; row < model.getRows(); row++) {
             final float top = row * rowHeight;
@@ -83,12 +84,18 @@ public class BoardView extends ImageView {
                 final TileState state = model.getState(row, col);
                 final float left = col * colWidth;
                 final float right = left + colWidth;
+                final float cx = (left + right) / 2;
+                final float cy = (top + bottom) / 2;
 
                 if (state == TileState.X) {
-                    canvas.drawLine(left, top, right, bottom, xPaint);
-                    canvas.drawLine(left, bottom, right, top, xPaint);
+                    final float startX = cx - radius;
+                    final float startY = cy - radius;
+                    final float stopX = cx + radius;
+                    final float stopY = cy + radius;
+                    canvas.drawLine(startX, startY, stopX, stopY, xPaint);
+                    canvas.drawLine(startX, stopY, stopX, startY, xPaint);
                 } else if (state == TileState.O) {
-                    canvas.drawCircle((left + right) / 2, (top + bottom) / 2, radius, oPaint);
+                    canvas.drawCircle(cx, cy, radius, oPaint);
                 }
             }
         }
