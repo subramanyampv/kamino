@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_ai_level"
+        android:title="@string/difficulty"
+        android:summary="%s"
+        android:entries="@array/pref_ai_level_entries"
+        android:entryValues="@array/pref_ai_level_values"
+        android:defaultValue="@string/pref_ai_level_default" />
+</PreferenceScreen>

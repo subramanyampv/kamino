@@ -23,7 +23,7 @@ public class GameParameters implements Serializable {
     }
 
     public GameParameters() {
-        this(3, 3, Player.X, Player.X, AILevel.Easy);
+        this(3, 3, Player.X, Player.X, AILevel.EASY);
     }
 
     public int getRows() {

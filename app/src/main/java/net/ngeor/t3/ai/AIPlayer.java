@@ -13,10 +13,10 @@ public class AIPlayer implements GameModelListener {
 
         AbstractMove move;
         switch (model.getGameParameters().getAILevel()) {
-            case Easy:
+            case EASY:
                 move = new FirstBlankMove(model);
                 break;
-            case Hard:
+            case HARD:
                 move = new SmartMove(model);
                 break;
             default:
