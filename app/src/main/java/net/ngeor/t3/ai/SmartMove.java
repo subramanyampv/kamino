@@ -11,10 +11,9 @@ public class SmartMove extends AbstractMove {
         super(model);
     }
 
-    @Override
-    protected Location pickMove(GameModel model) {
+    List<Location> pickMoves(GameModel model) {
         MinimaxNode startingNode = new MinimaxNode(model, null);
-        int bestScore = minimax(startingNode, 4, true);
+        int bestScore = minimax(startingNode, 3, true);
 
         // collect matching nodes
         List<MinimaxNode> bestMoves = new ArrayList<>();
@@ -29,11 +28,23 @@ public class SmartMove extends AbstractMove {
             bestMoves.add(startingNode.children().get(0));
         }
 
+        List<Location> result = new ArrayList<>();
+        for (MinimaxNode node : bestMoves) {
+            result.add(node.getPreviousMove());
+        }
+
+        return result;
+    }
+
+    @Override
+    protected Location pickMove(GameModel model) {
+        List<Location> bestMoves = pickMoves(model);
+
         // in case multiple moves have the same score, pick a random one
         Random random = new Random();
         int nextMoveIndex = random.nextInt(bestMoves.size());
-        MinimaxNode target = bestMoves.get(nextMoveIndex);
-        return target.getPreviousMove();
+        Location result = bestMoves.get(nextMoveIndex);
+        return result;
     }
 
     private List<Location> emptyTiles(GameDto model) {
@@ -106,7 +117,6 @@ public class SmartMove extends AbstractMove {
         }
 
         private int scoreOfSequence(List<TileState> tiles) {
-            int result = 0;
             int emptyCount = 0;
             int humanCount = 0;
             int cpuCount = 0;
@@ -119,6 +129,16 @@ public class SmartMove extends AbstractMove {
                 } else {
                     humanCount++;
                 }
+            }
+
+            if (cpuCount == tiles.size()) {
+                // victory
+                return 10;
+            }
+
+            if (humanCount == tiles.size()) {
+                // defeat
+                return -10;
             }
 
             if (cpuCount > 0) {
