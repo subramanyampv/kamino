@@ -2,9 +2,7 @@ package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class SmartMove extends AbstractMove {
     public SmartMove(GameModel model) {
@@ -13,7 +11,7 @@ public class SmartMove extends AbstractMove {
 
     List<Location> pickMoves(GameModel model) {
         MinimaxNode startingNode = new MinimaxNode(model, null);
-        int bestScore = minimax(startingNode, 3, true);
+        int bestScore = minimax(startingNode, 2, true);
 
         // collect matching nodes
         List<MinimaxNode> bestMoves = new ArrayList<>();
@@ -47,13 +45,11 @@ public class SmartMove extends AbstractMove {
         return result;
     }
 
-    private List<Location> emptyTiles(GameDto model) {
-        List<Location> result = new ArrayList<>();
-        for (int row = 0; row < model.getRows(); row++) {
-            for (int col = 0; col < model.getCols(); col++) {
-                if (model.getState(row, col) == TileState.Empty) {
-                    result.add(new Location(row, col));
-                }
+    private List<Tile> emptyTiles(GameDto model) {
+        List<Tile> result = new ArrayList<>();
+        for (Tile tile : model.allTiles()) {
+            if (tile.isEmpty()) {
+                result.add(tile);
             }
         }
 
@@ -108,50 +104,73 @@ public class SmartMove extends AbstractMove {
         public int heuristic() {
             int result = 0;
 
+            // calculate the winning frequency of a location
+            // e.g. top-left corner frequency is 3, because it appears in
+            // 3 different possible combinations
+            HashMap<Tile, Integer> locationFrequency = new HashMap<>();
+            List<List<Tile>> winningSequences = new ArrayList<>();
             for (SequenceProvider sequenceProvider : sequenceProviders()) {
-                List<TileState> sequence = sequenceProvider.getSequence();
-                result = result + scoreOfSequence(sequence);
+                winningSequences.add(sequenceProvider.getSequence());
+            }
+
+            for (Tile tile : allTiles()) {
+                int frequency = 0;
+                for (List<Tile> winningSequence : winningSequences) {
+                    if (winningSequence.contains(tile)) {
+                        frequency++;
+                    }
+                }
+
+                locationFrequency.put(tile, frequency);
+            }
+
+            for (List<Tile> winningSequence : winningSequences) {
+                result = result + scoreOfSequence(winningSequence, locationFrequency);
             }
 
             return result;
         }
 
-        private int scoreOfSequence(List<TileState> tiles) {
-            int emptyCount = 0;
+        private int scoreOfSequence(List<Tile> locations, Map<Tile, Integer> locationFrequency) {
             int humanCount = 0;
             int cpuCount = 0;
 
-            for (TileState tile : tiles) {
-                if (tile == TileState.Empty) {
-                    emptyCount++;
-                } else if (tile == getCpuTileState()) {
+            for (Tile tile : locations) {
+                if (tile.isCpu()) {
                     cpuCount++;
-                } else {
+                } else if (tile.isHuman()) {
                     humanCount++;
                 }
             }
 
-            if (cpuCount == tiles.size()) {
+            // TODO calculate an appropriate high value
+            final int VICTORY = 42;
+
+            if (cpuCount == locations.size()) {
                 // victory
-                return 10;
+                return VICTORY;
             }
 
-            if (humanCount == tiles.size()) {
+            if (humanCount == locations.size()) {
                 // defeat
-                return -10;
+                return -VICTORY;
             }
 
-            if (cpuCount > 0) {
-                return cpuCount + emptyCount - humanCount;
-            } else if (humanCount > 0) {
-                return  cpuCount - humanCount - emptyCount;
-            } else {
-                return emptyCount;
-            }
-        }
+            int result = 0;
+            for (Tile tile : locations) {
+                Integer frequency = locationFrequency.get(tile);
+                if (frequency == null) {
+                    frequency = 0; // should not happen
+                }
 
-        private TileState getCpuTileState() {
-            return TileState.fromPlayer(getGameParameters().getHumanPlayer().opponent());
+                if (tile.isCpu()) {
+                    result = result + frequency;
+                } else if (tile.isHuman()) {
+                    result = result - frequency;
+                }
+            }
+
+            return result;
         }
 
         public List<MinimaxNode> children() {
@@ -170,11 +189,10 @@ public class SmartMove extends AbstractMove {
             }
 
             children = new ArrayList<>();
-            List<Location> emptyTiles = emptyTiles(this);
-            for (Location location : emptyTiles) {
+            for (Tile tile : emptyTiles(this)) {
                 GameDto nextState = new GameDto(this);
-                nextState.play(location.getRow(), location.getCol());
-                MinimaxNode childNode = new MinimaxNode(nextState, location);
+                nextState.play(tile.getLocation().getRow(), tile.getLocation().getCol());
+                MinimaxNode childNode = new MinimaxNode(nextState, tile.getLocation());
                 children.add(childNode);
             }
         }
@@ -188,7 +206,7 @@ public class SmartMove extends AbstractMove {
             StringBuilder stringBuilder = new StringBuilder();
             for (int row = 0; row < getRows(); row++) {
                 for (int col = 0; col < getCols(); col++) {
-                    TileState state = getState(row, col);
+                    TileState state = getTile(row, col).getState();
                     String stateAsString = state == TileState.Empty ? " " : state.toString();
                     stringBuilder.append(stateAsString);
                 }

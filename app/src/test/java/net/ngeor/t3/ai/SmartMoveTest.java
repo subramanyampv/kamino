@@ -8,8 +8,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by ngeor on 2/6/2017.
@@ -46,6 +44,32 @@ public class SmartMoveTest {
         Location[] actual = locations.toArray(new Location[locations.size()]);
         Location[] expected = new Location[] {
                 new Location(0, 1)
+        };
+        assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * This test proves the CPU will play on a corner
+     * when the user starts in the middle.
+     */
+    @Test
+    public void shouldDefendCorner() {
+        // arrange
+        GameModel model = new GameModel(new GameParameters());
+        model.play(1, 1); // X
+
+        SmartMove move = new SmartMove(model);
+
+        // act
+        List<Location> locations = move.pickMoves(model);
+
+        // assert
+        Location[] actual = locations.toArray(new Location[locations.size()]);
+        Location[] expected = new Location[] {
+                new Location(0, 0),
+                new Location(0, 2),
+                new Location(2, 0),
+                new Location(2, 2),
         };
         assertArrayEquals(expected, actual);
     }

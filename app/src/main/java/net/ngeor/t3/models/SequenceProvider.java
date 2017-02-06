@@ -6,5 +6,5 @@ import java.util.List;
  * Created by ngeor on 2/5/2017.
  */
 public interface SequenceProvider {
-    List<TileState> getSequence();
+    List<Tile> getSequence();
 }

@@ -2,7 +2,6 @@ package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
-import net.ngeor.t3.models.TileState;
 
 import java.util.Random;
 
@@ -20,7 +19,7 @@ public class RandomMove extends AbstractMove {
         while (!found) {
             row = random.nextInt(model.getRows());
             col = random.nextInt(model.getCols());
-            found = model.getState(row, col) == TileState.Empty;
+            found = model.getTile(row, col).isEmpty();
         }
 
         return new Location(row, col);

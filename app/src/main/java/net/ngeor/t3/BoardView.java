@@ -83,7 +83,7 @@ public class BoardView extends ImageView {
             final float bottom = top + rowHeight;
 
             for (int col = 0; col < model.getCols(); col++) {
-                final TileState state = model.getState(row, col);
+                final TileState state = model.getTile(row, col).getState();
                 final float left = col * colWidth;
                 final float right = left + colWidth;
                 final float cx = (left + right) / 2;

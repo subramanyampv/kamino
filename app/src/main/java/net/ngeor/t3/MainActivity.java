@@ -50,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     int col = (int) (model.getCols() * event.getX() / v.getWidth());
                     int row = (int) (model.getRows() * event.getY() / v.getHeight());
-                    if (model.getState(row, col) == TileState.Empty) {
-                        model.play(row, col);
+                    Tile tile = model.getTile(row, col);
+                    if (tile.isEmpty()) {
+                        tile.play();
                     }
                 }
 

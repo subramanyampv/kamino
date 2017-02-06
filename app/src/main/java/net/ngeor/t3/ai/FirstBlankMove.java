@@ -2,7 +2,7 @@ package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
-import net.ngeor.t3.models.TileState;
+import net.ngeor.t3.models.Tile;
 
 public class FirstBlankMove extends AbstractMove {
 
@@ -12,11 +12,9 @@ public class FirstBlankMove extends AbstractMove {
 
     @Override
     protected Location pickMove(GameModel model) {
-        for (int row = 0; row < model.getRows(); row++) {
-            for (int col = 0; col < model.getCols(); col++) {
-                if (model.getState(row, col) == TileState.Empty) {
-                    return new Location(row, col);
-                }
+        for (Tile tile : model.allTiles()) {
+            if (tile.isEmpty()) {
+                return tile.getLocation();
             }
         }
 

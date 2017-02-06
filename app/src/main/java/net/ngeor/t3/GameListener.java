@@ -2,7 +2,6 @@ package net.ngeor.t3;
 
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.GameModelListener;
-import net.ngeor.t3.models.Player;
 
 public class GameListener implements GameModelListener {
     private final MainActivityView view;
@@ -25,8 +24,7 @@ public class GameListener implements GameModelListener {
                 resourceId = R.string.state_game_over_draw;
                 break;
             case Victory:
-                Player winner = model.getTurn();
-                if (model.isHuman(winner)) {
+                if (model.isHumanTurn()) {
                     resourceId = R.string.state_game_over_human_wins;
                 } else {
                     resourceId = R.string.state_game_over_cpu_wins;
