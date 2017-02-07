@@ -1,7 +1,8 @@
 package net.ngeor.t3.ai;
 
 import android.os.AsyncTask;
-import net.ngeor.t3.models.*;
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.Location;
 
 public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
     private final GameModel model;

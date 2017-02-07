@@ -5,5 +5,6 @@ package net.ngeor.t3.models;
  */
 public enum AILevel {
     EASY,
+    MEDIUM,
     HARD
 }

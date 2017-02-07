@@ -1,7 +1,6 @@
 package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.GameModel;
-import net.ngeor.t3.models.GameParameters;
 import net.ngeor.t3.models.Location;
 import org.junit.Test;
 
@@ -24,9 +23,9 @@ public class SmartMoveTest {
      * The correct move is to play on the top row.
      */
     @Test
-    public void shouldDefendScenario() {
+    public void shouldPreventLosing() {
         // arrange
-        GameModel model = new GameModel(new GameParameters());
+        GameModel model = new GameModel(3, 3);
         model.play(0, 0); // X
         model.play(1, 0); // O
         model.play(1, 1); // X
@@ -35,7 +34,7 @@ public class SmartMoveTest {
         model.play(2, 2); // O
         model.play(0, 2); // X
 
-        SmartMove move = new SmartMove(model);
+        SmartMove move = new SmartMove(model, 2);
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -55,10 +54,10 @@ public class SmartMoveTest {
     @Test
     public void shouldDefendCorner() {
         // arrange
-        GameModel model = new GameModel(new GameParameters());
+        GameModel model = new GameModel(3, 3);
         model.play(1, 1); // X
 
-        SmartMove move = new SmartMove(model);
+        SmartMove move = new SmartMove(model, 2);
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -70,6 +69,44 @@ public class SmartMoveTest {
                 new Location(0, 2),
                 new Location(2, 0),
                 new Location(2, 2),
+        };
+        assertArrayEquals(expected, actual);
+    }
+
+    /**
+     * X
+     *  O
+     *   X
+     * ---
+     * Expected:
+     * X
+     * OO
+     *   X
+     * ---
+     * Actual:
+     * X
+     *  O
+     * O X
+     */
+    @Test
+    public void shouldDefendAgainstDoubleThreat() {
+        // arrange
+        GameModel model = new GameModel(3, 3);
+        model.play(0, 0); // X
+        model.play(1, 1); // O
+        model.play(2, 2); // X
+        SmartMove move = new SmartMove(model, 3);
+
+        // act
+        List<Location> locations = move.pickMoves(model);
+
+        // assert
+        Location[] actual = locations.toArray(new Location[locations.size()]);
+        Location[] expected = new Location[] {
+                new Location(0, 1),
+                new Location(1, 0),
+                new Location(1, 2),
+                new Location(2, 1),
         };
         assertArrayEquals(expected, actual);
     }

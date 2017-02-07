@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_ai_level_entries">
-        <item>Easy (CPU picks the first available spot)</item>
-        <item>Hard (CPU tries to beat you)</item>
+        <item>Easy (CPU does not try too hard)</item>
+        <item>Medium (CPU tries to beat you)</item>
+        <item>Hard (Impossible to beat)</item>
     </string-array>
     <string-array name="pref_ai_level_values">
         <item>EASY</item>
+        <item>MEDIUM</item>
         <item>HARD</item>
     </string-array>
 </resources>

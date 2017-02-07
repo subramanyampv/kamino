@@ -5,13 +5,18 @@ import net.ngeor.t3.models.*;
 import java.util.*;
 
 public class SmartMove extends AbstractMove {
-    public SmartMove(GameModel model) {
+    private final Player me;
+    private final int minimaxDepth;
+
+    public SmartMove(GameModel model, int minimaxDepth) {
         super(model);
+        this.me = model.getTurn();
+        this.minimaxDepth = minimaxDepth;
     }
 
     List<Location> pickMoves(GameModel model) {
         MinimaxNode startingNode = new MinimaxNode(model, null);
-        int bestScore = minimax(startingNode, 2, true);
+        int bestScore = minimax(startingNode, minimaxDepth, true);
 
         // collect matching nodes
         List<MinimaxNode> bestMoves = new ArrayList<>();
@@ -42,17 +47,6 @@ public class SmartMove extends AbstractMove {
         Random random = new Random();
         int nextMoveIndex = random.nextInt(bestMoves.size());
         Location result = bestMoves.get(nextMoveIndex);
-        return result;
-    }
-
-    private List<Tile> emptyTiles(GameDto model) {
-        List<Tile> result = new ArrayList<>();
-        for (Tile tile : model.allTiles()) {
-            if (tile.isEmpty()) {
-                result.add(tile);
-            }
-        }
-
         return result;
     }
 
@@ -107,38 +101,38 @@ public class SmartMove extends AbstractMove {
             // calculate the winning frequency of a location
             // e.g. top-left corner frequency is 3, because it appears in
             // 3 different possible combinations
-            HashMap<Tile, Integer> locationFrequency = new HashMap<>();
-            List<List<Tile>> winningSequences = new ArrayList<>();
-            for (SequenceProvider sequenceProvider : sequenceProviders()) {
+            HashMap<Location, Integer> locationFrequency = new HashMap<>();
+            List<List<Location>> winningSequences = new ArrayList<>();
+            for (SequenceProvider sequenceProvider : getBoardModel().winningSequenceProviders()) {
                 winningSequences.add(sequenceProvider.getSequence());
             }
 
-            for (Tile tile : allTiles()) {
+            for (Location location : getBoardModel().allLocations()) {
                 int frequency = 0;
-                for (List<Tile> winningSequence : winningSequences) {
-                    if (winningSequence.contains(tile)) {
+                for (List<Location> winningSequence : winningSequences) {
+                    if (winningSequence.contains(location)) {
                         frequency++;
                     }
                 }
 
-                locationFrequency.put(tile, frequency);
+                locationFrequency.put(location, frequency);
             }
 
-            for (List<Tile> winningSequence : winningSequences) {
+            for (List<Location> winningSequence : winningSequences) {
                 result = result + scoreOfSequence(winningSequence, locationFrequency);
             }
 
             return result;
         }
 
-        private int scoreOfSequence(List<Tile> locations, Map<Tile, Integer> locationFrequency) {
+        private int scoreOfSequence(List<Location> locations, Map<Location, Integer> locationFrequency) {
             int humanCount = 0;
             int cpuCount = 0;
 
-            for (Tile tile : locations) {
-                if (tile.isCpu()) {
+            for (Location location : locations) {
+                if (getBoardModel().getTileState(location) == TileState.fromPlayer(me)) {
                     cpuCount++;
-                } else if (tile.isHuman()) {
+                } else if (getBoardModel().getTileState(location) == TileState.fromPlayer(me.opponent())) {
                     humanCount++;
                 }
             }
@@ -157,15 +151,15 @@ public class SmartMove extends AbstractMove {
             }
 
             int result = 0;
-            for (Tile tile : locations) {
-                Integer frequency = locationFrequency.get(tile);
+            for (Location location : locations) {
+                Integer frequency = locationFrequency.get(location);
                 if (frequency == null) {
                     frequency = 0; // should not happen
                 }
 
-                if (tile.isCpu()) {
+                if (getBoardModel().getTileState(location) == TileState.fromPlayer(me)) {
                     result = result + frequency;
-                } else if (tile.isHuman()) {
+                } else if (getBoardModel().getTileState(location) == TileState.fromPlayer(me.opponent())) {
                     result = result - frequency;
                 }
             }
@@ -189,10 +183,10 @@ public class SmartMove extends AbstractMove {
             }
 
             children = new ArrayList<>();
-            for (Tile tile : emptyTiles(this)) {
+            for (Location location : getBoardModel().emptyLocations()) {
                 GameDto nextState = new GameDto(this);
-                nextState.play(tile.getLocation().getRow(), tile.getLocation().getCol());
-                MinimaxNode childNode = new MinimaxNode(nextState, tile.getLocation());
+                nextState.play(location.getRow(), location.getCol());
+                MinimaxNode childNode = new MinimaxNode(nextState, location);
                 children.add(childNode);
             }
         }
@@ -204,10 +198,10 @@ public class SmartMove extends AbstractMove {
         @Override
         public String toString() {
             StringBuilder stringBuilder = new StringBuilder();
-            for (int row = 0; row < getRows(); row++) {
-                for (int col = 0; col < getCols(); col++) {
-                    TileState state = getTile(row, col).getState();
-                    String stateAsString = state == TileState.Empty ? " " : state.toString();
+            for (int row = 0; row < getBoardModel().getRows(); row++) {
+                for (int col = 0; col < getBoardModel().getCols(); col++) {
+                    TileState state = getBoardModel().getTileState(row, col);
+                    String stateAsString = state == TileState.EMPTY ? " " : state.toString();
                     stringBuilder.append(stateAsString);
                 }
 

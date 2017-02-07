@@ -1,21 +1,24 @@
 package net.ngeor.t3;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.ai.AIPlayer;
-import net.ngeor.t3.models.*;
+import net.ngeor.t3.models.GameDto;
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameState;
+import net.ngeor.t3.models.TileState;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
-    // bundle key for storing the model
-    private static final String BUNDLE_KEY_MODEL = "model";
-
     // model
     private GameModel model;
+
+    // AI player listens to model change events to know when its turn to play
+    private final AIPlayer aiPlayer = new AIPlayer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +30,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         // set default preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
+        // set AILevel from settings
+        SettingsAdapter settingsAdapter = new SettingsAdapter(this);
+        aiPlayer.setAILevel(settingsAdapter.getAILevel());
+
         // restore model
         if (savedInstanceState != null) {
-            GameDto savedGameState = (GameDto)savedInstanceState.getSerializable(BUNDLE_KEY_MODEL);
+            StateManager stateManager = new StateManager(savedInstanceState);
+            GameDto savedGameState = stateManager.getGame();
             model = new GameModel(savedGameState);
         } else {
-            model = new GameModel(createGameParameters());
+            model = createGameModel();
         }
 
         setModel(model);
@@ -41,18 +49,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         getBoardView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                final BoardView boardView = (BoardView)v;
-                final GameModel model = boardView.getModel();
                 if (model.getState() != GameState.WaitingPlayer || !model.isHumanTurn()) {
                     return false;
                 }
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int col = (int) (model.getCols() * event.getX() / v.getWidth());
-                    int row = (int) (model.getRows() * event.getY() / v.getHeight());
-                    Tile tile = model.getTile(row, col);
-                    if (tile.isEmpty()) {
-                        tile.play();
+                    int col = (int) (model.getBoardModel().getCols() * event.getX() / v.getWidth());
+                    int row = (int) (model.getBoardModel().getRows() * event.getY() / v.getHeight());
+                    TileState tileState = model.getBoardModel().getTileState(row, col);
+                    if (tileState == TileState.EMPTY) {
+                        model.play(row, col);
                     }
                 }
 
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final GameModel newModel = new GameModel(model.getGameParameters());
+                final GameModel newModel = createGameModel();
                 setModel(newModel);
             }
         });
@@ -81,17 +87,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     protected void onResume() {
         super.onResume();
         SettingsAdapter settings = new SettingsAdapter(this);
-        if (model.getGameParameters().getAILevel() != settings.getAILevel()) {
+        if (aiPlayer.getAILevel() != settings.getAILevel()) {
             // settings changed
-            final GameModel newModel = new GameModel(createGameParameters());
-            setModel(newModel);
+            // TODO: do not change AI level mid-game
+            aiPlayer.setAILevel(settings.getAILevel());
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(BUNDLE_KEY_MODEL, new GameDto(model));
+        StateManager stateManager = new StateManager(outState);
+        stateManager.setGame(new GameDto(model));
     }
 
     @Override
@@ -114,11 +121,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     private void setModel(GameModel model) {
         this.model = model;
-        getBoardView().setModel(model);
+        getBoardView().setModel(model.getBoardModel());
         GameListener gameListener = new GameListener(this);
         model.addGameModelListener(gameListener);
-        AIPlayer ai = new AIPlayer();
-        model.addGameModelListener(ai);
+        model.addGameModelListener(aiPlayer);
 
         if (model.getState() == GameState.NotStarted) {
             model.start();
@@ -129,8 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         }
     }
 
-    private GameParameters createGameParameters() {
-        SettingsAdapter settings = new SettingsAdapter(this);
-        return new GameParameters(3, 3, Player.X, Player.X, settings.getAILevel());
+    private GameModel createGameModel() {
+        return new GameModel(3, 3);
     }
 }

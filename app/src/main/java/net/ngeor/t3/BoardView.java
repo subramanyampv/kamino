@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.BoardModel;
 import net.ngeor.t3.models.TileState;
 
 /**
@@ -19,13 +19,9 @@ public class BoardView extends ImageView {
     private final Paint xPaint;
     private final Paint oPaint;
     private final Paint linesPaint;
-    private GameModel model;
+    private BoardModel model;
 
-    public GameModel getModel() {
-        return model;
-    }
-
-    public void setModel(GameModel model) {
+    public void setModel(BoardModel model) {
         this.model = model;
     }
 
@@ -83,7 +79,7 @@ public class BoardView extends ImageView {
             final float bottom = top + rowHeight;
 
             for (int col = 0; col < model.getCols(); col++) {
-                final TileState state = model.getTile(row, col).getState();
+                final TileState state = model.getTileState(row, col);
                 final float left = col * colWidth;
                 final float right = left + colWidth;
                 final float cx = (left + right) / 2;

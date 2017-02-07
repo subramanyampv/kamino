@@ -8,7 +8,7 @@ public enum TileState {
     /**
      * The tile is empty.
      */
-    Empty,
+    EMPTY,
 
     /**
      * The tile is marked X.

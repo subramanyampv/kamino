@@ -12,18 +12,16 @@ public class GameParameters implements Serializable {
     private final int cols;
     private final Player firstPlayer;
     private final Player humanPlayer;
-    private final AILevel aiLevel;
 
-    public GameParameters(int rows, int cols, Player firstPlayer, Player humanPlayer, AILevel aiLevel) {
+    public GameParameters(int rows, int cols, Player firstPlayer, Player humanPlayer) {
         this.rows = rows;
         this.cols = cols;
         this.firstPlayer = firstPlayer;
         this.humanPlayer = humanPlayer;
-        this.aiLevel = aiLevel;
     }
 
     public GameParameters() {
-        this(3, 3, Player.X, Player.X, AILevel.EASY);
+        this(3, 3, Player.X, Player.X);
     }
 
     public int getRows() {
@@ -40,9 +38,5 @@ public class GameParameters implements Serializable {
 
     public Player getHumanPlayer() {
         return humanPlayer;
-    }
-
-    public AILevel getAILevel() {
-        return aiLevel;
     }
 }
