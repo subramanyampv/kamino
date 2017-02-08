@@ -8,3 +8,6 @@ android:
     - build-tools-23.0.1
     - android-23
     - extra
+
+script:
+  - gradle build # by default it is build connectedCheck
