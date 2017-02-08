@@ -15,6 +15,6 @@ script:
 after_success:
   - cat app/build/outputs/lint-results-debug.html
   - ./gradlew clean jacocoTestReport
-  - mkdir -p build/reports/jacoco/test
-  - cp build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml build/reports/jacoco/test/
+  - mkdir -p app/build/reports/jacoco/test
+  - cp app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml app/build/reports/jacoco/test/
   - ./gradlew coveralls
