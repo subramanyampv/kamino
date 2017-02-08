@@ -5,10 +5,6 @@ plugins {
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
-coveralls {
-    jacocoReportPath = 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
-}
-
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
 
     reports {
