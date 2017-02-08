@@ -10,4 +10,4 @@ android:
     - extra
 
 script:
-  - gradle build # by default it is build connectedCheck
+  - ./gradlew build # by default it is build connectedCheck
