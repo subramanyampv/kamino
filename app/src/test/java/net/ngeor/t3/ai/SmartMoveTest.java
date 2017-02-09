@@ -2,6 +2,8 @@ package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
+import net.ngeor.t3.models.Player;
+import net.ngeor.t3.models.PlayerAssignment;
 import org.junit.Test;
 
 import java.util.List;
@@ -25,7 +27,7 @@ public class SmartMoveTest {
     @Test
     public void shouldPreventLosing() {
         // arrange
-        GameModel model = new GameModel(3, 3);
+        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(0, 0); // X
         model.play(1, 0); // O
         model.play(1, 1); // X
@@ -54,7 +56,7 @@ public class SmartMoveTest {
     @Test
     public void shouldDefendCorner() {
         // arrange
-        GameModel model = new GameModel(3, 3);
+        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(1, 1); // X
 
         SmartMove move = new SmartMove(model, 2);
@@ -91,7 +93,7 @@ public class SmartMoveTest {
     @Test
     public void shouldDefendAgainstDoubleThreat() {
         // arrange
-        GameModel model = new GameModel(3, 3);
+        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(0, 0); // X
         model.play(1, 1); // O
         model.play(2, 2); // X

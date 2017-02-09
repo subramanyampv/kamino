@@ -4,30 +4,44 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import net.ngeor.t3.models.AILevel;
+import net.ngeor.t3.models.Player;
 
 /**
  * Rich access to the settings data.
  * Created by ngeor on 2/5/2017.
  */
 public class SettingsAdapter {
-    private final SharedPreferences sharedPreferences;
     private final static String KEY_AI_LEVEL = "pref_ai_level";
+    private final static String KEY_FIRST_PLAYER = "pref_first_player";
+    private final SharedPreferences sharedPreferences;
 
     public SettingsAdapter(Context context) {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public AILevel getAILevel() {
-        String aiLevelAsString = sharedPreferences.getString(KEY_AI_LEVEL, "");
-        AILevel aiLevel = AILevel.EASY;
-        try {
-            if (aiLevelAsString != null && !aiLevelAsString.isEmpty()) {
-                aiLevel = AILevel.valueOf(aiLevelAsString);
+        String value = sharedPreferences.getString(KEY_AI_LEVEL, "");
+        AILevel aiLevel = null;
+        if (value != null && !value.isEmpty()) {
+            try {
+                aiLevel = AILevel.valueOf(value);
+            } catch (IllegalArgumentException ignored) {
             }
-        } catch (IllegalArgumentException ex) {
-            aiLevel = AILevel.EASY;
         }
 
-        return aiLevel;
+        return aiLevel == null ? AILevel.EASY : aiLevel;
+    }
+
+    public Player getFirstPlayer() {
+        String value = sharedPreferences.getString(KEY_FIRST_PLAYER, "");
+        Player player = null;
+        if (value != null && !value.isEmpty()) {
+            try {
+                player = Player.valueOf(value);
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
+        return player == null ? Player.X : player;
     }
 }

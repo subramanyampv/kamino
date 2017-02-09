@@ -7,12 +7,14 @@ import java.io.Serializable;
  * This contains anything that needs to be persisted.
  */
 public class GameDto implements Serializable {
-    private final PlayerAssignment playerAssignment = new PlayerAssignment();
+    private final PlayerAssignment playerAssignment;
     private final BoardModel boardModel;
     private GameState state;
     private Player turn;
 
-    GameDto(int rows, int cols) {
+    GameDto(int rows, int cols, PlayerAssignment playerAssignment) {
+        this.playerAssignment = playerAssignment;
+
         // initialize and clear tiles
         boardModel = new BoardModel(rows, cols);
         state = GameState.NotStarted;
@@ -22,6 +24,7 @@ public class GameDto implements Serializable {
     }
 
     public GameDto(GameDto other) {
+        this.playerAssignment = other.playerAssignment;
         this.boardModel = new BoardModel(other.boardModel);
         this.state = other.state;
         this.turn = other.turn;

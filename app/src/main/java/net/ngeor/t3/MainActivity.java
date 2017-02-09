@@ -8,17 +8,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.ai.AIPlayer;
-import net.ngeor.t3.models.GameDto;
-import net.ngeor.t3.models.GameModel;
-import net.ngeor.t3.models.GameState;
-import net.ngeor.t3.models.TileState;
+import net.ngeor.t3.models.*;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
-    // model
-    private GameModel model;
-
     // AI player listens to model change events to know when its turn to play
     private final AIPlayer aiPlayer = new AIPlayer();
+    // model
+    private GameModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     private GameModel createGameModel() {
-        return new GameModel(3, 3);
+        return new GameModel(3, 3, createPlayerAssignment());
+    }
+
+    private PlayerAssignment createPlayerAssignment() {
+        SettingsAdapter settings = new SettingsAdapter(this);
+        return new PlayerAssignment(settings.getFirstPlayer());
     }
 }

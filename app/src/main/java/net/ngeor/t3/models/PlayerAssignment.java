@@ -7,7 +7,11 @@ import java.io.Serializable;
  * Created by ngeor on 2/7/2017.
  */
 public class PlayerAssignment implements Serializable {
-    private final Player firstPlayer = Player.X;
+    private final Player firstPlayer;
+
+    public PlayerAssignment(Player firstPlayer) {
+        this.firstPlayer = firstPlayer;
+    }
 
     public Player getFirstPlayer() {
         return firstPlayer;
