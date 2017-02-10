@@ -1,12 +1,14 @@
 package net.ngeor.t3.ai;
 
-import net.ngeor.t3.models.AILevel;
-import net.ngeor.t3.models.GameModel;
-import net.ngeor.t3.models.GameModelListener;
-import net.ngeor.t3.models.GameState;
+import net.ngeor.t3.AbstractPlayer;
+import net.ngeor.t3.models.*;
 
-public class AIPlayer implements GameModelListener {
+public class AIPlayer extends AbstractPlayer implements GameModelListener {
     private AILevel aiLevel;
+
+    public AIPlayer(GameModel model, Player turn) {
+        super(model, turn);
+    }
 
     public AILevel getAILevel() {
         return aiLevel;
@@ -18,7 +20,7 @@ public class AIPlayer implements GameModelListener {
 
     @Override
     public void stateChanged(GameModel model) {
-        if (model.isHumanTurn() || model.getState() != GameState.WaitingPlayer) {
+        if (!isMyTurn() || model.getState() != GameState.WaitingPlayer) {
             return;
         }
 

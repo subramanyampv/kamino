@@ -46,6 +46,7 @@ public class GameDto implements Serializable {
         this.state = state;
     }
 
+    @Deprecated
     public boolean isHumanTurn() {
         return isHuman(turn);
     }

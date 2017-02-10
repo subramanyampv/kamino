@@ -4,17 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.ai.AIPlayer;
 import net.ngeor.t3.models.*;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
-    // AI player listens to model change events to know when its turn to play
-    private final AIPlayer aiPlayer = new AIPlayer();
     // model
     private GameModel model;
+
+    private HumanPlayer humanPlayer;
+    private AIPlayer aiPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +25,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         // set default preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        // set AILevel from settings
-        SettingsAdapter settingsAdapter = new SettingsAdapter(this);
-        aiPlayer.setAILevel(settingsAdapter.getAILevel());
 
         // restore model
         if (savedInstanceState != null) {
@@ -41,26 +37,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         setModel(model);
 
-        // create and touch listener
-        getBoardView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (model.getState() != GameState.WaitingPlayer || !model.isHumanTurn()) {
-                    return false;
-                }
+        // create touch listener
+        humanPlayer = new HumanPlayer(model, Player.X);
+        getBoardView().setOnTouchListener(humanPlayer);
 
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    int col = (int) (model.getBoardModel().getCols() * event.getX() / v.getWidth());
-                    int row = (int) (model.getBoardModel().getRows() * event.getY() / v.getHeight());
-                    TileState tileState = model.getBoardModel().getTileState(row, col);
-                    if (tileState == TileState.EMPTY) {
-                        model.play(row, col);
-                    }
-                }
-
-                return true;
-            }
-        });
+        // set AILevel from settings
+        SettingsAdapter settingsAdapter = new SettingsAdapter(this);
+        aiPlayer = new AIPlayer(model, Player.O);
+        aiPlayer.setAILevel(settingsAdapter.getAILevel());
 
         findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,11 +63,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         });
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         SettingsAdapter settings = new SettingsAdapter(this);
-        if (aiPlayer.getAILevel() != settings.getAILevel()) {
+        if (aiPlayer != null && aiPlayer.getAILevel() != settings.getAILevel()) {
             // settings changed
             // TODO: do not change AI level mid-game
             aiPlayer.setAILevel(settings.getAILevel());
