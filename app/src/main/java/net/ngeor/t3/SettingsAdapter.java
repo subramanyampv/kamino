@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import net.ngeor.t3.models.AILevel;
+import net.ngeor.t3.models.BoardInvariants;
 import net.ngeor.t3.models.Player;
 
 /**
  * Rich access to the settings data.
  * Created by ngeor on 2/5/2017.
  */
-public class SettingsAdapter {
+public class SettingsAdapter implements BoardInvariants {
     private final static String KEY_AI_LEVEL = "pref_ai_level";
     private final static String KEY_FIRST_PLAYER = "pref_first_player";
     private final SharedPreferences sharedPreferences;
@@ -43,5 +44,15 @@ public class SettingsAdapter {
         }
 
         return player == null ? Player.X : player;
+    }
+
+    @Override
+    public int getRows() {
+        return sharedPreferences.getInt("rows", 3);
+    }
+
+    @Override
+    public int getCols() {
+        return sharedPreferences.getInt("cols", 3);
     }
 }

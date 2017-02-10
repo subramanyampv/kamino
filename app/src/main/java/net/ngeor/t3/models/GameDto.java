@@ -12,11 +12,11 @@ public class GameDto implements Serializable {
     private GameState state;
     private Player turn;
 
-    GameDto(int rows, int cols, PlayerAssignment playerAssignment) {
+    GameDto(BoardInvariants boardInvariants, PlayerAssignment playerAssignment) {
         this.playerAssignment = playerAssignment;
 
         // initialize and clear tiles
-        boardModel = new BoardModel(rows, cols);
+        boardModel = new BoardModel(boardInvariants);
         state = GameState.NotStarted;
 
         // first player plays next

@@ -12,8 +12,8 @@ public class GameModel extends GameDto {
     // that's why there's the split to GameDto
     private final transient List<GameModelListener> gameModelListeners = new ArrayList<>();
 
-    public GameModel(int rows, int cols, PlayerAssignment playerAssignment) {
-        super(rows, cols, playerAssignment);
+    public GameModel(BoardInvariants boardInvariants, PlayerAssignment playerAssignment) {
+        super(boardInvariants, playerAssignment);
     }
 
     public GameModel(GameDto savedState) {

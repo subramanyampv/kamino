@@ -14,11 +14,15 @@ public class BoardModel implements Serializable {
     private final int cols;
     private final TileState[] tileStates;
 
-    public BoardModel(int rows, int cols) {
+    BoardModel(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.tileStates = new TileState[rows * cols];
         Arrays.fill(tileStates, TileState.EMPTY);
+    }
+
+    public BoardModel(BoardInvariants boardInvariants) {
+        this(boardInvariants.getRows(), boardInvariants.getCols());
     }
 
     public BoardModel(BoardModel model) {

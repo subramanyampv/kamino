@@ -117,11 +117,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     private GameModel createGameModel() {
-        return new GameModel(3, 3, createPlayerAssignment());
+        SettingsAdapter settings = new SettingsAdapter(this);
+        return new GameModel(settings, createPlayerAssignment(settings));
     }
 
-    private PlayerAssignment createPlayerAssignment() {
-        SettingsAdapter settings = new SettingsAdapter(this);
+    private PlayerAssignment createPlayerAssignment(SettingsAdapter settings) {
         return new PlayerAssignment(settings.getFirstPlayer());
     }
 }
