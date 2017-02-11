@@ -1,5 +1,6 @@
 package net.ngeor.t3.ai;
 
+import android.content.Context;
 import net.ngeor.t3.models.*;
 
 import java.util.*;
@@ -8,8 +9,8 @@ public class SmartMove extends AbstractMove {
     private final PlayerSymbol me;
     private final int minimaxDepth;
 
-    public SmartMove(GameDto model, int minimaxDepth) {
-        super(model);
+    public SmartMove(Context context, GameDto model, int minimaxDepth) {
+        super(context, model);
         this.me = model.getTurn();
         this.minimaxDepth = minimaxDepth;
     }
@@ -17,6 +18,9 @@ public class SmartMove extends AbstractMove {
     List<Location> pickMoves(GameDto model) {
         MinimaxNode startingNode = new MinimaxNode(model, null);
         int bestScore = minimax(startingNode, minimaxDepth, true);
+        if (internalIsCancelled()) {
+            return Collections.emptyList();
+        }
 
         // collect matching nodes
         List<MinimaxNode> bestMoves = new ArrayList<>();
@@ -42,6 +46,9 @@ public class SmartMove extends AbstractMove {
     @Override
     protected Location pickMove(GameDto model) {
         List<Location> bestMoves = pickMoves(model);
+        if (bestMoves == null || bestMoves.isEmpty()) {
+            return null;
+        }
 
         // in case multiple moves have the same score, pick a random one
         Random random = new Random();
@@ -52,6 +59,10 @@ public class SmartMove extends AbstractMove {
 
     private int minimax(MinimaxNode node, int depth, boolean maximizingPlayer) {
         int bestValue;
+
+        if (internalIsCancelled()) {
+            return 0;
+        }
 
         if (depth == 0 || node.isTerminal()) {
             bestValue = node.heuristic();

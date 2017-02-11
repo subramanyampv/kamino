@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
                 HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayerSymbol());
                 boardTouchListener.addListener(humanPlayer);
             } else if (playerDefinition instanceof AIPlayerDefinition) {
-                AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayerSymbol());
+                AIPlayer aiPlayer = new AIPlayer(this, model, playerDefinition.getPlayerSymbol());
                 model.addGameModelListener(aiPlayer);
                 aiPlayers.add(aiPlayer);
             } else {
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
     private void destroyPlayers() {
         for (AIPlayer aiPlayer : aiPlayers) {
+            aiPlayer.cancel();
             model.removeGameModelListener(aiPlayer);
         }
 

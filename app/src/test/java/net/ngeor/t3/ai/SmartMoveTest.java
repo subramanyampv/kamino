@@ -1,5 +1,6 @@
 package net.ngeor.t3.ai;
 
+import android.content.Context;
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
@@ -15,12 +16,14 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by ngeor on 2/6/2017.
  */
 public class SmartMoveTest {
     private GameModel model;
+    private Context context;
 
     @Before
     public void before() {
@@ -28,6 +31,7 @@ public class SmartMoveTest {
         PlayerDefinition second = new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.EASY);
         Settings settings = new SettingsImpl(3, 3, first, second);
         model = new GameModel(settings);
+        context = mock(Context.class);
     }
 
     /**
@@ -51,7 +55,8 @@ public class SmartMoveTest {
         model.play(2, 2); // O
         model.play(0, 2); // X
 
-        SmartMove move = new SmartMove(model, 2);
+        SmartMove move = new SmartMove(context, model, 2);
+        move.testMode = true;
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -73,7 +78,8 @@ public class SmartMoveTest {
         // arrange
         model.play(1, 1); // X
 
-        SmartMove move = new SmartMove(model, 2);
+        SmartMove move = new SmartMove(context, model, 2);
+        move.testMode = true;
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -110,7 +116,8 @@ public class SmartMoveTest {
         model.play(0, 0); // X
         model.play(1, 1); // O
         model.play(2, 2); // X
-        SmartMove move = new SmartMove(model, 3);
+        SmartMove move = new SmartMove(context, model, 3);
+        move.testMode = true;
 
         // act
         List<Location> locations = move.pickMoves(model);

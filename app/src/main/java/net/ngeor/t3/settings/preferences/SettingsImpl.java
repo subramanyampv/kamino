@@ -30,7 +30,7 @@ public class SettingsImpl implements Settings {
 
     @Override
     public int getCols() {
-        return 3;
+        return getRows();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.ngeor.t3.players;
 
+import android.content.Context;
 import net.ngeor.t3.ai.AbstractMove;
 import net.ngeor.t3.ai.SmartMove;
 import net.ngeor.t3.models.AILevel;
@@ -10,13 +11,17 @@ import net.ngeor.t3.settings.AIPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 
 public class AIPlayer extends AbstractPlayer implements GameModelListener {
-    public AIPlayer(GameModel model, PlayerSymbol turn) {
+    private final Context context;
+    private AbstractMove move;
+
+    public AIPlayer(Context context, GameModel model, PlayerSymbol turn) {
         super(model, turn);
+        this.context = context;
     }
 
     private AILevel getAILevel() {
         PlayerDefinition playerDefinition = getPlayerDefinition();
-        AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition)playerDefinition;
+        AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition) playerDefinition;
         return aiPlayerDefinition.getAILevel();
     }
 
@@ -28,9 +33,6 @@ public class AIPlayer extends AbstractPlayer implements GameModelListener {
 
         AILevel aiLevel = getAILevel();
 
-        AbstractMove move;
-
-        // TODO have CPU easy play against CPU hard
         final int minimaxDepth;
         switch (aiLevel) {
             case EASY:
@@ -46,7 +48,16 @@ public class AIPlayer extends AbstractPlayer implements GameModelListener {
                 throw new IllegalArgumentException();
         }
 
-        move = new SmartMove(getModel(), minimaxDepth);
+        move = new SmartMove(context, getModel(), minimaxDepth);
         move.execute();
+    }
+
+    public void cancel() {
+        if (move == null) {
+            return;
+        }
+
+        move.cancel(false);
+        move = null;
     }
 }

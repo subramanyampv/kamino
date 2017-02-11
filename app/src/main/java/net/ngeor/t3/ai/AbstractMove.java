@@ -1,13 +1,17 @@
 package net.ngeor.t3.ai;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 import net.ngeor.t3.models.GameDto;
 import net.ngeor.t3.models.Location;
 
 public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
+    private final Context context;
     private final GameDto model;
 
-    public AbstractMove(GameDto model) {
+    public AbstractMove(Context context, GameDto model) {
+        this.context = context;
         this.model = model;
     }
 
@@ -27,12 +31,29 @@ public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
     protected void onPostExecute(Location location) {
         super.onPostExecute(location);
         if (location == null) {
-            throw new IllegalStateException("No valid moves found!");
+            Toast.makeText(context, "Could not find move", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         int row = location.getRow();
         int col = location.getCol();
         model.play(row, col);
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        Toast.makeText(context, "AI cancelled", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Due to the inability to mock the isCancelled method,
+     * we use this workaround.
+     */
+    boolean testMode = false;
+
+    protected boolean internalIsCancelled() {
+        return testMode ? false : isCancelled();
     }
 
     protected abstract Location pickMove(GameDto model);
