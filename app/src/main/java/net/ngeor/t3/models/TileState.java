@@ -20,8 +20,8 @@ public enum TileState {
      */
     O;
 
-    public static TileState fromPlayer(Player player) {
-        switch (player) {
+    public static TileState fromPlayer(PlayerSymbol playerSymbol) {
+        switch (playerSymbol) {
             case X:
                 return TileState.X;
             case O:

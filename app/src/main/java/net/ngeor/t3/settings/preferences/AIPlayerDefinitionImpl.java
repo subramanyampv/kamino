@@ -2,8 +2,7 @@ package net.ngeor.t3.settings.preferences;
 
 import android.content.SharedPreferences;
 import net.ngeor.t3.models.AILevel;
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerType;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.AIPlayerDefinition;
 
 /**
@@ -11,13 +10,8 @@ import net.ngeor.t3.settings.AIPlayerDefinition;
  */
 public class AIPlayerDefinitionImpl extends PlayerDefinitionImpl implements AIPlayerDefinition {
     private final static String KEY_AI_LEVEL = "pref_ai_level";
-    public AIPlayerDefinitionImpl(SharedPreferences sharedPreferences, int index, Player player) {
-        super(sharedPreferences, index, player);
-    }
-
-    @Override
-    public PlayerType getPlayerType() {
-        return PlayerType.CPU;
+    public AIPlayerDefinitionImpl(SharedPreferences sharedPreferences, int index, PlayerSymbol playerSymbol) {
+        super(sharedPreferences, index, playerSymbol);
     }
 
     @Override

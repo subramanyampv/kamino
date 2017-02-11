@@ -1,7 +1,6 @@
 package net.ngeor.t3;
 
 import android.os.Bundle;
-import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.GameDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,74 +44,5 @@ public class StateManagerTest {
 
         // assert
         verify(bundle).putSerializable("game", result);
-    }
-
-    @Test
-    public void getAILevelShouldGetEasyString() {
-        // arrange
-        when(bundle.getString("aiLevel")).thenReturn(AILevel.EASY.toString());
-
-        // act
-        AILevel actual = stateManager.getAILevel();
-
-        // assert
-        assertEquals(AILevel.EASY, actual);
-    }
-
-    @Test
-    public void getAILevelShouldGetHardString() {
-        // arrange
-        when(bundle.getString("aiLevel")).thenReturn(AILevel.HARD.toString());
-
-        // act
-        AILevel actual = stateManager.getAILevel();
-
-        // assert
-        assertEquals(AILevel.HARD, actual);
-    }
-
-    @Test
-    public void getAILevelShouldReturnEasyOnNullString() {
-        // arrange
-        when(bundle.getString("aiLevel")).thenReturn(null);
-
-        // act
-        AILevel actual = stateManager.getAILevel();
-
-        // assert
-        assertEquals(AILevel.EASY, actual);
-    }
-
-    @Test
-    public void getAILevelShouldReturnEasyOnEmptyString() {
-        // arrange
-        when(bundle.getString("aiLevel")).thenReturn("");
-
-        // act
-        AILevel actual = stateManager.getAILevel();
-
-        // assert
-        assertEquals(AILevel.EASY, actual);
-    }
-
-    @Test
-    public void getAILevelShouldReturnEasyOnInvalidString() {
-        // arrange
-        when(bundle.getString("aiLevel")).thenReturn("something strange");
-
-        // act
-        AILevel actual = stateManager.getAILevel();
-
-        // assert
-        assertEquals(AILevel.EASY, actual);
-    }
-
-    @Test
-    public void setAILevelShouldPutString() {
-        // act
-        stateManager.setAILevel(AILevel.HARD);
-
-        // assert
-        verify(bundle).putString("aiLevel", AILevel.HARD.toString());
     }
 }

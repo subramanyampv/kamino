@@ -45,8 +45,16 @@ public class BoardModel implements Serializable {
         return tileStates[row * getCols() + col];
     }
 
+    public TileState getTileState(Location location) {
+        return getTileState(location.getRow(), location.getCol());
+    }
+
     void setTileState(int row, int col, TileState tileState) {
         tileStates[row * getCols() + col] = tileState;
+    }
+
+    public PlayerSymbol getPlayerSymbol(Location location) {
+        return PlayerSymbol.fromTileState(getTileState(location));
     }
 
     public List<Location> allLocations() {
@@ -58,10 +66,6 @@ public class BoardModel implements Serializable {
         }
 
         return result;
-    }
-
-    public TileState getTileState(Location location) {
-        return getTileState(location.getRow(), location.getCol());
     }
 
     public List<Location> emptyLocations() {

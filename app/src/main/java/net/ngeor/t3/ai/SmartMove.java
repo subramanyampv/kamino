@@ -5,16 +5,16 @@ import net.ngeor.t3.models.*;
 import java.util.*;
 
 public class SmartMove extends AbstractMove {
-    private final Player me;
+    private final PlayerSymbol me;
     private final int minimaxDepth;
 
-    public SmartMove(GameModel model, int minimaxDepth) {
+    public SmartMove(GameDto model, int minimaxDepth) {
         super(model);
         this.me = model.getTurn();
         this.minimaxDepth = minimaxDepth;
     }
 
-    List<Location> pickMoves(GameModel model) {
+    List<Location> pickMoves(GameDto model) {
         MinimaxNode startingNode = new MinimaxNode(model, null);
         int bestScore = minimax(startingNode, minimaxDepth, true);
 
@@ -40,7 +40,7 @@ public class SmartMove extends AbstractMove {
     }
 
     @Override
-    protected Location pickMove(GameModel model) {
+    protected Location pickMove(GameDto model) {
         List<Location> bestMoves = pickMoves(model);
 
         // in case multiple moves have the same score, pick a random one
@@ -130,9 +130,11 @@ public class SmartMove extends AbstractMove {
             int cpuCount = 0;
 
             for (Location location : locations) {
-                if (getBoardModel().getTileState(location) == TileState.fromPlayer(me)) {
+                PlayerSymbol playerAtLocation = getBoardModel().getPlayerSymbol(location);
+
+                if (playerAtLocation == me) {
                     cpuCount++;
-                } else if (getBoardModel().getTileState(location) == TileState.fromPlayer(me.opponent())) {
+                } else if (playerAtLocation == me.opponent()) {
                     humanCount++;
                 }
             }
@@ -157,9 +159,10 @@ public class SmartMove extends AbstractMove {
                     frequency = 0; // should not happen
                 }
 
-                if (getBoardModel().getTileState(location) == TileState.fromPlayer(me)) {
+                PlayerSymbol playerAtLocation = getBoardModel().getPlayerSymbol(location);
+                if (playerAtLocation == me) {
                     result = result + frequency;
-                } else if (getBoardModel().getTileState(location) == TileState.fromPlayer(me.opponent())) {
+                } else if (playerAtLocation == me.opponent()) {
                     result = result - frequency;
                 }
             }

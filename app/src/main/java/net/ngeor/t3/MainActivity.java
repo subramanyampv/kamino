@@ -7,9 +7,13 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-import net.ngeor.t3.ai.AIPlayer;
-import net.ngeor.t3.models.*;
+import net.ngeor.t3.models.GameDto;
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameState;
+import net.ngeor.t3.players.AIPlayer;
+import net.ngeor.t3.players.HumanPlayer;
 import net.ngeor.t3.settings.AIPlayerDefinition;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
 
@@ -42,24 +46,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         Settings settings = model.getSettings();
 
         getBoardView().setModel(model.getBoardModel());
-        GameListener gameListener = new GameListener(this, settings);
+        GameListener gameListener = new GameListener(this, model);
         model.addGameModelListener(gameListener);
 
         for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
-            switch (playerDefinition.getPlayerType()) {
-                case HUMAN:
-                    // create touch listener
-                    HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayer());
-                    getBoardView().setOnTouchListener(humanPlayer);
-                    break;
-                case CPU:
-                    AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition)playerDefinition;
-                    AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayer());
-                    model.addGameModelListener(aiPlayer);
-                    aiPlayer.setAILevel(aiPlayerDefinition.getAILevel());
-                    break;
-                default:
-                    throw new IllegalArgumentException();
+            if (playerDefinition instanceof HumanPlayerDefinition) {
+                // create touch listener
+                HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayerSymbol());
+                getBoardView().setOnTouchListener(humanPlayer);
+            } else if (playerDefinition instanceof AIPlayerDefinition) {
+                AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayerSymbol());
+                model.addGameModelListener(aiPlayer);
+            } else {
+                throw new IllegalArgumentException();
             }
         }
 
@@ -68,13 +67,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         } else {
             // when resuming after device orientation changes,
             // the text needs to be refreshed
-            gameListener.updateHeaderText(model);
+            gameListener.updateHeaderText();
         }
 
         findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 model.restart(createSettings());
+                getBoardView().setModel(model.getBoardModel());
+                model.start();
             }
         });
 

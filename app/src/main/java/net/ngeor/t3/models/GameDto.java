@@ -12,7 +12,7 @@ public class GameDto implements Serializable {
     private Settings settings;
     private BoardModel boardModel;
     private GameState state;
-    private Player turn;
+    private PlayerSymbol turn;
 
     public GameDto(Settings settings) {
         restart(settings);
@@ -31,7 +31,7 @@ public class GameDto implements Serializable {
         this.settings = settings;
         boardModel = new BoardModel(settings);
         state = GameState.NotStarted;
-        turn = settings.getPlayerDefinitions().get(0).getPlayer();
+        turn = settings.getPlayerDefinitions().get(0).getPlayerSymbol();
     }
 
     public Settings getSettings() {
@@ -65,7 +65,7 @@ public class GameDto implements Serializable {
         }
     }
 
-    public Player getTurn() {
+    public PlayerSymbol getTurn() {
         return turn;
     }
 }

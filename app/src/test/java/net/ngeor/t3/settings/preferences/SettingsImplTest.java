@@ -2,8 +2,8 @@ package net.ngeor.t3.settings.preferences;
 
 import android.content.SharedPreferences;
 import net.ngeor.t3.models.AILevel;
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerType;
+import net.ngeor.t3.models.PlayerSymbol;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,39 +40,44 @@ public class SettingsImplTest {
 
     @Test
     public void getPlayerDefinitions() {
+        // act
         List<PlayerDefinition> playerDefinitions = settings.getPlayerDefinitions();
+
+        // assert list
         assertNotNull(playerDefinitions);
         assertEquals(2, playerDefinitions.size());
-        PlayerDefinition first = playerDefinitions.get(0);
-        assertEquals(Player.X, first.getPlayer());
-        assertEquals(PlayerType.HUMAN, first.getPlayerType());
+
+        // assert first player
+        HumanPlayerDefinition first = (HumanPlayerDefinition)playerDefinitions.get(0);
+        assertEquals(PlayerSymbol.X, first.getPlayerSymbol());
+
+        // assert second player
         AIPlayerDefinitionImpl second = (AIPlayerDefinitionImpl)playerDefinitions.get(1);
-        assertEquals(Player.O, second.getPlayer());
-        assertEquals(PlayerType.CPU, second.getPlayerType());
+        assertEquals(PlayerSymbol.O, second.getPlayerSymbol());
         assertEquals(AILevel.EASY, second.getAILevel());
     }
 
     @Test
     public void whenFirstPlayerSettingIsNull() {
         when(sharedPreferences.getString("pref_first_player", "")).thenReturn(null);
-        assertEquals(Player.X, settings.getPlayerDefinitions().get(0).getPlayer());
+        assertEquals(PlayerSymbol.X, settings.getPlayerDefinitions().get(0).getPlayerSymbol());
     }
 
     @Test
     public void whenFirstPlayerSettingIsEmpty() {
         when(sharedPreferences.getString("pref_first_player", "")).thenReturn("");
-        assertEquals(Player.X, settings.getPlayerDefinitions().get(0).getPlayer());
+        assertEquals(PlayerSymbol.X, settings.getPlayerDefinitions().get(0).getPlayerSymbol());
     }
 
     @Test
     public void whenFirstPlayerSettingIsInvalid() {
         when(sharedPreferences.getString("pref_first_player", "")).thenReturn("invalid string");
-        assertEquals(Player.X, settings.getPlayerDefinitions().get(0).getPlayer());
+        assertEquals(PlayerSymbol.X, settings.getPlayerDefinitions().get(0).getPlayerSymbol());
     }
 
     @Test
     public void whenFirstPlayerSettingIsO() {
-        when(sharedPreferences.getString("pref_first_player", "")).thenReturn(Player.O.toString());
-        assertEquals(Player.O, settings.getPlayerDefinitions().get(0).getPlayer());
+        when(sharedPreferences.getString("pref_first_player", "")).thenReturn(PlayerSymbol.O.toString());
+        assertEquals(PlayerSymbol.O, settings.getPlayerDefinitions().get(0).getPlayerSymbol());
     }
 }

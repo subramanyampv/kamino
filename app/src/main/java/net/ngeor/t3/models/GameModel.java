@@ -50,7 +50,7 @@ public class GameModel extends GameDto {
 
     private void fireStateChanged() {
         for (GameModelListener gameModelListener : gameModelListeners) {
-            gameModelListener.stateChanged(this);
+            gameModelListener.stateChanged();
         }
     }
 }

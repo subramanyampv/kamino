@@ -1,13 +1,13 @@
 package net.ngeor.t3.ai;
 
 import android.os.AsyncTask;
-import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameDto;
 import net.ngeor.t3.models.Location;
 
 public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
-    private final GameModel model;
+    private final GameDto model;
 
-    public AbstractMove(GameModel model) {
+    public AbstractMove(GameDto model) {
         this.model = model;
     }
 
@@ -27,8 +27,7 @@ public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
     protected void onPostExecute(Location location) {
         super.onPostExecute(location);
         if (location == null) {
-            // TODO: fail
-            return;
+            throw new IllegalStateException("No valid moves found!");
         }
 
         int row = location.getRow();
@@ -36,5 +35,5 @@ public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
         model.play(row, col);
     }
 
-    protected abstract Location pickMove(GameModel model);
+    protected abstract Location pickMove(GameDto model);
 }

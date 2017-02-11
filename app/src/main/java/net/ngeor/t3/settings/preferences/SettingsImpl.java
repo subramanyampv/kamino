@@ -1,7 +1,7 @@
 package net.ngeor.t3.settings.preferences;
 
 import android.content.SharedPreferences;
-import net.ngeor.t3.models.Player;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
 
@@ -33,27 +33,27 @@ public class SettingsImpl implements Settings {
     @Override
     public List<PlayerDefinition> getPlayerDefinitions() {
         PlayerDefinition first, second;
-        if (getFirstPlayer() == Player.X) {
-            first = new PlayerDefinitionImpl(sharedPreferences, 0, Player.X);
-            second = new AIPlayerDefinitionImpl(sharedPreferences, 1, Player.O);
+        if (getFirstPlayer() == PlayerSymbol.X) {
+            first = new HumanPlayerDefinitionImpl(sharedPreferences, 0, PlayerSymbol.X);
+            second = new AIPlayerDefinitionImpl(sharedPreferences, 1, PlayerSymbol.O);
         } else {
-            first = new AIPlayerDefinitionImpl(sharedPreferences, 0, Player.O);
-            second = new PlayerDefinitionImpl(sharedPreferences, 1, Player.X);
+            first = new AIPlayerDefinitionImpl(sharedPreferences, 0, PlayerSymbol.O);
+            second = new HumanPlayerDefinitionImpl(sharedPreferences, 1, PlayerSymbol.X);
         }
 
         return Arrays.asList(first, second);
     }
 
-    private Player getFirstPlayer() {
+    private PlayerSymbol getFirstPlayer() {
         String value = sharedPreferences.getString(KEY_FIRST_PLAYER, "");
-        Player player = null;
+        PlayerSymbol playerSymbol = null;
         if (value != null && !value.isEmpty()) {
             try {
-                player = Player.valueOf(value);
+                playerSymbol = PlayerSymbol.valueOf(value);
             } catch (IllegalArgumentException ignored) {
             }
         }
 
-        return player == null ? Player.X : player;
+        return playerSymbol == null ? PlayerSymbol.X : playerSymbol;
     }
 }

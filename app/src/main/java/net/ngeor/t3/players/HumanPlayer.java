@@ -1,10 +1,10 @@
-package net.ngeor.t3;
+package net.ngeor.t3.players;
 
 import android.view.MotionEvent;
 import android.view.View;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.GameState;
-import net.ngeor.t3.models.Player;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.models.TileState;
 
 /**
@@ -12,7 +12,7 @@ import net.ngeor.t3.models.TileState;
  * Created by ngeor on 2/10/2017.
  */
 public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener {
-    public HumanPlayer(GameModel model, Player turn) {
+    public HumanPlayer(GameModel model, PlayerSymbol turn) {
         super(model, turn);
     }
 

@@ -10,11 +10,11 @@ import static org.junit.Assert.assertEquals;
 public class TileStateTest {
     @Test
     public void shouldCreateFromPlayerX() {
-        assertEquals(TileState.X, TileState.fromPlayer(Player.X));
+        assertEquals(TileState.X, TileState.fromPlayer(PlayerSymbol.X));
     }
 
     @Test
     public void shouldCreateFromPlayerO() {
-        assertEquals(TileState.O, TileState.fromPlayer(Player.O));
+        assertEquals(TileState.O, TileState.fromPlayer(PlayerSymbol.O));
     }
 }

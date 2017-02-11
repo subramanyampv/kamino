@@ -84,7 +84,7 @@ public class BoardModelTest {
     }
 
     @Test
-    public void isBoardFullOnFullBoardShouldBeTrue() {
+    public void isBoardFull_OnFullBoard_ShouldBeTrue() {
         BoardModel model = new BoardModel(2, 2);
         model.setTileState(0, 0, TileState.O);
         model.setTileState(0, 1, TileState.X);
@@ -94,7 +94,7 @@ public class BoardModelTest {
     }
 
     @Test
-    public void isBoardFullOnBoardWithSomeEmptyLocationsShouldBeFalse() {
+    public void isBoardFull_OnBoardWithSomeEmptyLocations_ShouldBeFalse() {
         BoardModel model = new BoardModel(2, 2);
         model.setTileState(0, 0, TileState.O);
         model.setTileState(1, 0, TileState.O);

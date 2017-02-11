@@ -1,7 +1,6 @@
 package net.ngeor.t3.settings.serializable;
 
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerType;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.PlayerDefinition;
 
 import java.io.Serializable;
@@ -9,27 +8,23 @@ import java.io.Serializable;
 /**
  * Created by ngeor on 2/11/2017.
  */
-public class PlayerDefinitionImpl implements PlayerDefinition, Serializable {
-    private final Player player;
-    private final PlayerType playerType;
+public abstract class PlayerDefinitionImpl implements PlayerDefinition, Serializable {
+    private final PlayerSymbol playerSymbol;
 
-    public PlayerDefinitionImpl(Player player, PlayerType playerType) {
-        this.player = player;
-        this.playerType = playerType;
+    public PlayerDefinitionImpl(PlayerSymbol playerSymbol) {
+        if (playerSymbol == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.playerSymbol = playerSymbol;
     }
 
     public PlayerDefinitionImpl(PlayerDefinition other) {
-        this.player = other.getPlayer();
-        this.playerType = other.getPlayerType();
+        this(other.getPlayerSymbol());
     }
 
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
-
-    @Override
-    public PlayerType getPlayerType() {
-        return playerType;
+    public PlayerSymbol getPlayerSymbol() {
+        return playerSymbol;
     }
 }
+

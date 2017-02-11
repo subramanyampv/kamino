@@ -1,10 +1,13 @@
 package net.ngeor.t3.ai;
 
+import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerAssignment;
+import net.ngeor.t3.models.PlayerSymbol;
+import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
+import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
+import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
 import net.ngeor.t3.settings.serializable.SettingsImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +24,9 @@ public class SmartMoveTest {
 
     @Before
     public void before() {
-        Settings settings = new SettingsImpl();
+        PlayerDefinition first = new HumanPlayerDefinitionImpl(PlayerSymbol.X);
+        PlayerDefinition second = new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.EASY);
+        Settings settings = new SettingsImpl(3, 3, first, second);
         model = new GameModel(settings);
     }
 
@@ -75,7 +80,7 @@ public class SmartMoveTest {
 
         // assert
         Location[] actual = locations.toArray(new Location[locations.size()]);
-        Location[] expected = new Location[] {
+        Location[] expected = {
                 new Location(0, 0),
                 new Location(0, 2),
                 new Location(2, 0),
@@ -112,7 +117,7 @@ public class SmartMoveTest {
 
         // assert
         Location[] actual = locations.toArray(new Location[locations.size()]);
-        Location[] expected = new Location[] {
+        Location[] expected = {
                 new Location(0, 1),
                 new Location(1, 0),
                 new Location(1, 2),

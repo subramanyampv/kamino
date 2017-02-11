@@ -1,28 +1,27 @@
 package net.ngeor.t3;
 
-import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameDto;
 import net.ngeor.t3.models.GameModelListener;
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerType;
+import net.ngeor.t3.models.PlayerSymbol;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
-import net.ngeor.t3.settings.Settings;
 
 public class GameListener implements GameModelListener {
     private final MainActivityView view;
-    private final Settings settings;
+    private final GameDto model;
 
-    public GameListener(MainActivityView view, Settings settings) {
+    public GameListener(MainActivityView view, GameDto model) {
         this.view = view;
-        this.settings = settings;
+        this.model = model;
     }
 
     @Override
-    public void stateChanged(GameModel model) {
-        updateHeaderText(model);
+    public void stateChanged() {
+        updateHeaderText();
         view.invalidateBoardView();
     }
 
-    public void updateHeaderText(GameModel model) {
+    public void updateHeaderText() {
         int resourceId;
 
         switch (model.getState()) {
@@ -50,11 +49,11 @@ public class GameListener implements GameModelListener {
         view.setHeaderText(resourceId);
     }
 
-    private boolean isHumanTurn(GameModel model) {
-        Player turn = model.getTurn();
-        for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
-            if (playerDefinition.getPlayer() == turn) {
-                return playerDefinition.getPlayerType() == PlayerType.HUMAN;
+    private boolean isHumanTurn(GameDto model) {
+        PlayerSymbol turn = model.getTurn();
+        for (PlayerDefinition playerDefinition : model.getSettings().getPlayerDefinitions()) {
+            if (playerDefinition.getPlayerSymbol() == turn) {
+                return playerDefinition instanceof HumanPlayerDefinition;
             }
         }
 

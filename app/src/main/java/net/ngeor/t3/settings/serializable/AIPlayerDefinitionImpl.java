@@ -1,8 +1,7 @@
 package net.ngeor.t3.settings.serializable;
 
 import net.ngeor.t3.models.AILevel;
-import net.ngeor.t3.models.Player;
-import net.ngeor.t3.models.PlayerType;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.AIPlayerDefinition;
 
 import java.io.Serializable;
@@ -12,18 +11,34 @@ import java.io.Serializable;
  */
 public class AIPlayerDefinitionImpl extends PlayerDefinitionImpl implements AIPlayerDefinition, Serializable {
     private final AILevel aiLevel;
-    public AIPlayerDefinitionImpl(Player player, AILevel aiLevel) {
-        super(player, PlayerType.CPU);
-        this.aiLevel = aiLevel;
+    public AIPlayerDefinitionImpl(PlayerSymbol playerSymbol, AILevel aiLevel) {
+        super(playerSymbol);
+        this.aiLevel = validateAILevel(aiLevel);
     }
 
     public AIPlayerDefinitionImpl(AIPlayerDefinition other) {
         super(other);
-        this.aiLevel = other.getAILevel();
+        this.aiLevel = validateAILevel(other.getAILevel());
     }
 
     @Override
     public AILevel getAILevel() {
+        return aiLevel;
+    }
+
+    @Override
+    public String toString() {
+        return "AIPlayerDefinition{ " +
+                getPlayerSymbol() +
+                " aiLevel=" + aiLevel +
+                '}';
+    }
+
+    private static AILevel validateAILevel(AILevel aiLevel) {
+        if (aiLevel == null) {
+            throw new IllegalArgumentException();
+        }
+
         return aiLevel;
     }
 }
