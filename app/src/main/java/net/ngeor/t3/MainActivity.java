@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.models.GameDto;
@@ -17,7 +18,12 @@ import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements MainActivityView {
+    private final CompositeTouchListener boardTouchListener = new CompositeTouchListener();
+
     // model
     private GameModel model;
 
@@ -27,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
 
         // load UI
         setContentView(R.layout.activity_main);
+        getBoardView().setOnTouchListener(boardTouchListener);
 
         // set default preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -49,18 +56,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         GameListener gameListener = new GameListener(this, model);
         model.addGameModelListener(gameListener);
 
-        for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
-            if (playerDefinition instanceof HumanPlayerDefinition) {
-                // create touch listener
-                HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayerSymbol());
-                getBoardView().setOnTouchListener(humanPlayer);
-            } else if (playerDefinition instanceof AIPlayerDefinition) {
-                AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayerSymbol());
-                model.addGameModelListener(aiPlayer);
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }
+        createPlayers();
 
         if (model.getState() == GameState.NotStarted) {
             model.start();
@@ -75,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             public void onClick(View v) {
                 model.restart(createSettings());
                 getBoardView().setModel(model.getBoardModel());
+                createPlayers();
                 model.start();
             }
         });
@@ -88,6 +85,42 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         });
     }
 
+    private final List<AIPlayer> aiPlayers = new ArrayList<>();
+    private final List<HumanPlayer> humanPlayers = new ArrayList<>();
+
+    private void createPlayers() {
+        destroyPlayers();
+
+        Settings settings = model.getSettings();
+
+        for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
+            if (playerDefinition instanceof HumanPlayerDefinition) {
+                // create touch listener
+                HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayerSymbol());
+                boardTouchListener.addListener(humanPlayer);
+            } else if (playerDefinition instanceof AIPlayerDefinition) {
+                AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayerSymbol());
+                model.addGameModelListener(aiPlayer);
+                aiPlayers.add(aiPlayer);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    private void destroyPlayers() {
+        for (AIPlayer aiPlayer : aiPlayers) {
+            model.removeGameModelListener(aiPlayer);
+        }
+
+        aiPlayers.clear();
+
+        for (HumanPlayer humanPlayer : humanPlayers) {
+            boardTouchListener.removeListener(humanPlayer);
+        }
+
+        humanPlayers.clear();
+    }
 
     @Override
     protected void onResume() {
@@ -137,3 +170,4 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         return serializableSettings;
     }
 }
+

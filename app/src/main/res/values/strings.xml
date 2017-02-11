@@ -7,8 +7,20 @@
     <string name="state_game_over_human_wins">Game over! You win!</string>
     <string name="state_game_over_cpu_wins">Game over! You lost!</string>
     <string name="restart">Restart</string>
-    <string name="pref_ai_level_title">Difficulty</string>
-    <string name="pref_ai_level_default">EASY</string>
-    <string name="pref_first_player_title">Who plays first?</string>
-    <string name="pref_first_player_default">X</string>
+
+    <string name="pref_first_player_title">First player settings</string>
+    <string name="pref_first_player_symbol_title">Symbol of first player</string>
+    <string name="pref_first_player_symbol_default">X</string>
+    <string name="pref_first_player_type_title">Type of first player</string>
+    <string name="pref_first_player_type_default">HUMAN</string>
+    <string name="pref_first_player_ai_level_title">Difficulty</string>
+    <string name="pref_first_player_ai_level_default">EASY</string>
+
+    <string name="pref_second_player_title">Second player settings</string>
+    <string name="pref_second_player_symbol_title">Symbol of second player</string>
+    <string name="pref_second_player_symbol_default">O</string>
+    <string name="pref_second_player_type_title">Type of second player</string>
+    <string name="pref_second_player_type_default">CPU</string>
+    <string name="pref_second_player_ai_level_title">Difficulty</string>
+    <string name="pref_second_player_ai_level_default">EASY</string>
 </resources>

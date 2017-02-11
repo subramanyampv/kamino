@@ -10,12 +10,16 @@
         <item>MEDIUM</item>
         <item>HARD</item>
     </string-array>
-    <string-array name="pref_first_player_entries">
-        <item>X plays first</item>
-        <item>O plays first</item>
-    </string-array>
-    <string-array name="pref_first_player_values">
+    <string-array name="pref_player_symbols">
         <item>X</item>
         <item>O</item>
+    </string-array>
+    <string-array name="pref_player_types">
+        <item>Human</item>
+        <item>CPU</item>
+    </string-array>
+    <string-array name="pref_player_types_values">
+        <item>HUMAN</item>
+        <item>CPU</item>
     </string-array>
 </resources>

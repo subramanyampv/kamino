@@ -1,9 +1,12 @@
 package net.ngeor.t3.settings.preferences;
 
 import android.content.SharedPreferences;
+import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
+import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
+import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,28 +35,36 @@ public class SettingsImpl implements Settings {
 
     @Override
     public List<PlayerDefinition> getPlayerDefinitions() {
-        PlayerDefinition first, second;
-        if (getFirstPlayer() == PlayerSymbol.X) {
-            first = new HumanPlayerDefinitionImpl(sharedPreferences, 0, PlayerSymbol.X);
-            second = new AIPlayerDefinitionImpl(sharedPreferences, 1, PlayerSymbol.O);
-        } else {
-            first = new AIPlayerDefinitionImpl(sharedPreferences, 0, PlayerSymbol.O);
-            second = new HumanPlayerDefinitionImpl(sharedPreferences, 1, PlayerSymbol.X);
-        }
+        String firstPlayerSymbol = sharedPreferences.getString("pref_key_first_player_symbol", "X");
+        String firstPlayerType = sharedPreferences.getString("pref_key_first_player_type", "HUMAN");
+        String firstPlayerAILevel = sharedPreferences.getString("pref_key_first_player_ai_level", "EASY");
 
-        return Arrays.asList(first, second);
+        String secondPlayerSymbol = sharedPreferences.getString("pref_key_second_player_symbol", "O");
+        String secondPlayerType = sharedPreferences.getString("pref_key_second_player_type", "CPU");
+        String secondPlayerAILevel = sharedPreferences.getString("pref_key_second_player_ai_level", "EASY");
+
+        return Arrays.asList(
+                createPlayerDefinition(firstPlayerSymbol, firstPlayerType, firstPlayerAILevel),
+                createPlayerDefinition(secondPlayerSymbol, secondPlayerType, secondPlayerAILevel)
+        );
     }
 
-    private PlayerSymbol getFirstPlayer() {
-        String value = sharedPreferences.getString(KEY_FIRST_PLAYER, "");
-        PlayerSymbol playerSymbol = null;
-        if (value != null && !value.isEmpty()) {
-            try {
-                playerSymbol = PlayerSymbol.valueOf(value);
-            } catch (IllegalArgumentException ignored) {
-            }
+    private PlayerDefinition createPlayerDefinition(String symbol, String type, String aiLevel) {
+        switch (type) {
+            case "HUMAN":
+                return createHumanPlayerDefinition(symbol);
+            case "CPU":
+                return createAIPlayerDefinition(symbol, aiLevel);
+            default:
+                throw new IllegalArgumentException("Unsupported type " + type);
         }
+    }
 
-        return playerSymbol == null ? PlayerSymbol.X : playerSymbol;
+    private PlayerDefinition createHumanPlayerDefinition(String symbol) {
+        return new HumanPlayerDefinitionImpl(PlayerSymbol.valueOf(symbol));
+    }
+
+    private PlayerDefinition createAIPlayerDefinition(String symbol, String aiLevel) {
+        return new AIPlayerDefinitionImpl(PlayerSymbol.valueOf(symbol), AILevel.valueOf(aiLevel));
     }
 }

@@ -34,6 +34,25 @@ public class AIPlayerDefinitionImpl extends PlayerDefinitionImpl implements AIPl
                 '}';
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other == null) {
+            return false;
+        }
+
+        if (!(other instanceof AIPlayerDefinition)) {
+            return false;
+        }
+
+        AIPlayerDefinition that = (AIPlayerDefinition)other;
+        return this.getPlayerSymbol() == that.getPlayerSymbol() && this.getAILevel() == that.getAILevel();
+    }
+
+    @Override
+    public int hashCode() {
+        return getPlayerSymbol().hashCode() ^ aiLevel.hashCode();
+    }
+
     private static AILevel validateAILevel(AILevel aiLevel) {
         if (aiLevel == null) {
             throw new IllegalArgumentException();
