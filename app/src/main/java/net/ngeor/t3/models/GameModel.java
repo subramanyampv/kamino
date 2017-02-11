@@ -1,5 +1,7 @@
 package net.ngeor.t3.models;
 
+import net.ngeor.t3.settings.Settings;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +14,8 @@ public class GameModel extends GameDto {
     // that's why there's the split to GameDto
     private final transient List<GameModelListener> gameModelListeners = new ArrayList<>();
 
-    public GameModel(BoardInvariants boardInvariants, PlayerAssignment playerAssignment) {
-        super(boardInvariants, playerAssignment);
+    public GameModel(Settings settings) {
+        super(settings);
     }
 
     public GameModel(GameDto savedState) {

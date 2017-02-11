@@ -1,6 +1,7 @@
 package net.ngeor.t3;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,13 +9,13 @@ import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.ai.AIPlayer;
 import net.ngeor.t3.models.*;
+import net.ngeor.t3.settings.AIPlayerDefinition;
+import net.ngeor.t3.settings.PlayerDefinition;
+import net.ngeor.t3.settings.Settings;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
     // model
     private GameModel model;
-
-    private HumanPlayer humanPlayer;
-    private AIPlayer aiPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +36,45 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             model = createGameModel();
         }
 
-        setModel(model);
+        // use the same settings the model has
+        // if the model had been restored from a saved state,
+        // it will be the same settings
+        Settings settings = model.getSettings();
 
-        // create touch listener
-        humanPlayer = new HumanPlayer(model, Player.X);
-        getBoardView().setOnTouchListener(humanPlayer);
+        getBoardView().setModel(model.getBoardModel());
+        GameListener gameListener = new GameListener(this, settings);
+        model.addGameModelListener(gameListener);
 
-        // set AILevel from settings
-        SettingsAdapter settingsAdapter = new SettingsAdapter(this);
-        aiPlayer = new AIPlayer(model, Player.O);
-        aiPlayer.setAILevel(settingsAdapter.getAILevel());
+        for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
+            switch (playerDefinition.getPlayerType()) {
+                case HUMAN:
+                    // create touch listener
+                    HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayer());
+                    getBoardView().setOnTouchListener(humanPlayer);
+                    break;
+                case CPU:
+                    AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition)playerDefinition;
+                    AIPlayer aiPlayer = new AIPlayer(model, playerDefinition.getPlayer());
+                    model.addGameModelListener(aiPlayer);
+                    aiPlayer.setAILevel(aiPlayerDefinition.getAILevel());
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
+
+        if (model.getState() == GameState.NotStarted) {
+            model.start();
+        } else {
+            // when resuming after device orientation changes,
+            // the text needs to be refreshed
+            gameListener.updateHeaderText(model);
+        }
 
         findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final GameModel newModel = createGameModel();
-                setModel(newModel);
+                model.restart(createSettings());
             }
         });
 
@@ -67,12 +91,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     @Override
     protected void onResume() {
         super.onResume();
-        SettingsAdapter settings = new SettingsAdapter(this);
-        if (aiPlayer != null && aiPlayer.getAILevel() != settings.getAILevel()) {
-            // settings changed
-            // TODO: do not change AI level mid-game
-            aiPlayer.setAILevel(settings.getAILevel());
-        }
+
+        // TODO: if settings changed, do something
     }
 
     @Override
@@ -100,28 +120,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         return (TextView) findViewById(R.id.header);
     }
 
-    private void setModel(GameModel model) {
-        this.model = model;
-        getBoardView().setModel(model.getBoardModel());
-        GameListener gameListener = new GameListener(this);
-        model.addGameModelListener(gameListener);
-        model.addGameModelListener(aiPlayer);
-
-        if (model.getState() == GameState.NotStarted) {
-            model.start();
-        } else {
-            // when resuming after device orientation changes,
-            // the text needs to be refreshed
-            gameListener.updateHeaderText(model);
-        }
-    }
-
     private GameModel createGameModel() {
-        SettingsAdapter settings = new SettingsAdapter(this);
-        return new GameModel(settings, createPlayerAssignment(settings));
+        Settings settings = createSettings();
+        return new GameModel(settings);
     }
 
-    private PlayerAssignment createPlayerAssignment(SettingsAdapter settings) {
-        return new PlayerAssignment(settings.getFirstPlayer());
+    private SharedPreferences createSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
+    private Settings createSettings() {
+        SharedPreferences sharedPreferences = createSharedPreferences();
+        net.ngeor.t3.settings.preferences.SettingsImpl preferenceSettings = new net.ngeor.t3.settings.preferences.SettingsImpl(sharedPreferences);
+        net.ngeor.t3.settings.serializable.SettingsImpl serializableSettings = new net.ngeor.t3.settings.serializable.SettingsImpl(preferenceSettings);
+        return serializableSettings;
     }
 }

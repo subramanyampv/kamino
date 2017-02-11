@@ -1,5 +1,7 @@
 package net.ngeor.t3.models;
 
+import net.ngeor.t3.settings.Settings;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,15 +16,15 @@ public class BoardModel implements Serializable {
     private final int cols;
     private final TileState[] tileStates;
 
-    BoardModel(int rows, int cols) {
+    public BoardModel(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.tileStates = new TileState[rows * cols];
         Arrays.fill(tileStates, TileState.EMPTY);
     }
 
-    public BoardModel(BoardInvariants boardInvariants) {
-        this(boardInvariants.getRows(), boardInvariants.getCols());
+    public BoardModel(Settings settings) {
+        this(settings.getRows(), settings.getCols());
     }
 
     public BoardModel(BoardModel model) {

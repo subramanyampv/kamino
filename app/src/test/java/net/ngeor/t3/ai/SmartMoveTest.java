@@ -4,6 +4,9 @@ import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.Location;
 import net.ngeor.t3.models.Player;
 import net.ngeor.t3.models.PlayerAssignment;
+import net.ngeor.t3.settings.Settings;
+import net.ngeor.t3.settings.serializable.SettingsImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,6 +17,14 @@ import static org.junit.Assert.assertArrayEquals;
  * Created by ngeor on 2/6/2017.
  */
 public class SmartMoveTest {
+    private GameModel model;
+
+    @Before
+    public void before() {
+        Settings settings = new SettingsImpl();
+        model = new GameModel(settings);
+    }
+
     /**
      * This test proves the CPU will block this scenario.
      * Next move is CPU, CPU plays with O:
@@ -27,7 +38,6 @@ public class SmartMoveTest {
     @Test
     public void shouldPreventLosing() {
         // arrange
-        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(0, 0); // X
         model.play(1, 0); // O
         model.play(1, 1); // X
@@ -56,7 +66,6 @@ public class SmartMoveTest {
     @Test
     public void shouldDefendCorner() {
         // arrange
-        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(1, 1); // X
 
         SmartMove move = new SmartMove(model, 2);
@@ -93,7 +102,6 @@ public class SmartMoveTest {
     @Test
     public void shouldDefendAgainstDoubleThreat() {
         // arrange
-        GameModel model = new GameModel(3, 3, new PlayerAssignment(Player.X));
         model.play(0, 0); // X
         model.play(1, 1); // O
         model.play(2, 2); // X

@@ -1,5 +1,7 @@
 package net.ngeor.t3.models;
 
+import net.ngeor.t3.settings.Settings;
+
 import java.io.Serializable;
 
 /**
@@ -7,31 +9,33 @@ import java.io.Serializable;
  * This contains anything that needs to be persisted.
  */
 public class GameDto implements Serializable {
-    private final PlayerAssignment playerAssignment;
-    private final BoardModel boardModel;
+    private Settings settings;
+    private BoardModel boardModel;
     private GameState state;
     private Player turn;
 
-    GameDto(BoardInvariants boardInvariants, PlayerAssignment playerAssignment) {
-        this.playerAssignment = playerAssignment;
-
-        // initialize and clear tiles
-        boardModel = new BoardModel(boardInvariants);
-        state = GameState.NotStarted;
-
-        // first player plays next
-        turn = playerAssignment.getFirstPlayer();
+    public GameDto(Settings settings) {
+        restart(settings);
     }
 
     public GameDto(GameDto other) {
-        this.playerAssignment = other.playerAssignment;
+        this.settings = other.settings;
+
+        // deep copy to be able to mutate
         this.boardModel = new BoardModel(other.boardModel);
         this.state = other.state;
         this.turn = other.turn;
     }
 
-    public PlayerAssignment getPlayerAssignment() {
-        return playerAssignment;
+    public void restart(Settings settings) {
+        this.settings = settings;
+        boardModel = new BoardModel(settings);
+        state = GameState.NotStarted;
+        turn = settings.getPlayerDefinitions().get(0).getPlayer();
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 
     public BoardModel getBoardModel() {
@@ -44,15 +48,6 @@ public class GameDto implements Serializable {
 
     protected void setState(GameState state) {
         this.state = state;
-    }
-
-    @Deprecated
-    public boolean isHumanTurn() {
-        return isHuman(turn);
-    }
-
-    private boolean isHuman(Player player) {
-        return playerAssignment.getPlayerType(player) == PlayerType.HUMAN;
     }
 
     public void play(int row, int col) {
