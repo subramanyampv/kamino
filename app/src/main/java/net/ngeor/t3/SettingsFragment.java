@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 /**
  * Created by ngeor on 2/6/2017.
@@ -28,6 +29,7 @@ public class SettingsFragment extends PreferenceFragment {
                     String otherKey = "pref_key_" + otherPlayer + "_player_symbol";
                     ListPreference listPreference = (ListPreference)findPreference(otherKey);
                     listPreference.setValue(otherValue);
+                    Toast.makeText(SettingsFragment.this.getView().getContext(), R.string.info_updated_other_player, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });
