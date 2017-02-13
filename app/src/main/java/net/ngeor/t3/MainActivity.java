@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import net.ngeor.t3.models.GameDto;
@@ -23,6 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
     private final CompositeTouchListener boardTouchListener = new CompositeTouchListener();
+    private final List<AIPlayer> aiPlayers = new ArrayList<>();
+    private final List<HumanPlayer> humanPlayers = new ArrayList<>();
 
     // model
     private GameModel model;
@@ -47,12 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             model = createGameModel();
         }
 
-        // use the same settings the model has
-        // if the model had been restored from a saved state,
-        // it will be the same settings
-        Settings settings = model.getSettings();
-
-        getBoardView().setModel(model.getBoardModel());
+        getBoardView().setModel(model);
         GameListener gameListener = new GameListener(this, model);
         model.addGameModelListener(gameListener);
 
@@ -65,62 +61,66 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
             // the text needs to be refreshed
             gameListener.updateHeaderText();
         }
-
-        findViewById(R.id.btn_restart).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.restart(createSettings());
-                getBoardView().setModel(model.getBoardModel());
-                createPlayers();
-                model.start();
-            }
-        });
-
-        findViewById(R.id.btn_settings).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
     }
-
-    private final List<AIPlayer> aiPlayers = new ArrayList<>();
-    private final List<HumanPlayer> humanPlayers = new ArrayList<>();
 
     private void createPlayers() {
         destroyPlayers();
 
         Settings settings = model.getSettings();
-
         for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
             if (playerDefinition instanceof HumanPlayerDefinition) {
                 // create touch listener
-                HumanPlayer humanPlayer = new HumanPlayer(model, playerDefinition.getPlayerSymbol());
-                boardTouchListener.addListener(humanPlayer);
+                createHumanPlayer(playerDefinition);
             } else if (playerDefinition instanceof AIPlayerDefinition) {
-                AIPlayer aiPlayer = new AIPlayer(this, model, playerDefinition.getPlayerSymbol());
-                model.addGameModelListener(aiPlayer);
-                aiPlayers.add(aiPlayer);
+                createAIPlayer(playerDefinition);
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("Cannot create player");
             }
         }
     }
 
+    private void createHumanPlayer(PlayerDefinition playerDefinition) {
+        HumanPlayer humanPlayer = new HumanPlayer(this, model, playerDefinition.getPlayerSymbol());
+        boardTouchListener.addListener(humanPlayer);
+        model.addGameModelListener(humanPlayer);
+        humanPlayers.add(humanPlayer);
+    }
+
+    private void createAIPlayer(PlayerDefinition playerDefinition) {
+        AIPlayer aiPlayer = new AIPlayer(this, model, playerDefinition.getPlayerSymbol());
+        model.addGameModelListener(aiPlayer);
+        aiPlayers.add(aiPlayer);
+    }
+
     private void destroyPlayers() {
-        for (AIPlayer aiPlayer : aiPlayers) {
-            aiPlayer.cancel();
-            model.removeGameModelListener(aiPlayer);
-        }
+        destroyAIPlayers();
+        destroyHumanPlayers();
+    }
 
-        aiPlayers.clear();
-
+    private void destroyHumanPlayers() {
         for (HumanPlayer humanPlayer : humanPlayers) {
-            boardTouchListener.removeListener(humanPlayer);
+            destroyHumanPlayer(humanPlayer);
         }
 
         humanPlayers.clear();
+    }
+
+    private void destroyAIPlayers() {
+        for (AIPlayer aiPlayer : aiPlayers) {
+            destroyAIPlayer(aiPlayer);
+        }
+
+        aiPlayers.clear();
+    }
+
+    private void destroyHumanPlayer(HumanPlayer humanPlayer) {
+        boardTouchListener.removeListener(humanPlayer);
+        model.removeGameModelListener(humanPlayer);
+    }
+
+    private void destroyAIPlayer(AIPlayer aiPlayer) {
+        aiPlayer.cancel();
+        model.removeGameModelListener(aiPlayer);
     }
 
     @Override
@@ -170,5 +170,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         net.ngeor.t3.settings.serializable.SettingsImpl serializableSettings = new net.ngeor.t3.settings.serializable.SettingsImpl(preferenceSettings);
         return serializableSettings;
     }
-}
 
+    public void onRestartClick(View view) {
+        model.restart(createSettings());
+        createPlayers();
+        model.start();
+    }
+
+    public void onSettingsClick(View view) {
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+}

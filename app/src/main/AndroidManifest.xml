@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".SettingsActivity">
         </activity>
-    </application>
 
+    </application>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 </manifest>

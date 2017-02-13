@@ -1,19 +1,24 @@
 package net.ngeor.t3.players;
 
+import android.content.Context;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
-import net.ngeor.t3.models.GameModel;
-import net.ngeor.t3.models.GameState;
-import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.models.TileState;
+import net.ngeor.t3.models.*;
 
 /**
  * Represents the human player.
  * Created by ngeor on 2/10/2017.
  */
-public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener {
-    public HumanPlayer(GameModel model, PlayerSymbol turn) {
+public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener, GameModelListener {
+    private final Context context;
+
+    public HumanPlayer(Context context, GameModel model, PlayerSymbol turn) {
         super(model, turn);
+        this.context = context;
     }
 
     @Override
@@ -29,9 +34,33 @@ public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener 
             TileState tileState = model.getBoardModel().getTileState(row, col);
             if (tileState == TileState.EMPTY) {
                 model.play(row, col);
+                notifyHumanPlayed();
+            } else {
+                notifyHumanCannotPlayHere();
             }
         }
 
         return true;
+    }
+
+    @Override
+    public void stateChanged() {
+        if (canIPlay()) {
+            notifyHumanCanPlay();
+        }
+    }
+
+    private void notifyHumanCannotPlayHere() {
+        Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(500);
+    }
+
+    private void notifyHumanPlayed() {
+    }
+
+    private void notifyHumanCanPlay() {
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
+        ringtone.play();
     }
 }

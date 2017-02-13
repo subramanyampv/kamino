@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import net.ngeor.t3.models.BoardModel;
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameState;
 import net.ngeor.t3.models.TileState;
+import net.ngeor.t3.settings.Settings;
 
 /**
  * Draws the board.
@@ -19,11 +22,7 @@ public class BoardView extends ImageView {
     private final Paint xPaint;
     private final Paint oPaint;
     private final Paint linesPaint;
-    private BoardModel model;
-
-    public void setModel(BoardModel model) {
-        this.model = model;
-    }
+    private GameModel model;
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,6 +47,10 @@ public class BoardView extends ImageView {
         linesPaint.setColor(Color.BLACK);
     }
 
+    public void setModel(GameModel model) {
+        this.model = model;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -56,30 +59,37 @@ public class BoardView extends ImageView {
         canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
 
         if (model == null) {
+            // no model assigned yet
             return;
         }
 
-        final float rowHeight = getHeight() / model.getRows();
-        final float colWidth = getWidth() / model.getCols();
+        BoardModel boardModel = this.model.getBoardModel();
+        final float rowHeight = getHeight() / boardModel.getRows();
+        final float colWidth = getWidth() / boardModel.getCols();
 
         // vertical lines
-        for (int col = 1; col < model.getCols(); col++) {
+        for (int col = 1; col < boardModel.getCols(); col++) {
             canvas.drawLine(col * colWidth, 0, col * colWidth, getHeight(), linesPaint);
         }
 
         // horizontal lines
-        for (int row = 1; row < model.getRows(); row++) {
+        for (int row = 1; row < boardModel.getRows(); row++) {
             canvas.drawLine(0, row * rowHeight, getWidth(), row * rowHeight, linesPaint);
+        }
+
+        Settings settings = model.getSettings();
+        if (settings.isInvisibleMode() && model.getState() == GameState.WaitingPlayer) {
+            return;
         }
 
         final float radius = Math.min(colWidth, rowHeight) / 2 - LETTER_THICKNESS;
 
-        for (int row = 0; row < model.getRows(); row++) {
+        for (int row = 0; row < boardModel.getRows(); row++) {
             final float top = row * rowHeight;
             final float bottom = top + rowHeight;
 
-            for (int col = 0; col < model.getCols(); col++) {
-                final TileState state = model.getTileState(row, col);
+            for (int col = 0; col < boardModel.getCols(); col++) {
+                final TileState state = boardModel.getTileState(row, col);
                 final float left = col * colWidth;
                 final float right = left + colWidth;
                 final float cx = (left + right) / 2;

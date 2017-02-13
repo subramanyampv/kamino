@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_key_invisible_mode"
+        android:title="@string/pref_invisible_mode_title" />
     <PreferenceCategory
         android:title="@string/pref_first_player_title"
         android:key="pref_key_first_player">

@@ -12,17 +12,21 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Serializable implementation of Settings.
+ * This is needed to save the settings mid-game.
  * Created by ngeor on 2/11/2017.
  */
 public class SettingsImpl implements Settings, Serializable {
     private final int rows;
     private final int cols;
     private final List<PlayerDefinition> playerDefinitions;
+    private final boolean invisibleMode;
 
     public SettingsImpl(int rows, int cols, PlayerDefinition... playerDefinitions) {
         this.rows = rows;
         this.cols = cols;
         this.playerDefinitions = Arrays.asList(playerDefinitions);
+        this.invisibleMode = false;
     }
 
     public SettingsImpl(Settings other) {
@@ -35,6 +39,7 @@ public class SettingsImpl implements Settings, Serializable {
         }
 
         playerDefinitions = Collections.unmodifiableList(converted);
+        this.invisibleMode = other.isInvisibleMode();
     }
 
     @Override
@@ -50,6 +55,11 @@ public class SettingsImpl implements Settings, Serializable {
     @Override
     public List<PlayerDefinition> getPlayerDefinitions() {
         return playerDefinitions;
+    }
+
+    @Override
+    public boolean isInvisibleMode() {
+        return invisibleMode;
     }
 
     private static PlayerDefinition convert(PlayerDefinition other) {

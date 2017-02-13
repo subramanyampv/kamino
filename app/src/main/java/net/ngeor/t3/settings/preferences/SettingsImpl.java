@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * SettingsImpl implementation that uses SharedPreferences as a backend.
+ * If they get changed mid-game, they don't affect the existing game.
+ * They are only picked up when the player presses the Restart button.
  * Created by ngeor on 2/11/2017.
  */
 public class SettingsImpl implements Settings {
@@ -47,6 +49,11 @@ public class SettingsImpl implements Settings {
                 createPlayerDefinition(firstPlayerSymbol, firstPlayerType, firstPlayerAILevel),
                 createPlayerDefinition(secondPlayerSymbol, secondPlayerType, secondPlayerAILevel)
         );
+    }
+
+    @Override
+    public boolean isInvisibleMode() {
+        return sharedPreferences.getBoolean("pref_key_invisible_mode", false);
     }
 
     private PlayerDefinition createPlayerDefinition(String symbol, String type, String aiLevel) {
