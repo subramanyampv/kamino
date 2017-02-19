@@ -114,8 +114,8 @@ function filesPerMonth() {
     local since=$1
     local until=$2
     local commitDate=$3
-    local fileCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" | wc -l)
-    local lineCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" | xargs cat | wc -l)
+    local fileCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*.png" -not -path "*.jpg" -not -path "*.gif" | wc -l)
+    local lineCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*.png" -not -path "*.jpg" -not -path "*.gif" | xargs cat | wc -l)
     echo "$since,$until,$commitDate,$fileCount,$lineCount"
 }
 
