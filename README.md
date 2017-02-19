@@ -9,20 +9,21 @@ git-analyze.sh COMMAND OPTIONS
 
 COMMAND is one of:
 
-- commits-per-month
-- merges-per-month
+- commits: list number of commits per month
+- merges: list number of merge commits per month (merged pull requests)
+- files: list number of files and total LOC per month
 
 OPTIONS are:
 
-- --work-tree=<path>
-- --git-dir=<path>
+- --work-tree=path
+- --git-dir=path
 
 ## Example
 
 To get a CSV report listing merges per month you can run:
 
 ```
-git-analyze.sh merges-per-month --work-tree=../my-project/ --git-dir=../my-project/.git/
+git-analyze.sh merges --work-tree=../my-project/ --git-dir=../my-project/.git/
 ```
 
 Which will print a report like this one:
