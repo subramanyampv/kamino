@@ -114,8 +114,13 @@ function filesPerMonth() {
     local since=$1
     local until=$2
     local commitDate=$3
-    local fileCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*.png" -not -path "*.jpg" -not -path "*.gif" | wc -l)
-    local lineCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*.png" -not -path "*.jpg" -not -path "*.gif" | xargs cat | wc -l)
+
+    # -not -path "*/\.*" excludes hidden paths e.g. .git folder
+    # -not -path "*/node_modules/*" excludes node_modules folder in case it's a working copy
+    # piping it through file to get the mime-type in order to exclude binary files.
+    # The output of file is something like my/file.txt: text charset=utf8 for text files (will not contain 'text' for binary files)
+    local fileCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -exec file \{\} \; | grep text | wc -l)
+    local lineCount=$(find $WORK_TREE -type f -not -path "*/\.*" -not -path "*/node_modules/*" -exec file \{\} \; | grep text | cut -d: -f1 | xargs cat | wc -l)
     echo "$since,$until,$commitDate,$fileCount,$lineCount"
 }
 
