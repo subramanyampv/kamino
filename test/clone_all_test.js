@@ -9,27 +9,43 @@ require('sinon-as-promised');
 describe('clone-all', function() {
     var cloneAll;
     var sandbox;
-    var fs;
     var GitServer;
-    var child_process;
+    var GitClone;
+    var gitClone;
     var jsonReader;
-    var gitServer;
 
     beforeEach(function() {
+        // setup a sinon sandbox
         sandbox = sinon.sandbox.create();
 
-        fs = require('fs');
-
-        GitServer = sandbox.stub();
-
-        child_process = {
-            exec: function() {}
+        // stub the GitServer class
+        GitServer = function(server) {
+            this.server = server;
         };
 
-        gitServer = {
-            getRepositories: function() {
+        GitServer.prototype.getRepositories = function() {
+            return {
+                requestOptions: this.server,
+                repositories: [
+                    {
+                        clone_url: 'https://lalala',
+                        ssh_url: 'ssh://lalala'
+                    }
+                ]
+            };
+        };
 
-            }
+        // stub the GitClone class
+        GitClone = function(options) {
+            this._cloneUrl = options.cloneUrl;
+            this._cloneLocation = options.cloneLocation;
+            gitClone = this;
+        };
+
+        GitClone.prototype.clone = function() {
+            return Promise.resolve({
+
+            });
         };
     });
 
@@ -37,109 +53,99 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should not throw an error when the config file is missing', function() {
+    it('should not throw an error when the config file is missing', () => {
         // arrange
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
             .rejects('oops');
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            fs: fs,
-            child_process: child_process,
             './lib/json_reader': jsonReader,
-            './lib/GitServer': GitServer
+            './lib/GitServer': GitServer,
+            './lib/GitClone': GitClone
         });
 
         // assert
         return expect(cloneAll).to.not.be.rejected;
     });
 
-    it('should not clone when the folder exists', function() {
+    it('should clone the configured repositories', () => {
         // arrange
-        var data = [{
-            path: '/users/ngeor/repos',
-            'clone-all': {
-                fetchAllPages: false
-            }
-        }];
-
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .resolves(data);
-
-        var repositories = [{
-            clone_url: 'https://something',
-            ssh_url: 'ssh://something',
-            name: 'repoName'
-        }];
-
-        GitServer.withArgs(data[0]).returns(gitServer);
-        sandbox.stub(gitServer, 'getRepositories').resolves({
-            requestOptions: {},
-            repositories: repositories
-        });
-
-        sandbox.stub(fs, 'stat').withArgs('repoName').callsArgWith(1, null, {});
-
-        sandbox.spy(child_process, 'exec');
+            .resolves([
+                {
+                    path: '/users/ngeor/repos',
+                    'clone-all': {
+                        'fetchAllPages': true,
+                        'localFolder': '../'
+                    }
+                }
+            ]);
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            fs: fs,
-            child_process: child_process,
             './lib/json_reader': jsonReader,
-            './lib/GitServer': GitServer
+            './lib/GitServer': GitServer,
+            './lib/GitClone': GitClone
         });
 
+        // assert
         return cloneAll.then(function() {
-            // assert
-            expect(child_process.exec.called).to.be.false;
+            expect(gitClone._cloneUrl).to.equal('ssh://lalala');
         });
     });
 
-    it('should clone when the folder does not exist', function() {
+    it('should clone the configured repositories with HTTPS', () => {
         // arrange
-        var data = [{
-            path: '/users/ngeor/repos',
-            'clone-all': {
-                fetchAllPages: false
-            }
-        }];
-
         jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .resolves(data);
-
-        var repositories = [{
-            clone_url: 'https://something',
-            ssh_url: 'ssh://something',
-            name: 'repoName'
-        }];
-
-        GitServer.withArgs(data[0]).returns(gitServer);
-        sandbox.stub(gitServer, 'getRepositories').resolves({
-            requestOptions: {
-                'clone-all': {
-                    fetchAllPages: false
+            .resolves([
+                {
+                    path: '/users/ngeor/repos',
+                    'clone-all': {
+                        'fetchAllPages': true,
+                        'localFolder': '../',
+                        'useHTTPS': true
+                    }
                 }
-            },
-            repositories: repositories
-        });
-
-        sandbox.stub(fs, 'stat').withArgs('repoName').callsArgWith(1, 'folder does not exist', null);
-
-        sandbox.stub(child_process, 'exec').withArgs('git clone ssh://something repoName')
-            .callsArgWith(1, null, null, null);
+            ]);
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            fs: fs,
-            child_process: child_process,
             './lib/json_reader': jsonReader,
-            './lib/GitServer': GitServer
+            './lib/GitServer': GitServer,
+            './lib/GitClone': GitClone
         });
 
+        // assert
         return cloneAll.then(function() {
-            // assert
-            expect(child_process.exec.called).to.be.true;
+            expect(gitClone._cloneUrl).to.equal('https://lalala');
+        });
+    });
+
+    it('should use the username override', () => {
+        // arrange
+        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
+            .resolves([
+                {
+                    path: '/users/ngeor/repos',
+                    'clone-all': {
+                        'fetchAllPages': true,
+                        'localFolder': '../',
+                        'forceUsername': 'nemo'
+                    }
+                }
+            ]);
+
+        // act
+        cloneAll = proxyquire('../clone-all', {
+            './lib/json_reader': jsonReader,
+            './lib/GitServer': GitServer,
+            './lib/GitClone': GitClone
+        });
+
+        // assert
+        return cloneAll.then(function() {
+            expect(gitClone._cloneUrl).to.equal('ssh://nemo@lalala');
         });
     });
 });

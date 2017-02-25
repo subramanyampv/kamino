@@ -1,32 +1,22 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
 var Promise = require('promise');
-var exec = require('child_process').exec;
 var jsonReader = require('./lib/json_reader');
 var GitServer = require('./lib/GitServer');
 var console = require('./lib/logger');
+var GitClone = require('./lib/GitClone');
 
-function cloneRepo(cloneUrl, cloneLocation) {
-    return new Promise(function(fullfill) {
-        fs.stat(cloneLocation, function(err) {
-            if (err) {
-                console.log('cloning ' + cloneLocation);
-                exec('git clone ' + cloneUrl + ' ' + cloneLocation, function(error) {
-                    console.log('finished cloning ' + cloneLocation);
-                    fullfill({
-                        cloneLocation: cloneLocation,
-                        error: error
-                    });
-                });
-            } else {
-                fullfill({
-                    cloneLocation: cloneLocation,
-                    skip: true
-                });
-            }
-        });
+/**
+ * Tries to clone a repository.
+ * If the location to clone into already exists, it skips cloning.
+ */
+function tryCloneRepo(cloneUrl, cloneLocation) {
+    var cloner = new GitClone({
+        cloneUrl: cloneUrl,
+        cloneLocation: cloneLocation
     });
+
+    return cloner.clone();
 }
 
 function processGitHub(cloneAllOptions, repositories) {
@@ -41,7 +31,7 @@ function processGitHub(cloneAllOptions, repositories) {
         }
 
         var cloneLocation = (localFolder || '') + repository.name;
-        return cloneRepo(url, cloneLocation);
+        return tryCloneRepo(url, cloneLocation);
     }));
 }
 

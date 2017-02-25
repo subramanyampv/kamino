@@ -65,5 +65,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-coveralls');
 
-    grunt.registerTask('default', ['eslint', 'mochaTest', 'mocha_istanbul', 'istanbul_check_coverage']);
+    grunt.registerTask('default', [
+        'eslint',
+        'mochaTest',
+        'mocha_istanbul',
+        'istanbul_check_coverage']);
 };
