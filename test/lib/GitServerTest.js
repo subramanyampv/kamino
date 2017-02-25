@@ -28,11 +28,17 @@ StubHttpsResponse.prototype.on = function(eventName, handler) {
 describe('GitServer', function() {
     var sandbox;
     var https;
+    var options;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
         https = {
             request: function() {}
+        };
+
+        options = {
+            getUsername: sandbox.stub(),
+            isNoPagination: sandbox.stub()
         };
     });
 
@@ -57,25 +63,22 @@ describe('GitServer', function() {
             method: 'GET',
             headers: {
                 'User-Agent': 'clone-all.js'
-            },
-            'clone-all': {
-                fetchAllPages: false
             }
         };
 
-        sandbox.stub(https, 'request').withArgs(requestOptions).returns(request).callsArgWith(1, new StubHttpsResponse(JSON.stringify(repositories)));
+        sandbox.stub(https, 'request').withArgs(requestOptions)
+            .returns(request)
+            .callsArgWith(1, new StubHttpsResponse(JSON.stringify(repositories)));
+        options.getUsername.returns('ngeor');
+        options.isNoPagination.returns(true);
 
         // act
         var GitServer = proxyquire('../../lib/GitServer', {
-            https: https
+            https: https,
+            './options': options
         });
 
-        var gitServer = new GitServer({
-            path: '/users/ngeor/repos',
-            'clone-all': {
-                fetchAllPages: false
-            }
-        });
+        var gitServer = new GitServer();
 
         // assert
         return expect(gitServer.getRepositories()).to.eventually.eql({

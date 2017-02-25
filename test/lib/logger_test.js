@@ -5,14 +5,15 @@ var expect = require('chai').expect;
 describe('logger', function() {
     var sandbox;
     var logger;
-    var process;
+    var options;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
         sandbox.spy(console, 'log');
         sandbox.spy(console, 'error');
-        process = {
-            argv: []
+
+        options = {
+            isVerbose: sandbox.stub()
         };
     });
 
@@ -23,7 +24,7 @@ describe('logger', function() {
     describe('when no options are passed', function() {
         beforeEach(function() {
             logger = proxyquire('../../lib/logger', {
-                process: process
+                './options': options
             });
         });
 
@@ -46,9 +47,9 @@ describe('logger', function() {
 
     describe('when verbose option is passed', function() {
         beforeEach(function() {
-            process.argv.push('-v');
+            options.isVerbose.returns(true);
             logger = proxyquire('../../lib/logger', {
-                process: process
+                './options': options
             });
         });
 

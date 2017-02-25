@@ -1,9 +1,0 @@
-[
-	{
-		"path": "/users/ngeor/repos",
-		"clone-all": {
-			"fetchAllPages": true,
-			"localFolder": "../"
-		}
-	}
-]

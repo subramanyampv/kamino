@@ -12,7 +12,7 @@ describe('clone-all', function() {
     var GitServer;
     var GitClone;
     var gitClone;
-    var jsonReader;
+    var options;
 
     beforeEach(function() {
         // setup a sinon sandbox
@@ -24,7 +24,7 @@ describe('clone-all', function() {
         };
 
         GitServer.prototype.getRepositories = function() {
-            return {
+            return Promise.resolve({
                 requestOptions: this.server,
                 repositories: [
                     {
@@ -32,7 +32,7 @@ describe('clone-all', function() {
                         ssh_url: 'ssh://lalala'
                     }
                 ]
-            };
+            });
         };
 
         // stub the GitClone class
@@ -44,8 +44,18 @@ describe('clone-all', function() {
 
         GitClone.prototype.clone = function() {
             return Promise.resolve({
-
+                cloneLocation: this._cloneLocation,
+                error: null
             });
+        };
+
+        // stub the options
+        options = {
+            getOutputDirectory: sandbox.stub(),
+            getProtocol: sandbox.stub(),
+            getSSHUsername: sandbox.stub(),
+            getUsername: sandbox.stub(),
+            isNoPagination: sandbox.stub()
         };
     });
 
@@ -53,38 +63,13 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should not throw an error when the config file is missing', () => {
-        // arrange
-        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .rejects('oops');
-
-        // act
-        cloneAll = proxyquire('../clone-all', {
-            './lib/json_reader': jsonReader,
-            './lib/GitServer': GitServer,
-            './lib/GitClone': GitClone
-        });
-
-        // assert
-        return expect(cloneAll).to.not.be.rejected;
-    });
-
     it('should clone the configured repositories', () => {
         // arrange
-        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .resolves([
-                {
-                    path: '/users/ngeor/repos',
-                    'clone-all': {
-                        'fetchAllPages': true,
-                        'localFolder': '../'
-                    }
-                }
-            ]);
+        options.getOutputDirectory.returns('../');
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            './lib/json_reader': jsonReader,
+            './lib/options': options,
             './lib/GitServer': GitServer,
             './lib/GitClone': GitClone
         });
@@ -97,21 +82,13 @@ describe('clone-all', function() {
 
     it('should clone the configured repositories with HTTPS', () => {
         // arrange
-        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .resolves([
-                {
-                    path: '/users/ngeor/repos',
-                    'clone-all': {
-                        'fetchAllPages': true,
-                        'localFolder': '../',
-                        'useHTTPS': true
-                    }
-                }
-            ]);
+        options.getProtocol.returns('https');
+        options.getOutputDirectory.returns('../');
+        options.isNoPagination.returns(false);
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            './lib/json_reader': jsonReader,
+            './lib/options': options,
             './lib/GitServer': GitServer,
             './lib/GitClone': GitClone
         });
@@ -124,21 +101,14 @@ describe('clone-all', function() {
 
     it('should use the username override', () => {
         // arrange
-        jsonReader = sandbox.stub().withArgs('clone-all-config.json')
-            .resolves([
-                {
-                    path: '/users/ngeor/repos',
-                    'clone-all': {
-                        'fetchAllPages': true,
-                        'localFolder': '../',
-                        'forceUsername': 'nemo'
-                    }
-                }
-            ]);
+        options.getProtocol.returns('ssh');
+        options.getOutputDirectory.returns('../');
+        options.isNoPagination.returns(true);
+        options.getSSHUsername.returns('nemo');
 
         // act
         cloneAll = proxyquire('../clone-all', {
-            './lib/json_reader': jsonReader,
+            './lib/options': options,
             './lib/GitServer': GitServer,
             './lib/GitClone': GitClone
         });
