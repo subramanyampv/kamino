@@ -31,11 +31,6 @@ function processGitHub(repositoryResults) {
         }
 
         var cloneLocation = localFolder + repository.name;
-
-        if (url.indexOf('git-') >= 0) {
-            url = url + '.oops';
-        }
-
         return tryCloneRepo(url, cloneLocation);
     }));
 }
