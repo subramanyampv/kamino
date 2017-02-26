@@ -21,7 +21,7 @@ describe('exec_promise', () => {
         });
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sandbox.restore();
     });
 
@@ -29,22 +29,19 @@ describe('exec_promise', () => {
         child_process.exec.withArgs('dummy command')
             .yields();
 
-        return execPromise('dummy command').then(function() {
+        return execPromise('dummy command').then(function(error) {
             expect(child_process.exec).to.have.been.calledWith('dummy command');
+            expect(error).to.be.null;
         });
     });
 
     it('should resolve when exec fails', () => {
-        var _error;
         child_process.exec.withArgs('dummy command')
             .yields(new Error('command failed'));
 
-        return execPromise('dummy command').then(function() {
+        return execPromise('dummy command').then(function(error) {
             expect(child_process.exec).to.have.been.calledWith('dummy command');
-        }).catch(function(error) {
-            _error = error;
-        }).then(function() {
-            expect(_error.message).to.equal('command failed');
+            expect(error.message).to.equal('command failed');
         });
     });
 });

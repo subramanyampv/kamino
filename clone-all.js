@@ -2,7 +2,7 @@
 
 var Promise = require('promise');
 var GitServer = require('./lib/GitServer');
-var console = require('./lib/logger');
+var logger = require('./lib/logger');
 var GitClone = require('./lib/GitClone');
 var options = require('./lib/options');
 
@@ -19,38 +19,44 @@ function tryCloneRepo(cloneUrl, cloneLocation) {
     return cloner.clone();
 }
 
-function processGitHub(repositories) {
+function processGitHub(repositoryResults) {
+    var repositories = repositoryResults.repositories;
     var sshUsername = options.getSSHUsername();
     var localFolder = options.getOutputDirectory();
     var useHTTPS = options.getProtocol() === 'https';
     return Promise.all(repositories.map(function(repository) {
-        var url = useHTTPS ? repository.clone_url : repository.ssh_url; // jscs: ignore
+        var url = useHTTPS ? repository.clone_url : repository.ssh_url;
         if (sshUsername) {
             url = url.replace('ssh://', 'ssh://' + sshUsername + '@');
         }
 
         var cloneLocation = localFolder + repository.name;
+
+        if (url.indexOf('git-') >= 0) {
+            url = url + '.oops';
+        }
+
         return tryCloneRepo(url, cloneLocation);
     }));
 }
 
+function summarizeErrors(cloneResults) {
+    cloneResults.forEach(function(cloneResult) {
+        if (cloneResult.error) {
+            logger.error('Error cloning ' + cloneResult.cloneLocation + ': ' + cloneResult.error);
+            process.exitCode = 1;
+        }
+    });
+}
+
 var gitServer = new GitServer();
-var mainPromise = gitServer.getRepositories()
-    .then(function(repositoryResult) {
-        return processGitHub(repositoryResult.repositories);
-    })
-    .then(function(data) {
-        data.forEach(function(repositoryResult) {
-            if (repositoryResult.error) {
-                console.error('Cloned ' + repositoryResult.cloneLocation + ', error = ' + repositoryResult.error);
-                process.exitCode = 1;
-            } else if (repositoryResult.skip) {
-                console.log('Skipped ' + repositoryResult.cloneLocation);
-            }
-        });
-    }).catch(function(err) {
+var mainPromise = gitServer.getRepositories() // get repositories via REST API
+    .then(processGitHub) // clone all
+    .then(summarizeErrors) // list errors
+    .catch(function(err) { // generic catch-all
         process.exitCode = 2;
-        console.error(err);
+        logger.error('An unexpected error occurred');
+        logger.error(err);
     });
 
 module.exports = mainPromise;

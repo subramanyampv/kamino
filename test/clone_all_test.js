@@ -50,13 +50,7 @@ describe('clone-all', function() {
         };
 
         // stub the options
-        options = {
-            getOutputDirectory: sandbox.stub(),
-            getProtocol: sandbox.stub(),
-            getSSHUsername: sandbox.stub(),
-            getUsername: sandbox.stub(),
-            isNoPagination: sandbox.stub()
-        };
+        options = sandbox.stub(require('../lib/options'));
     });
 
     afterEach(function() {

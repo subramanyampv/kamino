@@ -36,10 +36,7 @@ describe('GitServer', function() {
             request: function() {}
         };
 
-        options = {
-            getUsername: sandbox.stub(),
-            isNoPagination: sandbox.stub()
-        };
+        options = sandbox.stub(require('../../lib/options'));
     });
 
     afterEach(function() {
