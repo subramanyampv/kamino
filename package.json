@@ -1,6 +1,6 @@
 {
   "name": "clone-all",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
   "scripts": {

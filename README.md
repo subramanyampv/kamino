@@ -4,8 +4,9 @@ clone-all
 Automatically clone all your GitHub repositories.
 
 [![Build Status](https://travis-ci.org/ngeor/clone-all.svg?branch=master)](https://travis-ci.org/ngeor/clone-all)
-[![Dependencies](https://david-dm.org/ngeor/clone-all.svg)](https://david-dm.org/ngeor/clone-all)
 [![Coverage Status](https://coveralls.io/repos/github/ngeor/clone-all/badge.svg)](https://coveralls.io/github/ngeor/clone-all)
+[![Dependencies](https://david-dm.org/ngeor/clone-all.svg)](https://david-dm.org/ngeor/clone-all)
+[![devDependencies Status](https://david-dm.org/ngeor/clone-all/dev-status.svg)](https://david-dm.org/ngeor/clone-all?type=dev)
 
 Requirements
 ------------
