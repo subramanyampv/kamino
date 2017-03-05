@@ -59,8 +59,11 @@ public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener,
     }
 
     private void notifyHumanCanPlay() {
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
-        ringtone.play();
+        // play a sound when the human player needs to play, but only on invisible mode
+        if (getModel().getSettings().isInvisibleMode()) {
+            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
+            ringtone.play();
+        }
     }
 }
