@@ -1,0 +1,25 @@
+{
+  "name": "atom-lang-vb6",
+  "version": "0.0.1",
+  "description": "VB6 Language for Atom",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/atom-lang-vb6.git"
+  },
+  "keywords": [
+    "atom",
+    "language",
+    "vb6",
+    "visual basic"
+  ],
+  "author": "ngeor",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/atom-lang-vb6/issues"
+  },
+  "homepage": "https://github.com/ngeor/atom-lang-vb6#readme"
+}
