@@ -1,5 +1,143 @@
-filetypes: [
-  "cls"
+fileTypes: [
+  'cls',
+  'frm'
 ]
-name: "Visual Basic 6"
-scopeName: "source.cls.vb6"
+name: 'Visual Basic 6'
+patterns: [
+
+  # Sub Hello()
+  {
+    match: '\\b(?i:(sub|function))\\b\\s+(\\w+)'
+    name: 'meta.function.vb6'
+    captures:
+      '1':
+        name: 'storage.type.function.vb6'
+      '2':
+        name: 'entity.name.function.vb6'
+  }
+
+  # variable As Type
+  {
+    match: '\\b([A-Za-z]+)\\s+(As)\\s+([A-Za-z]+)\\b'
+    captures:
+      '1':
+        name: 'variable.parameter.vb6'
+      '2':
+        name: 'keyword.operator.as.vb6'
+      '3':
+        name: 'storage.type.vb6'
+  }
+
+  # numbers
+  {
+    match: '\\b([0-9]+(\.[0-9]+)?)\\b'
+    name: 'constant.numeric.vb6'
+  }
+
+  # more constants
+  {
+    match: '(?i)\\b(True|False|Nothing)\\b'
+    name: 'constant.language.vb6'
+  }
+
+  # keywords
+  {
+    match: '(?i)\\b(If|Then|Else|ElseIf|End If|While|Wend|Do|Loop|For|To|Next|Each|Select|End Select|Case|Exit|On Error Resume Next)\\b'
+    name: 'keyword.control.vb6'
+  }
+
+  # operators
+  {
+    match: '(?i)\\b(Not|And|Or)\\b'
+    name: 'keyword.operator.vb6'
+  }
+
+  {
+    match: '='
+    name: 'keyword.operator.assignment.vb6'
+  }
+
+  # built-in types
+  {
+    match: '(?i)\\b(Dim|ReDim|Set|New)\\b'
+    name: 'storage.type.var.vb6'
+  }
+
+  # private, public, etc
+  {
+    match: '(?i:\\b(Private|Public|Const|ByRef|ByVal)\\b)'
+    name: 'storage.modifier.vb6'
+  }
+
+  # built-in types
+  {
+    match: '(?i)\\b(String|Integer|Long|Boolean)\\b'
+    name: 'storage.type.primitive.vb6'
+  }
+
+  # # sub, function
+  # {
+  #   match: '(?i)\\b(Sub|Function|Property (Let|Get|Set)|End Sub|End Function|End Property)\\b'
+  #   name: 'storage.type.function.vb6'
+  # }
+
+  # strings
+  {
+    begin: '"'
+    end: '"'
+    name: 'string.quoted.double.vb6'
+    beginCaptures:
+      '0':
+        name: 'punctuation.definition.string.begin.vb6'
+    endCaptures:
+      '0':
+        name: 'punctuation.definition.string.end.vb6'
+  }
+
+  # string functions
+  {
+    match: '(?i)\\b(Left|Right|Mid|InStr|Chr|Len|Split|LCase|UCase)\\('
+    captures:
+      '1':
+        name: 'support.function.vb6'
+  }
+
+  # other functions
+  {
+    match: '(?i)\\b(RGB|LBound|UBound)\\('
+    captures:
+      '1':
+        name: 'support.function.vb6'
+  }
+
+  {
+    include: '#constants'
+  }
+
+  {
+    include: '#comments'
+  }
+]
+
+repository:
+  constants:
+    patterns: [
+      # support constants
+      {
+        match: '(?i)\\b(vbCrLf)\\b'
+        name: 'support.constant.vb6'
+      }
+    ]
+  comments:
+    patterns: [
+      {
+        begin: '\''
+        end: '$'
+        beginCaptures:
+          '0':
+            name: 'punctuation.definition.comment.vb6'
+        name: 'comment.line.vb6'
+      }
+    ]
+
+scopeName: 'source.vb6'
