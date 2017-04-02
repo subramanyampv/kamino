@@ -1,3 +1,4 @@
-".source.vb6":
+'.source.vb6':
   editor:
     commentStart: '\' '
+    tabLength: 4

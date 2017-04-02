@@ -71,8 +71,8 @@ patterns: [
 
   # built-in types
   {
-    match: '(?i)\\b(String|Integer|Long|Boolean)\\b'
-    name: 'storage.type.primitive.vb6'
+    match: '(?i)\\b(String|Integer|Long|Boolean|Variant|Collection)\\b'
+    name: 'storage.type.vb6'
   }
 
   # # sub, function

@@ -1,0 +1,79 @@
+'.source.vb6':
+  'Private Sub':
+    'prefix': 'prisub'
+    'body': """
+      ' ${1:Creates awesome features}
+      Private Sub ${2:SubName}()
+      \t${3:Body}
+      End Sub
+    """
+  'Private Function':
+    'prefix': 'prifun'
+    'body': """
+      ' ${1:Calculates the age of the universe}
+      Private Function ${2:FunctionName}() As ${3:String}
+      \t${4:Body}
+      \t${2:FunctionName} = ''
+      End Function
+    """
+
+  'Public Sub':
+    'prefix': 'pubsub'
+    'body': """
+      ' ${1:Creates awesome features}
+      Public Sub ${2:SubName}()
+      \t${3:Body}
+      End Sub
+    """
+  'Public Function':
+    'prefix': 'pubfun'
+    'body': """
+      ' ${1:Calculates the age of the universe}
+      Public Function ${2:FunctionName}() As ${3:String}
+      \t${4:Body}
+      \t${2:FunctionName} = ''
+      End Function
+    """
+
+  'Public Get Set Property With Backing Field':
+    'prefix': 'pubgetset'
+    'body': """
+      ' Holds the value of property ${1:PropertyName}
+      Private m$1 As ${2:String}
+
+      ' Gets the value of property $1
+      Public Property Get $1() As $2
+      \tSet $1 = m$1
+      End Property
+
+      ' Sets the value of property $1
+      Public Property Set $1(New$1 As $2)
+      \tSet m$1 = New$1
+      End Property
+    """
+
+  'Public Get Let Property With Backing Field':
+    'prefix': 'pubgetlet'
+    'body': """
+      ' Holds the value of property ${1:PropertyName}
+      Private m$1 As ${2:String}
+
+      ' Gets the value of property $1
+      Public Property Get $1() As $2
+      \t$1 = m$1
+      End Property
+
+      ' Sets the value of property $1
+      Public Property Let $1(New$1 As $2)
+      \tm$1 = New$1
+      End Property
+    """
+
+  'Loop Array':
+    'prefix': 'forarr'
+    'body': """
+      Dim i As Integer
+      For i = LBound($1) To UBound($1)
+      \t$1(i)
+      Next
+    """
