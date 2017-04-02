@@ -5,20 +5,79 @@ fileTypes: [
 name: 'Visual Basic 6'
 patterns: [
 
+  #
+  # Metadata on top of the file
+  #
+
+  # VERSION 5.00
+  # VERSION 1.0 CLASS
+  {
+    captures:
+      '1':
+        name: 'keyword.other.version.vb6'
+      '2':
+        name: 'constant.numeric.version.vb6'
+      '3':
+        name: 'keyword.other.version.class.vb6'
+    match: '^(VERSION)\\s*([0-9]+\\.[0-9]+)(\\s+CLASS)?$'
+    name: 'meta.version.vb6'
+  }
+
+  #
+  # VB6
+  #
+
+  # Option Explicit
+  {
+    begin: '^(?i:(option))\\s+(?=(\\w+))'
+    beginCaptures:
+      '1':
+        name: 'keyword.other.option.vb6'
+    end: '$'
+    name: 'meta.other.option.vb6'
+    patterns: [
+      {
+        match: '\\b(?i:(explicit))\\b'
+        name: 'keyword.other.explicit.vb6'
+      },
+      {
+        match: '.*',
+        name: 'invalid.illegal.option.vb6'
+      }
+    ]
+  }
+
+    # Implements Something
+    {
+      match: '^(?i:(implements))\\s+(\\w+)(.*)$'
+      name: 'meta.other.implements.vb6'
+      captures:
+        '1':
+          name: 'keyword.other.implements.vb6'
+        '2':
+          name: 'entity.name.interface.vb6'
+          patterns: [
+            {
+              include: '#interface-names'
+            }
+          ]
+        '3':
+          name: 'invalid.illegal.extra.vb6'
+    }
+
   # Sub Hello()
   {
-    match: '\\b(?i:(sub|function))\\b\\s+(\\w+)'
-    name: 'meta.function.vb6'
     captures:
       '1':
         name: 'storage.type.function.vb6'
       '2':
         name: 'entity.name.function.vb6'
+    match: '\\b(?i:(sub|function))\\s+(\\w+)\\b'
+    name: 'meta.function.vb6'
   }
 
   # variable As Type
   {
-    match: '\\b([A-Za-z]+)\\s+(As)\\s+([A-Za-z]+)\\b'
     captures:
       '1':
         name: 'variable.parameter.vb6'
@@ -26,6 +85,7 @@ patterns: [
         name: 'keyword.operator.as.vb6'
       '3':
         name: 'storage.type.vb6'
+    match: '\\b([A-Za-z]+)\\s+(As)\\s+([A-Za-z]+)\\b'
   }
 
   # numbers
@@ -75,11 +135,11 @@ patterns: [
     name: 'storage.type.vb6'
   }
 
-  # # sub, function
-  # {
-  #   match: '(?i)\\b(Sub|Function|Property (Let|Get|Set)|End Sub|End Function|End Property)\\b'
-  #   name: 'storage.type.function.vb6'
-  # }
+  # sub, function
+  {
+    match: '(?i)\\b(Sub|Function|Property (Let|Get|Set)|End Sub|End Function|End Property)\\b'
+    name: 'storage.type.function.vb6'
+  }
 
   # strings
   {
@@ -139,5 +199,38 @@ repository:
         name: 'comment.line.vb6'
       }
     ]
+  'interface-names':
+    patterns: [
+      {
+        include: '#reserved-interface-names'
+      }
+      {
+        include: '#generic-names'
+      }
+    ]
+  'reserved-interface-names':
+    patterns: [
+      {
+        include: '#reserved-names'
+      }
+      {
+        include: '#reserved-types'
+      }
+      {
+        include: '#reserved-values'
+      }
+    ]
+  'generic-names':
+    match: '[A-Za-z_][A-Za-z0-9_]*'
+  'reserved-names':
+    match: '(?i)\\b(implements|dim|redim|as|for|next|if|else|end|exit|option|explicit|while|wend|do|loop|sub|function|property|get|let|set|private|public|on|error|resume|goto)\\b'
+    name: 'invalid.illegal.reserved.vb6'
+  'reserved-types':
+    match: '(?i)\\b(string|integer|boolean|long|variant)\\b'
+    name: 'invalid.illegal.reserved.vb6'
+  'reserved-values':
+    match: '(?i)\\b(true|false)\\b'
+    name: 'invalid.illegal.reserved.vb6'
+
 
 scopeName: 'source.vb6'
