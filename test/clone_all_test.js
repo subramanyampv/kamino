@@ -28,8 +28,9 @@ describe('clone-all', function() {
                 requestOptions: this.server,
                 repositories: [
                     {
-                        clone_url: 'https://lalala',
-                        ssh_url: 'ssh://lalala'
+                        clone_url: 'https://myHost/myRepo',
+                        ssh_url: 'ssh://myHost/myRepo',
+                        name: 'myRepo'
                     }
                 ]
             });
@@ -70,7 +71,7 @@ describe('clone-all', function() {
 
         // assert
         return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('ssh://lalala');
+            expect(gitClone._cloneUrl).to.equal('ssh://myHost/myRepo');
         });
     });
 
@@ -89,7 +90,7 @@ describe('clone-all', function() {
 
         // assert
         return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('https://lalala');
+            expect(gitClone._cloneUrl).to.equal('https://myHost/myRepo');
         });
     });
 
@@ -109,7 +110,7 @@ describe('clone-all', function() {
 
         // assert
         return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('ssh://nemo@lalala');
+            expect(gitClone._cloneUrl).to.equal('ssh://nemo@myHost/myRepo');
         });
     });
 });

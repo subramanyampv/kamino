@@ -5,6 +5,7 @@ var GitServer = require('./lib/GitServer');
 var logger = require('./lib/logger');
 var GitClone = require('./lib/GitClone');
 var options = require('./lib/options');
+var path = require('path');
 
 /**
  * Tries to clone a repository.
@@ -30,7 +31,7 @@ function processGitHub(repositoryResults) {
             url = url.replace('ssh://', 'ssh://' + sshUsername + '@');
         }
 
-        var cloneLocation = localFolder + repository.name;
+        var cloneLocation = path.join(localFolder, repository.name);
         return tryCloneRepo(url, cloneLocation);
     }));
 }
