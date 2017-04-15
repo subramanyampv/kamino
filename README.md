@@ -16,8 +16,8 @@ This is a simple script that requires [Node.js](http://nodejs.org/).
 Installation
 ------------
 
-- Clone this repository from github.
-- Install the node dependencies with `npm install`
+*   Clone this repository from github.
+*   Install the node dependencies with `npm install`
 
 Usage
 -----
@@ -33,8 +33,9 @@ This will clone all the repositories of the `ngeor` user into the `target` sibli
 
 Additional configuration options:
 
-- -v: increases verbosity
-- --protocol: specify the cloning protocol (https or ssh)
-- --dry-run: don't clone anything, just show what would happen
-- --ssh-username: specify a different username for cloning over ssh
-- --no-pagination: don't fetch all repositories but only the first ones GitHub returns
+*   -v: increases verbosity
+*   --protocol: specify the cloning protocol (https or ssh)
+*   --dry-run: don't clone anything, just show what would happen
+*   --ssh-username: specify a different username for cloning over ssh
+*   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
+*   --bundle-dir: creates bundles of the cloned repositories in the given directory

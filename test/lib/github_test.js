@@ -25,7 +25,7 @@ StubHttpsResponse.prototype.on = function(eventName, handler) {
     }
 };
 
-describe('GitServer', function() {
+describe('github', function() {
     var sandbox;
     var https;
     var options;
@@ -70,15 +70,13 @@ describe('GitServer', function() {
         options.isNoPagination.returns(true);
 
         // act
-        var GitServer = proxyquire('../../lib/GitServer', {
+        var github = proxyquire('../../lib/github', {
             https: https,
             './options': options
         });
 
-        var gitServer = new GitServer();
-
         // assert
-        return expect(gitServer.getRepositories()).to.eventually.eql({
+        return expect(github.getRepositories()).to.eventually.eql({
             requestOptions: requestOptions,
             repositories: repositories
         });

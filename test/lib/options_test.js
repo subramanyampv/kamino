@@ -66,6 +66,17 @@ describe('options', () => {
         });
     });
 
+    describe('getBundleDirectory', () => {
+        it('should return empty string when --bundle-dir is missing', () => {
+            expect(options.getBundleDirectory()).to.equal('');
+        });
+
+        it('should return the directory when --bundle-dir=x is present', () => {
+            process.argv.push('--bundle-dir=../target/');
+            expect(options.getBundleDirectory()).to.equal('../target/');
+        });
+    });
+
     describe('getProtocol', () => {
         it('should return ssh when --protocol is missing', () => {
             expect(options.getProtocol()).to.equal('ssh');

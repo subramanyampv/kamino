@@ -1,6 +1,7 @@
 var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
+var _ = require('lodash');
 var expect = chai.expect;
 
 chai.use(require('chai-as-promised'));
@@ -9,108 +10,63 @@ require('sinon-as-promised');
 describe('clone-all', function() {
     var cloneAll;
     var sandbox;
-    var GitServer;
-    var GitClone;
+    var github;
     var gitClone;
-    var options;
+    var repositoriesToCloneInstances;
 
     beforeEach(function() {
         // setup a sinon sandbox
         sandbox = sinon.sandbox.create();
 
-        // stub the GitServer class
-        GitServer = function(server) {
-            this.server = server;
+        // stub the github module
+        github = sandbox.stub(require('../lib/github'));
+        github.getRepositories.returns(Promise.resolve({
+            requestOptions: this.server,
+            repositories: [
+                {
+                    name: 'abc'
+                },
+                {
+                    name: 'def'
+                }
+            ]
+        }));
+
+        // stub the repositoriesToCloneInstances function
+        repositoriesToCloneInstances = function(repositoryResults) {
+            return repositoryResults.repositories.map(x => _.assign(x, { url: 'https://' + x.name }));
         };
 
-        GitServer.prototype.getRepositories = function() {
-            return Promise.resolve({
-                requestOptions: this.server,
-                repositories: [
-                    {
-                        clone_url: 'https://myHost/myRepo',
-                        ssh_url: 'ssh://myHost/myRepo',
-                        name: 'myRepo'
-                    }
-                ]
-            });
+        // stub the gitClone function
+        gitClone = function(cloneInstruction) {
+            return Promise.resolve(_.assign(cloneInstruction, { check: true }));
         };
 
-        // stub the GitClone class
-        GitClone = function(options) {
-            this._cloneUrl = options.cloneUrl;
-            this._cloneLocation = options.cloneLocation;
-            gitClone = this;
-        };
-
-        GitClone.prototype.clone = function() {
-            return Promise.resolve({
-                cloneLocation: this._cloneLocation,
-                error: null
-            });
-        };
-
-        // stub the options
-        options = sandbox.stub(require('../lib/options'));
+        cloneAll = proxyquire('../clone-all', {
+            './lib/github': github,
+            './lib/git_clone': gitClone,
+            './lib/repositories_to_clone_instances': repositoriesToCloneInstances
+        });
     });
 
     afterEach(function() {
         sandbox.restore();
     });
 
-    it('should clone the configured repositories', () => {
-        // arrange
-        options.getOutputDirectory.returns('../');
-
-        // act
-        cloneAll = proxyquire('../clone-all', {
-            './lib/options': options,
-            './lib/GitServer': GitServer,
-            './lib/GitClone': GitClone
-        });
-
-        // assert
-        return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('ssh://myHost/myRepo');
-        });
-    });
-
-    it('should clone the configured repositories with HTTPS', () => {
-        // arrange
-        options.getProtocol.returns('https');
-        options.getOutputDirectory.returns('../');
-        options.isNoPagination.returns(false);
-
-        // act
-        cloneAll = proxyquire('../clone-all', {
-            './lib/options': options,
-            './lib/GitServer': GitServer,
-            './lib/GitClone': GitClone
-        });
-
-        // assert
-        return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('https://myHost/myRepo');
-        });
-    });
-
-    it('should use the username override', () => {
-        // arrange
-        options.getProtocol.returns('ssh');
-        options.getOutputDirectory.returns('../');
-        options.isNoPagination.returns(true);
-        options.getSSHUsername.returns('nemo');
-
-        // act
-        cloneAll = proxyquire('../clone-all', {
-            './lib/options': options,
-            './lib/GitServer': GitServer,
-            './lib/GitClone': GitClone
-        });
-
-        // assert
-        return cloneAll.then(function() {
-            expect(gitClone._cloneUrl).to.equal('ssh://nemo@myHost/myRepo');
+    it('should clone the repositories', () => {
+        return cloneAll.then(function(result) {
+            expect(result).to.eql([
+                {
+                    check: true,
+                    name: 'abc',
+                    url: 'https://abc'
+                },
+                {
+                    check: true,
+                    name: 'def',
+                    url: 'https://def'
+                }
+            ]);
         });
     });
 });
