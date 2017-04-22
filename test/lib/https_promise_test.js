@@ -61,7 +61,7 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('100');
+        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('Error: 100');
     });
 
     it('should reject if status code is more than 300', () => {
@@ -80,7 +80,7 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('404');
+        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('Error: 404');
     });
 
     it('should reject if the request object has an error', () => {

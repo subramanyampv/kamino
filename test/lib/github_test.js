@@ -20,7 +20,7 @@ describe('github', function() {
         sandbox.restore();
     });
 
-    it('should fetch the first page', function() {
+    it('should fetch repositories from GitHub', function() {
         // arrange
         var repositories = [{
             clone_url: 'https://something',
