@@ -3,6 +3,9 @@
 var repoProvider = require('./lib/repo_provider');
 var logger = require('./lib/logger');
 var gitClone = require('./lib/git_clone');
+var gitPull = require('./lib/git_pull');
+var gitBundle = require('./lib/git_bundle');
+var options = require('./lib/options');
 var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
 var sequentialArrayPromise = require('./lib/sequential_array_promise');
 
@@ -16,7 +19,18 @@ function summarizeErrors(cloneResult) {
 }
 
 function handleSingleRepo(cloneInstruction) {
-    return gitClone(cloneInstruction).then(summarizeErrors);
+    var promise = Promise.resolve(cloneInstruction)
+        .then(gitClone)
+        .then(gitPull);
+
+    if (options.getBundleDirectory()) {
+        promise = promise.then(gitBundle);
+    }
+
+    promise = promise
+        .then(summarizeErrors);
+
+    return promise;
 }
 
 var mainPromise = repoProvider.getRepositories() // get repositories via REST API

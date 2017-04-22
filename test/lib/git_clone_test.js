@@ -8,7 +8,7 @@ require('sinon-as-promised');
 
 describe('git_clone', () => {
     var sandbox;
-    var fs;
+    var fsPromise;
     var execPromise;
     var options;
     var logger;
@@ -17,11 +17,11 @@ describe('git_clone', () => {
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
-        fs = require('fs');
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
         options = sandbox.stub(require('../../lib/options'));
         logger = sandbox.stub(require('../../lib/logger'));
+        fsPromise = sandbox.stub(require('../../lib/fs_promise'));
         cloneInstruction = {
             name: 'myRepo',
             url: 'https://whatever',
@@ -29,7 +29,7 @@ describe('git_clone', () => {
         };
 
         gitClone = proxyquire('../../lib/git_clone', {
-            fs: fs,
+            './fs_promise': fsPromise,
             'path': {
                 join: (a, b) => a + '/' + b,
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
@@ -47,7 +47,7 @@ describe('git_clone', () => {
     describe('when the location is missing', () => {
         beforeEach(() => {
             execPromise.withArgs('git clone https://whatever whatever-dir').resolves(null);
-            sandbox.stub(fs, 'stat').withArgs('whatever-dir').yields(new Error('not found'));
+            fsPromise.exists.withArgs('whatever-dir').resolves(false);
         });
 
         it('should call exec only once', () => {
@@ -60,7 +60,7 @@ describe('git_clone', () => {
         it('should return the expected result', () => {
             // act
             return expect(gitClone(cloneInstruction)).to.eventually.eql({
-                error: null,
+                cloneResult: 'success',
                 location: 'whatever-dir',
                 name: 'myRepo',
                 url: 'https://whatever'
@@ -91,33 +91,6 @@ describe('git_clone', () => {
             });
         });
 
-        describe('when the --bundle-dir option is specified', () => {
-            beforeEach(() => {
-                options.getBundleDirectory.returns('../bundles');
-                execPromise.withArgs('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' })
-                    .resolves(new Error('Could not create bundle'));
-            });
-
-            it('should create the bundle', () => {
-                // act
-                return gitClone(cloneInstruction).then(function() {
-                    // assert
-                    expect(execPromise).to.have.been.calledWith('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' });
-                });
-            });
-
-            it('should add the error to the result', () => {
-                // act
-                return expect(gitClone(cloneInstruction)).to.eventually.eql({
-                    error: new Error('Could not create bundle'),
-                    location: 'whatever-dir',
-                    name: 'myRepo',
-                    url: 'https://whatever'
-                });
-            });
-
-        });
-
         describe('when cloning fails', () => {
             beforeEach(() => {
                 execPromise.withArgs('git clone https://whatever whatever-dir').resolves(new Error('cloning has failed'));
@@ -137,20 +110,10 @@ describe('git_clone', () => {
 
             it('should return the expected result', () => {
                 return expect(gitClone(cloneInstruction)).to.eventually.eql({
-                    error: new Error('cloning failed'),
+                    cloneResult: 'error',
                     location: 'whatever-dir',
                     name: 'myRepo',
                     url: 'https://whatever'
-                });
-            });
-
-            it('should not attempt to bundle', () => {
-                // arrange
-                options.getBundleDirectory.returns('../bundles');
-
-                // act
-                return gitClone(cloneInstruction).then(function() {
-                    expect(execPromise).to.have.been.calledOnce;
                 });
             });
         });
@@ -159,7 +122,7 @@ describe('git_clone', () => {
     describe('when the location exists', () => {
         beforeEach(() => {
             execPromise.resolves(null);
-            sandbox.stub(fs, 'stat').withArgs('whatever-dir').yields();
+            fsPromise.exists.withArgs('whatever-dir').resolves(true);
         });
 
         it('should not clone', () => {
@@ -172,7 +135,7 @@ describe('git_clone', () => {
             return expect(gitClone(cloneInstruction)).to.eventually.eql({
                 location: 'whatever-dir',
                 name: 'myRepo',
-                skip: true,
+                cloneResult: 'skip',
                 url: 'https://whatever'
             });
         });

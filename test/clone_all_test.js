@@ -12,7 +12,10 @@ describe('clone-all', function() {
     var sandbox;
     var repoProvider;
     var gitClone;
+    var gitPull;
+    var gitBundle;
     var repositoriesToCloneInstances;
+    var options;
 
     beforeEach(function() {
         // setup a sinon sandbox
@@ -35,14 +38,18 @@ describe('clone-all', function() {
         };
 
         // stub the gitClone function
-        gitClone = function(cloneInstruction) {
-            return Promise.resolve(_.assign(cloneInstruction, { check: true }));
-        };
+        gitClone = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { cloneResult: true }));
+        gitPull = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { pullResult: true }));
+        gitBundle = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { bundleResult: true }));
+        options = sandbox.stub(require('../lib/options'));
 
         cloneAll = proxyquire('../clone-all', {
             './lib/repo_provider': repoProvider,
             './lib/git_clone': gitClone,
-            './lib/repositories_to_clone_instances': repositoriesToCloneInstances
+            './lib/git_pull': gitPull,
+            './lib/git_bundle': gitBundle,
+            './lib/repositories_to_clone_instances': repositoriesToCloneInstances,
+            './lib/options': options
         });
     });
 
@@ -51,14 +58,36 @@ describe('clone-all', function() {
     });
 
     it('should clone the repositories', () => {
+        options.getBundleDirectory.returns('../bundles');
         return expect(cloneAll).to.eventually.eql([
             {
-                check: true,
+                cloneResult: true,
+                pullResult: true,
+                bundleResult: true,
                 name: 'abc',
                 url: 'https://abc'
             },
             {
-                check: true,
+                cloneResult: true,
+                pullResult: true,
+                bundleResult: true,
+                name: 'def',
+                url: 'https://def'
+            }
+        ]);
+    });
+
+    it('should not attempt bundling when --bundle-dir parameter is missing', () => {
+        return expect(cloneAll).to.eventually.eql([
+            {
+                cloneResult: true,
+                pullResult: true,
+                name: 'abc',
+                url: 'https://abc'
+            },
+            {
+                cloneResult: true,
+                pullResult: true,
                 name: 'def',
                 url: 'https://def'
             }
