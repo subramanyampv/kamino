@@ -6,23 +6,33 @@ var logger = require('./lib/logger');
 var gitClone = require('./lib/git_clone');
 var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
 
-function summarizeErrors(cloneResults) {
-    cloneResults.forEach(function(cloneResult) {
-        if (cloneResult.error) {
-            logger.error('Error cloning ' + cloneResult.cloneLocation + ': ' + cloneResult.error);
-            process.exitCode = 1;
-        }
-    });
-
-    return cloneResults;
+function summarizeErrors(cloneResult) {
+    if (cloneResult.error) {
+        logger.error('Error cloning ' + cloneResult.cloneLocation + ': ' + cloneResult.error);
+        process.exitCode = 1;
+    }
 }
 
+var results = [];
 var mainPromise = repoProvider.getRepositories() // get repositories via REST API
     .then(repositoriesToCloneInstances) // convert results to array of clone instructions
     .then(function(cloneInstructions) {
-        return Promise.all(cloneInstructions.map(gitClone));
+        return cloneInstructions.map(cloneInstruction => (()=>gitClone(cloneInstruction)));
     })
-    .then(summarizeErrors) // list errors
+    .then(function(clonePromises) {
+        return clonePromises.reduce(function(accumulator, currentValue) {
+            return accumulator
+                .then(currentValue)
+                .then(function(result) {
+                    results.push(result);
+                    return result;
+                })
+                .then(summarizeErrors);
+        }, Promise.resolve());
+    })
+    .then(function() {
+        return results;
+    })
     .catch(function(err) { // generic catch-all
         process.exitCode = 2;
         logger.error('An unexpected error occurred');

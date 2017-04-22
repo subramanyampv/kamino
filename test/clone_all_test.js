@@ -20,21 +20,18 @@ describe('clone-all', function() {
 
         // stub the repoProvider module
         repoProvider = sandbox.stub(require('../lib/repo_provider'));
-        repoProvider.getRepositories.returns(Promise.resolve({
-            requestOptions: this.server,
-            repositories: [
-                {
-                    name: 'abc'
-                },
-                {
-                    name: 'def'
-                }
-            ]
-        }));
+        repoProvider.getRepositories.resolves([
+            {
+                name: 'abc'
+            },
+            {
+                name: 'def'
+            }
+        ]);
 
         // stub the repositoriesToCloneInstances function
-        repositoriesToCloneInstances = function(repositoryResults) {
-            return repositoryResults.repositories.map(x => _.assign(x, { url: 'https://' + x.name }));
+        repositoriesToCloneInstances = function(repositories) {
+            return repositories.map(x => _.assign(x, { url: 'https://' + x.name }));
         };
 
         // stub the gitClone function
@@ -54,19 +51,17 @@ describe('clone-all', function() {
     });
 
     it('should clone the repositories', () => {
-        return cloneAll.then(function(result) {
-            expect(result).to.eql([
-                {
-                    check: true,
-                    name: 'abc',
-                    url: 'https://abc'
-                },
-                {
-                    check: true,
-                    name: 'def',
-                    url: 'https://def'
-                }
-            ]);
-        });
+        return expect(cloneAll).to.eventually.eql([
+            {
+                check: true,
+                name: 'abc',
+                url: 'https://abc'
+            },
+            {
+                check: true,
+                name: 'def',
+                url: 'https://def'
+            }
+        ]);
     });
 });
