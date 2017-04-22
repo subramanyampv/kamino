@@ -3,12 +3,16 @@ var expect = chai.expect;
 
 describe('options', () => {
     var options;
+
     beforeEach(() => {
         options = require('../../lib/options');
     });
 
     afterEach(() => {
         process.argv = [];
+        delete process.env.CLONE_ALL_OWNER;
+        delete process.env.CLONE_ALL_USERNAME;
+        delete process.env.CLONE_ALL_PASSWORD;
     });
 
     describe('isDryRun', () => {
@@ -38,8 +42,19 @@ describe('options', () => {
             expect(options.getOwnerUsername()).to.equal('');
         });
 
+        it('should get the env variable CLONE_ALL_OWNER', () => {
+            process.env['CLONE_ALL_OWNER'] = 'user123';
+            expect(options.getOwnerUsername()).to.equal('user123');
+        });
+
         it('should return the user when --owner=x is present', () => {
             process.argv.push('--owner=ngeor');
+            expect(options.getOwnerUsername()).to.equal('ngeor');
+        });
+
+        it('should return the user when --owner=x and env variable are both present', () => {
+            process.argv.push('--owner=ngeor');
+            process.env['CLONE_ALL_OWNER'] = 'user123';
             expect(options.getOwnerUsername()).to.equal('ngeor');
         });
     });
@@ -60,6 +75,11 @@ describe('options', () => {
             expect(options.getUsername()).to.equal('');
         });
 
+        it('should get the env variable CLONE_ALL_USERNAME', () => {
+            process.env['CLONE_ALL_USERNAME'] = 'user123';
+            expect(options.getUsername()).to.equal('user123');
+        });
+
         it('should return the user when --username=x is present', () => {
             process.argv.push('--username=ngeor');
             expect(options.getUsername()).to.equal('ngeor');
@@ -69,6 +89,11 @@ describe('options', () => {
     describe('getPassword', () => {
         it('should return empty string when --password is missing', () => {
             expect(options.getPassword()).to.equal('');
+        });
+
+        it('should get the env variable CLONE_ALL_PASSWORD', () => {
+            process.env['CLONE_ALL_PASSWORD'] = 'user123';
+            expect(options.getPassword()).to.equal('user123');
         });
 
         it('should return the user when --password=x is present', () => {
