@@ -9,15 +9,6 @@ var options = require('./lib/options');
 var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
 var sequentialArrayPromise = require('./lib/sequential_array_promise');
 
-function summarizeErrors(cloneResult) {
-    if (cloneResult.error) {
-        logger.error('Error cloning ' + cloneResult.cloneLocation + ': ' + cloneResult.error);
-        process.exitCode = 1;
-    }
-
-    return cloneResult;
-}
-
 function handleSingleRepo(cloneInstruction) {
     var promise = Promise.resolve(cloneInstruction)
         .then(gitClone)
@@ -26,9 +17,6 @@ function handleSingleRepo(cloneInstruction) {
     if (options.getBundleDirectory()) {
         promise = promise.then(gitBundle);
     }
-
-    promise = promise
-        .then(summarizeErrors);
 
     return promise;
 }
