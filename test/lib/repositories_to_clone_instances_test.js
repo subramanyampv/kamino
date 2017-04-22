@@ -25,24 +25,22 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use HTTPS', () => {
         // arrange
-        var repositoryResults = {
-            repositories: [
-                {
-                    name: 'abc',
-                    clone_url: 'https://host/abc'
-                },
-                {
-                    name: 'def',
-                    clone_url: 'https://host/def'
-                }
-            ]
-        };
+        var repositories = [
+            {
+                name: 'abc',
+                clone_url: 'https://host/abc'
+            },
+            {
+                name: 'def',
+                clone_url: 'https://host/def'
+            }
+        ];
 
         options.getOutputDirectory.returns('../target');
         options.getProtocol.returns('https');
 
         // act
-        var result = repositoriesToCloneInstances(repositoryResults);
+        var result = repositoriesToCloneInstances(repositories);
 
         // assert
         expect(result).to.eql([
@@ -62,24 +60,22 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use SSH', () => {
         // arrange
-        var repositoryResults = {
-            repositories: [
-                {
-                    name: 'abc',
-                    ssh_url: 'ssh://host/abc'
-                },
-                {
-                    name: 'def',
-                    ssh_url: 'ssh://host/def'
-                }
-            ]
-        };
+        var repositories = [
+            {
+                name: 'abc',
+                ssh_url: 'ssh://host/abc'
+            },
+            {
+                name: 'def',
+                ssh_url: 'ssh://host/def'
+            }
+        ];
 
         options.getOutputDirectory.returns('../target');
         options.getProtocol.returns('ssh');
 
         // act
-        var result = repositoriesToCloneInstances(repositoryResults);
+        var result = repositoriesToCloneInstances(repositories);
 
         // assert
         expect(result).to.eql([
@@ -99,25 +95,23 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use SSH with override username', () => {
         // arrange
-        var repositoryResults = {
-            repositories: [
-                {
-                    name: 'abc',
-                    ssh_url: 'ssh://host/abc'
-                },
-                {
-                    name: 'def',
-                    ssh_url: 'ssh://host/def'
-                }
-            ]
-        };
+        var repositories = [
+            {
+                name: 'abc',
+                ssh_url: 'ssh://host/abc'
+            },
+            {
+                name: 'def',
+                ssh_url: 'ssh://host/def'
+            }
+        ];
 
         options.getOutputDirectory.returns('../target');
         options.getProtocol.returns('ssh');
         options.getSSHUsername.returns('nemo');
 
         // act
-        var result = repositoriesToCloneInstances(repositoryResults);
+        var result = repositoriesToCloneInstances(repositories);
 
         // assert
         expect(result).to.eql([

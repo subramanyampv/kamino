@@ -2,40 +2,17 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-
 chai.use(require('chai-as-promised'));
-
-function StubHttpsRequest() {
-
-}
-
-StubHttpsRequest.prototype.end = function() {};
-StubHttpsRequest.prototype.on = function() {};
-
-function StubHttpsResponse(data) {
-    this.statusCode = 200;
-    this._data = data;
-}
-
-StubHttpsResponse.prototype.on = function(eventName, handler) {
-    if (eventName === 'data') {
-        handler(this._data);
-    } else if (eventName === 'end') {
-        handler();
-    }
-};
+require('sinon-as-promised');
 
 describe('github', function() {
     var sandbox;
-    var https;
+    var repoFetcher;
     var options;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
-        https = {
-            request: function() {}
-        };
-
+        repoFetcher = sandbox.stub();
         options = sandbox.stub(require('../../lib/options'));
     });
 
@@ -45,8 +22,6 @@ describe('github', function() {
 
     it('should fetch the first page', function() {
         // arrange
-        var request = new StubHttpsRequest();
-
         var repositories = [{
             clone_url: 'https://something',
             ssh_url: 'ssh://something',
@@ -63,22 +38,18 @@ describe('github', function() {
             }
         };
 
-        sandbox.stub(https, 'request').withArgs(requestOptions)
-            .returns(request)
-            .callsArgWith(1, new StubHttpsResponse(JSON.stringify(repositories)));
+        repoFetcher.withArgs(requestOptions)
+            .resolves(repositories);
         options.getUsername.returns('ngeor');
         options.isNoPagination.returns(true);
 
         // act
         var github = proxyquire('../../lib/github', {
-            https: https,
+            './repo_fetcher': repoFetcher,
             './options': options
         });
 
         // assert
-        return expect(github.getRepositories()).to.eventually.eql({
-            requestOptions: requestOptions,
-            repositories: repositories
-        });
+        return expect(github.getRepositories()).to.eventually.eql(repositories);
     });
 });
