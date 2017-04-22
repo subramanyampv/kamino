@@ -10,7 +10,7 @@ require('sinon-as-promised');
 describe('clone-all', function() {
     var cloneAll;
     var sandbox;
-    var github;
+    var repoProvider;
     var gitClone;
     var repositoriesToCloneInstances;
 
@@ -18,9 +18,9 @@ describe('clone-all', function() {
         // setup a sinon sandbox
         sandbox = sinon.sandbox.create();
 
-        // stub the github module
-        github = sandbox.stub(require('../lib/github'));
-        github.getRepositories.returns(Promise.resolve({
+        // stub the repoProvider module
+        repoProvider = sandbox.stub(require('../lib/repo_provider'));
+        repoProvider.getRepositories.returns(Promise.resolve({
             requestOptions: this.server,
             repositories: [
                 {
@@ -43,7 +43,7 @@ describe('clone-all', function() {
         };
 
         cloneAll = proxyquire('../clone-all', {
-            './lib/github': github,
+            './lib/repo_provider': repoProvider,
             './lib/git_clone': gitClone,
             './lib/repositories_to_clone_instances': repositoriesToCloneInstances
         });

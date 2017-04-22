@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var Promise = require('promise');
-var github = require('./lib/github');
+var repoProvider = require('./lib/repo_provider');
 var logger = require('./lib/logger');
 var gitClone = require('./lib/git_clone');
 var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
@@ -17,7 +17,7 @@ function summarizeErrors(cloneResults) {
     return cloneResults;
 }
 
-var mainPromise = github.getRepositories() // get repositories via REST API
+var mainPromise = repoProvider.getRepositories() // get repositories via REST API
     .then(repositoriesToCloneInstances) // convert results to array of clone instructions
     .then(function(cloneInstructions) {
         return Promise.all(cloneInstructions.map(gitClone));

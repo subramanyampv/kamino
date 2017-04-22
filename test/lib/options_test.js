@@ -33,6 +33,28 @@ describe('options', () => {
         });
     });
 
+    describe('getOwnerUsername', () => {
+        it('should return empty string when --owner is missing', () => {
+            expect(options.getOwnerUsername()).to.equal('');
+        });
+
+        it('should return the user when --owner=x is present', () => {
+            process.argv.push('--owner=ngeor');
+            expect(options.getOwnerUsername()).to.equal('ngeor');
+        });
+    });
+
+    describe('getProvider', () => {
+        it('should return empty string when --provider is missing', () => {
+            expect(options.getProvider()).to.equal('');
+        });
+
+        it('should return the user when --provider=x is present', () => {
+            process.argv.push('--provider=ngeor');
+            expect(options.getProvider()).to.equal('ngeor');
+        });
+    });
+
     describe('getUsername', () => {
         it('should return empty string when --username is missing', () => {
             expect(options.getUsername()).to.equal('');
@@ -41,6 +63,17 @@ describe('options', () => {
         it('should return the user when --username=x is present', () => {
             process.argv.push('--username=ngeor');
             expect(options.getUsername()).to.equal('ngeor');
+        });
+    });
+
+    describe('getPassword', () => {
+        it('should return empty string when --password is missing', () => {
+            expect(options.getPassword()).to.equal('');
+        });
+
+        it('should return the user when --password=x is present', () => {
+            process.argv.push('--password=ngeor');
+            expect(options.getPassword()).to.equal('ngeor');
         });
     });
 

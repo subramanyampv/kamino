@@ -13,7 +13,7 @@ describe('github', function() {
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
         repoFetcher = sandbox.stub();
-        options = sandbox.stub(require('../../lib/options'));
+        options = sandbox.stub(require('../../../lib/options'));
     });
 
     afterEach(function() {
@@ -44,9 +44,9 @@ describe('github', function() {
         options.isNoPagination.returns(true);
 
         // act
-        var github = proxyquire('../../lib/github', {
-            './repo_fetcher': repoFetcher,
-            './options': options
+        var github = proxyquire('../../../lib/providers/github', {
+            '../repo_fetcher': repoFetcher,
+            '../options': options
         });
 
         // assert
