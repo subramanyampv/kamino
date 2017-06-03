@@ -20,6 +20,10 @@
     "eslint": "^3.19.0",
     "eslint-config-bestseller": "^1.1.15",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1"
+    "gulp-eslint": "^3.0.1",
+    "gulp-mocha": "^4.3.1",
+    "mocha": "^3.4.2",
+    "yeoman-assert": "^3.0.0",
+    "yeoman-test": "^1.6.0"
   }
 }
