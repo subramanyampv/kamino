@@ -1,6 +1,61 @@
 'use strict';
 var Generator = require('yeoman-generator');
 var uuid = require('uuid');
+var ejs = require('ejs');
+
+/**
+ * Returns the parameter unchanged.
+ * Used when a file is already indented with tabs.
+ * @param {String} contents The file contents.
+ * @returns {String} The new file contents.
+ */
+function noop(contents) {
+    return contents;
+}
+
+/**
+ * Converts tabs to spaces.
+ * @param {String} contents The file contents.
+ * @returns {String} The new file contents.
+ */
+function tabsToSpaces(contents) {
+    return contents.replace(/\t/g, '    ');
+}
+
+/**
+ * Renders the given ejs template in the given context.
+ * @param {String} contents The ejs template.
+ * @param {*} context The context available during template rendering.
+ * @returns {String} The rendered content.
+ */
+function ejsProcessor(contents, context) {
+    return ejs.render(contents, context);
+}
+
+/**
+ * Builds the processor function.
+ * First the file is converted to spaces if needed, then it is rendered with ejs.
+ * @param {String} indentationCharacter The indentation character ('tabs' or 'spaces').
+ * @param {*} context The context available during template rendering.
+ * @returns {Function} The processor function.
+ */
+function buildProcessor(indentationCharacter, context) {
+    var fn = indentationCharacter === 'tabs' ? noop : tabsToSpaces;
+    return (contents) => ejsProcessor(fn(contents.toString()), context);
+}
+
+/**
+ * Builds the copier function.
+ * @param {*} fs The filesystem.
+ * @param {*} context The context available during template rendering.
+ * @param {String} indentationCharacter The indentation character ('tabs' or 'spaces').
+ * @returns {Function} The copier function.
+ */
+function buildCopier(fs, context, indentationCharacter) {
+    return (from, to) => fs.copy(from, to, {
+        process: buildProcessor(indentationCharacter, context)
+    });
+}
 
 module.exports = Generator.extend({
     prompting: function() {
@@ -16,6 +71,16 @@ module.exports = Generator.extend({
                 type: 'input',
                 name: 'companyName',
                 message: 'Company name (for AssemblyInfo.cs copyright fields)'
+            },
+            {
+                type: 'list',
+                name: 'indentationCharacter',
+                message: 'Indentation with tabs or spaces?',
+                choices: [
+                    'tabs',
+                    'spaces'
+                ],
+                default: 'spaces'
             }
         ]).then(function(answers) {
             _this.props = answers;
@@ -34,6 +99,8 @@ module.exports = Generator.extend({
             testsUUID: uuid.v1().toUpperCase()
         };
 
+        var copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
+
         // copy .gitignore
         this.fs.copy(
             this.templatePath('_gitignore'),
@@ -51,16 +118,16 @@ module.exports = Generator.extend({
             options);
 
         // copy packages/repositories.config
-        this.fs.copyTpl(
+        copyFn(
             this.templatePath('packages/repositories.config'),
-            this.destinationPath('packages/repositories.config'),
-            options);
+            this.destinationPath('packages/repositories.config')
+        );
 
         // copy MyApp *.cs files
-        this.fs.copyTpl(
+        copyFn(
             this.templatePath('MyApp/**/*.cs'),
-            this.destinationPath(name),
-            options);
+            this.destinationPath(name)
+        );
 
         // copy MyApp *.config files
         this.fs.copyTpl(
@@ -75,10 +142,10 @@ module.exports = Generator.extend({
             options);
 
         // copy MyApp.Tests *.cs files
-        this.fs.copyTpl(
+        copyFn(
             this.templatePath('MyApp.Tests/**/*.cs'),
-            this.destinationPath(testName),
-            options);
+            this.destinationPath(testName)
+        );
 
         // copy MyApp.Tests *.config files
         this.fs.copyTpl(
