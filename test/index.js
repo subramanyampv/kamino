@@ -16,6 +16,13 @@ describe('app', () => {
         it('should generate expected files', () => {
             assert.file([
                 '.gitignore',
+
+                '.nuget/NuGet.Config',
+                '.nuget/NuGet.exe',
+                '.nuget/NuGet.targets',
+
+                'packages/repositories.config',
+
                 'SomeApp.sln',
 
                 'SomeApp/SomeApp.csproj',
