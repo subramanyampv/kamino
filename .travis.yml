@@ -1,4 +1,10 @@
 language: node_js
 node_js:
-  - "stable"
+- stable
 before_install: npm install -g gulp-cli
+deploy:
+  provider: npm
+  api_key:
+    secure: fyX+2b37L5e2708zOL1zZJUd9tp7UbikdiKcKXy7JKN37KDlA1Ds9bFxA4mJkmllt1Hd2p22KwOiqAf3r1MTHVDjJ1iODjhdx89vyT6wbutolwonEE2m6Vo/qSKUhydZxFbEKgFE6jjlFmkJ7XNHn0QR6kXHjAsU0ZJSEYsauuGCePesSsuVrPNuhnrPJDs+7vEs2eSKioLcakF/F12YGULQ8r5hIMf/xQPF3qWvnv5cdTOzZ6tbIXpAdXl7ouFf852Dyq5CqqKjtkMRE2C+hT0xCJz0LylQ+NwCjUwBTk45lq0gc2apqaEZpAxIx0SN989DZ9mtAiByEsJnj/H5+J/7HAmE09v4q7VLiQhPPID0MOVB7vnq6UE6q+xKxipi0h3Qga+eUK4XIra2pim++UudgwggLimZIBNSTQebXjEfvgdCityC4V0mVuW2d+44UqnBUCvPSBh5bwLqiQ0bjD426Q/Z/JOLQnYzw0oAXqnRuUJdZu0hZ+OWa1tYLU6Tpg9kdjAJRM8kmqZ4D1G/s1xQcbDSB8B/yl/Wn1YnVkSumQ48CjxX169tq6sj/ruycYwqiGHXz9YSrcJ20zmHk2KZWcZQay8J/7rqzMsEgSlWbVjHhGHSijvvVtpr2WESlPuQ1wOruAoqpQ+rNnvJ01WArJaLJszDtqn3RrWHxtU=
+  on:
+    tags: true
