@@ -1,6 +1,6 @@
 {
   "name": "clone-all",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
   "scripts": {
@@ -17,23 +17,25 @@
   },
   "homepage": "https://github.com/ngeor/clone-all#readme",
   "dependencies": {
-    "lodash": "^4.15.0",
-    "promise": "^7.1.1"
+    "lodash": "^4.17.4",
+    "promise": "^7.3.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-coveralls": "^1.0.1",
-    "grunt-eslint": "^19.0.0",
+    "grunt-eslint": "^20.0.0",
     "grunt-mocha-istanbul": "^5.0.2",
-    "grunt-mocha-test": "^0.13.0",
-    "istanbul": "^0.4.5",
-    "mocha": "^3.0.2",
-    "proxyquire": "^1.7.10",
-    "sinon": "^1.17.5",
-    "sinon-as-promised": "^4.0.2",
-    "sinon-chai": "^2.8.0"
+    "grunt-mocha-test": "^0.13.2",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^3.4.2",
+    "proxyquire": "^1.8.0",
+    "sinon": "^2.3.4",
+    "sinon-chai": "^2.11.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }

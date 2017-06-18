@@ -7,29 +7,36 @@ var gitPull = require('./lib/git_pull');
 var gitBundle = require('./lib/git_bundle');
 var options = require('./lib/options');
 var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
-var sequentialArrayPromise = require('./lib/sequential_array_promise');
 
-function handleSingleRepo(cloneInstruction) {
-    var promise = Promise.resolve(cloneInstruction)
-        .then(gitClone)
-        .then(gitPull);
+async function handleSingleRepo(cloneInstruction) {
+    var cloneResult = await gitClone(cloneInstruction);
+    var pullResult = await gitPull(cloneResult);
 
     if (options.getBundleDirectory()) {
-        promise = promise.then(gitBundle);
+        return await gitBundle(pullResult);
     }
 
-    return promise;
+    return pullResult;
 }
 
-var mainPromise = repoProvider.getRepositories() // get repositories via REST API
-    .then(repositoriesToCloneInstances) // convert results to array of clone instructions
-    .then(function(cloneInstructions) {
-        return sequentialArrayPromise(cloneInstructions, handleSingleRepo);
-    })
-    .catch(function(err) { // generic catch-all
+async function main() {
+    var result = [];
+    try {
+        var repositories = await repoProvider.getRepositories();
+        var cloneInstructions = repositoriesToCloneInstances(repositories);
+        for (var i = 0; i < cloneInstructions.length; i++) {
+            var cloneInstruction = cloneInstructions[i];
+            result.push(await handleSingleRepo(cloneInstruction));
+        }
+
+        return result;
+    } catch (err) {
         process.exitCode = 2;
         logger.error('An unexpected error occurred');
         logger.error(err);
-    });
+    }
+}
 
-module.exports = mainPromise;
+main();
+
+module.exports = main;

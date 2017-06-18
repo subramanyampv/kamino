@@ -3,7 +3,6 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 chai.use(require('chai-as-promised'));
-require('sinon-as-promised');
 
 describe('bitbucket_cloud', function() {
     var sandbox;
@@ -12,7 +11,6 @@ describe('bitbucket_cloud', function() {
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
-        repoFetcher = sandbox.stub();
         options = sandbox.stub(require('../../../lib/options'));
     });
 
@@ -22,7 +20,7 @@ describe('bitbucket_cloud', function() {
 
     it('should fetch repositories from Bitbucket Cloud', function() {
         // arrange
-        var repositories = [{
+        var expectedRepositories = [{
             clone_url: 'https://something',
             ssh_url: 'ssh://something',
             name: 'repoName'
@@ -40,8 +38,31 @@ describe('bitbucket_cloud', function() {
             }
         };
 
-        repoFetcher.withArgs(requestOptions)
-            .resolves(repositories);
+        var bitbucketResponse = {
+            values: [
+                {
+                    slug: 'repoName',
+                    links: {
+                        clone: [
+                            {
+                                name: 'https',
+                                href: 'https://something'
+                            },
+                            {
+                                name: 'ssh',
+                                href: 'ssh://something'
+                            }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        repoFetcher = function(options, converter) {
+            expect(options).to.eql(requestOptions);
+            return Promise.resolve(converter(JSON.stringify(bitbucketResponse)));
+        };
+
         options.getOwnerUsername.returns('ngeor');
         options.getUsername.returns('user1');
         options.getPassword.returns('test123');
@@ -54,6 +75,6 @@ describe('bitbucket_cloud', function() {
         });
 
         // assert
-        return expect(bitbucketCloud.getRepositories()).to.eventually.eql(repositories);
+        return expect(bitbucketCloud.getRepositories()).to.eventually.eql(expectedRepositories);
     });
 });

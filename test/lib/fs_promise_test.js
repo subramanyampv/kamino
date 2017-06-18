@@ -4,7 +4,6 @@ var sinon = require('sinon');
 var expect = chai.expect;
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
-require('sinon-as-promised');
 
 describe('fs_promise', () => {
     var sandbox;

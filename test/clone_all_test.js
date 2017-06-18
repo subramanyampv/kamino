@@ -5,7 +5,6 @@ var _ = require('lodash');
 var expect = chai.expect;
 
 chai.use(require('chai-as-promised'));
-require('sinon-as-promised');
 
 describe('clone-all', function() {
     var cloneAll;
@@ -57,9 +56,10 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should clone the repositories', () => {
+    it('should clone the repositories', async () => {
         options.getBundleDirectory.returns('../bundles');
-        return expect(cloneAll).to.eventually.eql([
+        var result = await cloneAll();
+        expect(result).to.eql([
             {
                 cloneResult: true,
                 pullResult: true,
@@ -77,8 +77,8 @@ describe('clone-all', function() {
         ]);
     });
 
-    it('should not attempt bundling when --bundle-dir parameter is missing', () => {
-        return expect(cloneAll).to.eventually.eql([
+    it('should not attempt bundling when --bundle-dir parameter is missing', async () => {
+        expect(await cloneAll()).to.eql([
             {
                 cloneResult: true,
                 pullResult: true,

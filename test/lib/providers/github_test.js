@@ -3,7 +3,6 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 chai.use(require('chai-as-promised'));
-require('sinon-as-promised');
 
 describe('github', function() {
     var sandbox;
@@ -12,7 +11,6 @@ describe('github', function() {
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
-        repoFetcher = sandbox.stub();
         options = sandbox.stub(require('../../../lib/options'));
     });
 
@@ -38,8 +36,11 @@ describe('github', function() {
             }
         };
 
-        repoFetcher.withArgs(requestOptions)
-            .resolves(repositories);
+        repoFetcher = function(options, converter) {
+            expect(options).to.eql(requestOptions);
+            return Promise.resolve(converter(JSON.stringify(repositories)));
+        };
+
         options.getUsername.returns('ngeor');
         options.isNoPagination.returns(true);
 

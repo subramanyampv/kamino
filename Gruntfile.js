@@ -20,6 +20,7 @@ module.exports = function(grunt) {
             default: {
                 src: 'test/**/*.js',
                 options: {
+                    excludes: ['Gruntfile.js'],
                     istanbulOptions: ['--include-all']
                 }
             }

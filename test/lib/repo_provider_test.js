@@ -3,7 +3,6 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 chai.use(require('chai-as-promised'));
-require('sinon-as-promised');
 
 describe('repo_provider', function() {
     var sandbox;

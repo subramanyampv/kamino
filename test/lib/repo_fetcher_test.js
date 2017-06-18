@@ -3,7 +3,6 @@ var expect = chai.expect;
 var proxyquire = require('proxyquire').noCallThru();
 var sinon = require('sinon');
 chai.use(require('chai-as-promised'));
-require('sinon-as-promised');
 
 describe('repoFetcher', () => {
     var sandbox;

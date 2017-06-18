@@ -6,7 +6,6 @@ var child_process = require('child_process');
 
 chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
-require('sinon-as-promised');
 
 describe('exec_promise', () => {
     var sandbox;
