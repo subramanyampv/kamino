@@ -20,6 +20,7 @@ You will be asked to enter:
 
 - the project name (by default it is the folder name you're in)
 - the company name (it will be added in the AssemblyInfo.cs files)
+- if you want to use tabs or spaces for indentation of the generated files
 
 This command will create a Visual Studio solution that consists of a console application and an NUnit class library for unit tests.
 
@@ -31,11 +32,7 @@ In the following example you can get an idea of the files and folders you end up
 	? Your project name: MyApp
 	? Company name (for AssemblyInfo.cs copyright fields) My Company
 	   create .gitignore
-	   create .nuget/NuGet.Config
-	   create .nuget/NuGet.exe
-	   create .nuget/NuGet.targets
 	   create MyApp.sln
-	   create packages/repositories.config
 	   create MyApp/Program.cs
 	   create MyApp/Properties/AssemblyInfo.cs
 	   create MyApp/App.config
@@ -48,7 +45,6 @@ In the following example you can get an idea of the files and folders you end up
 
 What you'll also get:
 
-- NuGet package restore is already enabled
 - A `.gitignore` file
 - log4net for both the console app and the test library
 - NUnit and Moq for the test library
@@ -59,7 +55,7 @@ What you'll also get:
 
 To create a new release:
 
-- Make sure the version is correct in `package.json`
+- Make sure the version is correct in `package.json` and `package-lock.json`
 - Prepare changelog so that items listed in `Unreleased` are moved to the new version
 - Push changes to master
 - Create a tag
