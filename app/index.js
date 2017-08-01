@@ -86,6 +86,12 @@ module.exports = Generator.extend({
                 type: 'input',
                 name: 'user',
                 message: 'GitHub username (for badges, URLs, etc)'
+            },
+            {
+                type: 'input',
+                name: 'version',
+                message: 'Semantic version',
+                default: '0.1.0'
             }
         ]).then(function(answers) {
             _this.props = answers;
@@ -109,7 +115,8 @@ module.exports = Generator.extend({
             solutionFilesUUID: uuid.v1().toUpperCase(),
             testsUUID: uuid.v1().toUpperCase(),
             now: date,
-            year: year
+            year: year,
+            version: this.props.version
         };
 
         var copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);

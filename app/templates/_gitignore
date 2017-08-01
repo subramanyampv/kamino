@@ -1,11 +1,18 @@
 bin/
 obj/
 *.suo
+*.user
 packages/
 *.swp
 *.userprefs
 *.nupkg
 .idea/
+
+# NUnit results
 TestResult.xml
+
+# OpenCover results
 results.xml
+
+# ReportGenerator results
 coveragereport/

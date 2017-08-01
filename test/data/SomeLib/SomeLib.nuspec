@@ -1,22 +1,21 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
     <metadata>
-        <id>SomeLib</id>
+        <id>$id$</id>
         <version>0.1.0</version>
-        <title>SomeLib</title>
-        <authors>githubuser</authors>
-        <owners>githubuser</owners>
-        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+        <title>$id$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <description>$description$</description>
         <projectUrl>https://github.com/githubuser/SomeLib</projectUrl>
+        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>SomeLib</description>
-        <copyright>Copyright 2017</copyright>
+        <copyright>$copyright$</copyright>
         <tags>SomeLib</tags>
-        <dependencies>
-        </dependencies>
+        <dependencies></dependencies>
     </metadata>
     <files>
-        <file src="bin/Release/SomeLib.dll" target="lib/net462"/>
-        <file src="bin/Release/SomeLib.xml" target="lib/net462"/>
+        <file src="bin\$configuration$\SomeLib.dll" target="lib/net462"/>
+        <file src="bin\$configuration$\SomeLib.xml" target="lib/net462"/>
     </files>
 </package>
