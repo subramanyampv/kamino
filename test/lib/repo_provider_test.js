@@ -7,47 +7,50 @@ chai.use(require('chai-as-promised'));
 describe('repo_provider', function() {
     var sandbox;
     var options;
-    var provider;
+    var githubProvider;
+    var bitbucketCloudProvider;
+    var repoProvider;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
         options = sandbox.stub(require('../../lib/options'));
-        provider = {
+        githubProvider = {
             getRepositories: sandbox.stub()
         };
+        bitbucketCloudProvider = {
+            getRepositories: sandbox.stub()
+        };
+        repoProvider = proxyquire('../../lib/repo_provider', {
+            './providers/github': githubProvider,
+            './providers/bitbucket_cloud': bitbucketCloudProvider,
+            './options': options
+        });
     });
 
     afterEach(function() {
         sandbox.restore();
     });
 
-    it('should fetch repositories from GitHub', function() {
+    it('should not accept empty provider', () => {
+        // act & assert
+        return expect(repoProvider.getRepositories()).to.eventually.be.rejectedWith('No provider specified. Use the --provider option e.g. --provider=github');
+    });
+
+    it('should fetch repositories from GitHub', () => {
         // arrange
         options.getProvider.returns('github');
-        provider.getRepositories.resolves([1, 2, 3]);
+        githubProvider.getRepositories.resolves([1, 2, 3]);
 
-        // act
-        var repoProvider = proxyquire('../../lib/repo_provider', {
-            './providers/github': provider,
-            './options': options
-        });
-
-        // assert
+        // act & assert
         return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
     });
 
-    it('should fetch repositories from Bitbucket Cloud', function() {
+    it('should fetch repositories from Bitbucket Cloud', () => {
         // arrange
         options.getProvider.returns('bitbucket_cloud');
-        provider.getRepositories.resolves([1, 2, 3]);
+        bitbucketCloudProvider.getRepositories.resolves([1, 2, 3]);
 
-        // act
-        var repoProvider = proxyquire('../../lib/repo_provider', {
-            './providers/bitbucket_cloud': provider,
-            './options': options
-        });
-
-        // assert
+        // act & assert
         return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
     });
 });
