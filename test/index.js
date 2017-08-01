@@ -1,5 +1,6 @@
-var helpers = require('yeoman-test');
 var path = require('path');
+var fs = require('fs');
+var helpers = require('yeoman-test');
 var assert = require('yeoman-assert');
 
 describe('app', () => {
@@ -34,6 +35,12 @@ describe('app', () => {
 
         it('should indent Program.cs with tabs', () => {
             assert.fileContent('SomeApp/Program.cs', /\tclass Program/);
+        });
+
+        it('should have correct gitignore', () => {
+            var actualData = fs.readFileSync('.gitignore', 'utf8');
+            var expectedData = fs.readFileSync(path.join(__dirname, '../app/templates/_gitignore'), 'utf8');
+            assert.textEqual(actualData, expectedData);
         });
     });
 
