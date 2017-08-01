@@ -15,6 +15,7 @@ describe('clone-all', function() {
     var gitBundle;
     var repositoriesToCloneInstances;
     var options;
+    var logger;
 
     beforeEach(function() {
         // setup a sinon sandbox
@@ -42,13 +43,18 @@ describe('clone-all', function() {
         gitBundle = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { bundleResult: true }));
         options = sandbox.stub(require('../lib/options'));
 
+        // stub the logger
+        logger = sandbox.stub(require('../lib/logger'));
+
+        // create the system under test
         cloneAll = proxyquire('../clone-all', {
             './lib/repo_provider': repoProvider,
             './lib/git_clone': gitClone,
             './lib/git_pull': gitPull,
             './lib/git_bundle': gitBundle,
             './lib/repositories_to_clone_instances': repositoriesToCloneInstances,
-            './lib/options': options
+            './lib/options': options,
+            './lib/logger': logger
         });
     });
 
@@ -56,9 +62,52 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should clone the repositories', async() => {
-        options.getBundleDirectory.returns('../bundles');
+    it('should print help and exit if --help is given', async() => {
+        // arrange
+        options.isHelp.returns(true);
+
+        // act
         var result = await cloneAll();
+
+        // assert
+        expect(result).to.eql([]);
+        expect(logger.log).to.have.been.calledWith('Use clone-all to clone all your repositories.');
+    });
+
+    it('should print help and exit if --provider is not given', async() => {
+        // arrange
+        options.getUsername.returns('username'); // username is given, but it's not enough
+
+        // act
+        var result = await cloneAll();
+
+        // assert
+        expect(result).to.eql([]);
+        expect(logger.log).to.have.been.calledWith('Use clone-all to clone all your repositories.');
+    });
+
+    it('should print help and exit if --username is not given', async() => {
+        // arrange
+        options.getProvider.returns('provider'); // provider is given, but it's not enough
+
+        // act
+        var result = await cloneAll();
+
+        // assert
+        expect(result).to.eql([]);
+        expect(logger.log).to.have.been.calledWith('Use clone-all to clone all your repositories.');
+    });
+
+    it('should clone the repositories', async() => {
+        // arrange
+        options.getBundleDirectory.returns('../bundles');
+        options.getProvider.returns('provider');
+        options.getUsername.returns('username');
+
+        // act
+        var result = await cloneAll();
+
+        // assert
         expect(result).to.eql([
             {
                 cloneResult: true,
@@ -78,6 +127,11 @@ describe('clone-all', function() {
     });
 
     it('should not attempt bundling when --bundle-dir parameter is missing', async() => {
+        // arrange
+        options.getProvider.returns('provider');
+        options.getUsername.returns('username');
+
+        // act & assert
         expect(await cloneAll()).to.eql([
             {
                 cloneResult: true,

@@ -21,6 +21,13 @@ async function handleSingleRepo(cloneInstruction) {
 
 async function main() {
     var result = [];
+
+    if (options.isHelp() || !options.getUsername() || !options.getProvider()) {
+        logger.log('Use clone-all to clone all your repositories.');
+        logger.log('node clone-all.js --provider=github --username=ngeor --output=../');
+        return result;
+    }
+
     try {
         var repositories = await repoProvider.getRepositories();
         var cloneInstructions = repositoriesToCloneInstances(repositories);

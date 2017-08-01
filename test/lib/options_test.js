@@ -37,6 +37,17 @@ describe('options', () => {
         });
     });
 
+    describe('isHelp', () => {
+        it('should be false when --help is missing', () => {
+            expect(options.isHelp()).to.eql(false);
+        });
+
+        it('should be true when --help is present', () => {
+            process.argv.push('--help');
+            expect(options.isHelp()).to.eql(true);
+        });
+    });
+
     describe('getOwnerUsername', () => {
         it('should return empty string when --owner is missing', () => {
             expect(options.getOwnerUsername()).to.equal('');
