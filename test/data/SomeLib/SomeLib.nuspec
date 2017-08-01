@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>SomeLib</id>
+        <version>0.1.0</version>
+        <title>SomeLib</title>
+        <authors>githubuser</authors>
+        <owners>githubuser</owners>
+        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+        <projectUrl>https://github.com/githubuser/SomeLib</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SomeLib</description>
+        <copyright>Copyright 2017</copyright>
+        <tags>SomeLib</tags>
+        <dependencies>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin/Release/SomeLib.dll" target="lib/net462"/>
+        <file src="bin/Release/SomeLib.xml" target="lib/net462"/>
+    </files>
+</package>

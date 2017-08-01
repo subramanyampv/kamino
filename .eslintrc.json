@@ -1,0 +1,10 @@
+{
+    "extends": "bestseller",
+    "env": {
+        "node": true,
+        "mocha": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 6
+    }
+}

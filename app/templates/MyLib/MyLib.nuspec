@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id><%= name %></id>
+        <version>0.1.0</version>
+        <title><%= name %></title>
+        <authors><%= user %></authors>
+        <owners><%= user %></owners>
+        <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
+        <projectUrl>https://github.com/<%= user %>/<%= name %></projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description><%= name %></description>
+        <copyright>Copyright <%= year %></copyright>
+        <tags><%= name %></tags>
+        <dependencies>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="bin/Release/<%= name %>.dll" target="lib/net462"/>
+        <file src="bin/Release/<%= name %>.xml" target="lib/net462"/>
+    </files>
+</package>

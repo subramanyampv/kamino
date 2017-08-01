@@ -1,0 +1,11 @@
+bin/
+obj/
+*.suo
+packages/
+*.swp
+*.userprefs
+*.nupkg
+.idea/
+TestResult.xml
+results.xml
+coveragereport/
