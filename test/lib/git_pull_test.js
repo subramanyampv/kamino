@@ -102,5 +102,22 @@ describe('git_pull', () => {
                 url: 'https://whatever'
             });
         });
+
+        it('should add the success to the result', async() => {
+            // arrange
+            execPromise.withArgs('git pull', { cwd: 'whatever-dir' })
+                .resolves(null); // success
+
+            // act
+            var result = await gitPull(cloneInstruction);
+
+            // assert
+            expect(result).to.eql({
+                pullResult: 'success',
+                location: 'whatever-dir',
+                name: 'myRepo',
+                url: 'https://whatever'
+            });
+        });
     });
 });
