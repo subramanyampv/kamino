@@ -24,7 +24,7 @@ describe('repo_provider', function() {
     it('should fetch repositories from GitHub', function() {
         // arrange
         options.getProvider.returns('github');
-        provider.getRepositories.resolves([1,2,3]);
+        provider.getRepositories.resolves([1, 2, 3]);
 
         // act
         var repoProvider = proxyquire('../../lib/repo_provider', {
@@ -33,13 +33,13 @@ describe('repo_provider', function() {
         });
 
         // assert
-        return expect(repoProvider.getRepositories()).to.eventually.eql([1,2,3]);
+        return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
     });
 
     it('should fetch repositories from Bitbucket Cloud', function() {
         // arrange
         options.getProvider.returns('bitbucket_cloud');
-        provider.getRepositories.resolves([1,2,3]);
+        provider.getRepositories.resolves([1, 2, 3]);
 
         // act
         var repoProvider = proxyquire('../../lib/repo_provider', {
@@ -48,6 +48,6 @@ describe('repo_provider', function() {
         });
 
         // assert
-        return expect(repoProvider.getRepositories()).to.eventually.eql([1,2,3]);
+        return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
     });
 });

@@ -13,7 +13,7 @@ describe('repositoriesToCloneInstances', () => {
         options = sandbox.stub(require('../../lib/options'));
         repositoriesToCloneInstances = proxyquire('../../lib/repositories_to_clone_instances', {
             './options': options,
-            'path': {
+            path: {
                 join: (a, b) => a + '/' + b
             }
         });
@@ -28,11 +28,11 @@ describe('repositoriesToCloneInstances', () => {
         var repositories = [
             {
                 name: 'abc',
-                clone_url: 'https://host/abc'
+                clone_url: 'https://host/abc' // eslint-disable-line camelcase
             },
             {
                 name: 'def',
-                clone_url: 'https://host/def'
+                clone_url: 'https://host/def' // eslint-disable-line camelcase
             }
         ];
 
@@ -63,11 +63,11 @@ describe('repositoriesToCloneInstances', () => {
         var repositories = [
             {
                 name: 'abc',
-                ssh_url: 'ssh://host/abc'
+                ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
             },
             {
                 name: 'def',
-                ssh_url: 'ssh://host/def'
+                ssh_url: 'ssh://host/def' // eslint-disable-line camelcase
             }
         ];
 
@@ -98,11 +98,11 @@ describe('repositoriesToCloneInstances', () => {
         var repositories = [
             {
                 name: 'abc',
-                ssh_url: 'ssh://host/abc'
+                ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
             },
             {
                 name: 'def',
-                ssh_url: 'ssh://host/def'
+                ssh_url: 'ssh://host/def' // eslint-disable-line camelcase
             }
         ];
 

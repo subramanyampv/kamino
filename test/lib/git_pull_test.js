@@ -29,7 +29,7 @@ describe('git_pull', () => {
 
         gitPull = proxyquire('../../lib/git_pull', {
             './fs_promise': fsPromise,
-            'path': {
+            path: {
                 join: (a, b) => a + '/' + b,
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
@@ -51,7 +51,7 @@ describe('git_pull', () => {
 
         it('should not pull', () => {
             return gitPull(cloneInstruction).then(function() {
-                expect(execPromise).to.not.have.been.called;
+                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
         });
 
@@ -80,7 +80,7 @@ describe('git_pull', () => {
 
             it('should not pull', () => {
                 return gitPull(cloneInstruction).then(function() {
-                    expect(execPromise).to.not.have.been.called;
+                    expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
                 });
             });
         });

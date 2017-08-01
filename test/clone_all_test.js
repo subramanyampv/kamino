@@ -56,7 +56,7 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should clone the repositories', async () => {
+    it('should clone the repositories', async() => {
         options.getBundleDirectory.returns('../bundles');
         var result = await cloneAll();
         expect(result).to.eql([
@@ -77,7 +77,7 @@ describe('clone-all', function() {
         ]);
     });
 
-    it('should not attempt bundling when --bundle-dir parameter is missing', async () => {
+    it('should not attempt bundling when --bundle-dir parameter is missing', async() => {
         expect(await cloneAll()).to.eql([
             {
                 cloneResult: true,

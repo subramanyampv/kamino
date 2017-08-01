@@ -33,7 +33,7 @@ describe('logger', () => {
             logger.verbose('hello');
 
             // assert
-            expect(console.log.called).to.be.false;
+            expect(console.log.called).to.eql(false);
         });
 
         it('should log regular messages', () => {
@@ -41,7 +41,7 @@ describe('logger', () => {
             logger.log('hello');
 
             // assert
-            expect(console.log.called).to.be.true;
+            expect(console.log.called).to.eql(true);
         });
 
         it('should log error messages', () => {
@@ -49,7 +49,7 @@ describe('logger', () => {
             logger.error('hello');
 
             // assert
-            expect(console.error.called).to.be.true;
+            expect(console.error.called).to.eql(true);
         });
     });
 
@@ -66,7 +66,7 @@ describe('logger', () => {
             logger.verbose('hello');
 
             // assert
-            expect(console.log.called).to.be.true;
+            expect(console.log.called).to.eql(true);
         });
 
         it('should log regular messages', () => {
@@ -74,7 +74,7 @@ describe('logger', () => {
             logger.log('hello');
 
             // assert
-            expect(console.log.called).to.be.true;
+            expect(console.log.called).to.eql(true);
         });
 
         it('should log error messages', () => {
@@ -82,7 +82,7 @@ describe('logger', () => {
             logger.error('hello');
 
             // assert
-            expect(console.error.called).to.be.true;
+            expect(console.error.called).to.eql(true);
         });
     });
 });

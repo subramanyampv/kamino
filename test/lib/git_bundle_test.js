@@ -29,7 +29,7 @@ describe('git_bundle', () => {
 
         gitBundle = proxyquire('../../lib/git_bundle', {
             './fs_promise': fsPromise,
-            'path': {
+            path: {
                 join: (a, b) => a + '/' + b,
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
@@ -51,7 +51,7 @@ describe('git_bundle', () => {
 
         it('should not bundle', () => {
             return gitBundle(cloneInstruction).then(function() {
-                expect(execPromise).to.not.have.been.called;
+                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
         });
 
@@ -96,7 +96,7 @@ describe('git_bundle', () => {
 
                 it('should not clone', () => {
                     return gitBundle(cloneInstruction).then(function() {
-                        expect(execPromise).to.not.have.been.called;
+                        expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
                     });
                 });
             });

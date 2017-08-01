@@ -21,8 +21,8 @@ describe('github', function() {
     it('should fetch repositories from GitHub', function() {
         // arrange
         var repositories = [{
-            clone_url: 'https://something',
-            ssh_url: 'ssh://something',
+            clone_url: 'https://something', // eslint-disable-line camelcase
+            ssh_url: 'ssh://something', // eslint-disable-line camelcase
             name: 'repoName'
         }];
 

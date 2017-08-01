@@ -18,11 +18,13 @@
   "homepage": "https://github.com/ngeor/clone-all#readme",
   "dependencies": {
     "lodash": "^4.17.4",
-    "promise": "^7.3.0"
+    "promise": "^8.0.1"
   },
   "devDependencies": {
-    "chai": "^4.0.2",
-    "chai-as-promised": "^7.0.0",
+    "chai": "^4.1.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^4.3.0",
+    "eslint-config-bestseller": "^1.1.15",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-coveralls": "^1.0.1",
@@ -30,10 +32,10 @@
     "grunt-mocha-istanbul": "^5.0.2",
     "grunt-mocha-test": "^0.13.2",
     "istanbul": "^1.1.0-alpha.1",
-    "mocha": "^3.4.2",
+    "mocha": "^3.5.0",
     "proxyquire": "^1.8.0",
-    "sinon": "^2.3.4",
-    "sinon-chai": "^2.11.0"
+    "sinon": "^2.4.1",
+    "sinon-chai": "^2.12.0"
   },
   "engines": {
     "node": ">=8.0.0"

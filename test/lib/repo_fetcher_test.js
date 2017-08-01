@@ -35,7 +35,7 @@ describe('repoFetcher', () => {
         options.isNoPagination.returns(true);
         httpsPromise.withArgs(request).resolves('{ "repos": [1,2,3]}');
 
-        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1,2,3]);
+        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1, 2, 3]);
     });
 
     it('should work when pagination is enabled', () => {
@@ -51,6 +51,6 @@ describe('repoFetcher', () => {
         httpsPromise.withArgs({ path: '/repos?page=2'}).resolves('{ "repos": [4,5]}');
         httpsPromise.withArgs({ path: '/repos?page=3'}).resolves('{ "repos": []}');
 
-        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1,2,3,4,5]);
+        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1, 2, 3, 4, 5]);
     });
 });

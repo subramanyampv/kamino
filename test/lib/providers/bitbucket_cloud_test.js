@@ -21,8 +21,8 @@ describe('bitbucket_cloud', function() {
     it('should fetch repositories from Bitbucket Cloud', function() {
         // arrange
         var expectedRepositories = [{
-            clone_url: 'https://something',
-            ssh_url: 'ssh://something',
+            clone_url: 'https://something', // eslint-disable-line camelcase
+            ssh_url: 'ssh://something', // eslint-disable-line camelcase
             name: 'repoName'
         }];
 

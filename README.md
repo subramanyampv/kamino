@@ -11,7 +11,7 @@ Automatically clone all your GitHub repositories.
 Requirements
 ------------
 
-This is a simple script that requires [Node.js](http://nodejs.org/).
+clone-all requires [Node.js](http://nodejs.org/) version 8 or higher.
 
 Installation
 ------------
@@ -45,3 +45,9 @@ Additional configuration options:
 *   --ssh-username: specify a different username for cloning over ssh
 *   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --bundle-dir: creates bundles of the cloned repositories in the given directory
+
+Bitbucket cloud options:
+
+*   --owner: the user owning the repositories
+*   --username: the username to use against Bitbucket REST API
+*   --password: the password to use against Bitbucket REST API

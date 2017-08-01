@@ -29,7 +29,7 @@ describe('git_clone', () => {
 
         gitClone = proxyquire('../../lib/git_clone', {
             './fs_promise': fsPromise,
-            'path': {
+            path: {
                 join: (a, b) => a + '/' + b,
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
@@ -52,7 +52,7 @@ describe('git_clone', () => {
         it('should call exec only once', () => {
             // act
             return gitClone(cloneInstruction).then(function() {
-                expect(execPromise).to.have.been.calledOnce;
+                expect(execPromise).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
             });
         });
 
@@ -68,13 +68,13 @@ describe('git_clone', () => {
 
         it('should log a message', () => {
             return gitClone(cloneInstruction).then(function() {
-                expect(logger.log).to.have.been.calledOnce;
+                expect(logger.log).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
             });
         });
 
         it('should not log an error', () => {
             return gitClone(cloneInstruction).then(function() {
-                expect(logger.error).to.not.have.been.called;
+                expect(logger.error).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
         });
 
@@ -85,7 +85,7 @@ describe('git_clone', () => {
 
             it('should not clone', () => {
                 return gitClone(cloneInstruction).then(function() {
-                    expect(execPromise).to.not.have.been.called;
+                    expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
                 });
             });
         });
@@ -97,13 +97,13 @@ describe('git_clone', () => {
 
             it('should not log a message', () => {
                 return gitClone(cloneInstruction).then(function() {
-                    expect(logger.log).to.not.have.been.called;
+                    expect(logger.log).to.not.have.been.called; // eslint-disable-line no-unused-expressions
                 });
             });
 
             it('should log an error', () => {
                 return gitClone(cloneInstruction).then(function() {
-                    expect(logger.error).to.have.been.called;
+                    expect(logger.error).to.have.been.called; // eslint-disable-line no-unused-expressions
                 });
             });
 
@@ -126,7 +126,7 @@ describe('git_clone', () => {
 
         it('should not clone', () => {
             return gitClone(cloneInstruction).then(function() {
-                expect(execPromise).to.not.have.been.called;
+                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
         });
 

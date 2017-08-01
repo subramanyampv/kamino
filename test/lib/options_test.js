@@ -17,23 +17,23 @@ describe('options', () => {
 
     describe('isDryRun', () => {
         it('should be false when --dry-run is missing', () => {
-            expect(options.isDryRun()).to.be.false;
+            expect(options.isDryRun()).to.eql(false);
         });
 
         it('should be true when --dry-run is present', () => {
             process.argv.push('--dry-run');
-            expect(options.isDryRun()).to.be.true;
+            expect(options.isDryRun()).to.eql(true);
         });
     });
 
     describe('isVerbose', () => {
         it('should be false when -v is missing', () => {
-            expect(options.isVerbose()).to.be.false;
+            expect(options.isVerbose()).to.eql(false);
         });
 
         it('should be true when -v is present', () => {
             process.argv.push('-v');
-            expect(options.isVerbose()).to.be.true;
+            expect(options.isVerbose()).to.eql(true);
         });
     });
 
@@ -43,7 +43,7 @@ describe('options', () => {
         });
 
         it('should get the env variable CLONE_ALL_OWNER', () => {
-            process.env['CLONE_ALL_OWNER'] = 'user123';
+            process.env['CLONE_ALL_OWNER'] = 'user123'; // eslint-disable-line dot-notation
             expect(options.getOwnerUsername()).to.equal('user123');
         });
 
@@ -54,7 +54,7 @@ describe('options', () => {
 
         it('should return the user when --owner=x and env variable are both present', () => {
             process.argv.push('--owner=ngeor');
-            process.env['CLONE_ALL_OWNER'] = 'user123';
+            process.env['CLONE_ALL_OWNER'] = 'user123'; // eslint-disable-line dot-notation
             expect(options.getOwnerUsername()).to.equal('ngeor');
         });
     });
@@ -76,7 +76,7 @@ describe('options', () => {
         });
 
         it('should get the env variable CLONE_ALL_USERNAME', () => {
-            process.env['CLONE_ALL_USERNAME'] = 'user123';
+            process.env['CLONE_ALL_USERNAME'] = 'user123'; // eslint-disable-line dot-notation
             expect(options.getUsername()).to.equal('user123');
         });
 
@@ -92,7 +92,7 @@ describe('options', () => {
         });
 
         it('should get the env variable CLONE_ALL_PASSWORD', () => {
-            process.env['CLONE_ALL_PASSWORD'] = 'user123';
+            process.env['CLONE_ALL_PASSWORD'] = 'user123'; // eslint-disable-line dot-notation
             expect(options.getPassword()).to.equal('user123');
         });
 
@@ -104,12 +104,12 @@ describe('options', () => {
 
     describe('isNoPagination', () => {
         it('should be false when --no-pagination is missing', () => {
-            expect(options.isNoPagination()).to.be.false;
+            expect(options.isNoPagination()).to.eql(false);
         });
 
         it('should be true when --no-pagination is present', () => {
             process.argv.push('--no-pagination');
-            expect(options.isNoPagination()).to.be.true;
+            expect(options.isNoPagination()).to.eql(true);
         });
     });
 

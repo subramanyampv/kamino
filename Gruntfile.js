@@ -16,7 +16,7 @@ module.exports = function(grunt) {
             }
         },
 
-        mocha_istanbul: {
+        mocha_istanbul: { // eslint-disable-line camelcase
             default: {
                 src: 'test/**/*.js',
                 options: {
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
             }
         },
 
-        istanbul_check_coverage: {
+        istanbul_check_coverage: { // eslint-disable-line camelcase
             default: {
                 options: {
                     check: {
