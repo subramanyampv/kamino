@@ -13,18 +13,18 @@
   "author": "Nikolaos Georgiou",
   "license": "MIT",
   "dependencies": {
-    "ejs": "^2.5.6",
-    "uuid": "^3.0.1",
+    "ejs": "^2.5.7",
+    "uuid": "^3.1.0",
     "yeoman-generator": "^1.1.1"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^4.3.0",
     "eslint-config-bestseller": "^1.1.15",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1",
+    "gulp-eslint": "^4.0.0",
     "gulp-mocha": "^4.3.1",
-    "mocha": "^3.4.2",
+    "mocha": "^3.5.0",
     "yeoman-assert": "^3.0.0",
-    "yeoman-test": "^1.6.0"
+    "yeoman-test": "^1.7.0"
   }
 }

@@ -55,6 +55,16 @@ What you'll also get:
 - the console app internals are visible to the test library
 - the copyright information is filled in in the AssemblyInfo.cs files
 
+## Release Process
+
+To create a new release:
+
+- Make sure the version is correct in `package.json`
+- Prepare changelog so that items listed in `Unreleased` are moved to the new version
+- Push changes to master
+- Create a tag
+- Push the tag
+
 
 [npm-image]: https://img.shields.io/npm/v/generator-csharp-cli-app.svg
 [npm-url]: https://npmjs.org/package/generator-csharp-cli-app
