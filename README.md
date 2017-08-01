@@ -1,6 +1,8 @@
 # generator-csharp-cli-app
 
-[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url] [![Dependency Status][deps-image]][deps-url]
+[![npm version](https://img.shields.io/npm/v/generator-csharp-cli-app.svg)](https://npmjs.org/package/generator-csharp-cli-app)
+[![Build Status](https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master)](https://travis-ci.org/ngeor/generator-csharp-cli-app)
+[![Dependencies Status](https://david-dm.org/ngeor/generator-csharp-cli-app.svg)](https://david-dm.org/ngeor/generator-csharp-cli-app)
 [![devDependencies Status](https://david-dm.org/ngeor/generator-csharp-cli-app/dev-status.svg)](https://david-dm.org/ngeor/generator-csharp-cli-app?type=dev)
 
 Yeoman generator for a C# command line app with log4net and unit tests.
@@ -61,11 +63,3 @@ To create a new release:
 - Push changes to master
 - Create a tag
 - Push the tag
-
-
-[npm-image]: https://img.shields.io/npm/v/generator-csharp-cli-app.svg
-[npm-url]: https://npmjs.org/package/generator-csharp-cli-app
-[travis-image]: https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master
-[travis-url]: https://travis-ci.org/ngeor/generator-csharp-cli-app
-[deps-image]: https://david-dm.org/ngeor/generator-csharp-cli-app.svg
-[deps-url]: https://david-dm.org/ngeor/generator-csharp-cli-app
