@@ -6,7 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [0.3.1] - 2017-06-04
+## [0.4.0] - 2017-08-01
+
+- Upgraded NuGet dependencies to latest
+- Removed `.nuget` folder
+- Added `.gitignore` in solution items folder
+- Upgraded node dependencies to latest
+
+## [0.3.3] - 2017-06-04
 
 - Corrected npm publishing
 
