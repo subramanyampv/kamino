@@ -95,7 +95,7 @@ module.exports = Generator.extend({
             testName: testName,
             companyName: this.props.companyName,
             cliUUID: uuid.v1().toUpperCase(),
-            nugetUUID: uuid.v1().toUpperCase(),
+            solutionFilesUUID: uuid.v1().toUpperCase(),
             testsUUID: uuid.v1().toUpperCase()
         };
 
@@ -106,22 +106,11 @@ module.exports = Generator.extend({
             this.templatePath('_gitignore'),
             this.destinationPath('.gitignore'));
 
-        // copy .nuget folder
-        this.fs.copy(
-            this.templatePath('_nuget'),
-            this.destinationPath('.nuget'));
-
         // copy solution file
         this.fs.copyTpl(
             this.templatePath('MyApp.sln'),
             this.destinationPath(name + '.sln'),
             options);
-
-        // copy packages/repositories.config
-        copyFn(
-            this.templatePath('packages/repositories.config'),
-            this.destinationPath('packages/repositories.config')
-        );
 
         // copy MyApp *.cs files
         copyFn(
