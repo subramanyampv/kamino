@@ -6,6 +6,30 @@ Yeoman generator for a C# library that publishes a NuGet package. Includes a uni
 [![Dependencies Status](https://david-dm.org/ngeor/generator-csharp-nuget-lib.svg)](https://david-dm.org/ngeor/generator-csharp-nuget-lib)
 [![devDependencies Status](https://david-dm.org/ngeor/generator-csharp-nuget-lib/dev-status.svg)](https://david-dm.org/ngeor/generator-csharp-nuget-lib?type=dev)
 
+## Usage
+
+Install with `npm install -g yo generator-csharp-nuget-lib`.
+
+Run with `yo csharp-nuget-lib`.
+
+It will create a new .NET solution consisting of a NuGet library project and a unit test project.
+
+Some details:
+
+- .NET Framework 4.6.2
+- NUnit and Moq for the test project
+- Configuration for Travis, AppVeyor, Coveralls
+
 ## Contributing
 
 - Scaffold data is indented with tabs, test data is indented with spaces.
+
+## Release Process
+
+To create a new release:
+
+- Make sure the version is correct in `package.json` and `package-lock.json`
+- Prepare changelog so that items listed in `Unreleased` are moved to the new version
+- Push changes to master
+- Create a tag
+- Push the tag
