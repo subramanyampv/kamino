@@ -5,6 +5,7 @@ SomeLib is a new NuGet package.
 [![Build Status](https://travis-ci.org/githubuser/SomeLib.svg?branch=master)](https://travis-ci.org/githubuser/SomeLib)
 [![Build Status](https://ci.appveyor.com/api/projects/status/githubuser/somelib?svg=true)](https://ci.appveyor.com/project/githubuser/somelib)
 [![Coverage Status](https://coveralls.io/repos/github/githubuser/SomeLib/badge.svg?branch=master)](https://coveralls.io/github/githubuser/SomeLib?branch=master)
+[![NuGet Status](http://nugetstatus.com/SomeLib.png)](http://nugetstatus.com/packages/SomeLib)
 
 ## Release Process
 

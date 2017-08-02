@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/<%= user %>/<%= name %>.svg?branch=master)](https://travis-ci.org/<%= user %>/<%= name %>)
 [![Build Status](https://ci.appveyor.com/api/projects/status/<%= user %>/<%= nameToLower %>?svg=true)](https://ci.appveyor.com/project/<%= user %>/<%= nameToLower %>)
 [![Coverage Status](https://coveralls.io/repos/github/<%= user %>/<%= name %>/badge.svg?branch=master)](https://coveralls.io/github/<%= user %>/<%= name %>?branch=master)
+[![NuGet Status](http://nugetstatus.com/<%= name %>.png)](http://nugetstatus.com/packages/<%= name %>)
 
 ## Release Process
 
