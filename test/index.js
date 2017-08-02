@@ -64,6 +64,27 @@ describe('app', () => {
                 '');
         }
 
+        /**
+         * Checks if the file might contain GUIDs.
+         * @param {string} filename - The filename to check.
+         * @returns {boolean} A value indicating whether the file is expected to contain GUIDs.
+         */
+        function expectedToContainGuids(filename) {
+            var ext = path.extname(filename);
+            var basename = path.basename(filename);
+            return ext === '.csproj' || ext === '.sln' || basename === 'AssemblyInfo.cs';
+        }
+
+        /**
+         * Checks if the file might contain the present date.
+         * @param {string} filename - The filename to check.
+         * @returns {boolean} A value indicating whether the file is expected to contain the present date.
+         */
+        function expectedToContainDate(filename) {
+            var basename = path.basename(filename);
+            return basename === 'CHANGELOG.md';
+        }
+
         function templateTests() {
             var expectedDataDirectory = path.join(__dirname, 'data');
             var expectedFiles = readdirSyncRecursive(expectedDataDirectory)
@@ -74,7 +95,19 @@ describe('app', () => {
                 it(`should map ${sourceFile} to ${destFile}`, () => {
                     var actualData = fs.readFileSync(destFile, 'utf8');
                     var expectedData = fs.readFileSync(path.join(expectedDataDirectory, sourceFile), 'utf8');
-                    assert.textEqual(removeGuids(actualData), removeGuids(expectedData));
+
+                    if (expectedToContainGuids(sourceFile)) {
+                        actualData = removeGuids(actualData);
+                        expectedData = removeGuids(expectedData);
+                    }
+
+                    if (expectedToContainDate(sourceFile)) {
+                        actualData = actualData.replace(
+                            new Date().toISOString().substr(0, 10),
+                            '2017-08-01'); // the date of the test data
+                    }
+
+                    assert.textEqual(actualData, expectedData);
                 });
             });
         }

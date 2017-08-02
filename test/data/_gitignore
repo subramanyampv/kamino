@@ -16,3 +16,6 @@ results.xml
 
 # ReportGenerator results
 coveragereport/
+
+.DS_Store
+Thumbs.db
