@@ -65,12 +65,14 @@ module.exports = Generator.extend({
                 type: 'input',
                 name: 'name',
                 message: 'Your project name',
-                default: this.appname // default to current folder name
+                default: this.appname, // default to current folder name
+                store: true
             },
             {
                 type: 'input',
                 name: 'companyName',
-                message: 'Company name (for AssemblyInfo.cs copyright fields)'
+                message: 'Company name (for AssemblyInfo.cs copyright fields)',
+                store: true
             },
             {
                 type: 'list',
@@ -80,7 +82,8 @@ module.exports = Generator.extend({
                     'tabs',
                     'spaces'
                 ],
-                default: 'spaces'
+                default: 'spaces',
+                store: true
             }
         ]).then(function(answers) {
             _this.props = answers;
@@ -102,9 +105,16 @@ module.exports = Generator.extend({
         var copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
 
         // copy .gitignore
-        this.fs.copy(
+        this.fs.copyTpl(
             this.templatePath('_gitignore'),
-            this.destinationPath('.gitignore'));
+            this.destinationPath('.gitignore'),
+            options);
+
+        // copy .travis.yml
+        this.fs.copyTpl(
+            this.templatePath('_travis.yml'),
+            this.destinationPath('.travis.yml'),
+            options);
 
         // copy solution file
         this.fs.copyTpl(
