@@ -65,12 +65,14 @@ module.exports = Generator.extend({
                 type: 'input',
                 name: 'name',
                 message: 'Your project name',
-                default: this.appname // default to current folder name
+                default: this.appname, // default to current folder name
+                store: true
             },
             {
                 type: 'input',
                 name: 'companyName',
-                message: 'Company name (for AssemblyInfo.cs copyright fields)'
+                message: 'Company name (for AssemblyInfo.cs copyright fields)',
+                store: true
             },
             {
                 type: 'list',
@@ -80,18 +82,21 @@ module.exports = Generator.extend({
                     'tabs',
                     'spaces'
                 ],
-                default: 'spaces'
+                default: 'spaces',
+                store: true
             },
             {
                 type: 'input',
                 name: 'user',
-                message: 'GitHub username (for badges, URLs, etc)'
+                message: 'GitHub username (for badges, URLs, etc)',
+                store: true
             },
             {
                 type: 'input',
                 name: 'version',
                 message: 'Semantic version',
-                default: '0.1.0'
+                default: '0.1.0',
+                store: true
             }
         ]).then(function(answers) {
             _this.props = answers;
