@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ngeor/blog-helm/issues"
   },
-  "homepage": "https://github.com/ngeor/blog-helm#readme"
+  "homepage": "https://github.com/ngeor/blog-helm#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
 }
