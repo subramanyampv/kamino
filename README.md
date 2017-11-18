@@ -24,5 +24,5 @@ docker build -t blog-ci -f Dockerfile-ci .
 Run the CI Docker image with:
 
 ```
-docker run blog-ci npm run lint
+docker run -v $(pwd)/test-reports:/app/test-reports blog-ci npm run lint
 ```
