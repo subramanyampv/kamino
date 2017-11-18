@@ -1,0 +1,19 @@
+{
+  "name": "blog-helm",
+  "version": "1.0.0",
+  "description": "An example hello world application to show Docker and Helm",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/blog-helm.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/blog-helm/issues"
+  },
+  "homepage": "https://github.com/ngeor/blog-helm#readme"
+}
