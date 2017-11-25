@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint-junit": "eslint -f junit -o test-reports/eslint.xml .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run lint",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
