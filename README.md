@@ -26,35 +26,35 @@ npm run lint
 Build the production Docker image with:
 
 ```
-docker build -t blog .
+docker build -t blog-helm .
 ```
 
 Run the app with:
 
 ```
-docker run -p 3000:3000 blog
+docker run -p 3000:3000 blog-helm
 ```
 
 Build the CI Docker image with:
 
 ```
-docker build -t blog-ci -f Dockerfile-ci .
+docker build -t blog-helm-ci -f Dockerfile-ci .
 ```
 
 Use the CI Docker image to lint the app with:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-ci npm run lint
+docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint
 ```
 
 For the XML report:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-ci npm run lint-junit
+docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint-junit
 ```
 
 Correct user permissions if needed with:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-ci chown -R $(id -u):$(id -g) test-reports
+docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci chown -R $(id -u):$(id -g) test-reports
 ```
