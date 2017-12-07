@@ -1,0 +1,5 @@
+# Default values for the test environment.
+ingress:
+  enabled: true
+  hosts:
+    - tst.blog-helm.local
