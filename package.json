@@ -1,6 +1,6 @@
 {
   "name": "blog-helm",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "An example hello world application to show Docker and Helm",
   "main": "index.js",
   "scripts": {
