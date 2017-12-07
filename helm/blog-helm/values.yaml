@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: blog-helm
+  repository: registry.local:8222/blog-helm
   tag: latest
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 service:
   name: blog-helm
   type: ClusterIP
