@@ -1,0 +1,4 @@
+# Values for the acceptance environment.
+ingress:
+  hosts:
+    - acc.blog-helm.local
