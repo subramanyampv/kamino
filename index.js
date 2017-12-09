@@ -11,6 +11,7 @@ app.get('/', (req, res) => res.send(`
   <body>
     <h1>Hello world!</h1>
     <p>package.json version: ${packageJson.version}</p>
+    <p>Environment: ${process.env.APP_ENV}</p>
   </body>
 </html>
 `));

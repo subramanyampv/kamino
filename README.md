@@ -44,17 +44,17 @@ docker build -t blog-helm-ci -f Dockerfile-ci .
 Use the CI Docker image to lint the app with:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint
+docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint
 ```
 
 For the XML report:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint-junit
+docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint-junit
 ```
 
 Correct user permissions if needed with:
 
 ```
-docker run -v $(pwd)/test-reports:/app/test-reports blog-helm-ci chown -R $(id -u):$(id -g) test-reports
+docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci chown -R $(id -u):$(id -g) test-reports
 ```

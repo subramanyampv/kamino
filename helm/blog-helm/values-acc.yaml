@@ -2,3 +2,4 @@
 ingress:
   hosts:
     - acc.blog-helm.local
+env: acc
