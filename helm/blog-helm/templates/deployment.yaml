@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.service.internalPort }}
-          environment:
+          env:
             - name: APP_ENV
               value: {{ .Values.env }}
           livenessProbe:
