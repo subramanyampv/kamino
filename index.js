@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const express = require('express');
 const packageJson = require('./package.json');
+
 const app = express();
 app.get('/', (req, res) => res.send(`
 <html>
