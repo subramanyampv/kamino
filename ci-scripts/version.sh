@@ -3,15 +3,17 @@
 set -x
 set -e
 
-GIT_SHA=$(git rev-parse HEAD)
-GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-APP_VERSION=$(cat package.json  | grep version | cut -d\" -f 4)
+# make sure we have master branch and tags
+git fetch --tags origin +refs/heads/master:refs/heads/master
 
-if [ "$GIT_BRANCH" = "master" ]; then
-  IMAGE_TAG="$APP_VERSION"
-else
-  IMAGE_TAG="$APP_VERSION-$GIT_SHA"
-fi
+GITTOOLS_GITVERSION_TAG=${GITTOOLS_GITVERSION_TAG:-v4.0.0-beta.12}
+docker pull gittools/gitversion:$GITTOOLS_GITVERSION_TAG
+IMAGE_TAG=$(docker run --rm \
+  -u $(id -u):$(id -g) \
+  -v /opt/buildagent/system/git:/opt/buildagent/system/git \
+  -v $(pwd):/repo \
+  gittools/gitversion:$GITTOOLS_GITVERSION_TAG \
+  /showvariable SemVer)
 
 echo "Docker image tag will be $IMAGE_TAG"
 
@@ -20,3 +22,6 @@ echo "$IMAGE_TAG" > image-tag.txt
 
 # inject environment variable for next steps
 echo "##teamcity[setParameter name='env.IMAGE_TAG' value='$IMAGE_TAG']"
+
+# set build number of TeamCity (better UX)
+echo "##teamcity[buildNumber '$IMAGE_TAG']"
