@@ -4,7 +4,7 @@ set -x
 set -e
 
 # make sure we have master branch and tags
-git fetch --tags origin +refs/heads/master:refs/heads/master
+git fetch --tags origin
 
 GITTOOLS_GITVERSION_TAG=${GITTOOLS_GITVERSION_TAG:-v4.0.0-beta.12}
 docker pull gittools/gitversion:$GITTOOLS_GITVERSION_TAG
