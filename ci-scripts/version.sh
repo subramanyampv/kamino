@@ -6,6 +6,9 @@ set -e
 # make sure we have master branch and tags
 git fetch --tags origin
 
+# merge master into current feature branch
+git merge origin/master
+
 GITTOOLS_GITVERSION_TAG=${GITTOOLS_GITVERSION_TAG:-v4.0.0-beta.12}
 docker pull gittools/gitversion:$GITTOOLS_GITVERSION_TAG
 IMAGE_TAG=$(docker run --rm \
