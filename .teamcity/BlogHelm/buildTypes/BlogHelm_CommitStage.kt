@@ -37,6 +37,7 @@ object BlogHelm_CommitStage : BuildType({
         script {
             name = "Basic diagnostics"
             scriptContent = """
+                lsb_release -cdir
                 docker version
             """.trimIndent()
         }
