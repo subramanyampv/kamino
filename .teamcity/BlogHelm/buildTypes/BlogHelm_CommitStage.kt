@@ -34,6 +34,12 @@ object BlogHelm_CommitStage : BuildType({
     }
 
     steps {
+        script {
+            name = "Basic diagnostics"
+            scriptContent = """
+                docker version
+            """.trimIndent()
+        }
         exec {
             name = "Ensure feature branch is ahead of master"
             path = "ci-scripts/merge.sh"
@@ -56,7 +62,7 @@ object BlogHelm_CommitStage : BuildType({
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \
                   npm run lint-junit
-                
+
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \
