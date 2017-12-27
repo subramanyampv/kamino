@@ -9,6 +9,6 @@ object BlogHelm_DeployStage : BuildType({
     name = "Deploy Stage"
 
     params {
-        param("env", "to")
+        param("env", "test")
     }
 })
