@@ -11,4 +11,12 @@ object BlogHelm_DeployProduction : BuildType({
     params {
         param("env", "prod")
     }
+
+    dependencies {
+        dependency(BlogHelm.buildTypes.BlogHelm_DeployAcceptance) {
+            snapshot {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+        }
+    }
 })
