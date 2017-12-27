@@ -27,7 +27,6 @@ changeBuildType("2c559e38-b9b4-4dcf-a79f-2faa91c9f5af") {
             }
 
             artifacts {
-                buildRule = lastSuccessful()
                 cleanDestination = true
                 artifactRules = """
                     *.tgz => artifacts
