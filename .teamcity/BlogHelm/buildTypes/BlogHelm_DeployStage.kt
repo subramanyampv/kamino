@@ -17,13 +17,13 @@ object BlogHelm_DeployStage : BuildType({
     steps {
         script {
             scriptContent = """
-                IMAGE_TAG=${'$'}(cat image-tag.txt)
+                IMAGE_TAG=${'$'}(cat artifacts/image-tag.txt)
                 echo "Using version ${'$'}IMAGE_TAG"
-                
+
                 helm upgrade --install blog-helm-%env% \
-                  ./blog-helm-${'$'}{IMAGE_TAG}.tgz \
+                  ./artifacts/blog-helm-${'$'}{IMAGE_TAG}.tgz \
                   --set image.tag=${'$'}IMAGE_TAG \
-                  --values ./values-%env%.yaml \
+                  --values ./artifacts/values-%env%.yaml \
                   --debug \
                   --wait
             """.trimIndent()
@@ -37,9 +37,9 @@ object BlogHelm_DeployStage : BuildType({
             buildRule = lastSuccessful()
             cleanDestination = true
             artifactRules = """
-                *.tgz
-                *.txt
-                values-*.yaml
+                *.tgz => artifacts
+                *.txt => artifacts
+                values-*.yaml => artifacts
             """.trimIndent()
         }
     }
