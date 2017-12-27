@@ -23,4 +23,15 @@ changeBuildType("2c559e38-b9b4-4dcf-a79f-2faa91c9f5af") {
         "Unexpected option value: maxRunningBuilds = $maxRunningBuilds"
     }
     maxRunningBuilds = 1
+
+    params {
+        expect {
+            select("env", "", label = "Environment", description = "Select the environment to deploy to", display = ParameterDisplay.PROMPT,
+                    options = listOf("Test" to "test", "Acceptance" to "acc", "Production" to "prod"))
+        }
+        update {
+            text("env", "", label = "Environment", description = "Select the environment to deploy to",
+                  regex = "^test|acc|prod${'$'}", validationMessage = "Must be one of test acc prod")
+        }
+    }
 }
