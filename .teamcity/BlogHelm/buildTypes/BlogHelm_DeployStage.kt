@@ -14,6 +14,10 @@ object BlogHelm_DeployStage : BuildType({
         param("helm.host", "192.168.99.101:30200")
     }
 
+    vcs {
+        root(BlogHelm.vcsRoots.BlogHelm_BlogHelm)
+    }
+
     steps {
         script {
             scriptContent = """
