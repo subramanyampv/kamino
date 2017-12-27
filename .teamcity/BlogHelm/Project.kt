@@ -17,7 +17,9 @@ object Project : Project({
     vcsRoot(BlogHelm_BlogHelm)
 
     buildType(BlogHelm_CommitStage)
-    buildType(BlogHelm_DeployStage)
+    buildType(BlogHelm_DeployTest)
+    buildType(BlogHelm_DeployAcceptance)
+    buildType(BlogHelm_DeployProduction)
 
     template(BlogHelm_DeployTemplate)
 
