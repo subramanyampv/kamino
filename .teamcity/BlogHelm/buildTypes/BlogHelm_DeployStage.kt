@@ -16,6 +16,8 @@ object BlogHelm_DeployStage : BuildType({
 
     vcs {
         root(BlogHelm.vcsRoots.BlogHelm_BlogHelm)
+
+        showDependenciesChanges = true
     }
 
     steps {
@@ -37,14 +39,19 @@ object BlogHelm_DeployStage : BuildType({
     }
 
     dependencies {
-        artifacts(BlogHelm.buildTypes.BlogHelm_CommitStage) {
-            buildRule = lastSuccessful()
-            cleanDestination = true
-            artifactRules = """
-                *.tgz => artifacts
-                *.txt => artifacts
-                values-*.yaml => artifacts
-            """.trimIndent()
+        dependency(BlogHelm.buildTypes.BlogHelm_CommitStage) {
+            snapshot {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+
+            artifacts {
+                cleanDestination = true
+                artifactRules = """
+                    *.tgz => artifacts
+                    *.txt => artifacts
+                    values-*.yaml => artifacts
+                """.trimIndent()
+            }
         }
     }
 })
