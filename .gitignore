@@ -62,3 +62,7 @@ test-reports/
 
 # image-tag.txt artifact
 image-tag.txt
+
+.teamcity/.idea/
+.teamcity/target/
+.teamcity/*.iml

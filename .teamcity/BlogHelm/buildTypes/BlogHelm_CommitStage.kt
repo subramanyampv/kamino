@@ -13,7 +13,6 @@ object BlogHelm_CommitStage : BuildType({
     uuid = "3f8adc5d-5b14-4a13-9ecd-70b624f828de"
     id = "BlogHelm_CommitStage"
     name = "Commit Stage"
-
     enablePersonalBuilds = false
     artifactRules = """
         blog-helm-%env.IMAGE_TAG%.tgz
