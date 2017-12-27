@@ -7,7 +7,7 @@ object BlogHelm_DeployTemplate : Template({
     uuid = "bdb9db38-14a7-4b33-a762-f84f97141b1c"
     id = "BlogHelm_DeployTemplate"
     name = "Deploy Template"
-
+    buildNumberPattern = "%dep.BlogHelm_CommitStage.build.number%"
     enablePersonalBuilds = false
     type = BuildTypeSettings.Type.DEPLOYMENT
     maxRunningBuilds = 1
@@ -30,7 +30,7 @@ object BlogHelm_DeployTemplate : Template({
             scriptContent = """
                 IMAGE_TAG=${'$'}(cat artifacts/image-tag.txt)
                 echo "Using version ${'$'}IMAGE_TAG"
-                
+
                 helm upgrade --install blog-helm-%env% \
                   ./artifacts/blog-helm-${'$'}{IMAGE_TAG}.tgz \
                   --set image.tag=${'$'}IMAGE_TAG \
