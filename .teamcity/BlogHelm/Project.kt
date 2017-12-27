@@ -19,6 +19,8 @@ object Project : Project({
     buildType(BlogHelm_CommitStage)
     buildType(BlogHelm_DeployStage)
 
+    template(BlogHelm_DeployTemplate)
+
     features {
         versionedSettings {
             id = "PROJECT_EXT_3"
