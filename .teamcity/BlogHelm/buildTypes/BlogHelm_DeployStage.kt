@@ -8,9 +8,13 @@ object BlogHelm_DeployStage : BuildType({
     id = "BlogHelm_DeployStage"
     name = "Deploy Stage"
 
+    enablePersonalBuilds = false
+    type = BuildTypeSettings.Type.DEPLOYMENT
+    maxRunningBuilds = 1
+
     params {
-        select("env", "", label = "Environment", description = "Select the environment to deploy to", display = ParameterDisplay.PROMPT,
-                options = listOf("Test" to "test", "Acceptance" to "acc", "Production" to "prod"))
+        text("env", "", label = "Environment", description = "Select the environment to deploy to",
+              regex = "^test|acc|prod${'$'}", validationMessage = "Must be one of test acc prod")
         param("helm.host", "192.168.99.101:30200")
     }
 
