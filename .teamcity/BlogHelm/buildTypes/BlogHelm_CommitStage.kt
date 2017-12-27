@@ -63,7 +63,7 @@ object BlogHelm_CommitStage : BuildType({
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \
                   npm run lint-junit
-
+                
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \
