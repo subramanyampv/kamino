@@ -11,4 +11,12 @@ object BlogHelm_DeployTest : BuildType({
     params {
         param("env", "test")
     }
+
+    dependencies {
+        dependency(BlogHelm.buildTypes.BlogHelm_SmokeTest) {
+            snapshot {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+        }
+    }
 })
