@@ -13,5 +13,10 @@ create("d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c", BuildType({
     uuid = "d555deaf-076e-4997-8756-95da85e8d785"
     id = "BlogHelm_SmokeTest"
     name = "Smoke Test"
+
+    vcs {
+        root("BlogHelm_BlogHelm")
+
+    }
 }))
 
