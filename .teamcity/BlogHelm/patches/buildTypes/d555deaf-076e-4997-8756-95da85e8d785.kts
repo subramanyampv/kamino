@@ -2,6 +2,7 @@ package BlogHelm.patches.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.v2017_2.*
 import jetbrains.buildServer.configs.kotlin.v2017_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2017_2.triggers.finishBuildTrigger
 import jetbrains.buildServer.configs.kotlin.v2017_2.ui.*
 
 /*
@@ -17,6 +18,14 @@ create("d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c", BuildType({
     vcs {
         root("BlogHelm_BlogHelm")
 
+    }
+
+    triggers {
+        finishBuildTrigger {
+            buildTypeExtId = "BlogHelm_CommitStage"
+            successfulOnly = true
+            branchFilter = "+:*"
+        }
     }
 
     features {
