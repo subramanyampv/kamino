@@ -17,11 +17,16 @@ object Project : Project({
     vcsRoot(BlogHelm_BlogHelm)
 
     buildType(BlogHelm_CommitStage)
+    buildType(BlogHelm_SmokeTest)
     buildType(BlogHelm_DeployTest)
     buildType(BlogHelm_DeployAcceptance)
     buildType(BlogHelm_DeployProduction)
 
     template(BlogHelm_DeployTemplate)
+
+    params {
+        param("docker.registry", "registry.local:5000")
+    }
 
     features {
         versionedSettings {
