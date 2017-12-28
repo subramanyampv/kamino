@@ -24,6 +24,11 @@ create("d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c", BuildType({
             snapshot {
                 onDependencyFailure = FailureAction.FAIL_TO_START
             }
+
+            artifacts {
+                cleanDestination = true
+                artifactRules = "*.txt => artifacts"
+            }
         }
     }
 }))
