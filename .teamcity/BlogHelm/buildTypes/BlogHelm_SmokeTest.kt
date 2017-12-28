@@ -2,12 +2,10 @@ package BlogHelm.buildTypes
 
 import BlogHelm.vcsRoots.BlogHelm_BlogHelm
 import jetbrains.buildServer.configs.kotlin.v2017_2.*
-import jetbrains.buildServer.configs.kotlin.v2017_2.buildFeatures.sshAgent
-import jetbrains.buildServer.configs.kotlin.v2017_2.buildFeatures.vcsLabeling
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.dockerBuild
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.exec
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.script
-import jetbrains.buildServer.configs.kotlin.v2017_2.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.v2017_2.triggers.finishBuildTrigger
 
 object BlogHelm_SmokeTest : BuildType({
     uuid = "d555deaf-076e-4997-8756-95da85e8d785"
