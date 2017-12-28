@@ -21,6 +21,7 @@ object Project : Project({
     buildType(BlogHelm_DeployTest)
     buildType(BlogHelm_DeployAcceptance)
     buildType(BlogHelm_DeployProduction)
+    buildTypesOrderIds = arrayListOf("BlogHelm_CommitStage", "BlogHelm_SmokeTest", "BlogHelm_DeployTest", "BlogHelm_DeployAcceptance", "BlogHelm_DeployProduction")
 
     template(BlogHelm_DeployTemplate)
 
