@@ -1,6 +1,7 @@
 package BlogHelm.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.v2017_2.*
+import jetbrains.buildServer.configs.kotlin.v2017_2.triggers.finishBuildTrigger
 
 object BlogHelm_DeployProduction : BuildType({
     template(BlogHelm.buildTypes.BlogHelm_DeployTemplate)
@@ -17,6 +18,13 @@ object BlogHelm_DeployProduction : BuildType({
             snapshot {
                 onDependencyFailure = FailureAction.FAIL_TO_START
             }
+        }
+    }
+
+    triggers {
+        finishBuildTrigger {
+            buildTypeExtId = "BlogHelm_CommitStage"
+            successfulOnly = true
         }
     }
 })
