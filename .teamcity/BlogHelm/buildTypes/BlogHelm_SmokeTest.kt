@@ -34,12 +34,10 @@ object BlogHelm_SmokeTest : BuildType({
     }
 
     steps {
-        script {
-            name = "Basic diagnostics"
-            scriptContent = """
-                lsb_release -cdir
-                docker version
-            """.trimIndent()
+        exec {
+            name = "Smoke test Docker image"
+            path = "ci-scripts/smoke-test-docker-image.sh"
+            arguments = "%docker.registry% blog-helm"
         }
     }
 
