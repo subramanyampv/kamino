@@ -22,7 +22,6 @@ object BlogHelm_CommitStage : BuildType({
     maxRunningBuilds = 1
 
     params {
-        param("docker.registry", "registry.local:5000")
         param("env.IMAGE_TAG", "")
     }
 
@@ -62,7 +61,7 @@ object BlogHelm_CommitStage : BuildType({
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \
                   npm run lint-junit
-                
+
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci \

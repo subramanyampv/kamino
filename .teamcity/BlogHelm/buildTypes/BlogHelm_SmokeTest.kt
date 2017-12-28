@@ -11,11 +11,11 @@ object BlogHelm_SmokeTest : BuildType({
     uuid = "d555deaf-076e-4997-8756-95da85e8d785"
     id = "BlogHelm_SmokeTest"
     name = "Smoke Test"
+    buildNumberPattern = "%dep.BlogHelm_CommitStage.build.number%"
     enablePersonalBuilds = false
     maxRunningBuilds = 1
 
     params {
-        param("docker.registry", "registry.local:5000")
         param("env.IMAGE_TAG", "")
     }
 
