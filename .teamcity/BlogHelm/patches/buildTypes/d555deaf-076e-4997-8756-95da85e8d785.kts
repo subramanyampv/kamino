@@ -18,5 +18,13 @@ create("d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c", BuildType({
         root("BlogHelm_BlogHelm")
 
     }
+
+    dependencies {
+        dependency("BlogHelm_CommitStage") {
+            snapshot {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+        }
+    }
 }))
 
