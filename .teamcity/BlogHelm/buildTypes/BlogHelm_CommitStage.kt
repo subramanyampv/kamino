@@ -56,12 +56,17 @@ object BlogHelm_CommitStage : BuildType({
             """.trimIndent()
         }
         script {
-            name = "Run linting"
+            name = "Run linting and unit tests"
             scriptContent = """
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci:%env.IMAGE_TAG% \
                   npm run lint-junit
+
+                docker run \
+                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
+                  blog-helm-ci:%env.IMAGE_TAG% \
+                  npm run test-junit
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
@@ -111,7 +116,7 @@ object BlogHelm_CommitStage : BuildType({
         feature {
             type = "xml-report-plugin"
             param("xmlReportParsing.reportType", "junit")
-            param("xmlReportParsing.reportDirs", "test-reports/eslint.xml")
+            param("xmlReportParsing.reportDirs", "test-reports/ci-*.xml")
             param("xmlReportParsing.verboseOutput", "true")
         }
         vcsLabeling {
