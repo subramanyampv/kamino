@@ -20,13 +20,12 @@ object BlogHelm_DeployTemplate : Template({
 
     vcs {
         root(BlogHelm.vcsRoots.BlogHelm_BlogHelm)
-
         showDependenciesChanges = true
     }
 
     steps {
         script {
-            id = "RUNNER_1"
+            name = "Deploy using Helm"
             scriptContent = """
                 IMAGE_TAG=${'$'}(cat artifacts/image-tag.txt)
                 echo "Using version ${'$'}IMAGE_TAG"
@@ -41,7 +40,6 @@ object BlogHelm_DeployTemplate : Template({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -e HELM_HOST=%helm.host%"
         }
-        stepsOrder = arrayListOf("RUNNER_1")
     }
 
     dependencies {
