@@ -16,7 +16,6 @@ object BlogHelm_CommitStage : BuildType({
     enablePersonalBuilds = false
     artifactRules = """
         blog-helm-%env.IMAGE_TAG%.tgz
-        *.txt
         helm/blog-helm/values-*.yaml
     """.trimIndent()
     maxRunningBuilds = 1

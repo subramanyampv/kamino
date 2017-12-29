@@ -85,9 +85,6 @@ fi
 
 echo "Docker image tag will be $IMAGE_TAG"
 
-# store image tag into a text file (artifact for deployment)
-echo "$IMAGE_TAG" > image-tag.txt
-
 set +x
 
 # inject environment variable for next steps

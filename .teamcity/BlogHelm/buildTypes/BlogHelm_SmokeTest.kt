@@ -15,13 +15,8 @@ object BlogHelm_SmokeTest : BuildType({
     enablePersonalBuilds = false
     maxRunningBuilds = 1
 
-    params {
-        param("env.IMAGE_TAG", "")
-    }
-
     vcs {
         root(BlogHelm.vcsRoots.BlogHelm_BlogHelm)
-
         showDependenciesChanges = true
     }
 
@@ -37,7 +32,7 @@ object BlogHelm_SmokeTest : BuildType({
         exec {
             name = "Smoke test Docker image"
             path = "ci-scripts/smoke-test-docker-image.sh"
-            arguments = "%docker.registry% blog-helm"
+            arguments = "%docker.registry% blog-helm %build.number%"
         }
     }
 
@@ -51,11 +46,6 @@ object BlogHelm_SmokeTest : BuildType({
         dependency("BlogHelm_CommitStage") {
             snapshot {
                 onDependencyFailure = FailureAction.FAIL_TO_START
-            }
-
-            artifacts {
-                cleanDestination = true
-                artifactRules = "*.txt => artifacts"
             }
         }
     }

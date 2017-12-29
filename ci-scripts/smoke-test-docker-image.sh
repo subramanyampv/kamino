@@ -4,12 +4,6 @@
 #
 set -e
 
-IMAGE_TAG=$(cat artifacts/image-tag.txt)
-if [ -z "$IMAGE_TAG" ]; then
-    >&2 echo "ERROR: Could not read image tag."
-    exit 1
-fi
-
 DOCKER_REGISTRY=$1
 if [ -z "$DOCKER_REGISTRY" ]; then
     >&2 echo "ERROR: first parameter should be the docker registry to pull from."
@@ -19,6 +13,12 @@ fi
 IMAGE_NAME=$2
 if [ -z "$IMAGE_NAME" ]; then
     >&2 echo "ERROR: second parameter should be the name of the docker image."
+    exit 1
+fi
+
+IMAGE_TAG=$3
+if [ -z "$IMAGE_TAG" ]; then
+    >&2 echo "ERROR: third parameter should be the image tag."
     exit 1
 fi
 

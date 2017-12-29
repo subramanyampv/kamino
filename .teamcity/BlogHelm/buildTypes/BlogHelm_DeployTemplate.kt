@@ -27,12 +27,9 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Deploy using Helm"
             scriptContent = """
-                IMAGE_TAG=${'$'}(cat artifacts/image-tag.txt)
-                echo "Using version ${'$'}IMAGE_TAG"
-
                 helm upgrade --install blog-helm-%env% \
-                  ./artifacts/blog-helm-${'$'}{IMAGE_TAG}.tgz \
-                  --set image.tag=${'$'}IMAGE_TAG \
+                  ./artifacts/blog-helm-%build.number%.tgz \
+                  --set image.tag=%build.number% \
                   --values ./artifacts/values-%env%.yaml \
                   --debug \
                   --wait
@@ -53,7 +50,6 @@ object BlogHelm_DeployTemplate : Template({
                 cleanDestination = true
                 artifactRules = """
                     *.tgz => artifacts
-                    *.txt => artifacts
                     values-*.yaml => artifacts
                 """.trimIndent()
             }
