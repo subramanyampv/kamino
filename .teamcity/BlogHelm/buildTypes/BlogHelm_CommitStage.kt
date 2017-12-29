@@ -7,6 +7,8 @@ import jetbrains.buildServer.configs.kotlin.v2017_2.buildFeatures.vcsLabeling
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.dockerBuild
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.exec
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.script
+import jetbrains.buildServer.configs.kotlin.v2017_2.failureConditions.BuildFailureOnMetric
+import jetbrains.buildServer.configs.kotlin.v2017_2.failureConditions.failOnMetricChange
 import jetbrains.buildServer.configs.kotlin.v2017_2.triggers.vcs
 
 object BlogHelm_CommitStage : BuildType({
@@ -101,6 +103,17 @@ object BlogHelm_CommitStage : BuildType({
         script {
             name = "Push Docker CI image"
             scriptContent = "docker push %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%"
+        }
+    }
+
+    failureConditions {
+        failOnMetricChange {
+            metric = BuildFailureOnMetric.MetricType.COVERAGE_LINE_PERCENTAGE
+            units = BuildFailureOnMetric.MetricUnit.DEFAULT_UNIT
+            comparison = BuildFailureOnMetric.MetricComparison.LESS
+            compareTo = build {
+                buildRule = lastSuccessful()
+            }
         }
     }
 
