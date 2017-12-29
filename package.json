@@ -1,6 +1,6 @@
 {
   "name": "blog-helm",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "An example hello world application to show Docker and Helm",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,9 @@
     "test": "mocha ./test/unit-specs",
     "test-junit": "mocha -R xunit --reporter-options output=test-reports/ci-mocha.xml ./test/unit-specs",
     "start": "node index.js",
-    "wdio": "wdio"
+    "wdio": "wdio",
+    "nyc": "nyc npm test",
+    "nyc-junit": "nyc npm run test-junit"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "mocha": "^4.1.0",
+    "nyc": "^11.4.1",
     "proxyquire": "^1.8.0",
     "sinon": "^4.1.3",
     "wdio-dot-reporter": "0.0.9",
@@ -37,5 +40,18 @@
     "wdio-mocha-framework": "^0.5.12",
     "wdio-phantomjs-service": "^0.2.2",
     "webdriverio": "^4.9.11"
+  },
+  "nyc": {
+    "all": true,
+    "reporter": [
+      "text",
+      "html",
+      "teamcity"
+    ],
+    "exclude": [
+      "wdio.conf.js",
+      "coverage/**/*.js",
+      "test/**/*.js"
+    ]
   }
 }

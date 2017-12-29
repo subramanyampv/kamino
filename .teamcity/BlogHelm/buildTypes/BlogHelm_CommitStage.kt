@@ -66,7 +66,7 @@ object BlogHelm_CommitStage : BuildType({
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
                   blog-helm-ci:%env.IMAGE_TAG% \
-                  npm run test-junit
+                  npm run nyc-junit
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
