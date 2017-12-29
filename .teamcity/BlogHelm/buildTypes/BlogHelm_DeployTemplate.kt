@@ -38,7 +38,7 @@ object BlogHelm_DeployTemplate : Template({
                   --debug \
                   --wait
             """.trimIndent()
-            dockerImage = "lachlanevenson/k8s-helm:v2.6.2"
+            dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -e HELM_HOST=%helm.host%"
         }
         stepsOrder = arrayListOf("RUNNER_1")

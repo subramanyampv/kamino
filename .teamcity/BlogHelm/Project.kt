@@ -27,6 +27,7 @@ object Project : Project({
 
     params {
         param("docker.registry", "registry.local:5000")
+        param("lachlanevenson.k8s-helm.tag", "v2.6.2")
     }
 
     features {

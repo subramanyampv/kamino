@@ -86,7 +86,7 @@ object BlogHelm_CommitStage : BuildType({
                   --version %env.IMAGE_TAG% \
                   ./helm/blog-helm
             """.trimIndent()
-            dockerImage = "lachlanevenson/k8s-helm"
+            dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
         }
         script {
             name = "Push Docker image"
