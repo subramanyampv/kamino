@@ -50,19 +50,22 @@ object BlogHelm_CommitStage : BuildType({
             source = path {
                 path = "Dockerfile-ci"
             }
-            namesAndTags = "blog-helm-ci"
+            namesAndTags = """
+                blog-helm-ci:%env.IMAGE_TAG%
+                %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%
+            """.trimIndent()
         }
         script {
             name = "Run linting"
             scriptContent = """
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci \
+                  blog-helm-ci:%env.IMAGE_TAG% \
                   npm run lint-junit
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci \
+                  blog-helm-ci:%env.IMAGE_TAG% \
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
         }
@@ -87,8 +90,12 @@ object BlogHelm_CommitStage : BuildType({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
         }
         script {
-            name = "Push Docker image"
+            name = "Push Docker production image"
             scriptContent = "docker push %docker.registry%/blog-helm:%env.IMAGE_TAG%"
+        }
+        script {
+            name = "Push Docker CI image"
+            scriptContent = "docker push %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%"
         }
     }
 

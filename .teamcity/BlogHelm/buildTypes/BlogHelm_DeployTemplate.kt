@@ -47,6 +47,21 @@ object BlogHelm_DeployTemplate : Template({
             path = "ci-scripts/wait-for-version.sh"
             arguments = "%app.version.url% %build.number%"
         }
+
+        script {
+            name = "Run WebdriverIO tests"
+            scriptContent = """
+                docker run \
+                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
+                  blog-helm-ci:%build.number% \
+                  npm run wdio -- -b %app.baseurl%
+
+                docker run \
+                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
+                  blog-helm-ci:%build.number% \
+                  chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
+            """.trimIndent()
+        }
     }
 
     dependencies {
@@ -63,6 +78,18 @@ object BlogHelm_DeployTemplate : Template({
                     values-*.yaml => artifacts
                 """.trimIndent()
             }
+        }
+    }
+
+    features {
+        feature {
+            type = "perfmon"
+        }
+        feature {
+            type = "xml-report-plugin"
+            param("xmlReportParsing.reportType", "junit")
+            param("xmlReportParsing.reportDirs", "test-reports/WD*.xml")
+            param("xmlReportParsing.verboseOutput", "true")
         }
     }
 })

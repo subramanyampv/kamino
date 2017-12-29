@@ -1,13 +1,14 @@
 {
   "name": "blog-helm",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "An example hello world application to show Docker and Helm",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "lint-junit": "eslint -f junit -o test-reports/eslint.xml .",
     "test": "npm run lint",
-    "start": "node index.js"
+    "start": "node index.js",
+    "wdio": "wdio"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,11 @@
   "devDependencies": {
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint-plugin-import": "^2.8.0",
+    "wdio-dot-reporter": "0.0.9",
+    "wdio-junit-reporter": "^0.3.1",
+    "wdio-mocha-framework": "^0.5.12",
+    "wdio-phantomjs-service": "^0.2.2",
+    "webdriverio": "^4.9.11"
   }
 }

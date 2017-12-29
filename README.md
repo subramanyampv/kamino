@@ -58,3 +58,17 @@ Correct user permissions if needed with:
 ```
 docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci chown -R $(id -u):$(id -g) test-reports
 ```
+
+## WebdriverIO
+
+To run tests against an app that runs on http://localhost:3000/ :
+
+```
+npm run wdio
+```
+
+To run tests against an app at a different base URL:
+
+```
+npm run wdio -- -b http://some.other.url/
+```

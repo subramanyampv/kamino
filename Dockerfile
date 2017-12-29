@@ -1,10 +1,9 @@
-FROM node:alpine
+FROM node:8-alpine
 EXPOSE 3000
 RUN mkdir /app
 WORKDIR /app
-ADD package.json /app
-ADD package-lock.json /app
+COPY package*.json /app/
 RUN npm install --only=production
-ADD . /app
+COPY . /app
 CMD ["node", "index.js"]
 ENV APP_ENV=
