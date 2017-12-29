@@ -4,6 +4,6 @@ RUN mkdir /app
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install --only=production
-COPY . /app
+COPY index.js /app
 CMD ["node", "index.js"]
 ENV APP_ENV=
