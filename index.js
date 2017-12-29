@@ -15,6 +15,10 @@ app.get('/', (req, res) => res.send(`
   </body>
 </html>
 `));
+
+// output version for diagnostics and ensuring deployment is complete.
+app.get('/version', (req, res) => res.send(process.env.APP_VERSION));
+
 app.listen(
   3000,
   () => console.log('Example app listening on port 3000!'),

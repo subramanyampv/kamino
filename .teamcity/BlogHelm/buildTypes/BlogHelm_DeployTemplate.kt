@@ -1,6 +1,7 @@
 package BlogHelm.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.v2017_2.*
+import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.exec
 import jetbrains.buildServer.configs.kotlin.v2017_2.buildSteps.script
 
 object BlogHelm_DeployTemplate : Template({
@@ -16,6 +17,9 @@ object BlogHelm_DeployTemplate : Template({
         text("env", "", label = "Environment", description = "Select the environment to deploy to",
               regex = "^test|acc|prod${'$'}", validationMessage = "Must be one of test acc prod")
         param("helm.host", "192.168.99.101:30200")
+        param("app.host", "")
+        param("app.baseurl", "http://%app.host%")
+        param("app.version.url", "%app.baseurl%/version")
     }
 
     vcs {
@@ -36,6 +40,12 @@ object BlogHelm_DeployTemplate : Template({
             """.trimIndent()
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -e HELM_HOST=%helm.host%"
+        }
+
+        exec {
+            name = "Wait until the correct version is available"
+            path = "ci-scripts/wait-for-version.sh"
+            arguments = "%app.version.url% %build.number%"
         }
     }
 

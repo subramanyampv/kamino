@@ -10,6 +10,7 @@ object BlogHelm_DeployAcceptance : BuildType({
 
     params {
         param("env", "acc")
+        param("app.host", "acc.blog-helm.local")
     }
 
     dependencies {
