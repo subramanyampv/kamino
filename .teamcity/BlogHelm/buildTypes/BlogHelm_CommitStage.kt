@@ -27,7 +27,6 @@ object BlogHelm_CommitStage : BuildType({
 
     vcs {
         root(BlogHelm.vcsRoots.BlogHelm_BlogHelm)
-
         showDependenciesChanges = true
     }
 
@@ -106,7 +105,7 @@ object BlogHelm_CommitStage : BuildType({
         feature {
             type = "xml-report-plugin"
             param("xmlReportParsing.reportType", "junit")
-            param("xmlReportParsing.reportDirs", "test-reports/*.xml")
+            param("xmlReportParsing.reportDirs", "test-reports/eslint.xml")
             param("xmlReportParsing.verboseOutput", "true")
         }
         vcsLabeling {
