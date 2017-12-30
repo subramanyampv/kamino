@@ -37,7 +37,7 @@ object BlogHelm_SmokeTest : BuildType({
         exec {
             name = "Smoke test Docker image"
             path = "ci-scripts/smoke-test-docker-image.sh"
-            arguments = "%docker.registry% blog-helm %build.number%"
+            arguments = "%docker.registry%/blog-helm:%build.number%"
         }
         script {
             name = "Logout from Docker registry"
