@@ -96,10 +96,9 @@ object BlogHelm_CommitStage : BuildType({
             """.trimIndent()
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
         }
-        exec {
+        script {
             name = "Login to Docker registry"
-            path = "ci-scripts/docker-login.sh"
-            arguments = "-u %docker.username% -p %docker.password% %docker.server%"
+            scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
         }
         script {
             name = "Push Docker production image"
@@ -109,10 +108,9 @@ object BlogHelm_CommitStage : BuildType({
             name = "Push Docker CI image"
             scriptContent = "docker push %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%"
         }
-        exec {
+        script {
             name = "Logout from Docker registry"
-            path = "ci-scripts/docker-login.sh"
-            arguments = "--logout %docker.server%"
+            scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
         }
     }

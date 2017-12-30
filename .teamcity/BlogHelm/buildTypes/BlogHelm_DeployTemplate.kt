@@ -46,10 +46,9 @@ object BlogHelm_DeployTemplate : Template({
             path = "ci-scripts/wait-for-version.sh"
             arguments = "%app.version.url% %build.number%"
         }
-        exec {
+        script {
             name = "Login to Docker registry"
-            path = "ci-scripts/docker-login.sh"
-            arguments = "-u %docker.username% -p %docker.password% %docker.server%"
+            scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
         }
         script {
             name = "Run WebdriverIO tests"
@@ -65,10 +64,9 @@ object BlogHelm_DeployTemplate : Template({
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
         }
-        exec {
+        script {
             name = "Logout from Docker registry"
-            path = "ci-scripts/docker-login.sh"
-            arguments = "--logout %docker.server%"
+            scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
         }
     }
