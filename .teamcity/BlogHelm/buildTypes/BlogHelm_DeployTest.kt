@@ -9,7 +9,7 @@ object BlogHelm_DeployTest : BuildType({
     name = "Deploy To Test"
 
     params {
-        param("env", "test")
+        param("app.env", "test")
         param("app.host", "test.blog-helm.local")
     }
 

@@ -9,7 +9,7 @@ object BlogHelm_DeployAcceptance : BuildType({
     name = "Deploy To Acceptance"
 
     params {
-        param("env", "acc")
+        param("app.env", "acc")
         param("app.host", "acc.blog-helm.local")
     }
 

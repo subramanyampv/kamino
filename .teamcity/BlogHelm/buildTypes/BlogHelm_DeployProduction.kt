@@ -10,7 +10,7 @@ object BlogHelm_DeployProduction : BuildType({
     name = "Deploy To Production"
 
     params {
-        param("env", "prod")
+        param("app.env", "prod")
         param("app.host", "blog-helm.local")
     }
 

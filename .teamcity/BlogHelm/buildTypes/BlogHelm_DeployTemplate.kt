@@ -14,12 +14,12 @@ object BlogHelm_DeployTemplate : Template({
     maxRunningBuilds = 1
 
     params {
-        text("env", "", label = "Environment", description = "Select the environment to deploy to",
+        text("app.env", "", label = "Environment", description = "Select the environment to deploy to",
               regex = "^test|acc|prod${'$'}", validationMessage = "Must be one of test acc prod")
-        param("helm.host", "192.168.99.101:30200")
         param("app.host", "")
         param("app.baseurl", "http://%app.host%")
         param("app.version.url", "%app.baseurl%/version")
+        param("helm.host", "192.168.99.101:30200")
     }
 
     vcs {
@@ -31,10 +31,10 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Deploy using Helm"
             scriptContent = """
-                helm upgrade --install blog-helm-%env% \
+                helm upgrade --install blog-helm-%app.env% \
                   ./artifacts/blog-helm-%build.number%.tgz \
                   --set image.tag=%build.number% \
-                  --values ./artifacts/values-%env%.yaml \
+                  --values ./artifacts/values-%app.env%.yaml \
                   --debug \
                   --wait
             """.trimIndent()
