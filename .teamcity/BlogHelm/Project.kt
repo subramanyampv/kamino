@@ -27,7 +27,7 @@ object Project : Project({
 
     params {
         param("docker.registry", "registry.local:5000")
-        password("docker.password", "credentialsJSON:6a39fd43-0513-4ba4-a446-14843fa7c355", label = "Docker registry password")
+        password("docker.password", "credentialsJSON:175b2d15-2353-475e-ab70-571d1e5843e9", label = "Docker registry password")
         param("lachlanevenson.k8s-helm.tag", "v2.6.2")
     }
 
