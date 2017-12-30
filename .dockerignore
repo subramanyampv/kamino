@@ -4,3 +4,6 @@ test-reports/
 .nyc_output/
 coverage/
 .vscode/
+.git/
+.gitignore
+Dockerfile*

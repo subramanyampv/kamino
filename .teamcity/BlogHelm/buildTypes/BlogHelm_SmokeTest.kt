@@ -30,9 +30,20 @@ object BlogHelm_SmokeTest : BuildType({
 
     steps {
         exec {
+            name = "Login to Docker registry"
+            path = "ci-scripts/docker-login.sh"
+            arguments = "-u %docker.username% -p %docker.password% %docker.server%"
+        }
+        exec {
             name = "Smoke test Docker image"
             path = "ci-scripts/smoke-test-docker-image.sh"
             arguments = "%docker.registry% blog-helm %build.number%"
+        }
+        exec {
+            name = "Logout from Docker registry"
+            path = "ci-scripts/docker-login.sh"
+            arguments = "--logout %docker.server%"
+            executionMode = BuildStep.ExecutionMode.ALWAYS
         }
     }
 

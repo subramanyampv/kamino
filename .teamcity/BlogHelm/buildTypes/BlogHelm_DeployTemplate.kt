@@ -41,26 +41,35 @@ object BlogHelm_DeployTemplate : Template({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -e HELM_HOST=%helm.host%"
         }
-
         exec {
             name = "Wait until the correct version is available"
             path = "ci-scripts/wait-for-version.sh"
             arguments = "%app.version.url% %build.number%"
         }
-
+        exec {
+            name = "Login to Docker registry"
+            path = "ci-scripts/docker-login.sh"
+            arguments = "-u %docker.username% -p %docker.password% %docker.server%"
+        }
         script {
             name = "Run WebdriverIO tests"
             scriptContent = """
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%build.number% \
+                  %docker.registry%/blog-helm-ci:%build.number% \
                   npm run wdio -- -b %app.baseurl%
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%build.number% \
+                  %docker.registry%/blog-helm-ci:%build.number% \
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
+        }
+        exec {
+            name = "Logout from Docker registry"
+            path = "ci-scripts/docker-login.sh"
+            arguments = "--logout %docker.server%"
+            executionMode = BuildStep.ExecutionMode.ALWAYS
         }
     }
 
