@@ -99,6 +99,7 @@ object BlogHelm_CommitStage : BuildType({
         script {
             name = "Login to Docker registry"
             scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
+            enabled = false
         }
         script {
             name = "Push Docker production image"
@@ -112,6 +113,7 @@ object BlogHelm_CommitStage : BuildType({
             name = "Logout from Docker registry"
             scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
+            enabled = false
         }
     }
 

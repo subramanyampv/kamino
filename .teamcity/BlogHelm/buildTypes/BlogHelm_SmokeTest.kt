@@ -32,6 +32,7 @@ object BlogHelm_SmokeTest : BuildType({
         script {
             name = "Login to Docker registry"
             scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
+            enabled = false
         }
         exec {
             name = "Smoke test Docker image"
@@ -42,6 +43,7 @@ object BlogHelm_SmokeTest : BuildType({
             name = "Logout from Docker registry"
             scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
+            enabled = false
         }
     }
 

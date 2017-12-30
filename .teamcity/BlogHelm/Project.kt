@@ -26,7 +26,7 @@ object Project : Project({
     template(BlogHelm_DeployTemplate)
 
     params {
-        param("docker.registry", "830988624223.dkr.ecr.eu-west-1.amazonaws.com")
+        param("docker.registry", "registry.local:5000")
         param("docker.server", "https://%docker.registry%")
         param("docker.username", "AWS")
         password("docker.password", "credentialsJSON:175b2d15-2353-475e-ab70-571d1e5843e9", label = "Docker registry password")

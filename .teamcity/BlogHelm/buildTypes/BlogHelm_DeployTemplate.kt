@@ -49,6 +49,7 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Login to Docker registry"
             scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
+            enabled = false
         }
         script {
             name = "Run WebdriverIO tests"
@@ -68,6 +69,7 @@ object BlogHelm_DeployTemplate : Template({
             name = "Logout from Docker registry"
             scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
+            enabled = false
         }
     }
 
