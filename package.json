@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "lint-junit": "eslint -f junit -o test-reports/ci-eslint.xml .",
+    "lint-junit": "eslint --quiet -f junit -o test-reports/ci-eslint.xml .",
     "test": "mocha ./test/unit-specs",
     "test-junit": "mocha -R xunit --reporter-options output=test-reports/ci-mocha.xml ./test/unit-specs",
     "start": "node index.js",
