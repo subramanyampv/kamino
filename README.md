@@ -1,0 +1,2 @@
+# wpbot
+wordpress bot
