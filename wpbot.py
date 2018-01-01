@@ -15,8 +15,8 @@ class WPBot:
     def _parse_args(self):
         '''Parses command line arguments'''
         parser = argparse.ArgumentParser(description='Wordpress bot')
-        parser.add_argument('--client-id', required=True, help='Client ID')
-        parser.add_argument('--client-secret', required=True, help='Client Secret')
+        parser.add_argument('--client-id', help='Client ID')
+        parser.add_argument('--client-secret', help='Client Secret')
         parser.add_argument('-s', '--site', default=DEFAULT_SITE, help='Wordpress hostname')
         parser.add_argument('-p', '--post-id', type=int, help='Post ID to get/update')
         parser.add_argument(
@@ -156,11 +156,30 @@ class WPBot:
             print("modified post!")
         print("")
 
+    def _get_cached_oauth_token(self):
+        try:
+            with open('oauth.txt', 'r') as file:
+                return file.readline()
+        except OSError:
+            print('Cached OAuth token not found')
+            return None
+
+    def _cache_oauth_token(self, oauth_token):
+        with open('oauth.txt', 'w') as file:
+            file.write(oauth_token)
+
+    def _get_oauth_token(self, client_id, client_secret):
+        oauth_token = self._get_cached_oauth_token()
+        if not oauth_token:
+            oauth_retriever = oauth.OAuthTokenRetriever(client_id, client_secret)
+            oauth_token = oauth_retriever.get_oauth_token()
+            self._cache_oauth_token(oauth_token)
+        return oauth_token
+
     def cli(self):
         '''Runs the CLI interface'''
         args = self._parse_args()
-        oauth_retriever = oauth.OAuthTokenRetriever(args.client_id, args.client_secret)
-        self.oauth_token = oauth_retriever.get_oauth_token()
+        self.oauth_token = self._get_oauth_token(args.client_id, args.client_secret)
         self.site = args.site
 
         if args.command == 'list-tags':

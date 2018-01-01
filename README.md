@@ -2,8 +2,8 @@
 Wordpress bot
 
 ```
-usage: wpbot.py [-h] -t TOKEN [-s SITE] [-p POST_ID]
-                [--post-filter {all,fixable,unfixable}]
+usage: wpbot.py [-h] [--client-id CLIENT_ID] [--client-secret CLIENT_SECRET]
+                [-s SITE] [-p POST_ID] [--post-filter {all,fixable,unfixable}]
                 {list-tags,list-posts,get-post,fix-post}
 
 Wordpress bot
@@ -14,8 +14,10 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -t TOKEN, --token TOKEN
-                        OAuth2 Token
+  --client-id CLIENT_ID
+                        Client ID
+  --client-secret CLIENT_SECRET
+                        Client Secret
   -s SITE, --site SITE  Wordpress hostname
   -p POST_ID, --post-id POST_ID
                         Post ID to get/update
