@@ -6,6 +6,9 @@ import oauth
 
 DEFAULT_SITE = 'ngeor.wordpress.com'
 
+# page size for paginated REST API requests
+PAGE_SIZE = 10
+
 class WPBot:
     '''WordPress Bot'''
     def __init__(self):
@@ -34,9 +37,9 @@ class WPBot:
     def list_all_tags(self):
         '''Lists all tags of the blog'''
         page = 1
-        success = True
+        has_more = True
         print("ID\tSlug\tName\tCount")
-        while success:
+        while has_more:
             payload = {'page' : page}
             response = requests.get(
                 f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/tags',
@@ -48,7 +51,7 @@ class WPBot:
             for tag in json:
                 print(f"{tag['id']}\t{tag['slug']}\t{tag['name']}\t{tag['count']}")
 
-            success = json
+            has_more = len(json) >= PAGE_SIZE
             page = page + 1
 
     def _fix_post_content(self, content):
@@ -66,10 +69,10 @@ class WPBot:
     def list_posts(self, post_filter):
         '''Lists posts'''
         page = 1
-        success = True
+        has_more = True
         total_posts = 0
         total_shown_posts = 0
-        while success:
+        while has_more:
             response = requests.get(
                 f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts',
                 headers={'Authorization': 'Bearer ' + self.oauth_token},
@@ -98,7 +101,7 @@ class WPBot:
                         print("*** can be fixed!")
                     print("")
                     total_shown_posts = total_shown_posts + 1
-            success = len(json) >= 10
+            has_more = len(json) >= PAGE_SIZE
             page = page + 1
         print('Found %d posts (%d total)' % (total_shown_posts, total_posts))
 

@@ -54,10 +54,21 @@ The tool currently supports the following corrections on post content:
 ### List all tags
 
 ```
-python wpbot.py \
+$ python wpbot.py \
   --client-id your-client-id --client-secret your-client-secret \
   -s ngeor.wordpess.com \
   list-tags
+
+ID      Slug    Name    Count
+2427    net     .NET    4
+6277562 net-core        .NET Core       1
+641922  android Android 2
+145113159       appveyor        AppVeyor        1
+299725  archetype       archetype       1
+2290    architecture    architecture    1
+1517    atom    atom    2
+13307480        automated-tests automated tests 2
+144203  aws     AWS     5
 ```
 
 ### List all posts
