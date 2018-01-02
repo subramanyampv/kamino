@@ -1,4 +1,4 @@
-'''Wordpress bot main module'''
+'''WordPress bot main module'''
 import argparse
 import re
 import requests
@@ -7,17 +7,17 @@ import oauth
 DEFAULT_SITE = 'ngeor.wordpress.com'
 
 class WPBot:
-    '''Wordpress Bot'''
+    '''WordPress Bot'''
     def __init__(self):
         self.oauth_token = ''
         self.site = ''
 
     def _parse_args(self):
         '''Parses command line arguments'''
-        parser = argparse.ArgumentParser(description='Wordpress bot')
+        parser = argparse.ArgumentParser(description='WordPress bot')
         parser.add_argument('--client-id', help='Client ID')
         parser.add_argument('--client-secret', help='Client Secret')
-        parser.add_argument('-s', '--site', default=DEFAULT_SITE, help='Wordpress hostname')
+        parser.add_argument('-s', '--site', default=DEFAULT_SITE, help='WordPress hostname')
         parser.add_argument('-p', '--post-id', type=int, help='Post ID to get/update')
         parser.add_argument(
             '--post-filter',
