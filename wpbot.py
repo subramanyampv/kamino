@@ -103,19 +103,19 @@ class WPBot:
             params={'context' : 'edit'})
 
         json = response.json()
-        print(json)
-
         post = json
         post_id = post['id']
         title = post['title']['raw']
         content = post['content']['raw']
         print(f"ID: {post_id}")
         print(f"Title: {title}")
+        print(content)
         if fixer.is_fixable(content):
-            print(content)
             print("")
             print("After regex:")
             print(fixer.fix_post_content(content))
+        else:
+            print("Post is not fixable")
         print("")
 
     def fix_post(self, post_id):
@@ -126,8 +126,6 @@ class WPBot:
             params={'context' : 'edit'})
 
         json = response.json()
-        print(json)
-
         post = json
         post_id = post['id']
         title = post['title']['raw']
