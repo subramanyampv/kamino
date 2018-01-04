@@ -8,9 +8,10 @@ def is_fixable(content):
 
 def fix_post_content(content):
     '''Repairs post content by converting pre tags to [code] snippets'''
+
     fixed_pre_tags = re.sub(
-        r'<pre class="prettyprint">(.+?)</pre>',
-        r'\n[code]\n\1[/code]\n',
+        r'<pre class="prettyprint">[\r\n]*(.+?)[\r\n]*</pre>',
+        r'\n[code]\n\1\n[/code]\n',
         content,
         flags=re.S)
     fixed_span_tags = re.sub(

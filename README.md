@@ -16,12 +16,12 @@ WordPress bot. Batch editing of posts on `wordpress.com` blogs.
 ```
 usage: wpbot.py [-h] [--client-id CLIENT_ID] [--client-secret CLIENT_SECRET]
                 [-s SITE] [-p POST_ID] [--post-filter {all,fixable,unfixable}]
-                {list-tags,list-posts,get-post,fix-post}
+                {list-tags,list-posts,fix-posts,get-post,fix-post}
 
 WordPress bot
 
 positional arguments:
-  {list-tags,list-posts,get-post,fix-post}
+  {list-tags,list-posts,fix-posts,get-post,fix-post}
                         The command to run
 
 optional arguments:
@@ -33,6 +33,7 @@ optional arguments:
   -s SITE, --site SITE  WordPress hostname
   -p POST_ID, --post-id POST_ID
                         Post ID to get/update
+  --dry-run             Do not actually perform any changes
   --post-filter {all,fixable,unfixable}
                         Which posts to show
 ```
@@ -89,6 +90,17 @@ python wpbot.py \
   --post-filter fixable \
   list-posts
 ```
+
+### Fix all posts
+
+```
+python wpbot.py \
+  --client-id your-client-id --client-secret your-client-secret \
+  -s ngeor.wordpess.com \
+  fix-posts
+```
+
+You can use `--dry-run` to see what would happen.
 
 ### Get a post
 

@@ -22,5 +22,22 @@ class DryRunTestCase(unittest.TestCase):
         args = args_parser.parse_args(['list-tags'])
         self.assertFalse(args.dry_run)
 
+class CommandsTestCase(unittest.TestCase):
+    '''Supported commands'''
+    def test_list_tags(self):
+        '''list-tags command'''
+        args = args_parser.parse_args(['list-tags'])
+        self.assertEqual('list-tags', args.command)
+
+    def test_list_posts(self):
+        '''list-posts command'''
+        args = args_parser.parse_args(['list-posts'])
+        self.assertEqual('list-posts', args.command)
+
+    def test_fix_posts(self):
+        '''fix-posts command'''
+        args = args_parser.parse_args(['fix-posts'])
+        self.assertEqual('fix-posts', args.command)
+
 if __name__ == '__main__':
     unittest.main()

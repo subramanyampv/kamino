@@ -22,8 +22,23 @@ class PrettyPrintTestCase(unittest.TestCase):
     def test_fix_content(self):
         '''is replaced by code shortcode'''
         self.assertEqual(
-            '\n[code]\nsome code[/code]\n',
+            '''
+[code]
+some code
+[/code]
+''',
             fixer.fix_post_content('<pre class="prettyprint">some code</pre>')
+        )
+
+    def test_fix_content_no_trailing_empty_lines(self):
+        '''is replaced by code shortcode'''
+        self.assertEqual(
+            '''
+[code]
+some code
+[/code]
+''',
+            fixer.fix_post_content('<pre class="prettyprint">some code\n</pre>')
         )
 
 class SpanCodeTestCase(unittest.TestCase):

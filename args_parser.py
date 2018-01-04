@@ -24,6 +24,6 @@ def parse_args(args=None):
     )
     parser.add_argument(
         'command',
-        choices=['list-tags', 'list-posts', 'get-post', 'fix-post'],
+        choices=['list-tags', 'list-posts', 'fix-posts', 'get-post', 'fix-post'],
         help='The command to run')
     return parser.parse_args(args)
