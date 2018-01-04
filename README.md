@@ -1,6 +1,8 @@
 # wpbot
 WordPress bot. Batch editing of posts on `wordpress.com` blogs.
 
+[![Build Status](https://travis-ci.org/ngeor/wpbot.svg?branch=master)](https://travis-ci.org/ngeor/wpbot)
+
 ## Requirements
 
 - Python 3.6.3 and above
