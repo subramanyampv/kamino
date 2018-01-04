@@ -4,6 +4,7 @@ import requests
 
 import oauth
 import args_parser
+import fixer
 
 # page size for paginated REST API requests
 PAGE_SIZE = 10
@@ -38,18 +39,6 @@ class WPBot:
             has_more = len(json) >= PAGE_SIZE
             page = page + 1
 
-    def _fix_post_content(self, content):
-        '''Repairs post content by converting pre tags to [code] snippets'''
-        fixed_pre_tags = re.sub(
-            r'<pre class="prettyprint">(.+?)</pre>',
-            r'\n[code]\n\1[/code]\n',
-            content,
-            flags=re.S)
-        fixed_span_tags = re.sub(
-            r'<span class="code">(.+?)</span>', r'<code>\1</code>',
-            fixed_pre_tags)
-        return fixed_span_tags
-
     def list_posts(self, post_filter):
         '''Lists posts'''
         page = 1
@@ -68,7 +57,7 @@ class WPBot:
                 post_id = post['id']
                 title = post['title']['raw']
                 content = post['content']['raw']
-                is_fixable = content.find('<pre class="prettyprint">') >= 0
+                is_fixable = fixer.is_fixable(content)
 
                 show_post = False
                 if post_filter == 'all':
@@ -109,7 +98,7 @@ class WPBot:
             print(content)
             print("")
             print("After regex:")
-            print(self._fix_post_content(content))
+            print(fixer.fix_post_content(content))
         print("")
 
     def fix_post(self, post_id):
@@ -132,7 +121,7 @@ class WPBot:
             print(content)
             print("")
             print("After regex:")
-            fixed_content = self._fix_post_content(content)
+            fixed_content = fixer.fix_post_content(content)
             print(fixed_content)
 
             requests.post(
