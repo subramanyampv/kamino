@@ -1,5 +1,4 @@
 '''WordPress bot main module'''
-import re
 import requests
 
 import oauth
