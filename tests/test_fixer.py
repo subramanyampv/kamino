@@ -112,6 +112,7 @@ make install
 </div>''')
         )
 
+@unittest.skip('work in progress')
 class HtmlEncodedTestCase(unittest.TestCase):
     '''Fixes double encoded HTML'''
     def test_fix_content(self):

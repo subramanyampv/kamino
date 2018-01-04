@@ -136,3 +136,9 @@ The parameters `--client-id` and `--client-secret` are mandatory only when that 
 
 [code shortcodes]: https://en.support.wordpress.com/code/posting-source-code/
 [requests]: http://docs.python-requests.org/en/master/
+
+## Building
+
+- Linting: `pylint *.py && pylint tests`
+- Tests: `python -m unittest`
+- Coverage: `coverage run -m unittest && coverage report && coverage html`

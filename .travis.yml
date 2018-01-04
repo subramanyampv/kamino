@@ -2,7 +2,10 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install requests coverage
+  - pip install requests pylint coverage
 script:
-  - pylint
+  - pylint *.py
+  - pylint tests
   - python -m unittest
+  - coverage run -m unittest
+  - coverage report
