@@ -30,7 +30,7 @@ some code
             fixer.fix_post_content('<pre class="prettyprint">some code</pre>')
         )
 
-    def test_fix_content_no_trailing_empty_lines(self):
+    def strips_empty_lines(self):
         '''is replaced by code shortcode'''
         self.assertEqual(
             '''

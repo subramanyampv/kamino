@@ -2,7 +2,7 @@
 
 import re
 import html
-
+# pylint: disable=too-few-public-methods
 class RegexFixerBase:
     '''
     Base class for fixers with a regex
@@ -75,7 +75,9 @@ class DivPreCodeFixer(RegexFixerBase):
 
     def __init__(self):
         super().__init__(
-            r'<div class="highlighter-rouge">\s*<pre class="highlight">\s*<code>\s*(.+?)\s*</code>\s*</pre>\s*</div>',
+            r'<div class="highlighter-rouge">\s*' +
+            r'<pre class="highlight">\s*<code>\s*(.+?)\s*' +
+            r'</code>\s*</pre>\s*</div>',
             r'\n[code]\n\1\n[/code]\n'
         )
 
@@ -108,41 +110,41 @@ class HtmlEncodeFixer(RegexFixerBase):
     def __init__(self):
         super().__init__(
             r'\[code[^\]]*\](.+?)\[/code\]',
-            lambda match: self._unescape_html(match[0])
+            lambda match: _unescape_html(match[0])
         )
 
-    def _unescape_html(self, content):
-        '''Unescapes HTML fully'''
-        has_changes = True
-        current = content
+def _unescape_html(content):
+    '''Unescapes HTML fully'''
+    has_changes = True
+    current = content
 
-        while has_changes:
-            unescaped = html.unescape(current)
-            has_changes = unescaped != current
-            if has_changes:
-                current = unescaped
+    while has_changes:
+        unescaped = html.unescape(current)
+        has_changes = unescaped != current
+        if has_changes:
+            current = unescaped
 
-        return current
+    return current
 
-    def _unescape_double_html(self, content):
-        '''Unescapes double encoded HTML'''
-        has_changes = True
+def _unescape_double_html(content):
+    '''Unescapes double encoded HTML'''
+    has_changes = True
 
-        # current iteration
-        current = content
+    # current iteration
+    current = content
 
-        # previous iteration
-        previous = content
-        while has_changes:
-            unescaped = html.unescape(current)
-            has_changes = unescaped != current
-            if has_changes:
-                # we still observe changes, shift values
-                previous = current
-                current = unescaped
+    # previous iteration
+    previous = content
+    while has_changes:
+        unescaped = html.unescape(current)
+        has_changes = unescaped != current
+        if has_changes:
+            # we still observe changes, shift values
+            previous = current
+            current = unescaped
 
-        # return the one before it got stable
-        return previous
+    # return the one before it got stable
+    return previous
 
 CLASSES = [
     BlockquotePreFixer,

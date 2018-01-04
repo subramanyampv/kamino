@@ -35,7 +35,7 @@ def oauth_token_handler_factory(oauth_token_retriever_instance):
             self.end_headers()
             self.wfile.write(('Code: ' + self.oauth_token_retriever_instance.code).encode('utf8'))
             self.oauth_token_retriever_instance.code = code
-            self.oauth_token_retriever_instance._kill_server()
+            self.oauth_token_retriever_instance.kill_server()
 
         def _handle_no_code(self):
             self.send_response(400)
@@ -64,7 +64,7 @@ class OAuthTokenRetriever:
 
     def _get_authorization_url(self):
         oauth = OAuth2Session(self.client_id, redirect_uri=REDIRECT_URI)
-        authorization_url, state = oauth.authorization_url(
+        authorization_url, state = oauth.authorization_url( # pylint: disable=unused-variable
             f'https://public-api.wordpress.com/oauth2/authorize?' +
             f'client_id={self.client_id}&redirect_uri={REDIRECT_URI}&response_type=token')
         return authorization_url
@@ -93,7 +93,7 @@ class OAuthTokenRetriever:
         return token['access_token']
 
 
-    def _kill_server(self):
+    def kill_server(self):
         '''Kills the HTTP server on a separate thread'''
         assassin = threading.Thread(target=self._httpd.shutdown)
         assassin.daemon = True
@@ -102,5 +102,5 @@ class OAuthTokenRetriever:
 if __name__ == "__main__":
     CLIENT_ID = ''
     CLIENT_SECRET = ''
-    retriever = OAuthTokenRetriever(CLIENT_ID, CLIENT_SECRET)
-    print(retriever.get_oauth_token())
+    RETRIEVER = OAuthTokenRetriever(CLIENT_ID, CLIENT_SECRET)
+    print(RETRIEVER.get_oauth_token())

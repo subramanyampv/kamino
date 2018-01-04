@@ -5,10 +5,14 @@ import args_parser
 
 class BasicTestCase(unittest.TestCase):
     '''Basic unit tests for argument parsing'''
-    @unittest.expectedFailure
     def test_no_args_should_fail(self):
         '''Parser should fail when no arguments are given'''
-        args_parser.parse_args([])
+        exception = False
+        try:
+            args_parser.parse_args([])
+        except SystemExit:
+            exception = True
+        self.assertTrue(exception)
 
 class DryRunTestCase(unittest.TestCase):
     '''Unit tests for dry run feature'''

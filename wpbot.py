@@ -15,10 +15,6 @@ class WPBot:
         self.site = ''
         self.dry_run = False
 
-    def _parse_args(self):
-        '''Parses command line arguments'''
-        return args_parser.parse_args()
-
     def list_all_tags(self):
         '''Lists all tags of the blog'''
         page = 1
@@ -153,26 +149,6 @@ class WPBot:
                 print("modified post!")
         print("")
 
-    def _get_cached_oauth_token(self):
-        try:
-            with open('oauth.txt', 'r') as file:
-                return file.readline()
-        except OSError:
-            print('Cached OAuth token not found')
-            return None
-
-    def _cache_oauth_token(self, oauth_token):
-        with open('oauth.txt', 'w') as file:
-            file.write(oauth_token)
-
-    def _get_oauth_token(self, client_id, client_secret):
-        oauth_token = self._get_cached_oauth_token()
-        if not oauth_token:
-            oauth_retriever = oauth.OAuthTokenRetriever(client_id, client_secret)
-            oauth_token = oauth_retriever.get_oauth_token()
-            self._cache_oauth_token(oauth_token)
-        return oauth_token
-
     def _post_loop(self, callback):
         '''
         Loops over all posts of the blog.
@@ -196,8 +172,8 @@ class WPBot:
 
     def cli(self):
         '''Runs the CLI interface'''
-        args = self._parse_args()
-        self.oauth_token = self._get_oauth_token(args.client_id, args.client_secret)
+        args = args_parser.parse_args()
+        self.oauth_token = _get_oauth_token(args.client_id, args.client_secret)
         self.site = args.site
         self.dry_run = args.dry_run
 
@@ -213,6 +189,26 @@ class WPBot:
             self.fix_post(args.post_id)
         else:
             print(f'Unsupported command: {args.command}')
+
+def _get_oauth_token(client_id, client_secret):
+    oauth_token = _get_cached_oauth_token()
+    if not oauth_token:
+        oauth_retriever = oauth.OAuthTokenRetriever(client_id, client_secret)
+        oauth_token = oauth_retriever.get_oauth_token()
+        _cache_oauth_token(oauth_token)
+    return oauth_token
+
+def _get_cached_oauth_token():
+    try:
+        with open('oauth.txt', 'r') as file:
+            return file.readline()
+    except OSError:
+        print('Cached OAuth token not found')
+        return None
+
+def _cache_oauth_token(oauth_token):
+    with open('oauth.txt', 'w') as file:
+        file.write(oauth_token)
 
 if __name__ == "__main__":
     WPBot().cli()
