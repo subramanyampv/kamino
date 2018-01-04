@@ -1,6 +1,7 @@
 '''Fixes post content'''
 
 import re
+import html
 
 class RegexFixerBase:
     '''
@@ -10,10 +11,6 @@ class RegexFixerBase:
     def __init__(self, search_pattern, replace_pattern):
         self.search_pattern = search_pattern
         self.replace_pattern = replace_pattern
-
-    def is_fixable(self, content):
-        '''Checks if the content can be fixed'''
-        return re.search(self.search_pattern, content, flags=re.S)
 
     def fix(self, content):
         '''Fixes the content'''
@@ -82,22 +79,70 @@ class DivPreCodeFixer(RegexFixerBase):
             r'\n[code]\n\1\n[/code]\n'
         )
 
-class PreFixer:
+class PreFixer(RegexFixerBase):
     '''
     Fixes remaining pre elements
     '''
 
-    def is_fixable(self, content):
-        '''Checks if the content can be fixed'''
-        return content.find('<pre') >= 0
-
-    def fix(self, content):
-        '''Fixes the content'''
-        return re.sub(
+    def __init__(self):
+        super().__init__(
             r'<pre[^>]*>\s*(.+?)\s*</pre>',
-            r'\n[code]\n\1\n[/code]\n',
-            content,
-            flags=re.S)
+            r'\n[code]\n\1\n[/code]\n'
+        )
+
+class StripCodeHighlighterFixer(RegexFixerBase):
+    '''
+    Convert <code class="highlighter-rouge"></code> to <code>
+    '''
+
+    def __init__(self):
+        super().__init__(
+            r'<code class="[^"]+">(.+?)</code>',
+            r'<code>\1</code>')
+
+class HtmlEncodeFixer(RegexFixerBase):
+    '''
+    Removes encoded HTML entities from within code snippets
+    '''
+
+    def __init__(self):
+        super().__init__(
+            r'\[code[^\]]*\](.+?)\[/code\]',
+            lambda match: self._unescape_html(match[0])
+        )
+
+    def _unescape_html(self, content):
+        '''Unescapes HTML fully'''
+        has_changes = True
+        current = content
+
+        while has_changes:
+            unescaped = html.unescape(current)
+            has_changes = unescaped != current
+            if has_changes:
+                current = unescaped
+
+        return current
+
+    def _unescape_double_html(self, content):
+        '''Unescapes double encoded HTML'''
+        has_changes = True
+
+        # current iteration
+        current = content
+
+        # previous iteration
+        previous = content
+        while has_changes:
+            unescaped = html.unescape(current)
+            has_changes = unescaped != current
+            if has_changes:
+                # we still observe changes, shift values
+                previous = current
+                current = unescaped
+
+        # return the one before it got stable
+        return previous
 
 CLASSES = [
     BlockquotePreFixer,
@@ -106,17 +151,14 @@ CLASSES = [
     PreCodeFixer,
     PrePrettyprintFixer,
     EmptyParagraphFixer,
-    #PreFixer
+    StripCodeHighlighterFixer,
+    PreFixer,
+    #HtmlEncodeFixer
 ]
 
 def is_fixable(content):
     '''Checks if the given content can be repaired'''
-    for klass in CLASSES:
-        instance = klass()
-        if instance.is_fixable(content):
-            return True
-    return False
-
+    return content != fix_post_content(content)
 
 def fix_post_content(content):
     '''Repairs post content by converting pre tags to [code] snippets'''

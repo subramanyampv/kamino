@@ -74,14 +74,17 @@ class WPBot:
             '''Called for every post, fixes content'''
             is_fixable = fixer.is_fixable(content)
             if not is_fixable:
-                print('No need to fix post %d - %s' % (post_id, title))
                 return
 
             fixed_content = fixer.fix_post_content(content)
+            if content == fixed_content:
+                return
+
             print('ID: %d' % post_id)
             print('Title: %s' % title)
             print('\nOriginal content:\n%s' % content)
             print('\n\nModified content:\n%s' % fixed_content)
+
 
             if not self.dry_run:
                 print('Modifying content...')
@@ -139,12 +142,15 @@ class WPBot:
             fixed_content = fixer.fix_post_content(content)
             print(fixed_content)
 
-            requests.post(
-                f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
-                headers={'Authorization': 'Bearer ' + self.oauth_token},
-                data={'content' : fixed_content})
-
-            print("modified post!")
+            if self.dry_run:
+                print('in dry run mode')
+            else:
+                result = requests.post(
+                    f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
+                    headers={'Authorization': 'Bearer ' + self.oauth_token},
+                    data={'content' : fixed_content})
+                result.raise_for_status()
+                print("modified post!")
         print("")
 
     def _get_cached_oauth_token(self):

@@ -111,3 +111,74 @@ make install
 </code></pre>
 </div>''')
         )
+
+class HtmlEncodedTestCase(unittest.TestCase):
+    '''Fixes double encoded HTML'''
+    def test_fix_content(self):
+        '''Does not fix encoded HTML'''
+        before = '''
+[code]
+&lt;VirtualHost *:80&gt;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+&lt;/VirtualHost&gt;
+[/code]
+'''
+        after = '''
+[code]
+&lt;VirtualHost *:80&gt;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+&lt;/VirtualHost&gt;
+[/code]
+'''
+
+        self.assertEqual(after, fixer.fix_post_content(before))
+
+    def test_raw(self):
+        '''Does not fix raw HTML'''
+        before = '''
+[code]
+<VirtualHost *:80>;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+</VirtualHost&gt;
+[/code]
+'''
+        after = '''
+[code]
+&lt;VirtualHost *:80&gt;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+&lt;/VirtualHost&gt;
+[/code]
+'''
+
+        self.assertEqual(after, fixer.fix_post_content(before))
+
+    def test_double_encoded_html(self):
+        '''Fixes double encoded HTML'''
+        before = '''
+[code]
+&amp;lt;VirtualHost *:80&amp;gt;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+&amp;lt;/VirtualHost&amp;gt;
+[/code]
+'''
+        after = '''
+[code]
+&lt;VirtualHost *:80&gt;
+    ServerName my.site.that.runs.mono.com
+    DocumentRoot /var/www/
+    Include mod_mono.conf
+&lt;/VirtualHost&gt;
+[/code]
+'''
+
+        self.assertEqual(after, fixer.fix_post_content(before))
