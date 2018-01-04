@@ -85,10 +85,11 @@ class WPBot:
 
             if not self.dry_run:
                 print('Modifying content...')
-                requests.post(
+                result = requests.post(
                     f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
                     headers={'Authorization': 'Bearer ' + self.oauth_token},
-                    params={'content' : fixed_content})
+                    data={'content' : fixed_content})
+                result.raise_for_status()
 
         if self.dry_run:
             print('Running in dry run mode')
@@ -143,7 +144,7 @@ class WPBot:
             requests.post(
                 f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
                 headers={'Authorization': 'Bearer ' + self.oauth_token},
-                params={'content' : fixed_content})
+                data={'content' : fixed_content})
 
             print("modified post!")
         print("")
