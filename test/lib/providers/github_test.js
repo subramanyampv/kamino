@@ -2,7 +2,6 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(require('chai-as-promised'));
 
 describe('github', function() {
     var sandbox;
@@ -18,7 +17,7 @@ describe('github', function() {
         sandbox.restore();
     });
 
-    it('should fetch repositories from GitHub', function() {
+    it('should fetch repositories from GitHub', async() => {
         // arrange
         var repositories = [{
             clone_url: 'https://something', // eslint-disable-line camelcase
@@ -51,6 +50,6 @@ describe('github', function() {
         });
 
         // assert
-        return expect(github.getRepositories()).to.eventually.eql(repositories);
+        expect(await github.getRepositories()).to.eql(repositories);
     });
 });

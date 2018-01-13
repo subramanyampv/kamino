@@ -2,7 +2,6 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 
 describe('fs_promise', () => {
@@ -23,14 +22,14 @@ describe('fs_promise', () => {
     });
 
     describe('exists', () => {
-        it('should resolve to false when the file does not exist', () => {
+        it('should resolve to false when the file does not exist', async() => {
             sandbox.stub(fs, 'stat').withArgs('whatever-dir').yields(new Error('not found'));
-            return expect(fsPromise.exists('whatever-dir')).to.eventually.be.false;
+            expect(await fsPromise.exists('whatever-dir')).to.equal(false);
         });
 
-        it('should resolve to true when the file exists', () => {
+        it('should resolve to true when the file exists', async() => {
             sandbox.stub(fs, 'stat').withArgs('whatever-dir').yields(null);
-            return expect(fsPromise.exists('whatever-dir')).to.eventually.be.true;
+            expect(await fsPromise.exists('whatever-dir')).to.equal(true);
         });
     });
 });

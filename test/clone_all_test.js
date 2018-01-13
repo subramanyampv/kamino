@@ -4,8 +4,6 @@ var sinon = require('sinon');
 var _ = require('lodash');
 var expect = chai.expect;
 
-chai.use(require('chai-as-promised'));
-
 describe('clone-all', function() {
     var cloneAll;
     var sandbox;

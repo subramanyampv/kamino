@@ -4,7 +4,6 @@ var expect = chai.expect;
 var sinon = require('sinon');
 var child_process = require('child_process'); // eslint-disable-line camelcase
 
-chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 
 describe('exec_promise', () => {
@@ -24,23 +23,26 @@ describe('exec_promise', () => {
         sandbox.restore();
     });
 
-    it('should resolve when exec succeeds', () => {
+    it('should resolve when exec succeeds', async() => {
         child_process.exec.withArgs('dummy command') // eslint-disable-line camelcase
             .yields();
 
-        return execPromise('dummy command').then(function(error) {
-            expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
-            expect(error).to.be.null; // eslint-disable-line no-unused-expressions
-        });
+        await execPromise('dummy command');
+        expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
     });
 
-    it('should resolve when exec fails', () => {
+    it('should reject when exec fails', async() => {
         child_process.exec.withArgs('dummy command') // eslint-disable-line camelcase
             .yields(new Error('command failed'));
 
-        return execPromise('dummy command').then(function(error) {
-            expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
-            expect(error.message).to.equal('command failed');
-        });
+        let error = null;
+        try {
+            await execPromise('dummy command');
+        } catch (e) {
+            error = e;
+        }
+
+        expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
+        expect(error.message).to.equal('command failed');
     });
 });

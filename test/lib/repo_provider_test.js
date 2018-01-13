@@ -2,7 +2,7 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(require('chai-as-promised'));
+const expectAsyncError = require('../util').expectAsyncError;
 
 describe('repo_provider', function() {
     var sandbox;
@@ -31,26 +31,28 @@ describe('repo_provider', function() {
         sandbox.restore();
     });
 
-    it('should not accept empty provider', () => {
+    it('should not accept empty provider', async() => {
         // act & assert
-        return expect(repoProvider.getRepositories()).to.eventually.be.rejectedWith('No provider specified. Use the --provider option e.g. --provider=github');
+        await expectAsyncError(
+            async() => await repoProvider.getRepositories(),
+            'No provider specified. Use the --provider option e.g. --provider=github');
     });
 
-    it('should fetch repositories from GitHub', () => {
+    it('should fetch repositories from GitHub', async() => {
         // arrange
         options.getProvider.returns('github');
         githubProvider.getRepositories.resolves([1, 2, 3]);
 
         // act & assert
-        return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
+        expect(await repoProvider.getRepositories()).to.eql([1, 2, 3]);
     });
 
-    it('should fetch repositories from Bitbucket Cloud', () => {
+    it('should fetch repositories from Bitbucket Cloud', async() => {
         // arrange
         options.getProvider.returns('bitbucket_cloud');
         bitbucketCloudProvider.getRepositories.resolves([1, 2, 3]);
 
         // act & assert
-        return expect(repoProvider.getRepositories()).to.eventually.eql([1, 2, 3]);
+        expect(await repoProvider.getRepositories()).to.eql([1, 2, 3]);
     });
 });

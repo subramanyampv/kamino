@@ -2,7 +2,6 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(require('chai-as-promised'));
 
 describe('bitbucket_cloud', function() {
     var sandbox;
@@ -18,7 +17,7 @@ describe('bitbucket_cloud', function() {
         sandbox.restore();
     });
 
-    it('should fetch repositories from Bitbucket Cloud', function() {
+    it('should fetch repositories from Bitbucket Cloud', async() => {
         // arrange
         var expectedRepositories = [{
             clone_url: 'https://something', // eslint-disable-line camelcase
@@ -75,6 +74,6 @@ describe('bitbucket_cloud', function() {
         });
 
         // assert
-        return expect(bitbucketCloud.getRepositories()).to.eventually.eql(expectedRepositories);
+        expect(await bitbucketCloud.getRepositories()).to.eql(expectedRepositories);
     });
 });

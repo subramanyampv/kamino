@@ -2,7 +2,6 @@ var proxyquire = require('proxyquire').noCallThru();
 var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
-chai.use(require('chai-as-promised'));
 chai.use(require('sinon-chai'));
 
 describe('git_clone', () => {
@@ -49,16 +48,15 @@ describe('git_clone', () => {
             fsPromise.exists.withArgs('whatever-dir').resolves(false);
         });
 
-        it('should call exec only once', () => {
+        it('should call exec only once', async() => {
             // act
-            return gitClone(cloneInstruction).then(function() {
-                expect(execPromise).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
-            });
+            await gitClone(cloneInstruction);
+            expect(execPromise).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
         });
 
-        it('should return the expected result', () => {
+        it('should return the expected result', async() => {
             // act
-            return expect(gitClone(cloneInstruction)).to.eventually.eql({
+            expect(await gitClone(cloneInstruction)).to.eql({
                 cloneResult: 'success',
                 location: 'whatever-dir',
                 name: 'myRepo',
@@ -66,16 +64,14 @@ describe('git_clone', () => {
             });
         });
 
-        it('should log a message', () => {
-            return gitClone(cloneInstruction).then(function() {
-                expect(logger.log).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
-            });
+        it('should log a message', async() => {
+            await gitClone(cloneInstruction);
+            expect(logger.log).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
         });
 
-        it('should not log an error', () => {
-            return gitClone(cloneInstruction).then(function() {
-                expect(logger.error).to.not.have.been.called; // eslint-disable-line no-unused-expressions
-            });
+        it('should not log an error', async() => {
+            await gitClone(cloneInstruction);
+            expect(logger.error).to.not.have.been.called; // eslint-disable-line no-unused-expressions
         });
 
         describe('when the dry-run option is specified', () => {
@@ -83,32 +79,29 @@ describe('git_clone', () => {
                 options.isDryRun.returns(true);
             });
 
-            it('should not clone', () => {
-                return gitClone(cloneInstruction).then(function() {
-                    expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
-                });
+            it('should not clone', async() => {
+                await gitClone(cloneInstruction);
+                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
         });
 
         describe('when cloning fails', () => {
             beforeEach(() => {
-                execPromise.withArgs('git clone https://whatever whatever-dir').resolves(new Error('cloning has failed'));
+                execPromise.withArgs('git clone https://whatever whatever-dir').rejects(new Error('cloning has failed'));
             });
 
-            it('should not log a message', () => {
-                return gitClone(cloneInstruction).then(function() {
-                    expect(logger.log).to.not.have.been.called; // eslint-disable-line no-unused-expressions
-                });
+            it('should not log a message', async() => {
+                await gitClone(cloneInstruction);
+                expect(logger.log).to.not.have.been.called; // eslint-disable-line no-unused-expressions
             });
 
-            it('should log an error', () => {
-                return gitClone(cloneInstruction).then(function() {
-                    expect(logger.error).to.have.been.called; // eslint-disable-line no-unused-expressions
-                });
+            it('should log an error', async() => {
+                await gitClone(cloneInstruction);
+                expect(logger.error).to.have.been.called; // eslint-disable-line no-unused-expressions
             });
 
-            it('should return the expected result', () => {
-                return expect(gitClone(cloneInstruction)).to.eventually.eql({
+            it('should return the expected result', async() => {
+                expect(await gitClone(cloneInstruction)).to.eql({
                     cloneResult: 'error',
                     location: 'whatever-dir',
                     name: 'myRepo',
@@ -124,14 +117,13 @@ describe('git_clone', () => {
             fsPromise.exists.withArgs('whatever-dir').resolves(true);
         });
 
-        it('should not clone', () => {
-            return gitClone(cloneInstruction).then(function() {
-                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
-            });
+        it('should not clone', async() => {
+            await gitClone(cloneInstruction);
+            expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
         });
 
-        it('should return the expected result', () => {
-            return expect(gitClone(cloneInstruction)).to.eventually.eql({
+        it('should return the expected result', async() => {
+            expect(await gitClone(cloneInstruction)).to.eql({
                 location: 'whatever-dir',
                 name: 'myRepo',
                 cloneResult: 'skip',

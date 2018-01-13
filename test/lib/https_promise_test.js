@@ -2,7 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var proxyquire = require('proxyquire').noCallThru();
 var sinon = require('sinon');
-chai.use(require('chai-as-promised'));
+const expectAsyncError = require('../util').expectAsyncError;
 
 describe('https_promise', () => {
     var sandbox;
@@ -24,7 +24,7 @@ describe('https_promise', () => {
         sandbox.restore();
     });
 
-    it('should resolve into the message', () => {
+    it('should resolve into the message', async() => {
         var requestOptions = { url: 'whatever' };
         var result = {
             statusCode: 200,
@@ -42,10 +42,10 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.eventually.equal('the message');
+        expect(await httpsPromise(requestOptions)).to.equal('the message');
     });
 
-    it('should reject if status code is less than 200', () => {
+    it('should reject if status code is less than 200', async() => {
         var requestOptions = { url: 'whatever' };
         var result = {
             statusCode: 100,
@@ -61,10 +61,12 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('Error: 100');
+        await expectAsyncError(
+            async() => await httpsPromise(requestOptions),
+            'Error: 100');
     });
 
-    it('should reject if status code is more than 300', () => {
+    it('should reject if status code is more than 300', async() => {
         var requestOptions = { url: 'whatever' };
         var result = {
             statusCode: 404,
@@ -80,10 +82,12 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('Error: 404');
+        await expectAsyncError(
+            async() => await httpsPromise(requestOptions),
+            'Error: 404');
     });
 
-    it('should reject if the request object has an error', () => {
+    it('should reject if the request object has an error', async() => {
         var requestOptions = { url: 'whatever' };
         var result = {
             statusCode: 200,
@@ -101,6 +105,8 @@ describe('https_promise', () => {
             .returns(requestObject)
             .yields(result);
 
-        return expect(httpsPromise(requestOptions)).to.be.rejectedWith('some error');
+        await expectAsyncError(
+            async() => await httpsPromise(requestOptions),
+            'some error');
     });
 });

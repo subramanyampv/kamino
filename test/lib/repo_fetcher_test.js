@@ -2,7 +2,6 @@ var chai = require('chai');
 var expect = chai.expect;
 var proxyquire = require('proxyquire').noCallThru();
 var sinon = require('sinon');
-chai.use(require('chai-as-promised'));
 
 describe('repoFetcher', () => {
     var sandbox;
@@ -25,7 +24,7 @@ describe('repoFetcher', () => {
         sandbox.restore();
     });
 
-    it('should work when no pagination is enabled', () => {
+    it('should work when no pagination is enabled', async() => {
         var request = {
             path: '/repos'
         };
@@ -35,10 +34,10 @@ describe('repoFetcher', () => {
         options.isNoPagination.returns(true);
         httpsPromise.withArgs(request).resolves('{ "repos": [1,2,3]}');
 
-        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1, 2, 3]);
+        expect(await repoFetcher(request, responseConverter)).to.eql([1, 2, 3]);
     });
 
-    it('should work when pagination is enabled', () => {
+    it('should work when pagination is enabled', async() => {
         var request = {
             path: '/repos'
         };
@@ -51,6 +50,6 @@ describe('repoFetcher', () => {
         httpsPromise.withArgs({ path: '/repos?page=2'}).resolves('{ "repos": [4,5]}');
         httpsPromise.withArgs({ path: '/repos?page=3'}).resolves('{ "repos": []}');
 
-        return expect(repoFetcher(request, responseConverter)).to.eventually.eql([1, 2, 3, 4, 5]);
+        expect(await repoFetcher(request, responseConverter)).to.eql([1, 2, 3, 4, 5]);
     });
 });

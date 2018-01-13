@@ -1,6 +1,6 @@
 {
   "name": "clone-all",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
   "scripts": {
@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
     "eslint": "^4.15.0",
     "eslint-config-bestseller": "^1.1.15",
     "grunt": "^1.0.1",
