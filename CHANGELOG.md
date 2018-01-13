@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2018-01-13
+
+- Upgraded node dependencies (including upgrade to Yeoman 2.0.2)
+
 ## [0.2.0] - 2017-08-02
 
 - Exposing library project internals to the test project.

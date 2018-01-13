@@ -57,8 +57,8 @@ function buildCopier(fs, context, indentationCharacter) {
     });
 }
 
-module.exports = Generator.extend({
-    prompting: function() {
+module.exports = class extends Generator {
+    prompting() {
         var _this = this;
         return this.prompt([
             {
@@ -101,9 +101,9 @@ module.exports = Generator.extend({
         ]).then(function(answers) {
             _this.props = answers;
         });
-    },
+    }
 
-    writing: function() {
+    writing() {
         var name = this.props.name;
         var testName = name + '.Tests';
         var now = (new Date()).toISOString();
@@ -193,4 +193,4 @@ module.exports = Generator.extend({
             this.destinationPath(testName + '/' + testName + '.csproj'),
             options);
     }
-});
+};

@@ -24,7 +24,16 @@ Some details:
 
 - Scaffold data is indented with tabs, test data is indented with spaces.
 
-## Release Process
+## Development
+
+### Developing
+
+You can run `npm link` from the working directory of the repository to develop this generator,
+and `npm unlink` once you're finished.
+
+The default test command invokes `gulp`.
+
+### Release Process
 
 To create a new release:
 
