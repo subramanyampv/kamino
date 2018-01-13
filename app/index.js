@@ -1,7 +1,10 @@
 'use strict';
-var Generator = require('yeoman-generator');
-var uuid = require('uuid');
-var ejs = require('ejs');
+const Generator = require('yeoman-generator');
+const uuid = require('uuid');
+const ejs = require('ejs');
+const path = require('path');
+const readdirSyncRecursive = require('./readdir');
+const convertFilename = require('./filename_convert');
 
 /**
  * Returns the parameter unchanged.
@@ -125,72 +128,20 @@ module.exports = class extends Generator {
         };
 
         var copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
-
-        // copy .gitignore
-        this.fs.copyTpl(
-            this.templatePath('_gitignore'),
-            this.destinationPath('.gitignore'),
-            options);
-
-        this.fs.copyTpl(
-            this.templatePath('_travis.yml'),
-            this.destinationPath('.travis.yml'),
-            options);
-
-        ['appveyor.yml', 'CHANGELOG.md', 'coverage.ps1', 'README.md'].forEach(f => {
-            this.fs.copyTpl(
-                this.templatePath(f),
-                this.destinationPath(f),
-                options
-            );
+        const sourceRoot = this.sourceRoot();
+        const files = readdirSyncRecursive(sourceRoot);
+        files.forEach(file => {
+            const relativeFile = path.relative(sourceRoot, file);
+            const relativeDestination = convertFilename(relativeFile, options);
+            if (path.extname(relativeFile) === '.cs') {
+                copyFn(file, this.destinationPath(relativeDestination));
+            } else {
+                this.fs.copyTpl(
+                    file,
+                    this.destinationPath(relativeDestination),
+                    options
+                );
+            }
         });
-
-        // copy solution file
-        this.fs.copyTpl(
-            this.templatePath('MyLib.sln'),
-            this.destinationPath(name + '.sln'),
-            options);
-
-        // copy MyLib *.cs files
-        copyFn(
-            this.templatePath('MyLib/**/*.cs'),
-            this.destinationPath(name)
-        );
-
-        // copy MyLib *.config files
-        this.fs.copyTpl(
-            this.templatePath('MyLib/**/*.config'),
-            this.destinationPath(name),
-            options);
-
-        // copy MyLib.csproj file
-        this.fs.copyTpl(
-            this.templatePath('MyLib/MyLib.csproj'),
-            this.destinationPath(name + '/' + name + '.csproj'),
-            options);
-
-        // copy MyLib.nuspec file
-        this.fs.copyTpl(
-            this.templatePath('MyLib/MyLib.nuspec'),
-            this.destinationPath(name + '/' + name + '.nuspec'),
-            options);
-
-        // copy MyLib.Tests *.cs files
-        copyFn(
-            this.templatePath('MyLib.Tests/**/*.cs'),
-            this.destinationPath(testName)
-        );
-
-        // copy MyLib.Tests *.config files
-        this.fs.copyTpl(
-            this.templatePath('MyLib.Tests/**/*.config'),
-            this.destinationPath(testName),
-            options);
-
-        // copy MyLib.Tests.csproj file
-        this.fs.copyTpl(
-            this.templatePath('MyLib.Tests/MyLib.Tests.csproj'),
-            this.destinationPath(testName + '/' + testName + '.csproj'),
-            options);
     }
 };

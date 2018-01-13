@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const helpers = require('yeoman-test');
 const assert = require('yeoman-assert');
+const filenameConvert = require('../app/filename_convert');
+const readdirSyncRecursive = require('../app/readdir');
 
 describe('app', () => {
     describe('files', () => {
@@ -35,38 +37,18 @@ describe('app', () => {
                 'SomeLib.Tests/SomeLib.Tests.csproj',
                 'SomeLib.Tests/Properties/AssemblyInfo.cs',
                 'SomeLib.Tests/packages.config',
-                'SomeLib.Tests/Class1Test.cs'
+                'SomeLib.Tests/Class1Test.cs',
+
+                'docfx_project/api/.gitignore',
+                'docfx_project/api/index.md',
+                'docfx_project/articles/intro.md',
+                'docfx_project/articles/toc.yml',
+                'docfx_project/.gitignore',
+                'docfx_project/docfx.json',
+                'docfx_project/index.md',
+                'docfx_project/toc.yml'
             ]);
         });
-
-        /**
-         * Checks if the given path is a directory.
-         * @param {string} path - The path to check.
-         * @returns {boolean} true if the path is a directory, false otherwise.
-         */
-        function isDirectory(path) {
-            var s = fs.statSync(path);
-            return s.isDirectory();
-        }
-
-        /**
-         * Reads recursively the contents of the given directory.
-         * @param {string} dirname - The path to read.
-         * @returns {string[]} A collection of paths.
-         */
-        function readdirSyncRecursive(dirname) {
-            var contents = fs.readdirSync(dirname);
-            var result = [];
-            contents.map(f => path.join(dirname, f)).forEach(f => {
-                if (isDirectory(f)) {
-                    result = result.concat(readdirSyncRecursive(f));
-                } else {
-                    result.push(f);
-                }
-            });
-
-            return result;
-        }
 
         class GuidHandler {
             /**
@@ -146,7 +128,7 @@ describe('app', () => {
             ];
             expectedFiles.forEach(fixtureFile => {
                 var sourceFile = fixtureFile;
-                var destFile = fixtureFile.replace('_', '.');
+                var destFile = filenameConvert(fixtureFile);
                 it(`should map ${sourceFile} to ${destFile}`, () => {
                     var actualData = fs.readFileSync(destFile, 'utf8');
                     var expectedData = fs.readFileSync(path.join(expectedDataDirectory, sourceFile), 'utf8');

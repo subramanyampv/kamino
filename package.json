@@ -18,6 +18,7 @@
     "yeoman-generator": "^2.0.2"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.15.0",
     "eslint-config-bestseller": "^1.1.15",
     "gulp": "^3.9.1",

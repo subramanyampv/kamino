@@ -19,3 +19,8 @@ To create a new release:
 - Push changes to master
 - Create a tag
 - Push the tag
+
+## Documentation
+
+You can generate the API documentation with: `docfx .\docfx_project\docfx.json --serve`. See more
+information at [docfx](https://dotnet.github.io/docfx/index.html).

@@ -18,7 +18,7 @@ Some details:
 
 - .NET Framework 4.6.2
 - NUnit and Moq for the test project
-- Configuration for Travis, AppVeyor, Coveralls
+- Configuration for Travis, AppVeyor, Coveralls, docfx
 
 ## Contributing
 
