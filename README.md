@@ -54,7 +54,16 @@ What you'll also get:
 - the console app internals are visible to the test library
 - the copyright information is filled in in the AssemblyInfo.cs files
 
-## Release Process
+## Development
+
+### Developing
+
+You can run `npm link` from the working directory of the repository to develop this generator,
+and `npm unlink` once you're finished.
+
+The default test command invokes `gulp`.
+
+### Release Process
 
 To create a new release:
 
@@ -63,3 +72,4 @@ To create a new release:
 - Push changes to master
 - Create a tag
 - Push the tag
+
