@@ -1,0 +1,7 @@
+language: csharp
+solution: SomeApp.sln
+install:
+  - nuget restore SomeApp.sln
+script:
+  - xbuild /p:Configuration=Release SomeApp.sln
+  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./SomeApp.Tests/bin/Release/SomeApp.Tests.dll
