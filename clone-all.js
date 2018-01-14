@@ -1,19 +1,19 @@
 #!/usr/bin/env node
 
-var repoProvider = require('./lib/repo_provider');
-var logger = require('./lib/logger');
-var gitClone = require('./lib/git_clone');
-var gitPull = require('./lib/git_pull');
-var gitBundle = require('./lib/git_bundle');
-var options = require('./lib/options');
-var repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
+const repoProvider = require('./lib/repo_provider');
+const logger = require('./lib/logger');
+const gitClone = require('./lib/git_clone');
+const gitPull = require('./lib/git_pull');
+const gitBundle = require('./lib/git_bundle');
+const repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
+const optionsParser = require('./lib/options_parser');
 
-async function handleSingleRepo(cloneInstruction) {
-    var cloneResult = await gitClone(cloneInstruction);
-    var pullResult = await gitPull(cloneResult);
+async function handleSingleRepo(cloneInstruction, options) {
+    var cloneResult = await gitClone(cloneInstruction, options);
+    var pullResult = await gitPull(cloneResult, options);
 
-    if (options.getBundleDirectory()) {
-        return await gitBundle(pullResult);
+    if (options.bundleDir) {
+        return await gitBundle(pullResult, options);
     }
 
     return pullResult;
@@ -21,19 +21,24 @@ async function handleSingleRepo(cloneInstruction) {
 
 async function main() {
     var result = [];
-
-    if (options.isHelp() || !options.getUsername() || !options.getProvider()) {
-        logger.log('Use clone-all to clone all your repositories.');
-        logger.log('node clone-all.js --provider=github --username=ngeor --output=../');
-        return result;
-    }
+    const options = optionsParser.parse();
 
     try {
-        var repositories = await repoProvider.getRepositories();
-        var cloneInstructions = repositoriesToCloneInstances(repositories);
+        var repositories = await repoProvider.getRepositories(options);
+        if (!repositories) {
+            throw new Error('No repositories found!');
+        }
+
+        logger.verbose(`Found ${repositories.length} repositories`);
+
+        var cloneInstructions = repositoriesToCloneInstances(repositories, options);
+        if (!cloneInstructions) {
+            throw new Error('No clone instructions found!');
+        }
+
         for (var i = 0; i < cloneInstructions.length; i++) {
             var cloneInstruction = cloneInstructions[i];
-            result.push(await handleSingleRepo(cloneInstruction));
+            result.push(await handleSingleRepo(cloneInstruction, options));
         }
 
         return result;
@@ -44,6 +49,8 @@ async function main() {
     }
 }
 
-main();
+if (!Object.prototype.hasOwnProperty.call(process.env, 'LOADED_MOCHA_OPTS')) {
+    main();
+}
 
 module.exports = main;

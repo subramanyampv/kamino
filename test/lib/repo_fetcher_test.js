@@ -7,16 +7,13 @@ describe('repoFetcher', () => {
     var sandbox;
     var repoFetcher;
     var httpsPromise;
-    var options;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
         httpsPromise = sandbox.stub();
-        options = sandbox.stub(require('../../lib/options'));
 
         repoFetcher = proxyquire('../../lib/repo_fetcher', {
-            './https_promise': httpsPromise,
-            './options': options
+            './https_promise': httpsPromise
         });
     });
 
@@ -31,10 +28,14 @@ describe('repoFetcher', () => {
 
         var responseConverter = (response) => JSON.parse(response).repos;
 
-        options.isNoPagination.returns(true);
+        const options = {
+            pagination: false,
+            forks: true
+        };
+
         httpsPromise.withArgs(request).resolves('{ "repos": [1,2,3]}');
 
-        expect(await repoFetcher(request, responseConverter)).to.eql([1, 2, 3]);
+        expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3]);
     });
 
     it('should work when pagination is enabled', async() => {
@@ -44,12 +45,63 @@ describe('repoFetcher', () => {
 
         var responseConverter = (response) => JSON.parse(response).repos;
 
-        options.isNoPagination.returns(false);
+        const options = {
+            pagination: true,
+            forks: true
+        };
+
         httpsPromise.resolves('not a json');
         httpsPromise.withArgs({ path: '/repos'}).resolves('{ "repos": [1,2,3]}');
         httpsPromise.withArgs({ path: '/repos?page=2'}).resolves('{ "repos": [4,5]}');
         httpsPromise.withArgs({ path: '/repos?page=3'}).resolves('{ "repos": []}');
 
-        expect(await repoFetcher(request, responseConverter)).to.eql([1, 2, 3, 4, 5]);
+        expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3, 4, 5]);
+    });
+
+    it('should filter out forks', async() => {
+        var request = {
+            path: '/repos'
+        };
+
+        var responseConverter = (response) => response;
+
+        const options = {
+            pagination: true,
+            forks: false
+        };
+
+        httpsPromise.resolves('not a json');
+        httpsPromise.withArgs({ path: '/repos'}).resolves([
+            {
+                id: 1,
+                fork: false
+            },
+            {
+                id: 2,
+                fork: true
+            }
+        ]);
+        httpsPromise.withArgs({ path: '/repos?page=2'}).resolves([
+            {
+                id: 3,
+                fork: true
+            },
+            {
+                id: 4,
+                fork: false
+            }
+        ]);
+        httpsPromise.withArgs({ path: '/repos?page=3'}).resolves([]);
+
+        expect(await repoFetcher(request, responseConverter, options)).to.eql([
+            {
+                id: 1,
+                fork: false
+            },
+            {
+                id: 4,
+                fork: false
+            }
+        ]);
     });
 });

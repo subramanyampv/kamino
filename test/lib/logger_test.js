@@ -5,15 +5,15 @@ var expect = require('chai').expect;
 describe('logger', () => {
     var sandbox;
     var logger;
-    var options;
+    var optionsParser;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
         sandbox.spy(console, 'log');
         sandbox.spy(console, 'error');
 
-        options = {
-            isVerbose: sandbox.stub()
+        optionsParser = {
+            get: sandbox.stub()
         };
     });
 
@@ -21,10 +21,14 @@ describe('logger', () => {
         sandbox.restore();
     });
 
-    describe('when no options are passed', () => {
+    describe('when verbose is off', () => {
         beforeEach(() => {
             logger = proxyquire('../../lib/logger', {
-                './options': options
+                './options_parser': optionsParser
+            });
+
+            optionsParser.get.returns({
+                verbose: false
             });
         });
 
@@ -53,11 +57,13 @@ describe('logger', () => {
         });
     });
 
-    describe('when verbose option is passed', () => {
+    describe('when verbose is on', () => {
         beforeEach(() => {
-            options.isVerbose.returns(true);
+            optionsParser.get.returns({
+                verbose: true
+            });
             logger = proxyquire('../../lib/logger', {
-                './options': options
+                './options_parser': optionsParser
             });
         });
 

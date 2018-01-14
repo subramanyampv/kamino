@@ -8,16 +8,15 @@ describe('git_pull', () => {
     var sandbox;
     var fsPromise;
     var execPromise;
-    var options;
     var logger;
     var gitPull;
     var cloneInstruction;
+    let options = null;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
-        options = sandbox.stub(require('../../lib/options'));
         logger = sandbox.stub(require('../../lib/logger'));
         fsPromise = sandbox.stub(require('../../lib/fs_promise'));
         cloneInstruction = {
@@ -33,9 +32,10 @@ describe('git_pull', () => {
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
             './exec_promise': execPromise,
-            './options': options,
             './logger': logger
         });
+
+        options = {};
     });
 
     afterEach(() => {
@@ -49,13 +49,13 @@ describe('git_pull', () => {
         });
 
         it('should not pull', () => {
-            return gitPull(cloneInstruction).then(function() {
-                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+            return gitPull(cloneInstruction, options).then(function() {
+                expect(execPromise).to.not.have.been.called;
             });
         });
 
         it('should return the expected result', async() => {
-            expect(await gitPull(cloneInstruction)).to.eql({
+            expect(await gitPull(cloneInstruction, options)).to.eql({
                 location: 'whatever-dir',
                 name: 'myRepo',
                 pullResult: 'error',
@@ -67,25 +67,25 @@ describe('git_pull', () => {
     describe('when the location exists', () => {
         beforeEach(() => {
             fsPromise.exists.withArgs('whatever-dir').resolves(true);
-            options.getBundleDirectory.returns('../bundles');
+            options.bundleDir = '../bundles';
             execPromise.withArgs('git pull', { cwd: 'whatever-dir' })
                 .rejects(new Error('Could not pull'));
         });
 
         describe('when the dry-run option is specified', () => {
             beforeEach(() => {
-                options.isDryRun.returns(true);
+                options.dryRun = true;
             });
 
             it('should not pull', async() => {
-                await gitPull(cloneInstruction);
-                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+                await gitPull(cloneInstruction, options);
+                expect(execPromise).to.not.have.been.called;
             });
         });
 
         it('should pull', async() => {
             // act
-            await gitPull(cloneInstruction);
+            await gitPull(cloneInstruction, options);
 
             // assert
             expect(execPromise).to.have.been.calledWith('git pull', { cwd: 'whatever-dir' });
@@ -93,7 +93,7 @@ describe('git_pull', () => {
 
         it('should add the error to the result', async() => {
             // act
-            expect(await gitPull(cloneInstruction)).to.eql({
+            expect(await gitPull(cloneInstruction, options)).to.eql({
                 pullResult: 'error',
                 location: 'whatever-dir',
                 name: 'myRepo',
@@ -107,7 +107,7 @@ describe('git_pull', () => {
                 .resolves(null); // success
 
             // act
-            var result = await gitPull(cloneInstruction);
+            var result = await gitPull(cloneInstruction, options);
 
             // assert
             expect(result).to.eql({

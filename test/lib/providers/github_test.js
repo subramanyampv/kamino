@@ -6,11 +6,9 @@ var expect = chai.expect;
 describe('github', function() {
     var sandbox;
     var repoFetcher;
-    var options;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
-        options = sandbox.stub(require('../../../lib/options'));
     });
 
     afterEach(function() {
@@ -35,21 +33,23 @@ describe('github', function() {
             }
         };
 
-        repoFetcher = function(options, converter) {
-            expect(options).to.eql(requestOptions);
+        const options = {
+            username: 'ngeor',
+            pagination: true
+        };
+
+        repoFetcher = function($requestOptions, converter, $options) {
+            expect($requestOptions).to.eql(requestOptions);
+            expect($options).to.eql(options);
             return Promise.resolve(converter(JSON.stringify(repositories)));
         };
 
-        options.getUsername.returns('ngeor');
-        options.isNoPagination.returns(true);
-
         // act
         var github = proxyquire('../../../lib/providers/github', {
-            '../repo_fetcher': repoFetcher,
-            '../options': options
+            '../repo_fetcher': repoFetcher
         });
 
         // assert
-        expect(await github.getRepositories()).to.eql(repositories);
+        expect(await github.getRepositories(options)).to.eql(repositories);
     });
 });

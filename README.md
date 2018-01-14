@@ -45,6 +45,7 @@ Additional configuration options:
 *   --ssh-username: specify a different username for cloning over ssh
 *   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --bundle-dir: creates bundles of the cloned repositories in the given directory
+*   --no-forks: Do not clone forked repositories
 
 Bitbucket cloud options:
 

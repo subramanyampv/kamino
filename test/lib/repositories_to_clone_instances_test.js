@@ -6,13 +6,10 @@ var sinon = require('sinon');
 describe('repositoriesToCloneInstances', () => {
     var sandbox;
     var repositoriesToCloneInstances;
-    var options;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
-        options = sandbox.stub(require('../../lib/options'));
         repositoriesToCloneInstances = proxyquire('../../lib/repositories_to_clone_instances', {
-            './options': options,
             path: {
                 join: (a, b) => a + '/' + b
             }
@@ -36,11 +33,13 @@ describe('repositoriesToCloneInstances', () => {
             }
         ];
 
-        options.getOutputDirectory.returns('../target');
-        options.getProtocol.returns('https');
+        const options = {
+            output: '../target',
+            protocol: 'https'
+        };
 
         // act
-        var result = repositoriesToCloneInstances(repositories);
+        var result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([
@@ -71,11 +70,13 @@ describe('repositoriesToCloneInstances', () => {
             }
         ];
 
-        options.getOutputDirectory.returns('../target');
-        options.getProtocol.returns('ssh');
+        const options = {
+            output: '../target',
+            protocol: 'ssh'
+        };
 
         // act
-        var result = repositoriesToCloneInstances(repositories);
+        var result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([
@@ -106,12 +107,14 @@ describe('repositoriesToCloneInstances', () => {
             }
         ];
 
-        options.getOutputDirectory.returns('../target');
-        options.getProtocol.returns('ssh');
-        options.getSSHUsername.returns('nemo');
+        const options = {
+            output: '../target',
+            protocol: 'ssh',
+            sshUsername: 'nemo'
+        };
 
         // act
-        var result = repositoriesToCloneInstances(repositories);
+        var result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([

@@ -17,7 +17,7 @@ describe('git_clone', () => {
         sandbox = sinon.sandbox.create();
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
-        options = sandbox.stub(require('../../lib/options'));
+        options = {};
         logger = sandbox.stub(require('../../lib/logger'));
         fsPromise = sandbox.stub(require('../../lib/fs_promise'));
         cloneInstruction = {
@@ -33,7 +33,6 @@ describe('git_clone', () => {
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
             './exec_promise': execPromise,
-            './options': options,
             './logger': logger
         });
     });
@@ -50,13 +49,13 @@ describe('git_clone', () => {
 
         it('should call exec only once', async() => {
             // act
-            await gitClone(cloneInstruction);
-            expect(execPromise).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
+            await gitClone(cloneInstruction, options);
+            expect(execPromise).to.have.been.calledOnce;
         });
 
         it('should return the expected result', async() => {
             // act
-            expect(await gitClone(cloneInstruction)).to.eql({
+            expect(await gitClone(cloneInstruction, options)).to.eql({
                 cloneResult: 'success',
                 location: 'whatever-dir',
                 name: 'myRepo',
@@ -65,23 +64,23 @@ describe('git_clone', () => {
         });
 
         it('should log a message', async() => {
-            await gitClone(cloneInstruction);
-            expect(logger.log).to.have.been.calledOnce; // eslint-disable-line no-unused-expressions
+            await gitClone(cloneInstruction, options);
+            expect(logger.log).to.have.been.calledOnce;
         });
 
         it('should not log an error', async() => {
-            await gitClone(cloneInstruction);
-            expect(logger.error).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+            await gitClone(cloneInstruction, options);
+            expect(logger.error).to.not.have.been.called;
         });
 
         describe('when the dry-run option is specified', () => {
             beforeEach(() => {
-                options.isDryRun.returns(true);
+                options.dryRun = true;
             });
 
             it('should not clone', async() => {
-                await gitClone(cloneInstruction);
-                expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+                await gitClone(cloneInstruction, options);
+                expect(execPromise).to.not.have.been.called;
             });
         });
 
@@ -91,17 +90,17 @@ describe('git_clone', () => {
             });
 
             it('should not log a message', async() => {
-                await gitClone(cloneInstruction);
-                expect(logger.log).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+                await gitClone(cloneInstruction, options);
+                expect(logger.log).to.not.have.been.called;
             });
 
             it('should log an error', async() => {
-                await gitClone(cloneInstruction);
-                expect(logger.error).to.have.been.called; // eslint-disable-line no-unused-expressions
+                await gitClone(cloneInstruction, options);
+                expect(logger.error).to.have.been.called;
             });
 
             it('should return the expected result', async() => {
-                expect(await gitClone(cloneInstruction)).to.eql({
+                expect(await gitClone(cloneInstruction, options)).to.eql({
                     cloneResult: 'error',
                     location: 'whatever-dir',
                     name: 'myRepo',
@@ -118,12 +117,12 @@ describe('git_clone', () => {
         });
 
         it('should not clone', async() => {
-            await gitClone(cloneInstruction);
-            expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+            await gitClone(cloneInstruction, options);
+            expect(execPromise).to.not.have.been.called;
         });
 
         it('should return the expected result', async() => {
-            expect(await gitClone(cloneInstruction)).to.eql({
+            expect(await gitClone(cloneInstruction, options)).to.eql({
                 location: 'whatever-dir',
                 name: 'myRepo',
                 cloneResult: 'skip',

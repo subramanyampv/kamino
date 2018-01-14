@@ -6,11 +6,9 @@ var expect = chai.expect;
 describe('bitbucket_cloud', function() {
     var sandbox;
     var repoFetcher;
-    var options;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
-        options = sandbox.stub(require('../../../lib/options'));
     });
 
     afterEach(function() {
@@ -57,23 +55,25 @@ describe('bitbucket_cloud', function() {
             ]
         };
 
-        repoFetcher = function(options, converter) {
-            expect(options).to.eql(requestOptions);
+        const options = {
+            owner: 'ngeor',
+            username: 'user1',
+            password: 'test123',
+            pagination: false
+        };
+
+        repoFetcher = function($requestOptions, converter, $options) {
+            expect($requestOptions).to.eql(requestOptions);
+            expect($options).to.eql(options);
             return Promise.resolve(converter(JSON.stringify(bitbucketResponse)));
         };
 
-        options.getOwnerUsername.returns('ngeor');
-        options.getUsername.returns('user1');
-        options.getPassword.returns('test123');
-        options.isNoPagination.returns(true);
-
         // act
         var bitbucketCloud = proxyquire('../../../lib/providers/bitbucket_cloud', {
-            '../repo_fetcher': repoFetcher,
-            '../options': options
+            '../repo_fetcher': repoFetcher
         });
 
         // assert
-        expect(await bitbucketCloud.getRepositories()).to.eql(expectedRepositories);
+        expect(await bitbucketCloud.getRepositories(options)).to.eql(expectedRepositories);
     });
 });

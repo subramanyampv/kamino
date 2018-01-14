@@ -17,7 +17,7 @@ describe('git_bundle', () => {
         sandbox = sinon.sandbox.create();
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
-        options = sandbox.stub(require('../../lib/options'));
+        options = {};
         logger = sandbox.stub(require('../../lib/logger'));
         fsPromise = sandbox.stub(require('../../lib/fs_promise'));
         cloneInstruction = {
@@ -33,7 +33,6 @@ describe('git_bundle', () => {
                 resolve: (a, b) => (a + '/' + b).replace('../', 'C:/')
             },
             './exec_promise': execPromise,
-            './options': options,
             './logger': logger
         });
     });
@@ -49,12 +48,12 @@ describe('git_bundle', () => {
         });
 
         it('should not bundle', async() => {
-            await gitBundle(cloneInstruction);
-            expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+            await gitBundle(cloneInstruction, options);
+            expect(execPromise).to.not.have.been.called;
         });
 
         it('should return the expected result', async() => {
-            expect(await gitBundle(cloneInstruction)).to.eql({
+            expect(await gitBundle(cloneInstruction, options)).to.eql({
                 location: 'whatever-dir',
                 name: 'myRepo',
                 bundleResult: 'error',
@@ -71,7 +70,7 @@ describe('git_bundle', () => {
 
         describe('when the --bundle-dir option is missing', () => {
             it('should skip bundle', async() => {
-                expect(await gitBundle(cloneInstruction)).to.eql({
+                expect(await gitBundle(cloneInstruction, options)).to.eql({
                     location: 'whatever-dir',
                     name: 'myRepo',
                     bundleResult: 'skip',
@@ -82,25 +81,25 @@ describe('git_bundle', () => {
 
         describe('when the --bundle-dir option is specified', () => {
             beforeEach(() => {
-                options.getBundleDirectory.returns('../bundles');
+                options.bundleDir = '../bundles';
                 execPromise.withArgs('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' })
                     .rejects(new Error('Could not create bundle'));
             });
 
             describe('when the dry-run option is specified', () => {
                 beforeEach(() => {
-                    options.isDryRun.returns(true);
+                    options.dryRun = true;
                 });
 
                 it('should not clone', async() => {
-                    await gitBundle(cloneInstruction);
-                    expect(execPromise).to.not.have.been.called; // eslint-disable-line no-unused-expressions
+                    await gitBundle(cloneInstruction, options);
+                    expect(execPromise).to.not.have.been.called;
                 });
             });
 
             it('should create the bundle', async() => {
                 // act
-                await gitBundle(cloneInstruction);
+                await gitBundle(cloneInstruction, options);
 
                 // assert
                 expect(execPromise).to.have.been.calledWith('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' });
@@ -108,7 +107,7 @@ describe('git_bundle', () => {
 
             it('should add the error to the result', async() => {
                 // act
-                expect(await gitBundle(cloneInstruction)).to.eql({
+                expect(await gitBundle(cloneInstruction, options)).to.eql({
                     bundleResult: 'error',
                     location: 'whatever-dir',
                     name: 'myRepo',
