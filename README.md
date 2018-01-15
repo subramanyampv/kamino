@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/generator-csharp-cli-app.svg)](https://npmjs.org/package/generator-csharp-cli-app)
 [![Build Status](https://travis-ci.org/ngeor/generator-csharp-cli-app.svg?branch=master)](https://travis-ci.org/ngeor/generator-csharp-cli-app)
+[![Coverage Status](https://coveralls.io/repos/github/ngeor/generator-csharp-cli-app/badge.svg?branch=master)](https://coveralls.io/github/ngeor/generator-csharp-cli-app?branch=master)
 [![Dependencies Status](https://david-dm.org/ngeor/generator-csharp-cli-app.svg)](https://david-dm.org/ngeor/generator-csharp-cli-app)
 [![devDependencies Status](https://david-dm.org/ngeor/generator-csharp-cli-app/dev-status.svg)](https://david-dm.org/ngeor/generator-csharp-cli-app?type=dev)
 
