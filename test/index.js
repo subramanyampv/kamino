@@ -50,6 +50,9 @@ describe('app', () => {
             ]);
         });
 
+        /**
+         * Removes GUIDs from files.
+         */
         class GuidHandler {
             /**
              * Checks if the file might contain GUIDs.
@@ -74,6 +77,9 @@ describe('app', () => {
             }
         }
 
+        /**
+         * Converts dates in files.
+         */
         class DateHandler {
             /**
              * Checks if the file might contain the present date.
@@ -97,6 +103,9 @@ describe('app', () => {
             }
         }
 
+        /**
+         * Converts years in files.
+         */
         class YearHandler {
             /**
              * Checks if the file might contain the present year.
@@ -120,6 +129,9 @@ describe('app', () => {
             }
         }
 
+        /**
+         * Creates a unit test for every file.
+         */
         function templateTests() {
             const expectedDataDirectory = path.join(__dirname, 'data');
             const expectedFiles = readdirSyncRecursive(expectedDataDirectory)

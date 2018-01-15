@@ -1,10 +1,10 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const uuid = require('uuid');
 const ejs = require('ejs');
 const path = require('path');
 const readdirSyncRecursive = require('./readdir');
 const convertFilename = require('./filename_convert');
+const buildOptions = require('./build_options');
 
 /**
  * Returns the parameter unchanged.
@@ -106,34 +106,18 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        const name = this.props.name;
-        const testName = name + '.Tests';
-        const now = (new Date()).toISOString();
-        const yearLength = 4;
-        const dateLength = 10;
-        const year = now.substr(0, yearLength);
-        const date = now.substr(0, dateLength);
-
-        const options = {
-            name,
-            nameToLower: name.toLowerCase(),
-            testName,
-            user: this.props.user,
-            companyName: this.props.companyName,
-            libUUID: uuid.v1().toUpperCase(),
-            solutionFilesUUID: uuid.v1().toUpperCase(),
-            testsUUID: uuid.v1().toUpperCase(),
-            now: date,
-            year,
-            version: this.props.version
-        };
-
+        const options = buildOptions(this.props);
         const copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
         const sourceRoot = this.sourceRoot();
         const files = readdirSyncRecursive(sourceRoot);
+        const filenameConvertOptions = {
+            name: options.name,
+            templateName: 'MyLib'
+        };
+
         files.forEach(file => {
             const relativeFile = path.relative(sourceRoot, file);
-            const relativeDestination = convertFilename(relativeFile, options);
+            const relativeDestination = convertFilename(relativeFile, filenameConvertOptions);
             if (path.extname(relativeFile) === '.cs') {
                 copyFn(file, this.destinationPath(relativeDestination));
             } else {
