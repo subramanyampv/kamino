@@ -5,7 +5,9 @@
   "main": "app/index.js",
   "repository": "ngeor/generator-csharp-cli-app",
   "scripts": {
-    "test": "gulp"
+    "test": "gulp",
+    "coverage": "nyc mocha",
+    "coveralls": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [
     "yeoman-generator"
@@ -19,12 +21,31 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "coveralls": "^3.0.0",
     "eslint": "^4.15.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.1",
     "gulp-mocha": "^5.0.0",
     "mocha": "^4.1.0",
+    "nyc": "^11.4.1",
     "yeoman-assert": "^3.1.0",
     "yeoman-test": "^1.7.0"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 99,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99,
+    "include": [
+      "app/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "all": true
   }
 }
