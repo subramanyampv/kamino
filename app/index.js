@@ -65,15 +65,7 @@ module.exports = class extends Generator {
         files.forEach(file => {
             const relativeFile = path.relative(sourceRoot, file);
             const relativeDestination = convertFilename(relativeFile, filenameConvertOptions);
-            if (path.extname(relativeFile) === '.cs') {
-                copyFn(file, this.destinationPath(relativeDestination));
-            } else {
-                this.fs.copyTpl(
-                    file,
-                    this.destinationPath(relativeDestination),
-                    options
-                );
-            }
+            copyFn(file, this.destinationPath(relativeDestination));
         });
     }
 };
