@@ -32,7 +32,11 @@ rules:
   dot-notation: error
   eqeqeq: error
   no-eval: error
-  no-magic-numbers: error
+  no-magic-numbers:
+    - error
+    - ignore:
+      - 0
+      - 1
   no-multi-spaces: error
   no-return-assign: error
   no-return-await: error
