@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+- Improved linting
+
 ## [1.1.0] - 2018-01-13
+
 - Added [docfx](https://dotnet.github.io/docfx/index.html) support for generated project.
 
 ## [1.0.0] - 2018-01-13

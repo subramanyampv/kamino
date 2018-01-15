@@ -11,7 +11,7 @@ gulp.task('lint', () => {
 });
 
 gulp.task('test', () => {
-    return gulp.src('test/**/*.js', {read: false})
+    return gulp.src('test/**/*.js', { read: false })
         .pipe(mocha({}));
 });
 
@@ -19,6 +19,10 @@ gulp.task('stripbom', function() {
     return gulp.src(['**/*.*', '!node_modules/**'])
         .pipe(stripBom())
         .pipe(gulp.dest('.'));
+});
+
+gulp.task('watch', () => {
+    return gulp.watch('**/*.js', ['default']);
 });
 
 gulp.task('default', ['lint', 'test']);

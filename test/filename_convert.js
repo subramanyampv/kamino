@@ -14,9 +14,7 @@ describe('filename_convert', () => {
         ['MyLib.sln', 'SomeLib.sln']
     ];
 
-    const options = {
-        name: 'SomeLib'
-    };
+    const options = { name: 'SomeLib' };
 
     patterns.forEach(pattern => {
         it(`should map ${pattern[0]} to ${pattern[1]}`, () => {
