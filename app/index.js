@@ -1,13 +1,13 @@
 'use strict';
-var Generator = require('yeoman-generator');
-var uuid = require('uuid');
-var ejs = require('ejs');
+const Generator = require('yeoman-generator');
+const uuid = require('uuid');
+const ejs = require('ejs');
 
 /**
  * Returns the parameter unchanged.
  * Used when a file is already indented with tabs.
- * @param {String} contents The file contents.
- * @returns {String} The new file contents.
+ * @param {string} contents The file contents.
+ * @returns {string} The new file contents.
  */
 function noop(contents) {
     return contents;
@@ -15,8 +15,8 @@ function noop(contents) {
 
 /**
  * Converts tabs to spaces.
- * @param {String} contents The file contents.
- * @returns {String} The new file contents.
+ * @param {string} contents The file contents.
+ * @returns {string} The new file contents.
  */
 function tabsToSpaces(contents) {
     return contents.replace(/\t/g, '    ');
@@ -24,9 +24,9 @@ function tabsToSpaces(contents) {
 
 /**
  * Renders the given ejs template in the given context.
- * @param {String} contents The ejs template.
+ * @param {string} contents The ejs template.
  * @param {*} context The context available during template rendering.
- * @returns {String} The rendered content.
+ * @returns {string} The rendered content.
  */
 function ejsProcessor(contents, context) {
     return ejs.render(contents, context);
@@ -35,12 +35,12 @@ function ejsProcessor(contents, context) {
 /**
  * Builds the processor function.
  * First the file is converted to spaces if needed, then it is rendered with ejs.
- * @param {String} indentationCharacter The indentation character ('tabs' or 'spaces').
+ * @param {string} indentationCharacter The indentation character ('tabs' or 'spaces').
  * @param {*} context The context available during template rendering.
- * @returns {Function} The processor function.
+ * @returns {function} The processor function.
  */
 function buildProcessor(indentationCharacter, context) {
-    var fn = indentationCharacter === 'tabs' ? noop : tabsToSpaces;
+    const fn = indentationCharacter === 'tabs' ? noop : tabsToSpaces;
     return (contents) => ejsProcessor(fn(contents.toString()), context);
 }
 
@@ -48,18 +48,17 @@ function buildProcessor(indentationCharacter, context) {
  * Builds the copier function.
  * @param {*} fs The filesystem.
  * @param {*} context The context available during template rendering.
- * @param {String} indentationCharacter The indentation character ('tabs' or 'spaces').
- * @returns {Function} The copier function.
+ * @param {string} indentationCharacter The indentation character ('tabs' or 'spaces').
+ * @returns {function} The copier function.
  */
 function buildCopier(fs, context, indentationCharacter) {
-    return (from, to) => fs.copy(from, to, {
-        process: buildProcessor(indentationCharacter, context)
-    });
+    const process = buildProcessor(indentationCharacter, context);
+    return (from, to) => fs.copy(from, to, { process });
 }
 
 module.exports = class extends Generator {
     prompting() {
-        var _this = this;
+        const _this = this;
         return this.prompt([
             {
                 type: 'input',
@@ -91,18 +90,18 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        var name = this.props.name;
-        var testName = name + '.Tests';
-        var options = {
-            name: name,
-            testName: testName,
+        const name = this.props.name;
+        const testName = name + '.Tests';
+        const options = {
+            name,
+            testName,
             companyName: this.props.companyName,
             cliUUID: uuid.v1().toUpperCase(),
             solutionFilesUUID: uuid.v1().toUpperCase(),
             testsUUID: uuid.v1().toUpperCase()
         };
 
-        var copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
+        const copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
 
         // copy .gitignore
         this.fs.copyTpl(

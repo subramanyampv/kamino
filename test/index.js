@@ -42,8 +42,8 @@ describe('app', () => {
              * @returns {boolean} A value indicating whether the file is expected to contain GUIDs.
              */
             shouldHandle(filename) {
-                var ext = path.extname(filename);
-                var basename = path.basename(filename);
+                const ext = path.extname(filename);
+                const basename = path.basename(filename);
                 return ext === '.csproj' || ext === '.sln' || basename === 'AssemblyInfo.cs';
             }
 
@@ -62,10 +62,11 @@ describe('app', () => {
             /**
              * Checks if the file might contain the present date.
              * @param {string} filename - The filename to check.
-             * @returns {boolean} A value indicating whether the file is expected to contain the present date.
+             * @returns {boolean} A value indicating whether the file is expected
+             *                    to contain the present date.
              */
             shouldHandle(filename) {
-                var basename = path.basename(filename);
+                const basename = path.basename(filename);
                 return basename === 'CHANGELOG.md';
             }
 
@@ -84,10 +85,11 @@ describe('app', () => {
             /**
              * Checks if the file might contain the present year.
              * @param {string} filename - The filename to check.
-             * @returns {boolean} A value indicating whether the file is expected to contain the present year.
+             * @returns {boolean} A value indicating whether the file is expected
+             *                    to contain the present year.
              */
             shouldHandle(filename) {
-                var basename = path.basename(filename);
+                const basename = path.basename(filename);
                 return basename === 'AssemblyInfo.cs';
             }
 
@@ -103,8 +105,8 @@ describe('app', () => {
         }
 
         function templateTests() {
-            var expectedDataDirectory = path.join(__dirname, 'data');
-            var expectedFiles = readdirSyncRecursive(expectedDataDirectory)
+            const expectedDataDirectory = path.join(__dirname, 'data');
+            const expectedFiles = readdirSyncRecursive(expectedDataDirectory)
                 .map(f => path.relative(expectedDataDirectory, f));
             const handlers = [
                 new GuidHandler(),
@@ -112,11 +114,12 @@ describe('app', () => {
                 new YearHandler()
             ];
             expectedFiles.forEach(fixtureFile => {
-                var sourceFile = fixtureFile;
-                var destFile = filenameConvert(fixtureFile);
+                const sourceFile = fixtureFile;
+                const destFile = filenameConvert(fixtureFile);
                 it(`should map ${sourceFile} to ${destFile}`, () => {
-                    var actualData = fs.readFileSync(destFile, 'utf8');
-                    var expectedData = fs.readFileSync(path.join(expectedDataDirectory, sourceFile), 'utf8');
+                    let actualData = fs.readFileSync(destFile, 'utf8');
+                    let expectedData = fs.readFileSync(
+                        path.join(expectedDataDirectory, sourceFile), 'utf8');
                     for (let index = 0; index < handlers.length; index++) {
                         const handler = handlers[index];
                         if (handler.shouldHandle(sourceFile)) {

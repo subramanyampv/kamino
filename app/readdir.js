@@ -3,11 +3,11 @@ const path = require('path');
 
 /**
  * Checks if the given path is a directory.
- * @param {string} path - The path to check.
+ * @param {string} dirname - The path to check.
  * @returns {boolean} true if the path is a directory, false otherwise.
  */
-function isDirectory(path) {
-    var s = fs.statSync(path);
+function isDirectory(dirname) {
+    const s = fs.statSync(dirname);
     return s.isDirectory();
 }
 
@@ -17,8 +17,8 @@ function isDirectory(path) {
  * @returns {string[]} A collection of paths.
  */
 function readdirSyncRecursive(dirname) {
-    var contents = fs.readdirSync(dirname);
-    var result = [];
+    const contents = fs.readdirSync(dirname);
+    let result = [];
     contents.map(f => path.join(dirname, f)).forEach(f => {
         if (isDirectory(f)) {
             result = result.concat(readdirSyncRecursive(f));
