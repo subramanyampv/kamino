@@ -1,63 +1,10 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const ejs = require('ejs');
 const path = require('path');
 const readdirSyncRecursive = require('./readdir');
 const convertFilename = require('./filename_convert');
 const buildOptions = require('./build_options');
-
-/**
- * Returns the parameter unchanged.
- * Used when a file is already indented with tabs.
- * @param {string} contents The file contents.
- * @returns {string} The new file contents.
- */
-function noop(contents) {
-    return contents;
-}
-
-/**
- * Converts tabs to spaces.
- * @param {string} contents The file contents.
- * @returns {string} The new file contents.
- */
-function tabsToSpaces(contents) {
-    return contents.replace(/\t/g, '    ');
-}
-
-/**
- * Renders the given ejs template in the given context.
- * @param {string} contents The ejs template.
- * @param {*} context The context available during template rendering.
- * @returns {string} The rendered content.
- */
-function ejsProcessor(contents, context) {
-    return ejs.render(contents, context);
-}
-
-/**
- * Builds the processor function.
- * First the file is converted to spaces if needed, then it is rendered with ejs.
- * @param {string} indentationCharacter The indentation character ('tabs' or 'spaces').
- * @param {*} context The context available during template rendering.
- * @returns {function} The processor function.
- */
-function buildProcessor(indentationCharacter, context) {
-    const fn = indentationCharacter === 'tabs' ? noop : tabsToSpaces;
-    return (contents) => ejsProcessor(fn(contents.toString()), context);
-}
-
-/**
- * Builds the copier function.
- * @param {*} fs The filesystem.
- * @param {*} context The context available during template rendering.
- * @param {string} indentationCharacter The indentation character ('tabs' or 'spaces').
- * @returns {function} The copier function.
- */
-function buildCopier(fs, context, indentationCharacter) {
-    const process = buildProcessor(indentationCharacter, context);
-    return (from, to) => fs.copy(from, to, { process });
-}
+const copier = require('./copier');
 
 module.exports = class extends Generator {
     prompting() {
@@ -107,7 +54,7 @@ module.exports = class extends Generator {
 
     writing() {
         const options = buildOptions(this.props);
-        const copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
+        const copyFn = copier.buildCopier(this.fs, options, this.props.indentationCharacter);
         const sourceRoot = this.sourceRoot();
         const files = readdirSyncRecursive(sourceRoot);
         const filenameConvertOptions = {
