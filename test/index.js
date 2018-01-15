@@ -49,7 +49,7 @@ describe('app', () => {
 
             transformActualData(input) {
                 return input.replace(
-                    /[0-9a-z]{8}\-[0-9a-z]{4}\-[0-9a-z]{4}\-[0-9a-z]{4}\-[0-9a-z]{12}/ig,
+                    /[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}/ig,
                     '');
             }
 
@@ -159,7 +159,7 @@ describe('app', () => {
         });
 
         it('should indent Program.cs with spaces', () => {
-            assert.fileContent('SomeApp/Program.cs', /    class Program/);
+            assert.fileContent('SomeApp/Program.cs', / {4}class Program/);
         });
     });
 });
