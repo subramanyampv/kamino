@@ -1,7 +1,7 @@
 /**
  * Converts an input filename to a destination filename.
  * @param {string} filename - The input filename.
- * @param {object} options - Conversion options.
+ * @param {{name: [string], templateName: [string]}} options - Conversion options.
  * @returns {string} The converted filename.
  */
 module.exports = function(filename, options) {
@@ -9,8 +9,8 @@ module.exports = function(filename, options) {
         return $1 ? $0 : '.' + $2;
     });
 
-    if (options && options.name) {
-        result = result.replace(/MyLib/g, options.name);
+    if (options && options.name && options.templateName) {
+        result = result.replace(new RegExp(options.templateName, 'g'), options.name);
     }
 
     return result;

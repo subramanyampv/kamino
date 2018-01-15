@@ -1,7 +1,10 @@
 'use strict';
 const Generator = require('yeoman-generator');
-const uuid = require('uuid');
 const ejs = require('ejs');
+const path = require('path');
+const readdirSyncRecursive = require('./readdir');
+const convertFilename = require('./filename_convert');
+const buildOptions = require('./build_options');
 
 /**
  * Returns the parameter unchanged.
@@ -90,71 +93,27 @@ module.exports = class extends Generator {
     }
 
     writing() {
-        const name = this.props.name;
-        const testName = name + '.Tests';
-        const options = {
-            name,
-            testName,
-            companyName: this.props.companyName,
-            cliUUID: uuid.v1().toUpperCase(),
-            solutionFilesUUID: uuid.v1().toUpperCase(),
-            testsUUID: uuid.v1().toUpperCase()
+        const options = buildOptions(this.props);
+        const copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
+        const sourceRoot = this.sourceRoot();
+        const files = readdirSyncRecursive(sourceRoot);
+        const filenameConvertOptions = {
+            name: options.name,
+            templateName: 'MyApp'
         };
 
-        const copyFn = buildCopier(this.fs, options, this.props.indentationCharacter);
-
-        // copy .gitignore
-        this.fs.copyTpl(
-            this.templatePath('_gitignore'),
-            this.destinationPath('.gitignore'),
-            options);
-
-        // copy .travis.yml
-        this.fs.copyTpl(
-            this.templatePath('_travis.yml'),
-            this.destinationPath('.travis.yml'),
-            options);
-
-        // copy solution file
-        this.fs.copyTpl(
-            this.templatePath('MyApp.sln'),
-            this.destinationPath(name + '.sln'),
-            options);
-
-        // copy MyApp *.cs files
-        copyFn(
-            this.templatePath('MyApp/**/*.cs'),
-            this.destinationPath(name)
-        );
-
-        // copy MyApp *.config files
-        this.fs.copyTpl(
-            this.templatePath('MyApp/**/*.config'),
-            this.destinationPath(name),
-            options);
-
-        // copy MyApp.csproj file
-        this.fs.copyTpl(
-            this.templatePath('MyApp/MyApp.csproj'),
-            this.destinationPath(name + '/' + name + '.csproj'),
-            options);
-
-        // copy MyApp.Tests *.cs files
-        copyFn(
-            this.templatePath('MyApp.Tests/**/*.cs'),
-            this.destinationPath(testName)
-        );
-
-        // copy MyApp.Tests *.config files
-        this.fs.copyTpl(
-            this.templatePath('MyApp.Tests/**/*.config'),
-            this.destinationPath(testName),
-            options);
-
-        // copy MyApp.Tests.csproj file
-        this.fs.copyTpl(
-            this.templatePath('MyApp.Tests/MyApp.Tests.csproj'),
-            this.destinationPath(testName + '/' + testName + '.csproj'),
-            options);
+        files.forEach(file => {
+            const relativeFile = path.relative(sourceRoot, file);
+            const relativeDestination = convertFilename(relativeFile, filenameConvertOptions);
+            if (path.extname(relativeFile) === '.cs') {
+                copyFn(file, this.destinationPath(relativeDestination));
+            } else {
+                this.fs.copyTpl(
+                    file,
+                    this.destinationPath(relativeDestination),
+                    options
+                );
+            }
+        });
     }
 };
