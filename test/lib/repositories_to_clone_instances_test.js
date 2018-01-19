@@ -1,11 +1,11 @@
-var chai = require('chai');
-var expect = chai.expect;
-var proxyquire = require('proxyquire').noCallThru();
-var sinon = require('sinon');
+const chai = require('chai');
+const expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const sinon = require('sinon');
 
 describe('repositoriesToCloneInstances', () => {
-    var sandbox;
-    var repositoriesToCloneInstances;
+    let sandbox;
+    let repositoriesToCloneInstances;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
@@ -22,7 +22,7 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use HTTPS', () => {
         // arrange
-        var repositories = [
+        const repositories = [
             {
                 name: 'abc',
                 clone_url: 'https://host/abc' // eslint-disable-line camelcase
@@ -39,7 +39,7 @@ describe('repositoriesToCloneInstances', () => {
         };
 
         // act
-        var result = repositoriesToCloneInstances(repositories, options);
+        const result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([
@@ -59,7 +59,7 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use SSH', () => {
         // arrange
-        var repositories = [
+        const repositories = [
             {
                 name: 'abc',
                 ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
@@ -76,7 +76,7 @@ describe('repositoriesToCloneInstances', () => {
         };
 
         // act
-        var result = repositoriesToCloneInstances(repositories, options);
+        const result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([
@@ -96,7 +96,7 @@ describe('repositoriesToCloneInstances', () => {
 
     it('should use SSH with override username', () => {
         // arrange
-        var repositories = [
+        const repositories = [
             {
                 name: 'abc',
                 ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
@@ -114,7 +114,7 @@ describe('repositoriesToCloneInstances', () => {
         };
 
         // act
-        var result = repositoriesToCloneInstances(repositories, options);
+        const result = repositoriesToCloneInstances(repositories, options);
 
         // assert
         expect(result).to.eql([

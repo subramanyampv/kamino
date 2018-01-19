@@ -1,14 +1,14 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 const expectAsyncError = require('../util').expectAsyncError;
 
 describe('repo_provider', function() {
-    var sandbox;
-    var githubProvider;
-    var bitbucketCloudProvider;
-    var repoProvider;
+    let sandbox;
+    let githubProvider;
+    let bitbucketCloudProvider;
+    let repoProvider;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
@@ -31,7 +31,7 @@ describe('repo_provider', function() {
     it('should not accept empty provider', async() => {
         // act & assert
         await expectAsyncError(
-            async() => await repoProvider.getRepositories({}),
+            () => repoProvider.getRepositories({}),
             'No provider specified. Use the --provider option e.g. --provider=github');
     });
 

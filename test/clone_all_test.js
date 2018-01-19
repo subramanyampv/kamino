@@ -1,19 +1,19 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var _ = require('lodash');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const _ = require('lodash');
+const expect = chai.expect;
 
 describe('clone-all', function() {
-    var cloneAll;
-    var sandbox;
-    var repoProvider;
-    var gitClone;
-    var gitPull;
-    var gitBundle;
-    var repositoriesToCloneInstances;
-    var optionsParser;
-    var logger;
+    let cloneAll;
+    let sandbox;
+    let repoProvider;
+    let gitClone;
+    let gitPull;
+    let gitBundle;
+    let repositoriesToCloneInstances;
+    let optionsParser;
+    let logger;
 
     beforeEach(function() {
         // setup a sinon sandbox
@@ -32,13 +32,21 @@ describe('clone-all', function() {
 
         // stub the repositoriesToCloneInstances function
         repositoriesToCloneInstances = function(repositories) {
-            return repositories.map(x => _.assign(x, { url: 'https://' + x.name }));
+            return repositories.map(x => _.assign(x, {
+                url: 'https://' + x.name
+            }));
         };
 
         // stub the gitClone function
-        gitClone = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { cloneResult: true }));
-        gitPull = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { pullResult: true }));
-        gitBundle = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, { bundleResult: true }));
+        gitClone = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+            cloneResult: true
+        }));
+        gitPull = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+            pullResult: true
+        }));
+        gitBundle = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+            bundleResult: true
+        }));
         optionsParser = {
             parse: sandbox.stub()
         };
@@ -71,7 +79,7 @@ describe('clone-all', function() {
         });
 
         // act
-        var result = await cloneAll();
+        const result = await cloneAll();
 
         // assert
         expect(result).to.eql([

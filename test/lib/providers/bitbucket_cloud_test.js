@@ -1,11 +1,11 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 
 describe('bitbucket_cloud', function() {
-    var sandbox;
-    var repoFetcher;
+    let sandbox;
+    let repoFetcher;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
@@ -17,13 +17,13 @@ describe('bitbucket_cloud', function() {
 
     it('should fetch repositories from Bitbucket Cloud', async() => {
         // arrange
-        var expectedRepositories = [{
+        const expectedRepositories = [{
             clone_url: 'https://something', // eslint-disable-line camelcase
             ssh_url: 'ssh://something', // eslint-disable-line camelcase
             name: 'repoName'
         }];
 
-        var requestOptions = {
+        const requestOptions = {
             hostname: 'api.bitbucket.org',
             path: '/2.0/repositories/ngeor',
             port: 443,
@@ -35,7 +35,7 @@ describe('bitbucket_cloud', function() {
             }
         };
 
-        var bitbucketResponse = {
+        const bitbucketResponse = {
             values: [
                 {
                     slug: 'repoName',
@@ -69,7 +69,7 @@ describe('bitbucket_cloud', function() {
         };
 
         // act
-        var bitbucketCloud = proxyquire('../../../lib/providers/bitbucket_cloud', {
+        const bitbucketCloud = proxyquire('../../../lib/providers/bitbucket_cloud', {
             '../repo_fetcher': repoFetcher
         });
 

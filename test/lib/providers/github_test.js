@@ -1,11 +1,11 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 
 describe('github', function() {
-    var sandbox;
-    var repoFetcher;
+    let sandbox;
+    let repoFetcher;
 
     beforeEach(function() {
         sandbox = sinon.sandbox.create();
@@ -17,13 +17,13 @@ describe('github', function() {
 
     it('should fetch repositories from GitHub', async() => {
         // arrange
-        var repositories = [{
+        const repositories = [{
             clone_url: 'https://something', // eslint-disable-line camelcase
             ssh_url: 'ssh://something', // eslint-disable-line camelcase
             name: 'repoName'
         }];
 
-        var requestOptions = {
+        const requestOptions = {
             hostname: 'api.github.com',
             path: '/users/ngeor/repos',
             port: 443,
@@ -45,7 +45,7 @@ describe('github', function() {
         };
 
         // act
-        var github = proxyquire('../../../lib/providers/github', {
+        const github = proxyquire('../../../lib/providers/github', {
             '../repo_fetcher': repoFetcher
         });
 

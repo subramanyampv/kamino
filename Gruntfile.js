@@ -5,14 +5,16 @@ module.exports = function(grunt) {
                 '*.js',
                 'lib/**/*.js',
                 'test/**/*.js'
-            ]
+            ],
+            options: {
+                fix: false
+            }
         },
 
         mochaTest: {
             default: {
                 src: 'test/**/*.js',
-                options: {
-                }
+                options: {}
             }
         },
 

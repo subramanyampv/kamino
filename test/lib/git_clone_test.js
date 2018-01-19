@@ -1,17 +1,17 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 chai.use(require('sinon-chai'));
 
 describe('git_clone', () => {
-    var sandbox;
-    var fsPromise;
-    var execPromise;
-    var options;
-    var logger;
-    var gitClone;
-    var cloneInstruction;
+    let sandbox;
+    let fsPromise;
+    let execPromise;
+    let options;
+    let logger;
+    let gitClone;
+    let cloneInstruction;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
@@ -86,7 +86,9 @@ describe('git_clone', () => {
 
         describe('when cloning fails', () => {
             beforeEach(() => {
-                execPromise.withArgs('git clone https://whatever whatever-dir').rejects(new Error('cloning has failed'));
+                execPromise
+                    .withArgs('git clone https://whatever whatever-dir')
+                    .rejects(new Error('cloning has failed'));
             });
 
             it('should not log a message', async() => {

@@ -1,21 +1,21 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon');
-var child_process = require('child_process'); // eslint-disable-line camelcase
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon');
+const childProcess = require('child_process'); // eslint-disable-line camelcase
 
 chai.use(require('sinon-chai'));
 
 describe('exec_promise', () => {
-    var sandbox;
-    var execPromise;
+    let sandbox;
+    let execPromise;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
-        sandbox.stub(child_process, 'exec');
+        sandbox.stub(childProcess, 'exec');
 
         execPromise = proxyquire('../../lib/exec_promise', {
-            child_process: child_process // eslint-disable-line camelcase
+            childProcess
         });
     });
 
@@ -24,15 +24,15 @@ describe('exec_promise', () => {
     });
 
     it('should resolve when exec succeeds', async() => {
-        child_process.exec.withArgs('dummy command') // eslint-disable-line camelcase
+        childProcess.exec.withArgs('dummy command')
             .yields();
 
         await execPromise('dummy command');
-        expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
+        expect(childProcess.exec).to.have.been.calledWith('dummy command');
     });
 
     it('should reject when exec fails', async() => {
-        child_process.exec.withArgs('dummy command') // eslint-disable-line camelcase
+        childProcess.exec.withArgs('dummy command')
             .yields(new Error('command failed'));
 
         let error = null;
@@ -42,7 +42,7 @@ describe('exec_promise', () => {
             error = e;
         }
 
-        expect(child_process.exec).to.have.been.calledWith('dummy command'); // eslint-disable-line camelcase
+        expect(childProcess.exec).to.have.been.calledWith('dummy command');
         expect(error.message).to.equal('command failed');
     });
 });

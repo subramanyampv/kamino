@@ -1,19 +1,19 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 chai.use(require('sinon-chai'));
 
 describe('fs_promise', () => {
-    var sandbox;
-    var fs;
-    var fsPromise;
+    let sandbox;
+    let fs;
+    let fsPromise;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
         fs = require('fs');
         fsPromise = proxyquire('../../lib/fs_promise', {
-            fs: fs
+            fs
         });
     });
 

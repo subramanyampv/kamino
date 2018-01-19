@@ -1,13 +1,13 @@
-var chai = require('chai');
-var expect = chai.expect;
-var proxyquire = require('proxyquire').noCallThru();
-var sinon = require('sinon');
+const chai = require('chai');
+const expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const sinon = require('sinon');
 const expectAsyncError = require('../util').expectAsyncError;
 
 describe('https_promise', () => {
-    var sandbox;
-    var httpsPromise;
-    var https;
+    let sandbox;
+    let httpsPromise;
+    let https;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
@@ -16,7 +16,7 @@ describe('https_promise', () => {
         };
 
         httpsPromise = proxyquire('../../lib/https_promise', {
-            https: https
+            https
         });
     });
 
@@ -25,13 +25,15 @@ describe('https_promise', () => {
     });
 
     it('should resolve into the message', async() => {
-        var requestOptions = { url: 'whatever' };
-        var result = {
+        const requestOptions = {
+            url: 'whatever'
+        };
+        const result = {
             statusCode: 200,
             on: sandbox.stub()
         };
 
-        var requestObject = {
+        const requestObject = {
             on: sandbox.stub(),
             end: sandbox.stub()
         };
@@ -46,13 +48,15 @@ describe('https_promise', () => {
     });
 
     it('should reject if status code is less than 200', async() => {
-        var requestOptions = { url: 'whatever' };
-        var result = {
+        const requestOptions = {
+            url: 'whatever'
+        };
+        const result = {
             statusCode: 100,
             on: sandbox.stub()
         };
 
-        var requestObject = {
+        const requestObject = {
             on: sandbox.stub(),
             end: sandbox.stub()
         };
@@ -62,18 +66,20 @@ describe('https_promise', () => {
             .yields(result);
 
         await expectAsyncError(
-            async() => await httpsPromise(requestOptions),
+            () => httpsPromise(requestOptions),
             'Error: 100');
     });
 
     it('should reject if status code is more than 300', async() => {
-        var requestOptions = { url: 'whatever' };
-        var result = {
+        const requestOptions = {
+            url: 'whatever'
+        };
+        const result = {
             statusCode: 404,
             on: sandbox.stub()
         };
 
-        var requestObject = {
+        const requestObject = {
             on: sandbox.stub(),
             end: sandbox.stub()
         };
@@ -83,18 +89,20 @@ describe('https_promise', () => {
             .yields(result);
 
         await expectAsyncError(
-            async() => await httpsPromise(requestOptions),
+            () => httpsPromise(requestOptions),
             'Error: 404');
     });
 
     it('should reject if the request object has an error', async() => {
-        var requestOptions = { url: 'whatever' };
-        var result = {
+        const requestOptions = {
+            url: 'whatever'
+        };
+        const result = {
             statusCode: 200,
             on: sandbox.stub()
         };
 
-        var requestObject = {
+        const requestObject = {
             on: sandbox.stub(),
             end: sandbox.stub()
         };
@@ -106,7 +114,7 @@ describe('https_promise', () => {
             .yields(result);
 
         await expectAsyncError(
-            async() => await httpsPromise(requestOptions),
+            () => httpsPromise(requestOptions),
             'some error');
     });
 });

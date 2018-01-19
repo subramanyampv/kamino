@@ -1,16 +1,16 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
 chai.use(require('sinon-chai'));
 
 describe('git_pull', () => {
-    var sandbox;
-    var fsPromise;
-    var execPromise;
-    var logger;
-    var gitPull;
-    var cloneInstruction;
+    let sandbox;
+    let fsPromise;
+    let execPromise;
+    let logger;
+    let gitPull;
+    let cloneInstruction;
     let options = null;
 
     beforeEach(() => {
@@ -68,7 +68,9 @@ describe('git_pull', () => {
         beforeEach(() => {
             fsPromise.exists.withArgs('whatever-dir').resolves(true);
             options.bundleDir = '../bundles';
-            execPromise.withArgs('git pull', { cwd: 'whatever-dir' })
+            execPromise.withArgs('git pull', {
+                cwd: 'whatever-dir'
+            })
                 .rejects(new Error('Could not pull'));
         });
 
@@ -88,7 +90,9 @@ describe('git_pull', () => {
             await gitPull(cloneInstruction, options);
 
             // assert
-            expect(execPromise).to.have.been.calledWith('git pull', { cwd: 'whatever-dir' });
+            expect(execPromise).to.have.been.calledWith('git pull', {
+                cwd: 'whatever-dir'
+            });
         });
 
         it('should add the error to the result', async() => {
@@ -103,11 +107,13 @@ describe('git_pull', () => {
 
         it('should add the success to the result', async() => {
             // arrange
-            execPromise.withArgs('git pull', { cwd: 'whatever-dir' })
+            execPromise.withArgs('git pull', {
+                cwd: 'whatever-dir'
+            })
                 .resolves(null); // success
 
             // act
-            var result = await gitPull(cloneInstruction, options);
+            const result = await gitPull(cloneInstruction, options);
 
             // assert
             expect(result).to.eql({

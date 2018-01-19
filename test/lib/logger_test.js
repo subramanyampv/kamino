@@ -1,11 +1,11 @@
-var sinon = require('sinon');
-var proxyquire = require('proxyquire').noCallThru();
-var expect = require('chai').expect;
+const sinon = require('sinon');
+const proxyquire = require('proxyquire').noCallThru();
+const expect = require('chai').expect;
 
 describe('logger', () => {
-    var sandbox;
-    var logger;
-    var optionsParser;
+    let sandbox;
+    let logger;
+    let optionsParser;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();

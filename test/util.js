@@ -2,6 +2,11 @@ const chai = require('chai');
 const expect = chai.expect;
 
 module.exports = {
+    /**
+     * Expect an error from an async function.
+     * @param {function} fn - The async function.
+     * @param {string} msg - The expected message.
+     */
     expectAsyncError: async function expectAsyncError(fn, msg) {
         let error = null;
         try {

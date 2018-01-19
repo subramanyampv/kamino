@@ -1,17 +1,19 @@
-var proxyquire = require('proxyquire').noCallThru();
-var chai = require('chai');
-var sinon = require('sinon');
-var expect = chai.expect;
+const proxyquire = require('proxyquire').noCallThru();
+const chai = require('chai');
+const sinon = require('sinon');
+const expect = chai.expect;
+const expectAsyncError = require('../util').expectAsyncError;
+
 chai.use(require('sinon-chai'));
 
 describe('git_bundle', () => {
-    var sandbox;
-    var fsPromise;
-    var execPromise;
-    var options;
-    var logger;
-    var gitBundle;
-    var cloneInstruction;
+    let sandbox;
+    let fsPromise;
+    let execPromise;
+    let options;
+    let logger;
+    let gitBundle;
+    let cloneInstruction;
 
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
@@ -70,19 +72,18 @@ describe('git_bundle', () => {
 
         describe('when the --bundle-dir option is missing', () => {
             it('should skip bundle', async() => {
-                expect(await gitBundle(cloneInstruction, options)).to.eql({
-                    location: 'whatever-dir',
-                    name: 'myRepo',
-                    bundleResult: 'skip',
-                    url: 'https://whatever'
-                });
+                await expectAsyncError(
+                    () => gitBundle(cloneInstruction, options),
+                    'Internal error: bundle should not have been called');
             });
         });
 
         describe('when the --bundle-dir option is specified', () => {
             beforeEach(() => {
                 options.bundleDir = '../bundles';
-                execPromise.withArgs('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' })
+                execPromise.withArgs('git bundle create C:/bundles/myRepo.bundle master', {
+                    cwd: 'whatever-dir'
+                })
                     .rejects(new Error('Could not create bundle'));
             });
 
@@ -102,7 +103,10 @@ describe('git_bundle', () => {
                 await gitBundle(cloneInstruction, options);
 
                 // assert
-                expect(execPromise).to.have.been.calledWith('git bundle create C:/bundles/myRepo.bundle master', { cwd: 'whatever-dir' });
+                const expectedCommand = 'git bundle create C:/bundles/myRepo.bundle master';
+                expect(execPromise).to.have.been.calledWith(expectedCommand, {
+                    cwd: 'whatever-dir'
+                });
             });
 
             it('should add the error to the result', async() => {

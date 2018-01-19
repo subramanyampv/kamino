@@ -1,10 +1,10 @@
-var chai = require('chai');
-var expect = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 
 describe('options_parser', () => {
-    var options;
-    var optionsParser;
-    var originalProcessExit;
+    let options;
+    let optionsParser;
+    let originalProcessExit;
 
     beforeEach(() => {
         optionsParser = require('../../lib/options_parser');
