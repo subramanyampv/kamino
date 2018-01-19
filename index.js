@@ -3,6 +3,7 @@ const express = require('express');
 const packageJson = require('./package.json');
 
 const app = express();
+const port = 3000;
 app.get('/', (req, res) => res.send(`
 <html>
   <head>
@@ -20,7 +21,7 @@ app.get('/', (req, res) => res.send(`
 app.get('/version', (req, res) => res.send(process.env.APP_VERSION));
 
 app.listen(
-  3000,
-  () => console.log('Example app listening on port 3000!'),
+    port,
+    () => console.log('Example app listening on port 3000!')
 );
 /* eslint-enable no-console */
