@@ -11,7 +11,9 @@ gulp.task('lint', () => {
 });
 
 gulp.task('test', () => {
-    return gulp.src('test/**/*.js', { read: false })
+    return gulp.src('test/**/*.js', {
+        read: false
+    })
         .pipe(mocha({}));
 });
 

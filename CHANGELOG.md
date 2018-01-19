@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-- Improved linting
+- Improved linting.
+- Using eslint-config-ngeor for shared linting rules.
 
 ## [1.1.0] - 2018-01-13
 

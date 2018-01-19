@@ -47,10 +47,14 @@ function buildCopier(fs, context, indentationCharacter) {
      */
     function copier(from, to) {
         const process = selectProcessor(from);
-        return fs.copy(from, to, { process });
+        return fs.copy(from, to, {
+            process
+        });
     }
 
     return copier;
 }
 
-module.exports = { buildCopier };
+module.exports = {
+    buildCopier
+};
