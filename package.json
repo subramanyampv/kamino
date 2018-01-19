@@ -1,0 +1,25 @@
+{
+  "name": "eslint-config-ngeor",
+  "version": "0.1.0",
+  "description": "ESLint rules for my personal projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint -c index.js test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/eslint-config-ngeor.git"
+  },
+  "keywords": [
+    "eslint"
+  ],
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/eslint-config-ngeor/issues"
+  },
+  "homepage": "https://github.com/ngeor/eslint-config-ngeor#readme",
+  "devDependencies": {
+    "eslint": "^4.15.0"
+  }
+}
