@@ -2,28 +2,9 @@
 
 const repoProvider = require('./lib/repo_provider');
 const logger = require('./lib/logger');
-const gitClone = require('./lib/git_clone');
-const gitPull = require('./lib/git_pull');
-const gitBundle = require('./lib/git_bundle');
 const repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
 const optionsParser = require('./lib/options_parser');
-
-/**
- * Handles a single repository.
- * @param {object} cloneInstruction - The clone instruction.
- * @param {object} options - The command line options.
- * @returns {object} The combined result of the operations.
- */
-async function handleSingleRepo(cloneInstruction, options) {
-    const cloneResult = await gitClone(cloneInstruction, options);
-    const pullResult = await gitPull(cloneResult, options);
-
-    if (options.bundleDir) {
-        return gitBundle(pullResult, options);
-    }
-
-    return pullResult;
-}
+const handleRepo = require('./lib/handle_repo');
 
 /**
  * Creates the clone instruction objects.
@@ -56,7 +37,7 @@ async function handleAllRepositories(cloneInstructions, options) {
     const result = [];
     for (let i = 0; i < cloneInstructions.length; i++) {
         const cloneInstruction = cloneInstructions[i];
-        result.push(await handleSingleRepo(cloneInstruction, options));
+        result.push(await handleRepo(cloneInstruction, options));
     }
 
     return result;

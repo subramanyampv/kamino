@@ -8,9 +8,7 @@ describe('clone-all', function() {
     let cloneAll;
     let sandbox;
     let repoProvider;
-    let gitClone;
-    let gitPull;
-    let gitBundle;
+    let handleRepo;
     let repositoriesToCloneInstances;
     let optionsParser;
     let logger;
@@ -37,14 +35,9 @@ describe('clone-all', function() {
             }));
         };
 
-        // stub the gitClone function
-        gitClone = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
-            cloneResult: true
-        }));
-        gitPull = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
-            pullResult: true
-        }));
-        gitBundle = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+        handleRepo = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+            cloneResult: true,
+            pullResult: true,
             bundleResult: true
         }));
         optionsParser = {
@@ -57,9 +50,7 @@ describe('clone-all', function() {
         // create the system under test
         cloneAll = proxyquire('../clone-all', {
             './lib/repo_provider': repoProvider,
-            './lib/git_clone': gitClone,
-            './lib/git_pull': gitPull,
-            './lib/git_bundle': gitBundle,
+            './lib/handle_repo': handleRepo,
             './lib/repositories_to_clone_instances': repositoriesToCloneInstances,
             './lib/options_parser': optionsParser,
             './lib/logger': logger
@@ -94,30 +85,6 @@ describe('clone-all', function() {
                 cloneResult: true,
                 pullResult: true,
                 bundleResult: true,
-                name: 'def',
-                url: 'https://def'
-            }
-        ]);
-    });
-
-    it('should not attempt bundling when --bundle-dir parameter is missing', async() => {
-        // arrange
-        optionsParser.parse.returns({
-            provider: 'provider',
-            username: 'username'
-        });
-
-        // act & assert
-        expect(await cloneAll()).to.eql([
-            {
-                cloneResult: true,
-                pullResult: true,
-                name: 'abc',
-                url: 'https://abc'
-            },
-            {
-                cloneResult: true,
-                pullResult: true,
                 name: 'def',
                 url: 'https://def'
             }

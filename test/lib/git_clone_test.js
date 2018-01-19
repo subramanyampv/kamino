@@ -55,12 +55,7 @@ describe('git_clone', () => {
 
         it('should return the expected result', async() => {
             // act
-            expect(await gitClone(cloneInstruction, options)).to.eql({
-                cloneResult: 'success',
-                location: 'whatever-dir',
-                name: 'myRepo',
-                url: 'https://whatever'
-            });
+            expect(await gitClone(cloneInstruction, options)).to.eql('success');
         });
 
         it('should log a message', async() => {
@@ -102,12 +97,7 @@ describe('git_clone', () => {
             });
 
             it('should return the expected result', async() => {
-                expect(await gitClone(cloneInstruction, options)).to.eql({
-                    cloneResult: 'error',
-                    location: 'whatever-dir',
-                    name: 'myRepo',
-                    url: 'https://whatever'
-                });
+                expect(await gitClone(cloneInstruction, options)).to.eql('error');
             });
         });
     });
@@ -124,12 +114,7 @@ describe('git_clone', () => {
         });
 
         it('should return the expected result', async() => {
-            expect(await gitClone(cloneInstruction, options)).to.eql({
-                location: 'whatever-dir',
-                name: 'myRepo',
-                cloneResult: 'skip',
-                url: 'https://whatever'
-            });
+            expect(await gitClone(cloneInstruction, options)).to.eql('skip');
         });
     });
 });

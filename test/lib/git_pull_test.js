@@ -55,12 +55,7 @@ describe('git_pull', () => {
         });
 
         it('should return the expected result', async() => {
-            expect(await gitPull(cloneInstruction, options)).to.eql({
-                location: 'whatever-dir',
-                name: 'myRepo',
-                pullResult: 'error',
-                url: 'https://whatever'
-            });
+            expect(await gitPull(cloneInstruction, options)).to.eql('error');
         });
     });
 
@@ -97,12 +92,7 @@ describe('git_pull', () => {
 
         it('should add the error to the result', async() => {
             // act
-            expect(await gitPull(cloneInstruction, options)).to.eql({
-                pullResult: 'error',
-                location: 'whatever-dir',
-                name: 'myRepo',
-                url: 'https://whatever'
-            });
+            expect(await gitPull(cloneInstruction, options)).to.eql('error');
         });
 
         it('should add the success to the result', async() => {
@@ -116,12 +106,7 @@ describe('git_pull', () => {
             const result = await gitPull(cloneInstruction, options);
 
             // assert
-            expect(result).to.eql({
-                pullResult: 'success',
-                location: 'whatever-dir',
-                name: 'myRepo',
-                url: 'https://whatever'
-            });
+            expect(result).to.eql('success');
         });
     });
 });

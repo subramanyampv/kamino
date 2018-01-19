@@ -55,12 +55,7 @@ describe('git_bundle', () => {
         });
 
         it('should return the expected result', async() => {
-            expect(await gitBundle(cloneInstruction, options)).to.eql({
-                location: 'whatever-dir',
-                name: 'myRepo',
-                bundleResult: 'error',
-                url: 'https://whatever'
-            });
+            expect(await gitBundle(cloneInstruction, options)).to.eql('error');
         });
     });
 
@@ -111,12 +106,7 @@ describe('git_bundle', () => {
 
             it('should add the error to the result', async() => {
                 // act
-                expect(await gitBundle(cloneInstruction, options)).to.eql({
-                    bundleResult: 'error',
-                    location: 'whatever-dir',
-                    name: 'myRepo',
-                    url: 'https://whatever'
-                });
+                expect(await gitBundle(cloneInstruction, options)).to.eql('error');
             });
         });
     });
