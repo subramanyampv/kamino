@@ -1,9 +1,3 @@
-env:
-  mocha: true
+extends: 'ngeor/mocha'
 rules:
-  no-magic-numbers: off
-  no-unused-expressions: off
-  max-statements: off
-  max-nested-callbacks:
-    - error
-    - 4
+  no-console: off
