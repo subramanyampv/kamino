@@ -22,7 +22,7 @@ module.exports = function(grunt) {
             default: {
                 src: 'test/**/*.js',
                 options: {
-                    excludes: ['Gruntfile.js'],
+                    excludes: ['Gruntfile.js', 'jsdoc/**/*.js'],
                     istanbulOptions: ['--include-all']
                 }
             }
