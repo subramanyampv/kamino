@@ -1,7 +1,6 @@
 const proxyquire = require('proxyquire').noCallThru();
 const chai = require('chai');
 const sinon = require('sinon');
-const _ = require('lodash');
 const expect = chai.expect;
 
 describe('clone-all', function() {
@@ -30,12 +29,12 @@ describe('clone-all', function() {
 
         // stub the repositoriesToCloneInstances function
         repositoriesToCloneInstances = function(repositories) {
-            return repositories.map(x => _.assign(x, {
+            return repositories.map(x => Object.assign({}, x, {
                 url: 'https://' + x.name
             }));
         };
 
-        handleRepo = cloneInstruction => Promise.resolve(_.assign(cloneInstruction, {
+        handleRepo = cloneInstruction => Promise.resolve(Object.assign({}, cloneInstruction, {
             cloneResult: true,
             pullResult: true,
             bundleResult: true
