@@ -70,7 +70,7 @@ describe('bitbucket_cloud', function() {
 
         // act
         const bitbucketCloud = proxyquire('../../../lib/providers/bitbucket_cloud', {
-            '../repo_fetcher': repoFetcher
+            './repo_fetcher': repoFetcher
         });
 
         // assert

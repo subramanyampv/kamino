@@ -1,46 +1,43 @@
 #!/usr/bin/env node
 
-const repoProvider = require('./lib/repo_provider');
+const repoProvider = require('./lib/providers/repo_provider');
 const logger = require('./lib/logger');
-const repositoriesToCloneInstances = require('./lib/repositories_to_clone_instances');
 const optionsParser = require('./lib/options_parser');
-const handleRepo = require('./lib/handle_repo');
+const cloneAllRepos = require('./lib/clone_all_repos');
+const listAllRepos = require('./lib/list_all_repos');
 
 /**
- * Creates the clone instruction objects.
+ * Gets all the repositories.
  * @param {object} options - The command line options.
- * @returns {array} A collection of clone instructions.
+ * @returns {array} A collection of repositories.
+ * @private
  */
-async function createCloneInstructions(options) {
+async function getRepositories(options) {
     const repositories = await repoProvider.getRepositories(options);
     if (!repositories) {
         throw new Error('No repositories found!');
     }
 
     logger.verbose(`Found ${repositories.length} repositories`);
-
-    const cloneInstructions = repositoriesToCloneInstances(repositories, options);
-    if (!cloneInstructions) {
-        throw new Error('No clone instructions found!');
-    }
-
-    return cloneInstructions;
+    return repositories;
 }
 
 /**
- * Handles all repositories.
- * @param {array} cloneInstructions - The clone instructions.
+ * Processes all repositories.
+ * @param {array} repositories - The repositories to process.
  * @param {object} options - The command line options.
- * @returns {array} The combined result of all operations.
+ * @returns {array} The combined result of the operation.
+ * @private
  */
-async function handleAllRepositories(cloneInstructions, options) {
-    const result = [];
-    for (let i = 0; i < cloneInstructions.length; i++) {
-        const cloneInstruction = cloneInstructions[i];
-        result.push(await handleRepo(cloneInstruction, options));
+function processRepositories(repositories, options) {
+    if (options.list) {
+        return listAllRepos(repositories, options);
     }
 
-    return result;
+    return cloneAllRepos(
+        repositories,
+        options
+    );
 }
 
 /**
@@ -51,11 +48,8 @@ async function main() {
     const options = optionsParser.parse();
 
     try {
-        const cloneInstructions = await createCloneInstructions(options);
-        return handleAllRepositories(
-            cloneInstructions,
-            options
-        );
+        const repositories = await getRepositories(options);
+        return await processRepositories(repositories, options);
     } catch (err) {
         process.exitCode = 2;
         logger.error('An unexpected error occurred');

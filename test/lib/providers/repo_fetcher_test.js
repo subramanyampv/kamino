@@ -12,8 +12,8 @@ describe('repoFetcher', () => {
         sandbox = sinon.sandbox.create();
         httpsPromise = sandbox.stub();
 
-        repoFetcher = proxyquire('../../lib/repo_fetcher', {
-            './https_promise': httpsPromise
+        repoFetcher = proxyquire('../../../lib/providers/repo_fetcher', {
+            '../https_promise': httpsPromise
         });
     });
 

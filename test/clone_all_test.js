@@ -7,50 +7,44 @@ describe('clone-all', function() {
     let cloneAll;
     let sandbox;
     let repoProvider;
-    let handleRepo;
-    let repositoriesToCloneInstances;
+    let cloneAllRepos;
+    let listAllRepos;
     let optionsParser;
     let logger;
+    let repositories;
 
     beforeEach(function() {
         // setup a sinon sandbox
         sandbox = sinon.sandbox.create();
 
         // stub the repoProvider module
-        repoProvider = sandbox.stub(require('../lib/repo_provider'));
-        repoProvider.getRepositories.resolves([
+        repositories = [
             {
                 name: 'abc'
             },
             {
                 name: 'def'
             }
-        ]);
+        ];
+        repoProvider = sandbox.stub(require('../lib/providers/repo_provider'));
+        repoProvider.getRepositories.resolves(repositories);
 
-        // stub the repositoriesToCloneInstances function
-        repositoriesToCloneInstances = function(repositories) {
-            return repositories.map(x => Object.assign({}, x, {
-                url: 'https://' + x.name
-            }));
-        };
-
-        handleRepo = cloneInstruction => Promise.resolve(Object.assign({}, cloneInstruction, {
-            cloneResult: true,
-            pullResult: true,
-            bundleResult: true
-        }));
         optionsParser = {
             parse: sandbox.stub()
         };
 
         // stub the logger
         logger = sandbox.stub(require('../lib/logger'));
+        logger.error = (msg) => console.error(msg);
+
+        cloneAllRepos = sandbox.stub();
+        listAllRepos = sandbox.stub();
 
         // create the system under test
         cloneAll = proxyquire('../clone-all', {
-            './lib/repo_provider': repoProvider,
-            './lib/handle_repo': handleRepo,
-            './lib/repositories_to_clone_instances': repositoriesToCloneInstances,
+            './lib/providers/repo_provider': repoProvider,
+            './lib/clone_all_repos': cloneAllRepos,
+            './lib/list_all_repos': listAllRepos,
             './lib/options_parser': optionsParser,
             './lib/logger': logger
         });
@@ -60,33 +54,66 @@ describe('clone-all', function() {
         sandbox.restore();
     });
 
-    it('should clone the repositories', async() => {
-        // arrange
-        optionsParser.parse.returns({
-            bundleDir: '../bundles',
-            provider: 'provider',
-            username: 'username'
+    describe('when --list is not given', () => {
+        const cloneAllReposResult = [
+            {
+                dummy: 'value'
+            }
+        ];
+
+        beforeEach(() => {
+            // arrange
+            const options = {
+                list: false
+            };
+
+            optionsParser.parse.returns(options);
+            cloneAllRepos.withArgs(repositories, options).resolves(cloneAllReposResult);
         });
 
-        // act
-        const result = await cloneAll();
+        it('should clone the repositories', async() => {
+            // act
+            const result = await cloneAll();
 
-        // assert
-        expect(result).to.eql([
-            {
-                cloneResult: true,
-                pullResult: true,
-                bundleResult: true,
-                name: 'abc',
-                url: 'https://abc'
-            },
-            {
-                cloneResult: true,
-                pullResult: true,
-                bundleResult: true,
-                name: 'def',
-                url: 'https://def'
-            }
-        ]);
+            // assert
+            expect(result).to.eql(cloneAllReposResult);
+        });
+
+        it('should not call the stats command', async() => {
+            // act
+            await cloneAll();
+
+            // assert
+            expect(listAllRepos).to.not.have.been.called;
+        });
+    });
+
+    describe('when --list is given', () => {
+        beforeEach(() => {
+            // arrange
+            const options = {
+                list: true
+            };
+
+            optionsParser.parse.returns(options);
+            cloneAllRepos.rejects();
+            listAllRepos.withArgs(repositories, options).returns('list!');
+        });
+
+        it('should not clone the repositories', async() => {
+            // act
+            await cloneAll();
+
+            // assert
+            expect(cloneAllRepos).to.not.have.been.called;
+        });
+
+        it('should call the list command', async() => {
+            // act
+            const result = await cloneAll();
+
+            // assert
+            expect(result).to.eql('list!');
+        });
     });
 });

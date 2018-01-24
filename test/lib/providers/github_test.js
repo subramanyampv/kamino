@@ -46,7 +46,7 @@ describe('github', function() {
 
         // act
         const github = proxyquire('../../../lib/providers/github', {
-            '../repo_fetcher': repoFetcher
+            './repo_fetcher': repoFetcher
         });
 
         // assert

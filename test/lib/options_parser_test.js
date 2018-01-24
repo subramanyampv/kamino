@@ -181,4 +181,17 @@ describe('options_parser', () => {
             expect(options.forks).to.be.false;
         });
     });
+
+    describe('list', () => {
+        it('should be false when --list is missing', () => {
+            options = optionsParser.parse();
+            expect(options.list).to.be.false;
+        });
+
+        it('should be true when --list is present', () => {
+            process.argv.push('--list');
+            options = optionsParser.parse();
+            expect(options.list).to.be.true;
+        });
+    });
 });

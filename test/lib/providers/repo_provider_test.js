@@ -2,7 +2,7 @@ const proxyquire = require('proxyquire').noCallThru();
 const chai = require('chai');
 const sinon = require('sinon');
 const expect = chai.expect;
-const expectAsyncError = require('../util').expectAsyncError;
+const expectAsyncError = require('../../util').expectAsyncError;
 
 describe('repo_provider', function() {
     let sandbox;
@@ -18,9 +18,9 @@ describe('repo_provider', function() {
         bitbucketCloudProvider = {
             getRepositories: sandbox.stub()
         };
-        repoProvider = proxyquire('../../lib/repo_provider', {
-            './providers/github': githubProvider,
-            './providers/bitbucket_cloud': bitbucketCloudProvider
+        repoProvider = proxyquire('../../../lib/providers/repo_provider', {
+            './github': githubProvider,
+            './bitbucket_cloud': bitbucketCloudProvider
         });
     });
 
