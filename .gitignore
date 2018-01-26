@@ -36,3 +36,4 @@ clone-all-config.json
 
 # Generated documentation
 jsdoc/
+.nyc_output/

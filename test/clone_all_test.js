@@ -2,6 +2,7 @@ const proxyquire = require('proxyquire').noCallThru();
 const chai = require('chai');
 const sinon = require('sinon');
 const expect = chai.expect;
+chai.use(require('sinon-chai'));
 
 describe('clone-all', function() {
     let cloneAll;
