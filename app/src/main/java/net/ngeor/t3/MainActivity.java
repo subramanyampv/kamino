@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import net.ngeor.t3.models.GameDto;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.GameState;
@@ -87,7 +89,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     }
 
     private void createAIPlayer(PlayerDefinition playerDefinition) {
-        AIPlayer aiPlayer = new AIPlayer(this, model, playerDefinition.getPlayerSymbol());
+        AIPlayer aiPlayer = new AIPlayer(
+                msg -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(),
+                model,
+                playerDefinition.getPlayerSymbol());
         model.addGameModelListener(aiPlayer);
         aiPlayers.add(aiPlayer);
     }

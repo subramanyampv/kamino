@@ -1,6 +1,5 @@
 package net.ngeor.t3.ai;
 
-import android.content.Context;
 import net.ngeor.t3.models.*;
 
 import java.util.*;
@@ -9,8 +8,8 @@ public class SmartMove extends AbstractMove {
     private final PlayerSymbol me;
     private final int minimaxDepth;
 
-    public SmartMove(Context context, GameDto model, int minimaxDepth) {
-        super(context, model);
+    public SmartMove(MessageBox messageBox, GameDto model, int minimaxDepth) {
+        super(messageBox, model);
         this.me = model.getTurn();
         this.minimaxDepth = minimaxDepth;
     }

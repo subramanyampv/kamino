@@ -6,6 +6,8 @@ import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 
+import java.util.List;
+
 public class GameListener implements GameModelListener {
     private final MainActivityView view;
     private final GameDto model;
@@ -51,7 +53,8 @@ public class GameListener implements GameModelListener {
 
     private boolean isHumanTurn(GameDto model) {
         PlayerSymbol turn = model.getTurn();
-        for (PlayerDefinition playerDefinition : model.getSettings().getPlayerDefinitions()) {
+        List<PlayerDefinition> playerDefinitions = model.getSettings().getPlayerDefinitions();
+        for (PlayerDefinition playerDefinition : playerDefinitions) {
             if (playerDefinition.getPlayerSymbol() == turn) {
                 return playerDefinition instanceof HumanPlayerDefinition;
             }

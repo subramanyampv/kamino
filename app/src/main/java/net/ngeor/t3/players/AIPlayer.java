@@ -1,7 +1,7 @@
 package net.ngeor.t3.players;
 
-import android.content.Context;
 import net.ngeor.t3.ai.AbstractMove;
+import net.ngeor.t3.ai.MessageBox;
 import net.ngeor.t3.ai.SmartMove;
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.GameModel;
@@ -11,12 +11,12 @@ import net.ngeor.t3.settings.AIPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 
 public class AIPlayer extends AbstractPlayer implements GameModelListener {
-    private final Context context;
+    private final MessageBox messageBox;
     private AbstractMove move;
 
-    public AIPlayer(Context context, GameModel model, PlayerSymbol turn) {
+    public AIPlayer(MessageBox messageBox, GameModel model, PlayerSymbol turn) {
         super(model, turn);
-        this.context = context;
+        this.messageBox = messageBox;
     }
 
     private AILevel getAILevel() {
@@ -48,7 +48,7 @@ public class AIPlayer extends AbstractPlayer implements GameModelListener {
                 throw new IllegalArgumentException();
         }
 
-        move = new SmartMove(context, getModel(), minimaxDepth);
+        move = new SmartMove(messageBox, getModel(), minimaxDepth);
         move.execute();
     }
 
