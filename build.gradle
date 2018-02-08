@@ -8,6 +8,7 @@ allprojects {
 
 buildscript {
     repositories {
+        jcenter()
         google()
     }
     dependencies {
