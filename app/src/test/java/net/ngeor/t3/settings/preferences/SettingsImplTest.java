@@ -1,13 +1,13 @@
 package net.ngeor.t3.settings.preferences;
 
 import android.content.SharedPreferences;
+
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.AIPlayerDefinition;
-import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
 import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,11 +15,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
+ * Unit tests for SettingsImpl.
  * Created by ngeor on 2/11/2017.
  */
 public class SettingsImplTest {
