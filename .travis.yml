@@ -13,5 +13,5 @@ script:
   - ./gradlew build # by default it is build connectedCheck
 
 after_success:
-  - cat app/build/outputs/lint-results-debug.html
+  - cat ./app/build/reports/lint-results.html
   - ./gradlew clean jacocoTestReport coveralls
