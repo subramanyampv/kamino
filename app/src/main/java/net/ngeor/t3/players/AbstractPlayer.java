@@ -5,10 +5,10 @@ import net.ngeor.t3.models.GameState;
 import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.PlayerDefinition;
 
-import java.util.List;
-
 /**
- * Created by ngeor on 2/10/2017.
+ * Base class for player implementation.
+ *
+ * @author ngeor on 2/10/2017.
  */
 public abstract class AbstractPlayer {
     private final PlayerSymbol turn;
@@ -26,13 +26,6 @@ public abstract class AbstractPlayer {
     }
 
     protected PlayerDefinition getPlayerDefinition(GameModel model) {
-        List<PlayerDefinition> playerDefinitions = model.getSettings().getPlayerDefinitions();
-        for (PlayerDefinition playerDefinition : playerDefinitions) {
-            if (playerDefinition.getPlayerSymbol() == turn) {
-                return playerDefinition;
-            }
-        }
-
-        throw new IllegalStateException("Could not find my player definition");
+        return model.getSettings().getPlayerDefinitions().get(turn);
     }
 }

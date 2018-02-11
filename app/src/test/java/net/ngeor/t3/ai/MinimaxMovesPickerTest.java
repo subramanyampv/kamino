@@ -5,16 +5,15 @@ import net.ngeor.t3.models.GameModelHolder;
 import net.ngeor.t3.models.ImmutableGameModelImpl;
 import net.ngeor.t3.models.Location;
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.AIPlayerDefinitionImpl;
-import net.ngeor.t3.settings.HumanPlayerDefinitionImpl;
+import net.ngeor.t3.settings.AIPlayerDefinition;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
+import net.ngeor.t3.settings.PlayerDefinitions;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.SettingsImpl;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -29,9 +28,9 @@ public class MinimaxMovesPickerTest {
 
     @Before
     public void before() {
-        PlayerDefinition first = new HumanPlayerDefinitionImpl(PlayerSymbol.X);
-        PlayerDefinition second = new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.EASY);
-        Settings settings = new SettingsImpl(3, 3, false, Arrays.asList(first, second));
+        PlayerDefinition first = new HumanPlayerDefinition(PlayerSymbol.X);
+        PlayerDefinition second = new AIPlayerDefinition(PlayerSymbol.O, AILevel.EASY);
+        Settings settings = new Settings(3, 3, false, new PlayerDefinitions(first, second));
         model = new GameModelHolder();
         model.setBackingModel(new ImmutableGameModelImpl(settings));
         model.start();

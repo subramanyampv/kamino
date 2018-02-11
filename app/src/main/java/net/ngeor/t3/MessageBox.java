@@ -1,9 +1,9 @@
-package net.ngeor.t3.ai;
+package net.ngeor.t3;
 
 /**
  * Abstraction over Android's Toast.
  */
 @FunctionalInterface
 public interface MessageBox {
-    void show(String message);
+    void show(int message);
 }

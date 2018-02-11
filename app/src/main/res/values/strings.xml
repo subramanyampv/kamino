@@ -26,4 +26,7 @@
     <string name="info_updated_other_player">Opponent player adjusted</string>
     <string name="pref_invisible_mode_title">Invisible Mode</string>
     <string name="settings">Settings</string>
+
+    <string name="err_could_not_find_move">Could not find move!</string>
+    <string name="err_async_cancel">AI cancelled!</string>
 </resources>

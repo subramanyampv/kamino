@@ -2,7 +2,7 @@ package net.ngeor.t3.players;
 
 import android.util.Log;
 
-import net.ngeor.t3.ai.MessageBox;
+import net.ngeor.t3.MessageBox;
 import net.ngeor.t3.ai.MinimaxMovesPicker;
 import net.ngeor.t3.ai.MovesPickerAsyncTask;
 import net.ngeor.t3.ai.RandomMoveReducer;

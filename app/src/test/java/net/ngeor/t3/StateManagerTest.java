@@ -6,7 +6,6 @@ import net.ngeor.t3.models.BoardModel;
 import net.ngeor.t3.models.GameState;
 import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.SettingsImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +32,7 @@ public class StateManagerTest {
 
     @Test
     public void getSettings() {
-        SettingsImpl settings = mock(SettingsImpl.class);
+        Settings settings = mock(Settings.class);
         when(bundle.getSerializable("settings")).thenReturn(settings);
         Settings actualSettings = stateManager.getSettings();
         assertEquals(settings, actualSettings);
@@ -41,7 +40,7 @@ public class StateManagerTest {
 
     @Test
     public void setSettings() {
-        SettingsImpl settings = mock(SettingsImpl.class);
+        Settings settings = mock(Settings.class);
         stateManager.setSettings(settings);
         verify(bundle).putSerializable("settings", settings);
     }

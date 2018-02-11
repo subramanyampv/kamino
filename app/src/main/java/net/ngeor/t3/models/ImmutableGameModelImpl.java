@@ -18,7 +18,7 @@ public class ImmutableGameModelImpl implements ImmutableGameModel {
                 settings,
                 new BoardModel(settings.getRows(), settings.getCols()),
                 GameState.NotStarted,
-                settings.getPlayerDefinitions().get(0).getPlayerSymbol());
+                settings.getPlayerDefinitions().getFirstPlayerDefinition().getPlayerSymbol());
     }
 
     public ImmutableGameModelImpl(Settings settings, BoardModel boardModel, GameState state, PlayerSymbol turn) {

@@ -13,9 +13,9 @@ import android.widget.Toast;
 import net.ngeor.t3.models.GameModelHolder;
 import net.ngeor.t3.models.GameState;
 import net.ngeor.t3.models.ImmutableGameModelImpl;
-import net.ngeor.t3.settings.PreferenceBackedSettings;
+import net.ngeor.t3.preferences.PreferenceBackedSettings;
+import net.ngeor.t3.preferences.SettingsActivity;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.SettingsImpl;
 
 public class MainActivity extends AppCompatActivity implements MainActivityView {
     public static final String TAG = "MainActivity";
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
         playerFactory = new PlayerFactory(
                 this,
                 model,
-                msg -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show(),
+                resId -> Toast.makeText(this, resId, Toast.LENGTH_SHORT).show(),
                 boardTouchListener
         );
     }
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityView 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         StateManager stateManager = new StateManager(outState);
-        stateManager.setSettings(new SettingsImpl(model.getSettings()));
+        stateManager.setSettings(model.getSettings());
         stateManager.setBoardModel(model.getBoardModel());
         stateManager.setGameState(model.getState());
         stateManager.setTurn(model.getTurn());

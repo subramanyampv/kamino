@@ -6,7 +6,6 @@ import net.ngeor.t3.models.BoardModel;
 import net.ngeor.t3.models.GameState;
 import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.SettingsImpl;
 
 /**
  * Handles the state of the main activity during creation and saving.
@@ -23,7 +22,7 @@ public class StateManager {
         return (Settings) bundle.getSerializable("settings");
     }
 
-    public void setSettings(SettingsImpl settings) {
+    public void setSettings(Settings settings) {
         bundle.putSerializable("settings", settings);
     }
 

@@ -2,13 +2,13 @@ package net.ngeor.t3;
 
 import android.content.Context;
 
-import net.ngeor.t3.ai.MessageBox;
 import net.ngeor.t3.models.MutableGameModel;
 import net.ngeor.t3.players.AIPlayer;
 import net.ngeor.t3.players.HumanPlayer;
 import net.ngeor.t3.settings.AIPlayerDefinition;
 import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
+import net.ngeor.t3.settings.PlayerDefinitions;
 import net.ngeor.t3.settings.Settings;
 
 import java.util.ArrayList;
@@ -36,21 +36,25 @@ public class PlayerFactory {
 
     public void createPlayers() {
         Settings settings = model.getSettings();
-        for (PlayerDefinition playerDefinition : settings.getPlayerDefinitions()) {
-            if (playerDefinition instanceof HumanPlayerDefinition) {
-                // create touch listener
-                createHumanPlayer(playerDefinition);
-            } else if (playerDefinition instanceof AIPlayerDefinition) {
-                createAIPlayer(playerDefinition);
-            } else {
-                throw new IllegalArgumentException("Cannot create player");
-            }
-        }
+        PlayerDefinitions playerDefinitions = settings.getPlayerDefinitions();
+        createPlayer(playerDefinitions.getFirstPlayerDefinition());
+        createPlayer(playerDefinitions.getSecondPlayerDefinition());
     }
 
     public void destroyPlayers() {
         destroyAIPlayers();
         destroyHumanPlayers();
+    }
+
+    private void createPlayer(PlayerDefinition playerDefinition) {
+        if (playerDefinition instanceof HumanPlayerDefinition) {
+            // create touch listener
+            createHumanPlayer(playerDefinition);
+        } else if (playerDefinition instanceof AIPlayerDefinition) {
+            createAIPlayer(playerDefinition);
+        } else {
+            throw new IllegalArgumentException("Cannot create player");
+        }
     }
 
     private void createHumanPlayer(PlayerDefinition playerDefinition) {

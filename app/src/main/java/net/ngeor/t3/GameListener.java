@@ -7,8 +7,6 @@ import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.HumanPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 
-import java.util.List;
-
 public class GameListener implements GameModelListener {
     private final MainActivityView view;
 
@@ -52,13 +50,7 @@ public class GameListener implements GameModelListener {
 
     private boolean isHumanTurn(GameModel model) {
         PlayerSymbol turn = model.getTurn();
-        List<PlayerDefinition> playerDefinitions = model.getSettings().getPlayerDefinitions();
-        for (PlayerDefinition playerDefinition : playerDefinitions) {
-            if (playerDefinition.getPlayerSymbol() == turn) {
-                return playerDefinition instanceof HumanPlayerDefinition;
-            }
-        }
-
-        throw new IllegalArgumentException("could not find player settings");
+        PlayerDefinition playerDefinition = model.getSettings().getPlayerDefinitions().get(turn);
+        return playerDefinition instanceof HumanPlayerDefinition;
     }
 }

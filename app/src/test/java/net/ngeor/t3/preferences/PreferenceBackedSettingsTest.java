@@ -1,15 +1,15 @@
-package net.ngeor.t3.settings;
+package net.ngeor.t3.preferences;
 
 import android.content.SharedPreferences;
 
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
+import net.ngeor.t3.settings.AIPlayerDefinition;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
+import net.ngeor.t3.settings.PlayerDefinitions;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -53,13 +53,13 @@ public class PreferenceBackedSettingsTest {
         // arrange
 
         // act
-        List<PlayerDefinition> playerDefinitions = settings.createSettings().getPlayerDefinitions();
+        PlayerDefinitions playerDefinitions = settings.createSettings().getPlayerDefinitions();
 
         // assert
         assertEquals(
-                Arrays.asList(
-                        new HumanPlayerDefinitionImpl(PlayerSymbol.X),
-                        new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.EASY)),
+                new PlayerDefinitions(
+                        new HumanPlayerDefinition(PlayerSymbol.X),
+                        new AIPlayerDefinition(PlayerSymbol.O, AILevel.EASY)),
                 playerDefinitions);
     }
 
@@ -75,13 +75,13 @@ public class PreferenceBackedSettingsTest {
         mockPreference("pref_key_second_player_ai_level", "EASY", "EASY");
 
         // act
-        List<PlayerDefinition> playerDefinitions = settings.createSettings().getPlayerDefinitions();
+        PlayerDefinitions playerDefinitions = settings.createSettings().getPlayerDefinitions();
 
         // assert
         assertEquals(
-                Arrays.asList(
-                        new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.MEDIUM),
-                        new HumanPlayerDefinitionImpl(PlayerSymbol.X)),
+                new PlayerDefinitions(
+                        new AIPlayerDefinition(PlayerSymbol.O, AILevel.MEDIUM),
+                        new HumanPlayerDefinition(PlayerSymbol.X)),
                 playerDefinitions);
     }
 

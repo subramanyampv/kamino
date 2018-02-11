@@ -1,15 +1,13 @@
 package net.ngeor.t3.models;
 
-import net.ngeor.t3.settings.HumanPlayerDefinitionImpl;
+import net.ngeor.t3.settings.HumanPlayerDefinition;
+import net.ngeor.t3.settings.PlayerDefinitions;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.SettingsImpl;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -29,9 +27,9 @@ public class ImmutableGameModelImplTest {
 
         @Before
         public void before() {
-            settings = new SettingsImpl(3, 3, false, Arrays.asList(
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.X),
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.O)));
+            settings = new Settings(3, 3, false, new PlayerDefinitions(
+                    new HumanPlayerDefinition(PlayerSymbol.X),
+                    new HumanPlayerDefinition(PlayerSymbol.O)));
         }
 
         @Test
@@ -57,9 +55,9 @@ public class ImmutableGameModelImplTest {
 
         @Before
         public void before() {
-            settings = new SettingsImpl(3, 3, false, Arrays.asList(
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.X),
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.O)));
+            settings = new Settings(3, 3, false, new PlayerDefinitions(
+                    new HumanPlayerDefinition(PlayerSymbol.X),
+                    new HumanPlayerDefinition(PlayerSymbol.O)));
             model = new ImmutableGameModelImpl(settings);
         }
 
@@ -93,9 +91,9 @@ public class ImmutableGameModelImplTest {
 
         @Before
         public void before() {
-            settings = new SettingsImpl(3, 3, false, Arrays.asList(
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.X),
-                    new HumanPlayerDefinitionImpl(PlayerSymbol.O)));
+            settings = new Settings(3, 3, false, new PlayerDefinitions(
+                    new HumanPlayerDefinition(PlayerSymbol.X),
+                    new HumanPlayerDefinition(PlayerSymbol.O)));
             model = new ImmutableGameModelImpl(settings);
             model = model.immutableStart();
         }

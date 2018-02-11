@@ -2,6 +2,8 @@ package net.ngeor.t3.ai;
 
 import android.os.AsyncTask;
 
+import net.ngeor.t3.MessageBox;
+import net.ngeor.t3.R;
 import net.ngeor.t3.models.Location;
 import net.ngeor.t3.models.MutableGameModel;
 
@@ -31,7 +33,7 @@ public class MovesPickerAsyncTask extends AsyncTask<Void, Void, Location> {
     protected void onPostExecute(Location location) {
         super.onPostExecute(location);
         if (location == null) {
-            messageBox.show("Could not find move");
+            messageBox.show(R.string.err_could_not_find_move);
             return;
         }
 
@@ -43,6 +45,6 @@ public class MovesPickerAsyncTask extends AsyncTask<Void, Void, Location> {
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        messageBox.show("AI cancelled");
+        messageBox.show(R.string.err_async_cancel);
     }
 }
