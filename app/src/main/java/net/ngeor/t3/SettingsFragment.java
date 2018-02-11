@@ -23,7 +23,7 @@ public class SettingsFragment extends PreferenceFragment {
                 String otherValue = "X".equals(newValue) ? "O" : "X";
                 String otherPlayer = "first".equals(playerNumber) ? "second" : "first";
                 String otherKey = "pref_key_" + otherPlayer + "_player_symbol";
-                ListPreference listPreference = (ListPreference)findPreference(otherKey);
+                ListPreference listPreference = (ListPreference) findPreference(otherKey);
                 listPreference.setValue(otherValue);
                 Toast.makeText(SettingsFragment.this.getView().getContext(), R.string.info_updated_other_player, Toast.LENGTH_SHORT).show();
                 return true;

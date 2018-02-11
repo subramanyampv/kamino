@@ -6,9 +6,4 @@
 /captures
 .externalNativeBuild
 
-.idea/workspace.xml
-.idea/dictionaries
-.idea/libraries
-.idea/compiler.xml
-.idea/copyright/
-.idea/runConfigurations.xml
+.idea/

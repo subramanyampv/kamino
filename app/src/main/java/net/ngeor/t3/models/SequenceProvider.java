@@ -4,8 +4,10 @@ import java.util.List;
 
 /**
  * Creates a sequence of tiles.
- * Created by ngeor on 2/5/2017.
+ *
+ * @author ngeor on 2/5/2017.
  */
+@FunctionalInterface
 public interface SequenceProvider {
-    List<Location> getSequence();
+    List<Location> getSequence(BoardModel boardModel);
 }

@@ -1,42 +1,33 @@
-package net.ngeor.t3.settings.preferences;
+package net.ngeor.t3.settings;
 
 import android.content.SharedPreferences;
+
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.PlayerDefinition;
-import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
-import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * SettingsImpl implementation that uses SharedPreferences as a backend.
+ * PreferenceBackedSettings implementation that uses SharedPreferences as a backend.
  * If they get changed mid-game, they don't affect the existing game.
  * They are only picked up when the player presses the Restart button.
  * Created by ngeor on 2/11/2017.
  */
-public class SettingsImpl implements Settings {
+public class PreferenceBackedSettings {
     private final static String KEY_FIRST_PLAYER = "pref_first_player";
 
     private final SharedPreferences sharedPreferences;
-    public SettingsImpl(SharedPreferences sharedPreferences) {
+
+    public PreferenceBackedSettings(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
     }
 
-    @Override
-    public int getRows() {
-        return 3;
+    public Settings createSettings() {
+        return new SettingsImpl(3, 3, isInvisibleMode(), getPlayerDefinitions());
     }
 
-    @Override
-    public int getCols() {
-        return getRows();
-    }
-
-    @Override
-    public List<PlayerDefinition> getPlayerDefinitions() {
+    private List<PlayerDefinition> getPlayerDefinitions() {
         String firstPlayerSymbol = sharedPreferences.getString("pref_key_first_player_symbol", "X");
         String firstPlayerType = sharedPreferences.getString("pref_key_first_player_type", "HUMAN");
         String firstPlayerAILevel = sharedPreferences.getString("pref_key_first_player_ai_level", "EASY");
@@ -51,8 +42,7 @@ public class SettingsImpl implements Settings {
         );
     }
 
-    @Override
-    public boolean isInvisibleMode() {
+    private boolean isInvisibleMode() {
         return sharedPreferences.getBoolean("pref_key_invisible_mode", false);
     }
 

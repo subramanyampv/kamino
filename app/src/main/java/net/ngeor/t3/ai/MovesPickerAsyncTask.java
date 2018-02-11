@@ -1,16 +1,19 @@
 package net.ngeor.t3.ai;
 
 import android.os.AsyncTask;
-import net.ngeor.t3.models.GameDto;
+
 import net.ngeor.t3.models.Location;
+import net.ngeor.t3.models.MutableGameModel;
 
-public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
+public class MovesPickerAsyncTask extends AsyncTask<Void, Void, Location> {
     private final MessageBox messageBox;
-    private final GameDto model;
+    private final MutableGameModel model;
+    private final MovePicker movePicker;
 
-    public AbstractMove(MessageBox messageBox, GameDto model) {
+    public MovesPickerAsyncTask(MessageBox messageBox, MutableGameModel model, MovePicker movePicker) {
         this.messageBox = messageBox;
         this.model = model;
+        this.movePicker = movePicker;
     }
 
     @Override
@@ -21,8 +24,7 @@ public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
         } catch (InterruptedException ex) {
         }
 
-
-        return pickMove(model);
+        return movePicker.pickMove(model);
     }
 
     @Override
@@ -43,16 +45,4 @@ public abstract class AbstractMove extends AsyncTask<Void, Void, Location> {
         super.onCancelled();
         messageBox.show("AI cancelled");
     }
-
-    /**
-     * Due to the inability to mock the isCancelled method,
-     * we use this workaround.
-     */
-    boolean testMode = false;
-
-    protected boolean internalIsCancelled() {
-        return testMode ? false : isCancelled();
-    }
-
-    protected abstract Location pickMove(GameDto model);
 }

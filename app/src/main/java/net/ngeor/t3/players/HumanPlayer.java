@@ -5,9 +5,14 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import net.ngeor.t3.models.*;
+
+import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameModelListener;
+import net.ngeor.t3.models.MutableGameModel;
+import net.ngeor.t3.models.PlayerSymbol;
 
 /**
  * Represents the human player.
@@ -15,55 +20,63 @@ import net.ngeor.t3.models.*;
  */
 public class HumanPlayer extends AbstractPlayer implements View.OnTouchListener, GameModelListener {
     private final Context context;
+    private final MutableGameModel model;
 
-    public HumanPlayer(Context context, GameModel model, PlayerSymbol turn) {
-        super(model, turn);
+    public HumanPlayer(Context context, MutableGameModel model, PlayerSymbol turn) {
+        super(turn);
         this.context = context;
+        this.model = model;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        final GameModel model = getModel();
-        if (model.getState() != GameState.WaitingPlayer || !isMyTurn()) {
+        Log.d("HumanPlayer", "onTouch " + event);
+
+        if (event.getAction() != MotionEvent.ACTION_UP) {
+            return true;
+        }
+
+        Log.d("HumanPlayer", "onTouch");
+        if (!canIPlay(model)) {
             return false;
         }
 
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            int col = (int) (model.getBoardModel().getCols() * event.getX() / v.getWidth());
-            int row = (int) (model.getBoardModel().getRows() * event.getY() / v.getHeight());
-            TileState tileState = model.getBoardModel().getTileState(row, col);
-            if (tileState == TileState.EMPTY) {
-                model.play(row, col);
-                notifyHumanPlayed();
-            } else {
-                notifyHumanCannotPlayHere();
-            }
+        int col = (int) (model.getBoardModel().getCols() * event.getX() / v.getWidth());
+        int row = (int) (model.getBoardModel().getRows() * event.getY() / v.getHeight());
+        PlayerSymbol tileState = model.getBoardModel().getTileState(row, col);
+        if (tileState == null) {
+            model.play(row, col);
+            notifyHumanPlayed();
+        } else {
+            notifyHumanCannotPlayHere();
         }
 
         return true;
     }
 
     @Override
-    public void stateChanged() {
-        if (canIPlay()) {
-            notifyHumanCanPlay();
+    public void stateChanged(MutableGameModel model) {
+        if (canIPlay(model)) {
+            notifyHumanCanPlay(model);
         }
     }
 
     private void notifyHumanCannotPlayHere() {
-        Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(500);
     }
 
     private void notifyHumanPlayed() {
     }
 
-    private void notifyHumanCanPlay() {
+    private void notifyHumanCanPlay(GameModel model) {
         // play a sound when the human player needs to play, but only on invisible mode
-        if (getModel().getSettings().isInvisibleMode()) {
+        if (model.getSettings().isInvisibleMode()) {
             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
-            ringtone.play();
+            if (ringtone != null) {
+                ringtone.play();
+            }
         }
     }
 }

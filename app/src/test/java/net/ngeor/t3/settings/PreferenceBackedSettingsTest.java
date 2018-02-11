@@ -1,12 +1,9 @@
-package net.ngeor.t3.settings.preferences;
+package net.ngeor.t3.settings;
 
 import android.content.SharedPreferences;
 
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.PlayerDefinition;
-import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
-import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,32 +16,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Unit tests for SettingsImpl.
+ * Unit tests for PreferenceBackedSettings.
  * Created by ngeor on 2/11/2017.
  */
-public class SettingsImplTest {
+public class PreferenceBackedSettingsTest {
     private SharedPreferences sharedPreferences;
-    private SettingsImpl settings;
+    private PreferenceBackedSettings settings;
 
     @Before
     public void setUp() {
         sharedPreferences = mock(SharedPreferences.class);
-        settings = new SettingsImpl(sharedPreferences);
-    }
+        settings = new PreferenceBackedSettings(sharedPreferences);
 
-    @Test
-    public void getRows() {
-        assertEquals(3, settings.getRows());
-    }
-
-    @Test
-    public void getCols() {
-        assertEquals(3, settings.getCols());
-    }
-
-    @Test
-    public void getPlayerDefinitions_withDefaultSettings() {
-        // arrange
+        // mock default values
         mockPreference("pref_key_first_player_symbol", "X", "X");
         mockPreference("pref_key_first_player_type", "HUMAN", "HUMAN");
         mockPreference("pref_key_first_player_ai_level", "EASY", null);
@@ -52,9 +36,24 @@ public class SettingsImplTest {
         mockPreference("pref_key_second_player_symbol", "O", "O");
         mockPreference("pref_key_second_player_type", "CPU", "CPU");
         mockPreference("pref_key_second_player_ai_level", "EASY", "EASY");
+    }
+
+    @Test
+    public void getRows() {
+        assertEquals(3, settings.createSettings().getRows());
+    }
+
+    @Test
+    public void getCols() {
+        assertEquals(3, settings.createSettings().getCols());
+    }
+
+    @Test
+    public void getPlayerDefinitions_withDefaultSettings() {
+        // arrange
 
         // act
-        List<PlayerDefinition> playerDefinitions = settings.getPlayerDefinitions();
+        List<PlayerDefinition> playerDefinitions = settings.createSettings().getPlayerDefinitions();
 
         // assert
         assertEquals(
@@ -76,7 +75,7 @@ public class SettingsImplTest {
         mockPreference("pref_key_second_player_ai_level", "EASY", "EASY");
 
         // act
-        List<PlayerDefinition> playerDefinitions = settings.getPlayerDefinitions();
+        List<PlayerDefinition> playerDefinitions = settings.createSettings().getPlayerDefinitions();
 
         // assert
         assertEquals(

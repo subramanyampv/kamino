@@ -1,7 +1,6 @@
-package net.ngeor.t3.settings.serializable;
+package net.ngeor.t3.settings;
 
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.HumanPlayerDefinition;
 
 public class HumanPlayerDefinitionImpl extends PlayerDefinitionImpl implements HumanPlayerDefinition {
 
@@ -28,7 +27,7 @@ public class HumanPlayerDefinitionImpl extends PlayerDefinitionImpl implements H
             return false;
         }
 
-        HumanPlayerDefinition that = (HumanPlayerDefinition)other;
+        HumanPlayerDefinition that = (HumanPlayerDefinition) other;
         return getPlayerSymbol() == that.getPlayerSymbol();
     }
 

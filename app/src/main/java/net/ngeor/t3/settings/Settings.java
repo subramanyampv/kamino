@@ -8,8 +8,11 @@ import java.util.List;
  */
 public interface Settings {
     int getRows();
+
     int getCols();
+
     List<PlayerDefinition> getPlayerDefinitions();
+
     boolean isInvisibleMode();
 }
 

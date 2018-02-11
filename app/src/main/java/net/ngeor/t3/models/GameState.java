@@ -11,7 +11,7 @@ public enum GameState {
     NotStarted,
 
     /**
-     * Waiting for a player to play.
+     * Waiting for a player to immutablePlay.
      */
     WaitingPlayer,
 

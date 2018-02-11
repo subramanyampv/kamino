@@ -1,5 +1,6 @@
 package net.ngeor.t3;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,6 +18,7 @@ public class CompositeTouchListener implements View.OnTouchListener {
 
     /**
      * Adds a new touch listener.
+     *
      * @param listener The touch listener to add.
      */
     public void addListener(View.OnTouchListener listener) {
@@ -28,6 +30,7 @@ public class CompositeTouchListener implements View.OnTouchListener {
 
     /**
      * Removes a touch listener.
+     *
      * @param listener The touch listener to remove.
      */
     public void removeListener(View.OnTouchListener listener) {
@@ -40,12 +43,14 @@ public class CompositeTouchListener implements View.OnTouchListener {
     /**
      * Handles the touch event. The event is delegated to the listeners of this object.
      * If a listener returns true, the remaining listeners are not called.
-     * @param view The view that was touched.
+     *
+     * @param view        The view that was touched.
      * @param motionEvent The motion event.
      * @return true if the event was handled; false otherwise.
      */
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        Log.d("CompositeTouchListener", "Has " + listeners.size() + " listeners");
         Collection<View.OnTouchListener> temp = listeners;
         for (View.OnTouchListener listener : temp) {
             if (listener.onTouch(view, motionEvent)) {

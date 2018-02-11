@@ -4,19 +4,20 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+
 import net.ngeor.t3.models.BoardModel;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.GameState;
-import net.ngeor.t3.models.TileState;
+import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.Settings;
 
 /**
  * Draws the board.
  * Created by ngeor on 1/29/2017.
  */
-public class BoardView extends ImageView {
+public class BoardView extends AppCompatImageView {
     private final static int LETTER_THICKNESS = 8;
     private final Paint backgroundPaint;
     private final Paint xPaint;
@@ -63,7 +64,7 @@ public class BoardView extends ImageView {
             return;
         }
 
-        BoardModel boardModel = this.model.getBoardModel();
+        BoardModel boardModel = model.getBoardModel();
         final float rowHeight = getHeight() / boardModel.getRows();
         final float colWidth = getWidth() / boardModel.getCols();
 
@@ -89,23 +90,24 @@ public class BoardView extends ImageView {
             final float bottom = top + rowHeight;
 
             for (int col = 0; col < boardModel.getCols(); col++) {
-                final TileState state = boardModel.getTileState(row, col);
+                final PlayerSymbol state = boardModel.getTileState(row, col);
                 final float left = col * colWidth;
                 final float right = left + colWidth;
                 final float cx = (left + right) / 2;
                 final float cy = (top + bottom) / 2;
 
-                if (state == TileState.X) {
+                if (state == PlayerSymbol.X) {
                     final float startX = cx - radius;
                     final float startY = cy - radius;
                     final float stopX = cx + radius;
                     final float stopY = cy + radius;
                     canvas.drawLine(startX, startY, stopX, stopY, xPaint);
                     canvas.drawLine(startX, stopY, stopX, startY, xPaint);
-                } else if (state == TileState.O) {
+                } else if (state == PlayerSymbol.O) {
                     canvas.drawCircle(cx, cy, radius, oPaint);
                 }
             }
         }
     }
 }
+

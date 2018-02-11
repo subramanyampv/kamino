@@ -1,11 +1,8 @@
-package net.ngeor.t3.settings.serializable;
+package net.ngeor.t3.settings;
 
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.AIPlayerDefinition;
-import net.ngeor.t3.settings.HumanPlayerDefinition;
-import net.ngeor.t3.settings.PlayerDefinition;
-import net.ngeor.t3.settings.Settings;
+
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -62,12 +59,12 @@ public class SettingsImplTest {
         assertEquals(2, playerDefinitions.size());
 
         // assert first player
-        HumanPlayerDefinition first = (HumanPlayerDefinition)playerDefinitions.get(0);
+        HumanPlayerDefinition first = (HumanPlayerDefinition) playerDefinitions.get(0);
         assertNotNull(first);
         assertEquals(PlayerSymbol.X, first.getPlayerSymbol());
 
         // assert second player
-        AIPlayerDefinition second = (AIPlayerDefinition)playerDefinitions.get(1);
+        AIPlayerDefinition second = (AIPlayerDefinition) playerDefinitions.get(1);
         assertNotNull(second);
         assertEquals(PlayerSymbol.O, second.getPlayerSymbol());
         assertEquals(AILevel.HARD, second.getAILevel());
@@ -80,7 +77,7 @@ public class SettingsImplTest {
         HumanPlayerDefinition human = new HumanPlayerDefinitionImpl(PlayerSymbol.O);
 
         // act
-        SettingsImpl settings = new SettingsImpl(3, 4, ai, human);
+        SettingsImpl settings = new SettingsImpl(3, 4, false, Arrays.asList(ai, human));
 
         // assert
         assertEquals(3, settings.getRows());

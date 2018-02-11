@@ -5,9 +5,11 @@ jdk:
 
 android:
   components:
-    - build-tools-27.0.3
-    - android-27
+    - build-tools-26.0.3
+    - android-26
     - extra
+  licenses:
+    - 'android-sdk-license-.+'
 
 script:
   - ./gradlew build # by default it is build connectedCheck

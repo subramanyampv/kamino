@@ -2,11 +2,16 @@ package net.ngeor.t3;
 
 import android.view.MotionEvent;
 import android.view.View;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by ngeor on 3/5/2017.

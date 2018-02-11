@@ -1,7 +1,6 @@
-package net.ngeor.t3.settings.serializable;
+package net.ngeor.t3.settings;
 
 import net.ngeor.t3.models.PlayerSymbol;
-import net.ngeor.t3.settings.PlayerDefinition;
 
 import java.io.Serializable;
 

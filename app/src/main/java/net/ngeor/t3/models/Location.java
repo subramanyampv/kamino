@@ -2,7 +2,8 @@ package net.ngeor.t3.models;
 
 /**
  * Represents a location on the game board.
- * Created by ngeor on 2/5/2017.
+ *
+ * @author ngeor on 2/5/2017.
  */
 public class Location {
     private final int row;

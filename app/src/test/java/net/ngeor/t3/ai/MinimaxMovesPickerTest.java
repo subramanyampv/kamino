@@ -1,47 +1,50 @@
 package net.ngeor.t3.ai;
 
 import net.ngeor.t3.models.AILevel;
-import net.ngeor.t3.models.GameModel;
+import net.ngeor.t3.models.GameModelHolder;
+import net.ngeor.t3.models.ImmutableGameModelImpl;
 import net.ngeor.t3.models.Location;
 import net.ngeor.t3.models.PlayerSymbol;
+import net.ngeor.t3.settings.AIPlayerDefinitionImpl;
+import net.ngeor.t3.settings.HumanPlayerDefinitionImpl;
 import net.ngeor.t3.settings.PlayerDefinition;
 import net.ngeor.t3.settings.Settings;
-import net.ngeor.t3.settings.serializable.AIPlayerDefinitionImpl;
-import net.ngeor.t3.settings.serializable.HumanPlayerDefinitionImpl;
-import net.ngeor.t3.settings.serializable.SettingsImpl;
+import net.ngeor.t3.settings.SettingsImpl;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.mockito.Mockito.mock;
 
 /**
- * Unit test for SmartMove.
- * Created by ngeor on 2/6/2017.
+ * Unit test for MinimaxMovesPicker.
+ *
+ * @author ngeor on 2/6/2017.
  */
-public class SmartMoveTest {
-    private GameModel model;
-    private MessageBox messageBox;
+public class MinimaxMovesPickerTest {
+    private GameModelHolder model;
 
     @Before
     public void before() {
         PlayerDefinition first = new HumanPlayerDefinitionImpl(PlayerSymbol.X);
         PlayerDefinition second = new AIPlayerDefinitionImpl(PlayerSymbol.O, AILevel.EASY);
-        Settings settings = new SettingsImpl(3, 3, first, second);
-        model = new GameModel(settings);
-        messageBox = mock(MessageBox.class);
+        Settings settings = new SettingsImpl(3, 3, false, Arrays.asList(first, second));
+        model = new GameModelHolder();
+        model.setBackingModel(new ImmutableGameModelImpl(settings));
+        model.start();
     }
 
     /**
      * This test proves the CPU will block this scenario.
      * Next move is CPU, CPU plays with O:
-     *
+     * <p>
      * x| |X
      * O|X|
      * O|X|O
-     *
+     * <p>
      * The correct move is to play on the top row.
      */
     @Test
@@ -55,15 +58,14 @@ public class SmartMoveTest {
         model.play(2, 2); // O
         model.play(0, 2); // X
 
-        SmartMove move = new SmartMove(messageBox, model, 2);
-        move.testMode = true;
+        MinimaxMovesPicker move = new MinimaxMovesPicker(() -> false, model, 2);
 
         // act
         List<Location> locations = move.pickMoves(model);
 
         // assert
         Location[] actual = locations.toArray(new Location[locations.size()]);
-        Location[] expected = new Location[] {
+        Location[] expected = new Location[]{
                 new Location(0, 1)
         };
         assertArrayEquals(expected, actual);
@@ -78,8 +80,7 @@ public class SmartMoveTest {
         // arrange
         model.play(1, 1); // X
 
-        SmartMove move = new SmartMove(messageBox, model, 2);
-        move.testMode = true;
+        MinimaxMovesPicker move = new MinimaxMovesPicker(() -> false, model, 2);
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -97,17 +98,17 @@ public class SmartMoveTest {
 
     /**
      * X
-     *  O
-     *   X
+     * O
+     * X
      * ---
      * Expected:
      * X
      * OO
-     *   X
+     * X
      * ---
      * Actual:
      * X
-     *  O
+     * O
      * O X
      */
     @Test
@@ -116,8 +117,7 @@ public class SmartMoveTest {
         model.play(0, 0); // X
         model.play(1, 1); // O
         model.play(2, 2); // X
-        SmartMove move = new SmartMove(messageBox, model, 3);
-        move.testMode = true;
+        MinimaxMovesPicker move = new MinimaxMovesPicker(() -> false, model, 3);
 
         // act
         List<Location> locations = move.pickMoves(model);
@@ -129,6 +129,25 @@ public class SmartMoveTest {
                 new Location(1, 0),
                 new Location(1, 2),
                 new Location(2, 1),
+        };
+        assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldStopCalculatingAfterVictory() {
+        // arrange
+        model.play(0, 0);
+        model.play(1, 1);
+        model.play(0, 2);
+        MinimaxMovesPicker move = new MinimaxMovesPicker(() -> false, model, 3);
+
+        // act
+        List<Location> locations = move.pickMoves(model);
+
+        // assert
+        Location[] actual = locations.toArray(new Location[locations.size()]);
+        Location[] expected = {
+                new Location(0, 1)
         };
         assertArrayEquals(expected, actual);
     }

@@ -1,37 +1,39 @@
 package net.ngeor.t3.players;
 
-import net.ngeor.t3.ai.AbstractMove;
+import android.util.Log;
+
 import net.ngeor.t3.ai.MessageBox;
-import net.ngeor.t3.ai.SmartMove;
+import net.ngeor.t3.ai.MinimaxMovesPicker;
+import net.ngeor.t3.ai.MovesPickerAsyncTask;
+import net.ngeor.t3.ai.RandomMoveReducer;
 import net.ngeor.t3.models.AILevel;
 import net.ngeor.t3.models.GameModel;
 import net.ngeor.t3.models.GameModelListener;
+import net.ngeor.t3.models.MutableGameModel;
 import net.ngeor.t3.models.PlayerSymbol;
 import net.ngeor.t3.settings.AIPlayerDefinition;
 import net.ngeor.t3.settings.PlayerDefinition;
 
 public class AIPlayer extends AbstractPlayer implements GameModelListener {
     private final MessageBox messageBox;
-    private AbstractMove move;
+    private final MutableGameModel model;
+    private MovesPickerAsyncTask move;
 
-    public AIPlayer(MessageBox messageBox, GameModel model, PlayerSymbol turn) {
-        super(model, turn);
+    public AIPlayer(MessageBox messageBox, MutableGameModel model, PlayerSymbol turn) {
+        super(turn);
         this.messageBox = messageBox;
-    }
-
-    private AILevel getAILevel() {
-        PlayerDefinition playerDefinition = getPlayerDefinition();
-        AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition) playerDefinition;
-        return aiPlayerDefinition.getAILevel();
+        this.model = model;
     }
 
     @Override
-    public void stateChanged() {
-        if (!canIPlay()) {
+    public void stateChanged(MutableGameModel model) {
+        if (!canIPlay(model)) {
             return;
         }
 
-        AILevel aiLevel = getAILevel();
+        Log.d("AIPlayer", model.getState().toString());
+
+        AILevel aiLevel = getAILevel(model);
 
         final int minimaxDepth;
         switch (aiLevel) {
@@ -48,7 +50,13 @@ public class AIPlayer extends AbstractPlayer implements GameModelListener {
                 throw new IllegalArgumentException();
         }
 
-        move = new SmartMove(messageBox, getModel(), minimaxDepth);
+        MinimaxMovesPicker minimaxMovesPicker = new MinimaxMovesPicker(this::isCancelled, model, minimaxDepth);
+        RandomMoveReducer randomMoveReducer = new RandomMoveReducer();
+        move = new MovesPickerAsyncTask(
+                messageBox,
+                this.model,
+                m -> randomMoveReducer.reduce(minimaxMovesPicker.pickMoves(m))
+        );
         move.execute();
     }
 
@@ -59,5 +67,15 @@ public class AIPlayer extends AbstractPlayer implements GameModelListener {
 
         move.cancel(false);
         move = null;
+    }
+
+    private AILevel getAILevel(GameModel model) {
+        PlayerDefinition playerDefinition = getPlayerDefinition(model);
+        AIPlayerDefinition aiPlayerDefinition = (AIPlayerDefinition) playerDefinition;
+        return aiPlayerDefinition.getAILevel();
+    }
+
+    private boolean isCancelled() {
+        return move == null || move.isCancelled();
     }
 }

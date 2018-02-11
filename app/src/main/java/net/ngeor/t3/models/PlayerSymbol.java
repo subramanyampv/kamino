@@ -11,21 +11,4 @@ public enum PlayerSymbol {
     public PlayerSymbol opponent() {
         return this == X ? O : X;
     }
-
-    public static PlayerSymbol fromTileState(TileState tileState) {
-        if (tileState == null) {
-            throw new IllegalArgumentException();
-        }
-
-        switch (tileState) {
-            case X:
-                return PlayerSymbol.X;
-            case O:
-                return PlayerSymbol.O;
-            case EMPTY:
-                return null;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
 }

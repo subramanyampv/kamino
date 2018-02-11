@@ -1,7 +1,9 @@
 package net.ngeor.t3.models;
 
 /**
- * Created by ngeor on 2/5/2017.
+ * Difficulty setting of AI.
+ *
+ * @author ngeor on 2/5/2017.
  */
 public enum AILevel {
     EASY,
