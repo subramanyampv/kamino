@@ -99,3 +99,13 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# requests dependencies
+certifi*
+chardet*
+idna*
+requests*
+urllib3*
+
+# deployment package
+*.zip
