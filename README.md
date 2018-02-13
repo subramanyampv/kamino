@@ -56,3 +56,8 @@ This provides the HTTPS endpoint that needs to be configured in Jira.
 - Create a new WebHook with name kddbot
 - The URL should be the URL of the API Gateway
 - Select to listen on Issue Created events
+
+## Resources
+
+- [Jira Cloud REST API](https://developer.atlassian.com/cloud/jira/platform/rest/)
+- [Confluence Cloud REST API](https://developer.atlassian.com/cloud/confluence/rest/)
