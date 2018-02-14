@@ -61,3 +61,15 @@ This provides the HTTPS endpoint that needs to be configured in Jira.
 
 - [Jira Cloud REST API](https://developer.atlassian.com/cloud/jira/platform/rest/)
 - [Confluence Cloud REST API](https://developer.atlassian.com/cloud/confluence/rest/)
+
+## Sequence Diagram
+
+![Sequence Diagram](docs/sequence-diagram.png?raw=true "Sequence Diagram")
+
+<!-- title KDDBot
+
+JIRA WebHook->AWS API Gateway: POST request
+AWS API Gateway->AWS Lambda Function: execute lambda
+AWS Lambda Function->Confluence Cloud REST API: create page
+AWS Lambda Function->Confluence Cloud REST API: add label to page
+AWS Lambda Function->JIRA Cloud REST API: link issue with page -->
