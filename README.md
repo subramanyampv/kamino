@@ -1,6 +1,17 @@
 # kddbot
 A bot that automatically creates a Confluence page when a Jira ticket is created.
 
+## Overview
+
+Whenever a ticket is created in Jira Cloud with the word 'KDD' (Key Decision Document) in its summary, kddbot will
+create a Confluence decision page with the same title and link the Jira issue with the newly created Confluence page.
+
+This saves a couple of clicks and promotes consistency. Without kddbot, you'd have to:
+
+- create the issue
+- create the confluence page
+- go to the issue page and the link it to the confluence page (which needs some clicks)
+
 ## Requirements
 
 - Atlassian Cloud instance
@@ -8,12 +19,14 @@ A bot that automatically creates a Confluence page when a Jira ticket is created
 - Python 3.6
 - requests python module
 
-## Preparing deployment package
+## Installation
+
+### Preparing deployment package
 
 - Run `pip install -t .` in the working directory.
 - Create a zip file including the code and the dependencies. The zip file should not have a top-level folder.
 
-## Create AWS Lambda Function
+### Create AWS Lambda Function
 
 Select the following options:
 
@@ -22,14 +35,14 @@ Select the following options:
 - Role: Create new role from template
 - Role name: kddbot
 
-## Upload deployment package
+### Upload deployment package
 
 - Edit the lambda function
 - Select Code Entry Type: Upload a zip file
 - Upload the zip file
 - Save function
 
-## Set environment variables
+### Set environment variables
 
 Environment Variables:
 
@@ -40,7 +53,7 @@ Environment Variables:
 
 Save the function after editing the environment variables.
 
-## Create API Gateway
+### Create API Gateway
 
 - Create new API Gateway
 - Select New API with name kddbot
@@ -50,12 +63,18 @@ Save the function after editing the environment variables.
 
 This provides the HTTPS endpoint that needs to be configured in Jira.
 
-## Configure Jira WebHook
+### Configure Jira WebHook
 
 - Configure WebHooks in Jira (System -> Advanced -> WebHooks)
 - Create a new WebHook with name kddbot
 - The URL should be the URL of the API Gateway
 - Select to listen on Issue Created events
+
+## Limitations
+
+The Confluence Cloud REST API currently does not offer a way of creating
+a page based on a template or a blueprint. Therefore, the template that
+is used is hardcoded in the Python code of kddbot.
 
 ## Resources
 
