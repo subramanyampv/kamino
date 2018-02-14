@@ -1,6 +1,8 @@
 # kddbot
 A bot that automatically creates a Confluence page when a Jira ticket is created.
 
+![kddbot logo](kddbot-256px.png?raw=true)
+
 ## Overview
 
 Whenever a ticket is created in Jira Cloud with the word 'KDD' (Key Decision Document) in its summary, kddbot will
