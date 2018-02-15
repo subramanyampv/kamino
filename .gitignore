@@ -102,3 +102,6 @@ ENV/
 
 # the cached OAuth Token
 oauth.txt
+
+# Visual Studio Code
+.vscode/
