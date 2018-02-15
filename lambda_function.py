@@ -1,6 +1,7 @@
+import os
+
 import requests
 from requests.auth import HTTPBasicAuth
-import os
 
 def create_page(issue_key, summary):
     data = {

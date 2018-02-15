@@ -109,3 +109,6 @@ urllib3*
 
 # deployment package
 *.zip
+
+# Visual Studio Code
+.vscode/
