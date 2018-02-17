@@ -41,16 +41,23 @@ We need to configure two hosts, `teamcity.local` and `registry.local`.
   ```
   127.0.0.1 teamcity.local
   127.0.0.1 registry.local
+
+  127.0.0.1 test.blog-helm.local
+  127.0.0.1 acc.blog-helm.local
+  127.0.0.1 blog-helm.local
   ```
 - If you're using Docker Toolbox, the IP should be the IP returned
   by `docker-machine ip` (e.g. 192.168.99.100)
   ```
   192.168.99.100 teamcity.local
   192.168.99.100 registry.local
+
+  192.168.99.101 test.blog-helm.local
+  192.168.99.101 acc.blog-helm.local
+  192.168.99.101 blog-helm.local
   ```
 
   and in that case this needs to be applied also to Docker. Use the script `docker-toolbox-provision.sh`.
-
 
 ## First time run of TeamCity
 
@@ -81,10 +88,16 @@ for the agent to appear).
 Import settings from VCS. At this point, you'll see the pipeline
 as expected.
 
-## Open a port for Tiller
+## Kubernetes
+
+### Open a port for Tiller
 
 You can use the `tiller-nodeport.yaml` to make Tiller available via a NodePort. Run:
 
 ```
 kubectl apply -f tiller-nodeport.yaml
 ```
+
+### Enable Ingress
+
+Enable Ingress with `minikube addons enable ingress`.

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 MACHINE=default
 
 echo "Loading env for $MACHINE docker machine"
@@ -22,4 +22,8 @@ docker-machine ssh $MACHINE "sudo cp $(pwd)/certs/registry.local.crt /etc/docker
 
 # Add host aliases
 IP=$(docker-machine ip)
+MINIKUBE_IP=$(minikube ip)
 docker-machine ssh $MACHINE "echo $IP registry.local | sudo tee -a /etc/hosts"
+docker-machine ssh $MACHINE "echo $MINIKUBE_IP test.blog-helm.local | sudo tee -a /etc/hosts"
+docker-machine ssh $MACHINE "echo $MINIKUBE_IP acc.blog-helm.local | sudo tee -a /etc/hosts"
+docker-machine ssh $MACHINE "echo $MINIKUBE_IP blog-helm.local | sudo tee -a /etc/hosts"
