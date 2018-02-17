@@ -3,7 +3,6 @@
 # Wait until the version endpoint reports the expected version.
 # Usage: wait-for-version.sh version-url expected-version
 # Example: wait-for-version.sh http://some.host/version 1.3.0
-set -e
 
 VERSION_URL=$1
 if [ -z "$VERSION_URL" ]; then
