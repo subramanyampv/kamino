@@ -27,3 +27,8 @@ docker-machine ssh $MACHINE "echo $IP registry.local | sudo tee -a /etc/hosts"
 docker-machine ssh $MACHINE "echo $MINIKUBE_IP test.blog-helm.local | sudo tee -a /etc/hosts"
 docker-machine ssh $MACHINE "echo $MINIKUBE_IP acc.blog-helm.local | sudo tee -a /etc/hosts"
 docker-machine ssh $MACHINE "echo $MINIKUBE_IP blog-helm.local | sudo tee -a /etc/hosts"
+
+# Add host aliases for agent
+MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP test.blog-helm.local
+MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP acc.blog-helm.local
+MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP blog-helm.local
