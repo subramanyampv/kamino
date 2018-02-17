@@ -23,3 +23,6 @@ helm/
 test-reports/
 .nyc_output/
 coverage/
+
+# ignore support folder for server
+teamcity-server/
