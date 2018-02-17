@@ -29,7 +29,7 @@ object Project : Project({
         param("docker.registry", "registry.local:5000")
         param("docker.server", "https://%docker.registry%")
         param("docker.username", "AWS")
-        password("docker.password", "credentialsJSON:175b2d15-2353-475e-ab70-571d1e5843e9", label = "Docker registry password")
+        password("docker.password", "credentialsJSON:545a56c8-5944-47b1-86b5-dc49bc065bc9", label = "Docker registry password")
         param("lachlanevenson.k8s-helm.tag", "v2.6.2")
     }
 
@@ -42,6 +42,18 @@ object Project : Project({
             showChanges = false
             settingsFormat = VersionedSettings.Format.KOTLIN
             storeSecureParamsOutsideOfVcs = true
+        }
+        feature {
+            type = "IssueTracker"
+            id = "PROJECT_EXT_2"
+            param("secure:password", "")
+            param("name", "ngeor/blog-helm")
+            param("pattern", """#(\d+)""")
+            param("authType", "anonymous")
+            param("repository", "https://github.com/ngeor/blog-helm")
+            param("type", "GithubIssues")
+            param("secure:accessToken", "")
+            param("username", "")
         }
     }
 })

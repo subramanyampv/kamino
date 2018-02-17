@@ -1,0 +1,9 @@
+# TeamCity data
+agent/
+server/
+
+# Registry certificate
+certs/
+
+# Registry data
+registry/
