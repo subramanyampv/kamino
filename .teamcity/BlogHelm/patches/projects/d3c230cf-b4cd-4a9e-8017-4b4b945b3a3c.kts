@@ -18,4 +18,21 @@ changeProject("d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c") {
             password("docker.password", "credentialsJSON:545a56c8-5944-47b1-86b5-dc49bc065bc9", label = "Docker registry password")
         }
     }
+
+    features {
+        add {
+            feature {
+                type = "IssueTracker"
+                id = "PROJECT_EXT_2"
+                param("secure:password", "")
+                param("name", "ngeor/blog-helm")
+                param("pattern", """#(\d+)""")
+                param("authType", "anonymous")
+                param("repository", "https://github.com/ngeor/blog-helm")
+                param("type", "GithubIssues")
+                param("secure:accessToken", "")
+                param("username", "")
+            }
+        }
+    }
 }
