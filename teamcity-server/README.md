@@ -80,3 +80,11 @@ for the agent to appear).
 
 Import settings from VCS. At this point, you'll see the pipeline
 as expected.
+
+## Open a port for Tiller
+
+You can use the `tiller-nodeport.yaml` to make Tiller available via a NodePort. Run:
+
+```
+kubectl apply -f tiller-nodeport.yaml
+```
