@@ -5,14 +5,14 @@ services:
     ports:
     - "8111:8111"
     volumes:
-    - ./server/data:/data/teamcity_server/datadir
-    - ./server/logs:/opt/teamcity/logs
+    - ./data/server/data:/data/teamcity_server/datadir
+    - ./data/server/logs:/opt/teamcity/logs
   agent:
     build:
       context: .
       dockerfile: Dockerfile-agent
     volumes:
-    - ./agent/conf:/data/teamcity_agent/conf
+    - ./data/agent/conf:/data/teamcity_agent/conf
     - /opt/buildagent/work:/opt/buildagent/work
     - /opt/buildagent/temp:/opt/buildagent/temp
     - /var/run/docker.sock:/var/run/docker.sock
@@ -27,8 +27,8 @@ services:
     ports:
     - "5000:5000"
     volumes:
-    - ./registry:/var/lib/registry
-    - ./certs:/certs
+    - ./data/registry:/var/lib/registry
+    - ./data/certs:/certs
     environment:
     - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/registry.local.crt
     - REGISTRY_HTTP_TLS_KEY=/certs/registry.local.key

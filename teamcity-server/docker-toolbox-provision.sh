@@ -2,9 +2,6 @@
 set -e
 MACHINE=default
 
-echo "Loading env for $MACHINE docker machine"
-eval $(docker-machine env $MACHINE) || (echo "Unable to set machine $MACHINE env" && exit 1)
-
 # create folder /etc/docker/certs.d/registry.local:5000
 docker-machine ssh $MACHINE 'sudo mkdir -p /etc/docker/certs.d/registry.local:5000'
 
@@ -18,17 +15,4 @@ docker-machine ssh $MACHINE 'sudo mkdir -p /etc/docker/certs.d/registry.local:50
 #docker-machine ssh $MACHINE 'sudo mv ~/registry.local.crt /etc/docker/certs.d/registry.local:5000/ca.crt'
 
 # the following works on Windows and Mac (because /c/Users and /Users are mounted on the same paths inside the Docker machine)
-docker-machine ssh $MACHINE "sudo cp $(pwd)/certs/registry.local.crt /etc/docker/certs.d/registry.local:5000/ca.crt"
-
-# Add host aliases
-IP=$(docker-machine ip)
-MINIKUBE_IP=$(minikube ip)
-docker-machine ssh $MACHINE "echo $IP registry.local | sudo tee -a /etc/hosts"
-docker-machine ssh $MACHINE "echo $MINIKUBE_IP test.blog-helm.local | sudo tee -a /etc/hosts"
-docker-machine ssh $MACHINE "echo $MINIKUBE_IP acc.blog-helm.local | sudo tee -a /etc/hosts"
-docker-machine ssh $MACHINE "echo $MINIKUBE_IP blog-helm.local | sudo tee -a /etc/hosts"
-
-# Add host aliases for agent
-MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP test.blog-helm.local
-MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP acc.blog-helm.local
-MSYS_NO_PATHCONV=1 docker-compose exec agent /usr/local/bin/add-host.sh $MINIKUBE_IP blog-helm.local
+docker-machine ssh $MACHINE "sudo cp $(pwd)/data/certs/registry.local.crt /etc/docker/certs.d/registry.local:5000/ca.crt"

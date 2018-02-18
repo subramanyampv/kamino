@@ -1,9 +1,2 @@
-# TeamCity data
-agent/
-server/
-
-# Registry certificate
-certs/
-
-# Registry data
-registry/
+# Mounted volumes
+data/

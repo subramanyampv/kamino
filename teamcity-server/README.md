@@ -4,6 +4,17 @@ This guide shows how to use TeamCity for the build pipeline.
 
 This docker-compose file provides TeamCity Server & Agent and a Docker Registry.
 
+## Configure VMs
+
+These actions need to be done with the VMs stopped.
+
+- Increase RAM to at least 2GB.
+- Configure VMs to use the DNS of the HOST.
+  ```
+  "$VBOX_MSI_INSTALL_PATH/VBoxManage" modifyvm "default" --natdnshostresolver1 on
+  "$VBOX_MSI_INSTALL_PATH/VBoxManage" modifyvm "minikube" --natdnshostresolver1 on
+  ```
+
 ## Setup
 
 ### Pull images
@@ -21,10 +32,10 @@ It's going to take a while because the TeamCity images are large.
 Generate the certificate for the hostname `registry.local`:
 
 ```
-mkdir certs
+mkdir data/certs
 openssl req \
-  -newkey rsa:4096 -nodes -sha256 -keyout certs/registry.local.key \
-  -x509 -days 365 -out certs/registry.local.crt
+  -newkey rsa:4096 -nodes -sha256 -keyout data/certs/registry.local.key \
+  -x509 -days 365 -out data/certs/registry.local.crt
 ```
 
 Make sure that the common name is set to `registry.local`:
@@ -35,7 +46,7 @@ Common Name (e.g. server FQDN or YOUR name) []:registry.local
 
 ### Configure HOSTS file
 
-We need to configure two hosts, `teamcity.local` and `registry.local`.
+We need to configure some hosts:
 
 - If you're using Docker, the IP should be 127.0.0.1 (localhost)
   ```
@@ -47,7 +58,7 @@ We need to configure two hosts, `teamcity.local` and `registry.local`.
   127.0.0.1 blog-helm.local
   ```
 - If you're using Docker Toolbox, the IP should be the IP returned
-  by `docker-machine ip` (e.g. 192.168.99.100)
+  by `docker-machine ip` (e.g. 192.168.99.100) and `minikube ip` (e.g. 192.168.99.101)
   ```
   192.168.99.100 teamcity.local
   192.168.99.100 registry.local
@@ -57,7 +68,6 @@ We need to configure two hosts, `teamcity.local` and `registry.local`.
   192.168.99.101 blog-helm.local
   ```
 
-  and in that case this needs to be applied also to Docker. Use the script `docker-toolbox-provision.sh`.
 
 ## First time run of TeamCity
 
