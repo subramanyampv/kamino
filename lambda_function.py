@@ -80,6 +80,7 @@ def create_page(issue_key, summary):
     base_url = os.environ['ATLASSIAN_CLOUD_NAME']
 
     # create page
+    print('Creating page')
     result = requests.post(
         f'https://{base_url}.atlassian.net/wiki/rest/api/content',
         auth=auth,
@@ -91,8 +92,10 @@ def create_page(issue_key, summary):
     result.raise_for_status()
     json = result.json()
     new_page_id = json['id']
+    print(f'Page created {new_page_id}')
 
     # add label 'decisions'
+    print('Marking page with label decision')
     result = requests.post(
         f'https://{base_url}.atlassian.net/wiki/rest/api/content/{new_page_id}/label',
         auth=auth,
@@ -108,6 +111,7 @@ def create_page(issue_key, summary):
     result.raise_for_status()
 
     # create link from jira to confluence page
+    print('Linking from jia to confluence')
     result = requests.post(
         f'https://{base_url}.atlassian.net/rest/api/2/issue/{issue_key}/remotelink',
         auth=auth,
@@ -142,6 +146,7 @@ def lambda_handler(event, context):
     print('Extracting data')
     issue_key = body['issue']['key']
     summary = body['issue']['fields']['summary']
+    print(f'Found key {issue_key} with summary {summary}')
     if 'KDD' in summary:
         return create_page(issue_key, summary)
     else:
