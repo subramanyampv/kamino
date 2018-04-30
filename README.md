@@ -25,8 +25,8 @@ This saves a couple of clicks and promotes consistency. Without kddbot, you'd ha
 
 ### Preparing deployment package
 
-- Run `pip install -t .` in the working directory.
-- Create a zip file including the code and the dependencies. The zip file should not have a top-level folder.
+- Run `pip install -r requirements.txt -t .` in the working directory.
+- Create a zip file including the code and the dependencies. The zip file should not have a top-level folder (e.g. `zip -r ../kddbot.zip *`)
 
 ### Create AWS Lambda Function
 

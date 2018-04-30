@@ -1,5 +1,5 @@
 import os
-
+import json
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -135,8 +135,13 @@ def lambda_handler(event, context):
     """
     Gets updates from JIRA when an issue is created.
     """
-    issue_key = event['issue']['key']
-    summary = event['issue']['fields']['summary']
+    print('Received event')
+    print(event)
+    print('Parsing body')
+    body = json.loads(event['body'])
+    print('Extracting data')
+    issue_key = body['issue']['key']
+    summary = body['issue']['fields']['summary']
     if 'KDD' in summary:
         return create_page(issue_key, summary)
     else:
