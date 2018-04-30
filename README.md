@@ -50,8 +50,8 @@ Environment Variables:
 
 * ATLASSIAN_CLOUD_NAME: The name of the Atlassian Cloud site (only the name, before `.atlassian.net`)
 * USERNAME and PASSWORD: Credentials for Basic Authentication
-* SPACE_KEY: The key in which pages will be created
-* PARENT_PAGE_ID: The parent page of the newly created pages
+* SPACES: Configures the parent page IDs under which the new pages will be created. The format is:
+  `SPACE_KEY_1=PARENT_PAGE_ID_1,SPACE_KEY_2=PARENT_PAGE_ID_2,...`
 
 Save the function after editing the environment variables.
 
@@ -76,7 +76,7 @@ This provides the HTTPS endpoint that needs to be configured in Jira.
 
 The Confluence Cloud REST API currently does not offer a way of creating
 a page based on a template or a blueprint. Therefore, the template that
-is used is hardcoded in the Python code of kddbot.
+is used is hard-coded in the Python code of kddbot.
 
 ## Resources
 
