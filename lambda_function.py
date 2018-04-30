@@ -44,13 +44,21 @@ class Options:
         Returns the parent page ID that corresponds to the given issue.
         """
 
-        prefix = issue_key.split('-')[0]
+        space_key = self.space_key(issue_key)
         for space_config in self.spaces.split(','):
             kv = space_config.split('=')
-            if (kv[0] == prefix):
+            if (kv[0] == space_key):
                 return int(kv[1])
 
         return 0
+
+    def space_key(self, issue_key):
+        """
+        Extracts the space key out of an issue key.
+        For example, if the issue key is DEV-100, it returns DEV.
+        """
+
+        return issue_key.split('-')[0]
 
 def view_page_url(base_url, page_id):
     """
@@ -136,7 +144,7 @@ def create_page(options, issue_key, summary):
             }
         },
         'space': {
-            'key': options.space_key
+            'key': options.space_key(issue_key)
         },
         'status': 'current',
         'title': summary,
