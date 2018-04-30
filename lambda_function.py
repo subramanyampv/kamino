@@ -202,7 +202,7 @@ def create_page(options, issue_key, summary):
     result.raise_for_status()
     return create_page_response
 
-def lambda_handler(event):
+def lambda_handler(event, context):
     """
     Gets updates from JIRA when an issue is created.
     """
