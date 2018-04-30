@@ -10,7 +10,7 @@ describe('https_promise', () => {
     let https;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         https = {
             request: sandbox.stub()
         };

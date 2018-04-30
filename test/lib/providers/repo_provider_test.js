@@ -11,7 +11,7 @@ describe('repo_provider', function() {
     let repoProvider;
 
     beforeEach(function() {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         githubProvider = {
             getRepositories: sandbox.stub()
         };

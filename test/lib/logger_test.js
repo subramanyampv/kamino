@@ -8,7 +8,7 @@ describe('logger', () => {
     let optionsParser;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         sandbox.spy(console, 'log');
         sandbox.spy(console, 'error');
 

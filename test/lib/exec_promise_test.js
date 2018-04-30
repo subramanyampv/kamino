@@ -11,7 +11,7 @@ describe('exec_promise', () => {
     let execPromise;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         sandbox.stub(childProcess, 'exec');
 
         execPromise = proxyquire('../../lib/exec_promise', {

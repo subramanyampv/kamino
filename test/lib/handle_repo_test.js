@@ -12,7 +12,7 @@ describe('handle-repo', function() {
 
     beforeEach(function() {
         // setup a sinon sandbox
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
 
         gitClone = sandbox.stub();
         gitPull = sandbox.stub();

@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.3.0] - 2018-04-30
+
+- Parameter `ssh-username` replaces the username on the URL only when it's `git@`.
 - Removed Grunt, using npm scripts.
+- Upgraded dependencies.
 
 ## [5.2.0] - 2018-01-24
 

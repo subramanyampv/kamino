@@ -16,7 +16,7 @@ describe('clone-all', function() {
 
     beforeEach(function() {
         // setup a sinon sandbox
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
 
         // stub the repoProvider module
         repositories = [

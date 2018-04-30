@@ -14,7 +14,7 @@ describe('git_pull', () => {
     let options = null;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
         logger = sandbox.stub(require('../../lib/logger'));

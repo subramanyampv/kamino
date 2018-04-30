@@ -8,7 +8,7 @@ describe('repositoriesToCloneInstances', () => {
     let repositoriesToCloneInstances;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         repositoriesToCloneInstances = proxyquire('../../lib/repositories_to_clone_instances', {
             path: {
                 join: (a, b) => a + '/' + b
@@ -99,11 +99,7 @@ describe('repositoriesToCloneInstances', () => {
         const repositories = [
             {
                 name: 'abc',
-                ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
-            },
-            {
-                name: 'def',
-                ssh_url: 'ssh://host/def' // eslint-disable-line camelcase
+                ssh_url: 'git@github.com:ngeor/clone-all.git' // eslint-disable-line camelcase
             }
         ];
 
@@ -119,15 +115,9 @@ describe('repositoriesToCloneInstances', () => {
         // assert
         expect(result).to.eql([
             {
+                location: '../target/abc',
                 name: 'abc',
-                url: 'ssh://nemo@host/abc',
-                location: '../target/abc'
-            },
-
-            {
-                name: 'def',
-                url: 'ssh://nemo@host/def',
-                location: '../target/def'
+                url: 'nemo@github.com:ngeor/clone-all.git'
             }
         ]);
     });

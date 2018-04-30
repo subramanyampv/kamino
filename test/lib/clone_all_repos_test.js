@@ -11,7 +11,7 @@ describe('clone_all_repos', function() {
 
     beforeEach(function() {
         // setup a sinon sandbox
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
 
         // stub the repositoriesToCloneInstances function
         repositoriesToCloneInstances = function(repositories, options) {

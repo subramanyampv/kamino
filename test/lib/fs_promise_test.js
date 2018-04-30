@@ -10,7 +10,7 @@ describe('fs_promise', () => {
     let fsPromise;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         fs = require('fs');
         fsPromise = proxyquire('../../lib/fs_promise', {
             fs

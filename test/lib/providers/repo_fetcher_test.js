@@ -9,7 +9,7 @@ describe('repoFetcher', () => {
     let httpsPromise;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         httpsPromise = sandbox.stub();
 
         repoFetcher = proxyquire('../../../lib/providers/repo_fetcher', {

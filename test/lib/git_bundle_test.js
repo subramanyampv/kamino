@@ -16,7 +16,7 @@ describe('git_bundle', () => {
     let cloneInstruction;
 
     beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         execPromise = sandbox.stub();
         execPromise.resolves(new Error('an error has occurred'));
         options = {};

@@ -8,7 +8,7 @@ describe('github', function() {
     let repoFetcher;
 
     beforeEach(function() {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
     });
 
     afterEach(function() {
