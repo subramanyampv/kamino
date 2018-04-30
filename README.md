@@ -68,7 +68,7 @@ Command Line Options
 *   -p, --provider: github or bitbucket_cloud
 *   --username: the user owning the repositories
 *   --protocol: specify the cloning protocol (https or ssh)
-*   --ssh-username: specify a different username for cloning over ssh
+*   --ssh-username: specify a different username for cloning over ssh (instead of `git@`)
 *   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --no-forks: Do not clone forked repositories
 
