@@ -21,13 +21,20 @@ spec:
           livenessProbe:
             tcpSocket:
               port: teamcity-server
-            initialDelaySeconds: 120
+            initialDelaySeconds: 90
             periodSeconds: 10
           readinessProbe:
             tcpSocket:
               port: teamcity-server
-            initialDelaySeconds: 120
+            initialDelaySeconds: 90
             periodSeconds: 10
+          volumeMounts:
+            - mountPath: /data/teamcity_server/datadir
+              name: data
+      volumes:
+        - name: data
+          hostPath:
+            path: /data/teamcity_server/datadir
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -45,25 +52,11 @@ spec:
         - name: teamcity-agent
           image: jetbrains/teamcity-agent:2017.2.2
           imagePullPolicy: IfNotPresent
-          ports:
-            - name: teamcity-agent
-              containerPort: 9090
-              hostPort: 9090
           env:
             - name: AGENT_NAME
               value: TeamCityKubeAgent
             - name: SERVER_URL
               value: http://teamcity-server:8111/
-          livenessProbe:
-            tcpSocket:
-              port: teamcity-agent
-            initialDelaySeconds: 120
-            periodSeconds: 10
-          readinessProbe:
-            tcpSocket:
-              port: teamcity-agent
-            initialDelaySeconds: 120
-            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
