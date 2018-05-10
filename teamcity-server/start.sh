@@ -7,7 +7,7 @@
 # Start docker VM
 
 # Start minikube VM
-minikube start
+minikube start --vm-driver virtualbox
 
 # Modify C:\Windows\System32\drivers\etc\hosts accordingly
 
