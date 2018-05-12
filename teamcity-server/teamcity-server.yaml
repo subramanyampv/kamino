@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: teamcity-server
-          image: jetbrains/teamcity-server:2017.2.2
+          image: jetbrains/teamcity-server:2017.2.3
           imagePullPolicy: IfNotPresent
           ports:
             - name: teamcity-server
@@ -34,29 +34,7 @@ spec:
       volumes:
         - name: data
           hostPath:
-            path: /data/teamcity_server/datadir
----
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: teamcity-agent
-  labels:
-    app: teamcity-agent
-spec:
-  template:
-    metadata:
-      labels:
-        app: teamcity-agent
-    spec:
-      containers:
-        - name: teamcity-agent
-          image: jetbrains/teamcity-agent:2017.2.2
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: AGENT_NAME
-              value: TeamCityKubeAgent
-            - name: SERVER_URL
-              value: http://teamcity-server:8111/
+            path: /vagrant/teamcity-server/data/server/data
 ---
 apiVersion: v1
 kind: Service

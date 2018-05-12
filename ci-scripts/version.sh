@@ -10,13 +10,12 @@ VERSION_MODE=${1:-GitVersion}
 # Default mode is GitVersion.
 # It uses the GitVersion utility to determine the semantic version.
 function gitVersion {
-  GITTOOLS_GITVERSION_TAG=${GITTOOLS_GITVERSION_TAG:-v4.0.0-beta.12}
-  docker pull gittools/gitversion:$GITTOOLS_GITVERSION_TAG
+  docker pull ngeor/gitversion
   IMAGE_TAG=$(docker run --rm \
     -u $(id -u):$(id -g) \
     -v /opt/buildagent/system/git:/opt/buildagent/system/git \
     -v $(pwd):/repo \
-    gittools/gitversion:$GITTOOLS_GITVERSION_TAG \
+    ngeor/gitversion \
     /showvariable SemVer)
 }
 
