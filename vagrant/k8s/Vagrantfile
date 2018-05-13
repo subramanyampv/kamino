@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Based on Ubuntu 16.04 LTS
+  config.vm.box = "ubuntu/xenial64"
+
+  # 3GB RAM
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "3072"
+  end
+
+  # Kubernetes Dashboard on port 8001
+  config.vm.network "forwarded_port", guest: 8001, host: 8001, host_ip: "127.0.0.1"
+
+  config.vm.provision "shell", inline: "chown -R vagrant:vagrant /usr/local/bin"
+  config.vm.provision "file", source: "./scripts", destination: "/usr/local/bin"
+  config.vm.provision "shell", inline: "chown -R root:root /usr/local/bin"
+  config.vm.provision "shell", inline: "chmod +x /usr/local/bin/*.sh"
+  config.vm.provision "shell", path: "bootstrap.sh"
+end

@@ -66,5 +66,3 @@ image-tag.txt
 .teamcity/.idea/
 .teamcity/target/
 .teamcity/*.iml
-
-.vagrant/
