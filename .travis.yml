@@ -8,6 +8,6 @@ script:
   - pylint *.py
   - pylint tests
   - python -m unittest
-  - coverage run -m unittest
+  - coverage run -m unittest --omit='/home/travis/virtualenv/*'
   - coverage report --fail-under=95
   - coverage html
