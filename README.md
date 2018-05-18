@@ -96,3 +96,12 @@ AWS API Gateway->AWS Lambda Function: execute lambda
 AWS Lambda Function->Confluence Cloud REST API: create page
 AWS Lambda Function->Confluence Cloud REST API: add label to page
 AWS Lambda Function->JIRA Cloud REST API: link issue with page -->
+
+## Configuring Visual Studio Code
+
+To see all `pylint` messages in Visual Studio Code, make sure you have this
+setting in your workspace settings:
+
+```
+    "python.linting.pylintUseMinimalCheckers": false
+```

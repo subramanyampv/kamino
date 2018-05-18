@@ -17,6 +17,9 @@ class OptionsTestCase(unittest.TestCase):
             lambda_function.Options({})
 
     def test_can_create(self):
+        '''
+        Tests creating options instance
+        '''
         options = lambda_function.Options(
             {
                 'ATLASSIAN_CLOUD_NAME': 'hello',
@@ -31,6 +34,9 @@ class OptionsTestCase(unittest.TestCase):
         self.assertEqual('password', options.password)
 
     def test_empty_url(self):
+        '''
+        Tests that URL is mandatory
+        '''
         with self.assertRaises(ValueError):
             lambda_function.Options(
                 {
@@ -42,6 +48,9 @@ class OptionsTestCase(unittest.TestCase):
             )
 
     def test_empty_username(self):
+        '''
+        Tests that username is mandatory
+        '''
         with self.assertRaises(ValueError):
             lambda_function.Options(
                 {
@@ -53,6 +62,9 @@ class OptionsTestCase(unittest.TestCase):
             )
 
     def test_empty_password(self):
+        '''
+        Tests that password is mandatory
+        '''
         with self.assertRaises(ValueError):
             lambda_function.Options(
                 {
@@ -64,6 +76,9 @@ class OptionsTestCase(unittest.TestCase):
             )
 
     def test_empty_spaces(self):
+        '''
+        Tests that spaces configuration is mandatory
+        '''
         with self.assertRaises(ValueError):
             lambda_function.Options(
                 {
@@ -75,6 +90,9 @@ class OptionsTestCase(unittest.TestCase):
             )
 
     def test_spaces(self):
+        '''
+        Tests multiple space configuration
+        '''
         options = lambda_function.Options(
             {
                 'ATLASSIAN_CLOUD_NAME': 'hello',
@@ -89,6 +107,9 @@ class OptionsTestCase(unittest.TestCase):
         self.assertEqual(42, parent_page_id)
 
     def test_spaces_unknown_space(self):
+        '''
+        Tests unknown space key
+        '''
         options = lambda_function.Options(
             {
                 'ATLASSIAN_CLOUD_NAME': 'hello',

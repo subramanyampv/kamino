@@ -5,8 +5,8 @@ install:
   - pip install -r requirements.txt
   - pip install pylint coverage
 script:
-  # - pylint *.py
-  # - pylint tests
+  - pylint *.py
+  - pylint tests
   - python -m unittest
   - coverage run -m unittest
   - coverage report

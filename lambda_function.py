@@ -7,6 +7,15 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
+def extract_space_key(issue_key):
+    """
+    Extracts the space key out of an issue key.
+    For example, if the issue key is DEV-100, it returns DEV.
+    """
+
+    return issue_key.split('-')[0]
+
+# pylint: disable=too-few-public-methods
 class Options:
     """
     The options of the function.
@@ -44,21 +53,15 @@ class Options:
         Returns the parent page ID that corresponds to the given issue.
         """
 
-        space_key = self.space_key(issue_key)
+        space_key = extract_space_key(issue_key)
         for space_config in self.spaces.split(','):
-            kv = space_config.split('=')
-            if (kv[0] == space_key):
-                return int(kv[1])
+            [configured_space_key, configured_page_id] = space_config.split('=')
+            if configured_space_key == space_key:
+                return int(configured_page_id)
 
         return 0
+# pylint: enable=too-few-public-methods
 
-    def space_key(self, issue_key):
-        """
-        Extracts the space key out of an issue key.
-        For example, if the issue key is DEV-100, it returns DEV.
-        """
-
-        return issue_key.split('-')[0]
 
 def view_page_url(base_url, page_id):
     """
@@ -73,8 +76,8 @@ def create_page(options, issue_key, summary):
     parent_page_id = options.parent_page_id(issue_key)
     if parent_page_id <= 0:
         return {
-        'result': 'Not a supported space'
-    }
+            'result': 'Not a supported space'
+        }
 
     data = {
         'ancestors': [
@@ -210,6 +213,7 @@ def create_page(options, issue_key, summary):
     result.raise_for_status()
     return create_page_response
 
+# pylint: disable=unused-argument
 def lambda_handler(event, context):
     """
     Gets updates from JIRA when an issue is created.
@@ -231,3 +235,4 @@ def lambda_handler(event, context):
     return {
         'result': 'Not a KDD issue'
     }
+# pylint: enable=unused-argument
