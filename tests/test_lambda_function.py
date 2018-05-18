@@ -1,127 +1,134 @@
-'''Unit tests for fixing content'''
+'''
+Unit tests for the lambda function
+'''
 import unittest
+import requests_mock
 
 import lambda_function
 
-class OptionsTestCase(unittest.TestCase):
+@requests_mock.Mocker()
+class LambdaTestCase(unittest.TestCase):
     '''
-    Unit tests for the Options class
+    Unit tests for the lambda function
     '''
 
-    def test_missing_key(self):
+    def test_not_kdd_issue(self, mocker):
         '''
-        Tests creating a new page
+        Tests receiving notification for a non KDD issue
         '''
 
-        with self.assertRaises(KeyError):
-            lambda_function.Options({})
-
-    def test_can_create(self):
-        '''
-        Tests creating options instance
-        '''
-        options = lambda_function.Options(
-            {
-                'ATLASSIAN_CLOUD_NAME': 'hello',
-                'USERNAME': 'username',
-                'PASSWORD': 'password',
-                'SPACES': 'S1=12,XYZ=900'
+        event = {
+            'body': '''{
+                "issue": {
+                    "key": "IG-100",
+                    "fields": {
+                        "summary": "A normal ticket"
+                    }
+                }
             }
-        )
+            '''
+        }
 
-        self.assertEqual('hello', options.base_url)
-        self.assertEqual('username', options.username)
-        self.assertEqual('password', options.password)
+        environment = {
+            'ATLASSIAN_CLOUD_NAME': 'hello',
+            'USERNAME': 'username',
+            'PASSWORD': 'password',
+            'SPACES': 'S1=12,XYZ=900'
+        }
 
-    def test_empty_url(self):
+        # act
+        result = lambda_function.lambda_handler_with_environment(event, environment)
+
+        # assert
+        self.assertDictEqual(result, {
+            'result': 'Not a KDD issue'
+        })
+
+    def test_kdd_issue(self, mocker):
         '''
-        Tests that URL is mandatory
+        Test creating a KDD issue
         '''
-        with self.assertRaises(ValueError):
-            lambda_function.Options(
-                {
-                    'ATLASSIAN_CLOUD_NAME': '',
-                    'USERNAME': 'username',
-                    'PASSWORD': 'password',
-                    'SPACES': 'S1=12,XYZ=900'
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/wiki/rest/api/content',
+            text='{"id": 42}')
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/wiki/rest/api/content/42/label',
+            text='whatever')
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/rest/api/2/issue/ABC-100/remotelink',
+            text='whatever')
+        event = {
+            'body': '''{
+                "issue": {
+                    "key": "ABC-100",
+                    "fields": {
+                        "summary": "KDD for ci server"
+                    }
                 }
-            )
-
-    def test_empty_username(self):
-        '''
-        Tests that username is mandatory
-        '''
-        with self.assertRaises(ValueError):
-            lambda_function.Options(
-                {
-                    'ATLASSIAN_CLOUD_NAME': 'url',
-                    'USERNAME': '',
-                    'PASSWORD': 'password',
-                    'SPACES': 'S1=12,XYZ=900'
-                }
-            )
-
-    def test_empty_password(self):
-        '''
-        Tests that password is mandatory
-        '''
-        with self.assertRaises(ValueError):
-            lambda_function.Options(
-                {
-                    'ATLASSIAN_CLOUD_NAME': 'url',
-                    'USERNAME': 'username',
-                    'PASSWORD': '',
-                    'SPACES': 'S1=12,XYZ=900'
-                }
-            )
-
-    def test_empty_spaces(self):
-        '''
-        Tests that spaces configuration is mandatory
-        '''
-        with self.assertRaises(ValueError):
-            lambda_function.Options(
-                {
-                    'ATLASSIAN_CLOUD_NAME': 'url',
-                    'USERNAME': 'username',
-                    'PASSWORD': 'password',
-                    'SPACES': ''
-                }
-            )
-
-    def test_spaces(self):
-        '''
-        Tests multiple space configuration
-        '''
-        options = lambda_function.Options(
-            {
-                'ATLASSIAN_CLOUD_NAME': 'hello',
-                'USERNAME': 'username',
-                'PASSWORD': 'password',
-                'SPACES': 'IG=42,AB=50'
             }
-        )
+            '''
+        }
 
-        parent_page_id = options.parent_page_id('IG-100')
+        environment = {
+            'ATLASSIAN_CLOUD_NAME': 'hello',
+            'USERNAME': 'username',
+            'PASSWORD': 'password',
+            'SPACES': 'ABC=123'
+        }
 
-        self.assertEqual(42, parent_page_id)
+        # act
+        result = lambda_function.lambda_handler_with_environment(event, environment)
 
-    def test_spaces_unknown_space(self):
+        # assert
+        self.assertDictEqual(result, {
+            'id': 42
+        })
+
+    def test_unsupported_space(self, mocker):
         '''
-        Tests unknown space key
+        Test creating a KDD issue for an unknown space
         '''
-        options = lambda_function.Options(
-            {
-                'ATLASSIAN_CLOUD_NAME': 'hello',
-                'USERNAME': 'username',
-                'PASSWORD': 'password',
-                'SPACES': 'IG=42,AB=50'
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/wiki/rest/api/content',
+            text='{"id": 42}')
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/wiki/rest/api/content/42/label',
+            text='whatever')
+        mocker.register_uri(
+            'POST',
+            'https://hello.atlassian.net/rest/api/2/issue/ABC-100/remotelink',
+            text='whatever')
+        event = {
+            'body': '''{
+                "issue": {
+                    "key": "ABC-100",
+                    "fields": {
+                        "summary": "KDD for ci server"
+                    }
+                }
             }
-        )
+            '''
+        }
 
-        parent_page_id = options.parent_page_id('XY-100')
+        environment = {
+            'ATLASSIAN_CLOUD_NAME': 'hello',
+            'USERNAME': 'username',
+            'PASSWORD': 'password',
+            'SPACES': 'DEF=123'
+        }
 
-        self.assertEqual(0, parent_page_id)
+        # act
+        result = lambda_function.lambda_handler_with_environment(event, environment)
+
+        # assert
+        self.assertDictEqual(result, {
+            'result': 'Not a supported space'
+        })
 
 if __name__ == '__main__':
     unittest.main()

@@ -147,7 +147,7 @@ def create_page(options, issue_key, summary):
             }
         },
         'space': {
-            'key': options.space_key(issue_key)
+            'key': extract_space_key(issue_key)
         },
         'status': 'current',
         'title': summary,
@@ -213,11 +213,10 @@ def create_page(options, issue_key, summary):
     result.raise_for_status()
     return create_page_response
 
-# pylint: disable=unused-argument
-def lambda_handler(event, context):
-    """
-    Gets updates from JIRA when an issue is created.
-    """
+def lambda_handler_with_environment(event, environment):
+    '''
+    Processes the JIRA event
+    '''
     print('Received event')
     print(event)
     print('Parsing body')
@@ -227,7 +226,7 @@ def lambda_handler(event, context):
     summary = body['issue']['fields']['summary']
     print(f'Found key {issue_key} with summary {summary}')
     print('Creating options')
-    options = Options(os.environ)
+    options = Options(environment)
 
     if 'KDD' in summary:
         return create_page(options, issue_key, summary)
@@ -235,4 +234,11 @@ def lambda_handler(event, context):
     return {
         'result': 'Not a KDD issue'
     }
+
+# pylint: disable=unused-argument
+def lambda_handler(event, context):
+    """
+    Gets updates from JIRA when an issue is created.
+    """
+    return lambda_handler_with_environment(event, os.environ)
 # pylint: enable=unused-argument

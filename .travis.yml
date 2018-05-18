@@ -9,4 +9,5 @@ script:
   - pylint tests
   - python -m unittest
   - coverage run -m unittest
-  - coverage report
+  - coverage report --fail-under=95
+  - coverage html
