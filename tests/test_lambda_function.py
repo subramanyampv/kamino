@@ -12,6 +12,7 @@ class LambdaTestCase(unittest.TestCase):
     Unit tests for the lambda function
     '''
 
+    # pylint: disable=unused-argument
     def test_not_kdd_issue(self, mocker):
         '''
         Tests receiving notification for a non KDD issue
@@ -43,6 +44,7 @@ class LambdaTestCase(unittest.TestCase):
         self.assertDictEqual(result, {
             'result': 'Not a KDD issue'
         })
+    # pylint: enable=unused-argument
 
     def test_kdd_issue(self, mocker):
         '''
