@@ -17,9 +17,9 @@ It will create a new .NET solution consisting of a NuGet library project and a u
 
 Some details:
 
-- .NET Framework 4.6.2
+- .NET Core 2
 - NUnit and Moq for the test project
-- Configuration for Travis, AppVeyor, Coveralls, docfx
+- Configuration for Travis
 
 ## Contributing
 

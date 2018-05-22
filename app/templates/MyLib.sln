@@ -11,9 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		README.md = README.md
 		.gitignore = .gitignore
 		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
 		CHANGELOG.md = CHANGELOG.md
-		coverage.ps1 = coverage.ps1
 	EndProjectSection
 EndProject
 Global

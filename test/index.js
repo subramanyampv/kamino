@@ -21,9 +21,7 @@ describe('app', () => {
             assert.file([
                 '.gitignore',
                 '.travis.yml',
-                'appveyor.yml',
                 'CHANGELOG.md',
-                'coverage.ps1',
                 'README.md',
 
                 'SomeLib.sln',
@@ -37,16 +35,7 @@ describe('app', () => {
                 'SomeLib.Tests/SomeLib.Tests.csproj',
                 'SomeLib.Tests/Properties/AssemblyInfo.cs',
                 'SomeLib.Tests/packages.config',
-                'SomeLib.Tests/Class1Test.cs',
-
-                'docfx_project/api/.gitignore',
-                'docfx_project/api/index.md',
-                'docfx_project/articles/intro.md',
-                'docfx_project/articles/toc.yml',
-                'docfx_project/.gitignore',
-                'docfx_project/docfx.json',
-                'docfx_project/index.md',
-                'docfx_project/toc.yml'
+                'SomeLib.Tests/Class1Test.cs'
             ]);
         });
 

@@ -9,8 +9,6 @@ describe('filename_convert', () => {
         ['README.md', 'README.md'],
         ['app/index.js', 'app/index.js'],
         ['app/_gitignore', 'app/.gitignore'],
-        ['docfx_project/toc.yml', 'docfx_project/toc.yml'],
-        ['docfx_project/_gitignore', 'docfx_project/.gitignore'],
         ['MyLib.sln', 'SomeLib.sln']
     ];
 
