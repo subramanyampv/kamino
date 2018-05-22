@@ -1,6 +1,6 @@
 # About <%= name %>
 
-<%= name %> is a new NuGet package.
+<%= description %>
 
 [![Build Status](https://travis-ci.org/<%= user %>/<%= name %>.svg?branch=master)](https://travis-ci.org/<%= user %>/<%= name %>)
 [![NuGet](https://img.shields.io/nuget/v/<%= name %>.svg)](https://www.nuget.org/packages/<%= name %>/)

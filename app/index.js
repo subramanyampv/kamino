@@ -19,8 +19,14 @@ module.exports = class extends Generator {
             },
             {
                 type: 'input',
+                name: 'description',
+                message: 'Description of the project',
+                store: true
+            },
+            {
+                type: 'input',
                 name: 'companyName',
-                message: 'Company name (for AssemblyInfo.cs copyright fields)',
+                message: 'Company name (for copyright fields)',
                 store: true
             },
             {

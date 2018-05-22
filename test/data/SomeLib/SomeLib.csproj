@@ -11,7 +11,7 @@
     <Copyright>Copyright (C) 2017 SomeCompany</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/githubuser/SomeLib</PackageProjectUrl>
-    <Description></Description>
+    <Description>SomeDescription</Description>
     <RepositoryUrl>https://github.com/githubuser/SomeLib</RepositoryUrl>
     <PackageTags>SomeLib</PackageTags>
   </PropertyGroup>

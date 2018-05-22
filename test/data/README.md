@@ -1,6 +1,6 @@
 # About SomeLib
 
-SomeLib is a new NuGet package.
+SomeDescription
 
 [![Build Status](https://travis-ci.org/githubuser/SomeLib.svg?branch=master)](https://travis-ci.org/githubuser/SomeLib)
 [![NuGet](https://img.shields.io/nuget/v/SomeLib.svg)](https://www.nuget.org/packages/SomeLib/)

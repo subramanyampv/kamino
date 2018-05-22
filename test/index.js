@@ -11,6 +11,7 @@ describe('app', () => {
             return helpers.run(path.join(__dirname, '../app'))
                 .withPrompts({
                     name: 'SomeLib',
+                    description: 'SomeDescription',
                     companyName: 'SomeCompany',
                     indentationCharacter: 'spaces',
                     user: 'githubuser'

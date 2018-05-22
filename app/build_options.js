@@ -18,6 +18,7 @@ module.exports = function buildOptions(props) {
         nameToLower: name.toLowerCase(),
         testName,
         user: props.user,
+        description: props.description,
         companyName: props.companyName,
         cliUUID: uuid.v1().toUpperCase(),
         libUUID: uuid.v1().toUpperCase(),

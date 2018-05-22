@@ -11,7 +11,7 @@
     <Copyright>Copyright (C) <%= year %> <%= companyName %></Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/<%= user %>/<%= name %></PackageProjectUrl>
-    <Description></Description>
+    <Description><%= description %></Description>
     <RepositoryUrl>https://github.com/<%= user %>/<%= name %></RepositoryUrl>
     <PackageTags><%= name %></PackageTags>
   </PropertyGroup>
