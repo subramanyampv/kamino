@@ -9,8 +9,5 @@ packages/
 .idea/
 .vs/
 
-# NUnit results
-TestResult.xml
-
 .DS_Store
 Thumbs.db
