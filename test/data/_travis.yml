@@ -1,7 +1,20 @@
 language: csharp
+dotnet: 2.0.0
+mono: none
 solution: SomeLib.sln
 install:
-  - nuget restore SomeLib.sln
+- dotnet restore SomeLib.sln
 script:
-  - xbuild /p:Configuration=Release SomeLib.sln
-  - mono ./packages/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./SomeLib.Tests/bin/Release/SomeLib.Tests.dll
+- dotnet build /p:Configuration=Release
+- dotnet test /p:Configuration=Release SomeLib.Tests
+- dotnet pack /p:Configuration=Release
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: dotnet nuget push ./SomeLib/bin/Release/SomeLib.*.nupkg
+    --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+  on:
+    tags: true
+env:
+  global:
+    secure: ADD_YOUR_NUGET_API_KEY_HERE

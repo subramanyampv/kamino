@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [2.0.0] - 2018-05-22
+
+- Generated project is now targeting .NET Standard 2.0
+- Removed docfx, appveyor, coverage script.
+- Using MSTest instead of NUnit.
+- Added EditorConfig.
+
 ## [1.1.1] - 2018-05-22
 
 - Improved linting.

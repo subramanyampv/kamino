@@ -21,6 +21,7 @@ describe('app', () => {
             assert.file([
                 '.gitignore',
                 '.travis.yml',
+                '.editorconfig',
                 'CHANGELOG.md',
                 'README.md',
 
@@ -28,13 +29,9 @@ describe('app', () => {
 
                 'SomeLib/SomeLib.csproj',
                 'SomeLib/SomeLib.nuspec',
-                'SomeLib/Properties/AssemblyInfo.cs',
-                'SomeLib/packages.config',
                 'SomeLib/Class1.cs',
 
                 'SomeLib.Tests/SomeLib.Tests.csproj',
-                'SomeLib.Tests/Properties/AssemblyInfo.cs',
-                'SomeLib.Tests/packages.config',
                 'SomeLib.Tests/Class1Test.cs'
             ]);
         });
@@ -51,8 +48,7 @@ describe('app', () => {
              */
             shouldHandle(filename) {
                 const ext = path.extname(filename);
-                const basename = path.basename(filename);
-                return ext === '.csproj' || ext === '.sln' || basename === 'AssemblyInfo.cs';
+                return ext === '.sln';
             }
 
             transformActualData(input) {
@@ -103,8 +99,8 @@ describe('app', () => {
              * expected to contain the present year.
              */
             shouldHandle(filename) {
-                const basename = path.basename(filename);
-                return basename === 'AssemblyInfo.cs';
+                const ext = path.extname(filename);
+                return ext === '.csproj';
             }
 
             transformActualData(actualData) {

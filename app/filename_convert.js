@@ -5,6 +5,7 @@
  * @returns {string} The converted filename.
  */
 module.exports = function(filename, options) {
+    // maps the leading dot to an underscore (e.g. _gitignore -> .gitignore)
     let result = filename.replace(/([a-z]*)_([a-z]+)/ig, function($0, $1, $2) {
         return $1 ? $0 : '.' + $2;
     });

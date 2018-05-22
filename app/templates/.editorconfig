@@ -1,0 +1,5 @@
+[*.cs]
+# templates are using tabs, to be able to easily convert indentation
+# to tabs or spaces
+indent_style = tab
+indent_size = 4
