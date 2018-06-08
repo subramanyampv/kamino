@@ -24,7 +24,16 @@ func gitAdd(gitDir string, file string) (string, error) {
 }
 
 func gitCommit(gitDir string, msg string) (string, error) {
-	return gitCommand(gitDir, "commit", "-m", msg)
+	cmdOutAsString, err := gitCommand(gitDir, "commit", "-m", msg)
+	if err != nil {
+		// maybe it is "nothing to commit, working tree clean"
+		if strings.Contains(cmdOutAsString, "nothing to commit, working tree clean") {
+			// do not indicate an error in this case
+			return cmdOutAsString, nil
+		}
+	}
+
+	return cmdOutAsString, err
 }
 
 func gitTag(gitDir string, version string) (string, error) {
