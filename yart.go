@@ -16,15 +16,26 @@ func updateProjectFiles(dir string, version string) error {
 	return nil
 }
 
+func getCommitMessage(version string, message string) string {
+	if len(message) > 0 {
+		return message
+	} else {
+		return "Bumping version " + version
+	}
+}
+
 func main() {
 	var version string
 	var dir string
 	var noCommit bool
 	var noPush bool
+	var message string
+
 	flag.StringVar(&version, "version", "", "The new version")
 	flag.StringVar(&dir, "dir", ".", "The directory of the project to version")
 	flag.BoolVar(&noCommit, "no-commit", false, "Does not commit or create the tag (dry run)")
 	flag.BoolVar(&noPush, "no-push", false, "Does not push to remote (dry run)")
+	flag.StringVar(&message, "message", "", "An optional commit message")
 
 	flag.Parse()
 
@@ -55,7 +66,7 @@ func main() {
 	}
 
 	// commit with message bumping version
-	_, err = gitCommit(dir, "Bumping version "+version)
+	_, err = gitCommit(dir, getCommitMessage(version, message))
 	if err != nil {
 		panic(err)
 	}
