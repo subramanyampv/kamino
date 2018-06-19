@@ -38,6 +38,11 @@ yart bumps up the version in `pom.xml`. It takes into account
 multi-module projects, ensuring that child modules point to
 the correct parent version.
 
+### Readme files
+
+yart will do a text replace in files named `README.md`, replacing the current
+version with the new version.
+
 ## Options
 
 - `-help`: shows information about the program

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Optional `-message` parameter for specifying a custom commit message
+- Replacing version in `README.md` files
 - This changelog file
 - Documentation in `README.md`
 

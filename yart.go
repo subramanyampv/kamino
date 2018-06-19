@@ -6,8 +6,13 @@ import (
 	"os"
 )
 
-func updateProjectFiles(dir string, version string) error {
+func updateProjectFiles(dir string, version string, currentVersion string) error {
 	err := UpdatePomFiles(dir, version)
+	if err != nil {
+		return err
+	}
+
+	err = UpdateReadmeFiles(dir, version, currentVersion)
 	if err != nil {
 		return err
 	}
@@ -19,9 +24,9 @@ func updateProjectFiles(dir string, version string) error {
 func getCommitMessage(version string, message string) string {
 	if len(message) > 0 {
 		return message
-	} else {
-		return "Bumping version " + version
 	}
+
+	return "Bumping version " + version
 }
 
 func main() {
@@ -57,7 +62,7 @@ func main() {
 		panic(err)
 	}
 
-	err = updateProjectFiles(dir, version)
+	err = updateProjectFiles(dir, version, currentVersion)
 
 	if noCommit {
 		fmt.Println("Skipping commit because the no-commit flag was set")
