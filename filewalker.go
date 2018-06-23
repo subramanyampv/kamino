@@ -7,7 +7,7 @@ import (
 )
 
 func ignoreDir(name string) bool {
-	return name == ".git" || name == ".idea" || name == ".vscode" || name == "target"
+	return name == ".git" || name == ".idea" || name == ".vscode" || name == "target" || name == "node_modules"
 }
 
 // visitor

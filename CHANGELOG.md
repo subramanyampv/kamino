@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Ignoring `node_modules` folder when scanning for files
+
 ## [1.2.0] - 2018-06-19
 
 ### Added
