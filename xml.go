@@ -14,6 +14,7 @@ type Parser struct {
 type parserEvents interface {
 	Element(name string)
 	Contents(contents string)
+	Declaration(declaration string)
 }
 
 func (p *Parser) isEOF() bool {
@@ -32,12 +33,42 @@ func (p *Parser) skip() {
 	p.position = p.position + 1
 }
 
+func parseDeclaration(p *Parser, parserEvents parserEvents) bool {
+	if !p.isEOF() && p.current() == "?" {
+		// we're in something like <?xml version="1.0"?>
+
+		// skip '?'
+		p.skip()
+
+		declaration := "?"
+		for !p.isEOF() && p.current() != ">" {
+			declaration = declaration + p.current()
+			p.skip()
+		}
+
+		// read past closing ">"
+		if !p.isEOF() {
+			p.skip()
+		}
+
+		parserEvents.Declaration(declaration)
+
+		return true
+	}
+
+	return false
+}
+
 func (p *Parser) parseOpenTag(parserEvents parserEvents) {
 	if p.current() != "<" {
 		return
 	}
 
 	p.skip()
+
+	if parseDeclaration(p, parserEvents) {
+		return
+	}
 
 	tag := ""
 	for !p.isEOF() && p.current() != ">" {
@@ -99,4 +130,8 @@ func (p *consoleParserEvents) Contents(value string) {
 	} else {
 		p.buffer = p.buffer + value
 	}
+}
+
+func (p *consoleParserEvents) Declaration(value string) {
+	p.buffer = p.buffer + "<" + value + ">"
 }
