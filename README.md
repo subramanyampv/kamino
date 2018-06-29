@@ -46,7 +46,7 @@ version with the new version.
 ## Options
 
 - `-help`: shows information about the program
-- `-version`: The desired version e.g. 1.2.0
+- `-version`: The desired version e.g. 1.3.0
 - `-dir`: Optional: the directory of the project to version (defaults to current directory)
 - `-message`: Optional: a commit message to specify when committing project files. Defaults to "Bumping version x.y.z"
 - `-no-commit`: Does not commit or create the tag (dry run)
