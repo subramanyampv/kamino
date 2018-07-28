@@ -5,3 +5,15 @@ ESLint rules for my personal projects
 [![Build Status](https://travis-ci.org/ngeor/eslint-config-ngeor.svg?branch=master)](https://travis-ci.org/ngeor/eslint-config-ngeor)
 [![Dependencies Status](https://david-dm.org/ngeor/eslint-config-ngeor.svg)](https://david-dm.org/ngeor/eslint-config-ngeor)
 [![devDependencies Status](https://david-dm.org/ngeor/eslint-config-ngeor/dev-status.svg)](https://david-dm.org/ngeor/eslint-config-ngeor?type=dev)
+
+## Installation
+
+First install the package as a dev dependency:
+
+    npm i -D eslint-config-ngeor
+
+and configure your eslint config:
+
+    extends: {
+        'ngeor'
+    }
