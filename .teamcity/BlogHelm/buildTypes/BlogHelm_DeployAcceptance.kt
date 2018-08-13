@@ -1,13 +1,11 @@
 package BlogHelm.buildTypes
 
 import jetbrains.buildServer.configs.kotlin.v2018_1.*
-import jetbrains.buildServer.configs.kotlin.v2018_1.ui.*
 
 object BlogHelm_DeployAcceptance : BuildType({
     uuid = "b39778ac-2a13-46db-ab56-5b17798e4a84"
     id("BlogHelm_DeployAcceptance")
     name = "Deploy To Acceptance"
-    expectTemplates()
     templates = arrayListOf(AbsoluteId("BlogHelm_DeployTemplate"))
 
     params {
