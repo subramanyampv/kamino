@@ -2,7 +2,7 @@ package BlogHelm.buildTypes
 
 import BlogHelm.vcsRoots.BlogHelm_BlogHelm
 import jetbrains.buildServer.configs.kotlin.v2018_1.*
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.dockerBuild
+import jetbrains.buildServer.configs.kotlin.v2018_1.ui.*
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
