@@ -6,7 +6,7 @@ import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
 
 object BlogHelm_DeployTemplate : Template({
     uuid = "bdb9db38-14a7-4b33-a762-f84f97141b1c"
-    id = "BlogHelm_DeployTemplate"
+    id("BlogHelm_DeployTemplate")
     name = "Deploy Template"
     buildNumberPattern = "%dep.BlogHelm_CommitStage.build.number%"
     enablePersonalBuilds = false
@@ -80,7 +80,7 @@ object BlogHelm_DeployTemplate : Template({
             }
 
             artifacts {
-                id = "ARTIFACT_DEPENDENCY_1"
+                id("ARTIFACT_DEPENDENCY_1")
                 cleanDestination = true
                 artifactRules = """
                     *.tgz => artifacts

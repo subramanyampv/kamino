@@ -10,8 +10,8 @@ import jetbrains.buildServer.configs.kotlin.v2018_1.projectFeatures.versionedSet
 
 object Project : Project({
     uuid = "d3c230cf-b4cd-4a9e-8017-4b4b945b3a3c"
-    id = "BlogHelm"
-    parentId = "_Root"
+    id("BlogHelm")
+    parentId("_Root")
     name = "Blog Helm"
 
     vcsRoot(BlogHelm_BlogHelm)
@@ -21,7 +21,6 @@ object Project : Project({
     buildType(BlogHelm_DeployTest)
     buildType(BlogHelm_DeployAcceptance)
     buildType(BlogHelm_DeployProduction)
-    buildTypesOrderIds = arrayListOf("BlogHelm_CommitStage", "BlogHelm_SmokeTest", "BlogHelm_DeployTest", "BlogHelm_DeployAcceptance", "BlogHelm_DeployProduction")
 
     template(BlogHelm_DeployTemplate)
 
@@ -34,7 +33,7 @@ object Project : Project({
 
     features {
         versionedSettings {
-            id = "PROJECT_EXT_3"
+            id("PROJECT_EXT_3")
             mode = VersionedSettings.Mode.ENABLED
             buildSettingsMode = VersionedSettings.BuildSettingsMode.PREFER_SETTINGS_FROM_VCS
             rootExtId = BlogHelm_BlogHelm.id
@@ -44,7 +43,7 @@ object Project : Project({
         }
         feature {
             type = "IssueTracker"
-            id = "PROJECT_EXT_2"
+            id("PROJECT_EXT_2")
             param("secure:password", "")
             param("name", "ngeor/blog-helm")
             param("pattern", """#(\d+)""")
