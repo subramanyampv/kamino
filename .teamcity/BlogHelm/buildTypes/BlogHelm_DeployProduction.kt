@@ -4,7 +4,6 @@ import jetbrains.buildServer.configs.kotlin.v2018_1.*
 import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
 
 object BlogHelm_DeployProduction : BuildType({
-    template(BlogHelm.buildTypes.BlogHelm_DeployTemplate)
     uuid = "961a48d2-8e68-4405-85c9-6af47bda89ab"
     id("BlogHelm_DeployProduction")
     name = "Deploy To Production"
