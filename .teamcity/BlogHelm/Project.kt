@@ -33,17 +33,15 @@ object Project : Project({
 
     features {
         versionedSettings {
-            id("PROJECT_EXT_3")
             mode = VersionedSettings.Mode.ENABLED
             buildSettingsMode = VersionedSettings.BuildSettingsMode.PREFER_SETTINGS_FROM_VCS
-            rootExtId = BlogHelm_BlogHelm.id
+            rootExtId = "BlogHelm_BlogHelm"
             showChanges = false
             settingsFormat = VersionedSettings.Format.KOTLIN
             storeSecureParamsOutsideOfVcs = true
         }
         feature {
             type = "IssueTracker"
-            id("PROJECT_EXT_2")
             param("secure:password", "")
             param("name", "ngeor/blog-helm")
             param("pattern", """#(\d+)""")

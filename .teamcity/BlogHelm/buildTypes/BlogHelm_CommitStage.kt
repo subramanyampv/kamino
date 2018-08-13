@@ -148,7 +148,7 @@ object BlogHelm_CommitStage : BuildType({
             param("xmlReportParsing.verboseOutput", "true")
         }
         vcsLabeling {
-            vcsRootExtId = BlogHelm_BlogHelm.id
+            vcsRootExtId = "BlogHelm_BlogHelm"
             labelingPattern = "v%system.build.number%"
             successfulOnly = true
             enabled = false

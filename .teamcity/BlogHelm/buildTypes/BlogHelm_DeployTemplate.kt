@@ -80,7 +80,6 @@ object BlogHelm_DeployTemplate : Template({
             }
 
             artifacts {
-                id("ARTIFACT_DEPENDENCY_1")
                 cleanDestination = true
                 artifactRules = """
                     *.tgz => artifacts
