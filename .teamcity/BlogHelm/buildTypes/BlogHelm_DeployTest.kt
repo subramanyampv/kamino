@@ -1,6 +1,6 @@
 package BlogHelm.buildTypes
 
-import jetbrains.buildServer.configs.kotlin.v2017_2.*
+import jetbrains.buildServer.configs.kotlin.v2018_1.*
 
 object BlogHelm_DeployTest : BuildType({
     template(BlogHelm.buildTypes.BlogHelm_DeployTemplate)

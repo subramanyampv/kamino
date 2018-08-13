@@ -4,7 +4,7 @@
   <name>BlogHelm Config DSL Script</name>
   <properties>
     <kotlin.version>1.1.4-3</kotlin.version>
-    <teamcity.dsl.version>2017.2</teamcity.dsl.version>
+    <teamcity.dsl.version>2018.1</teamcity.dsl.version>
   </properties>
   <groupId>BlogHelm</groupId>
   <artifactId>BlogHelm_dsl</artifactId>
