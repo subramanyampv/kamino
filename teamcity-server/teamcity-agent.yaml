@@ -34,7 +34,7 @@ spec:
             path: /var/run/docker.sock
         - name: agent-conf
           hostPath:
-            path: /vagrant/teamcity-server/data/agent/conf
+            path: /c/Users/ngeor/Projects/github/blog-helm/teamcity-server/data/agent/conf
         - name: work
           hostPath:
             path: /opt/buildagent/work

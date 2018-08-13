@@ -1,4 +1,4 @@
-FROM jetbrains/teamcity-agent:2017.2.3
+FROM jetbrains/teamcity-agent:2018.1.1
 
 # Make sure github.com is a known host when git is using SSH
 RUN mkdir -p /etc/ssh

@@ -1,5 +1,0 @@
-FROM jetbrains/teamcity-agent:2017.2.3
-
-# Make sure github.com is a known host when git is using SSH
-RUN mkdir -p /etc/ssh
-RUN ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts

@@ -3,23 +3,11 @@ An example hello world application to show Docker and Helm
 
 ## Standalone usage
 
-Install the dependencies with:
-
-```
-npm install
-```
-
-Run the app with:
-
-```
-node index.js
-```
-
-Lint the app with:
-
-```
-npm run lint
-```
+| Command         | Action               |
+|-----------------|----------------------|
+| `npm i`         | Install dependencies |
+| `node index.js` | Run the application  |
+| `npm run lint`  | Lint the app         |
 
 ## Docker usage
 

@@ -47,15 +47,17 @@ object BlogHelm_CommitStage : BuildType({
             name = "Determine version"
             path = "ci-scripts/version.sh"
         }
-        dockerBuild {
+        dockerCommand {
             name = "Build CI Image"
-            source = path {
-                path = "Dockerfile-ci"
+            commandType = build {
+                source = path {
+                    path = "Dockerfile-ci"
+                }
+                namesAndTags = """
+                    blog-helm-ci:%env.IMAGE_TAG%
+                    %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%
+                """.trimIndent()
             }
-            namesAndTags = """
-                blog-helm-ci:%env.IMAGE_TAG%
-                %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%
-            """.trimIndent()
         }
         script {
             name = "Run linting and unit tests"
@@ -76,15 +78,17 @@ object BlogHelm_CommitStage : BuildType({
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
         }
-        dockerBuild {
+        dockerCommand {
             name = "Build production Docker image"
-            source = path {
-                path = "Dockerfile"
+            commandType = build {
+                source = path {
+                    path = "Dockerfile"
+                }
+                namesAndTags = """
+                    blog-helm:%env.IMAGE_TAG%
+                    %docker.registry%/blog-helm:%env.IMAGE_TAG%
+                """.trimIndent()
             }
-            namesAndTags = """
-                blog-helm:%env.IMAGE_TAG%
-                %docker.registry%/blog-helm:%env.IMAGE_TAG%
-            """.trimIndent()
         }
         script {
             name = "Package Helm Chart"

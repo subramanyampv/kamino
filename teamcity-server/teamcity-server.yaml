@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: teamcity-server
-          image: jetbrains/teamcity-server:2017.2.3
+          image: jetbrains/teamcity-server:2018.1.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: teamcity-server
@@ -34,7 +34,7 @@ spec:
       volumes:
         - name: data
           hostPath:
-            path: /vagrant/teamcity-server/data/server/data
+            path: /c/Users/ngeor/Projects/github/blog-helm/teamcity-server/data/server/datadir
 ---
 apiVersion: v1
 kind: Service

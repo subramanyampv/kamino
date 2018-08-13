@@ -26,10 +26,9 @@ object Project : Project({
     template(BlogHelm_DeployTemplate)
 
     params {
-        param("docker.registry", "registry.default.svc.cluster.local:5000")
-        param("docker.server", "https://%docker.registry%")
-        param("docker.username", "AWS")
-        password("docker.password", "credentialsJSON:545a56c8-5944-47b1-86b5-dc49bc065bc9", label = "Docker registry password")
+        param("docker.registry", "")
+        param("docker.server", "")
+        param("docker.username", "")
         param("lachlanevenson.k8s-helm.tag", "v2.6.2")
     }
 
