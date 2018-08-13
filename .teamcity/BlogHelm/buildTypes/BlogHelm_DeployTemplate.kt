@@ -56,12 +56,12 @@ object BlogHelm_DeployTemplate : Template({
             scriptContent = """
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  %docker.registry%/blog-helm-ci:%build.number% \
+                  %docker.registry%blog-helm-ci:%build.number% \
                   npm run wdio -- -b %app.baseurl%
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  %docker.registry%/blog-helm-ci:%build.number% \
+                  %docker.registry%blog-helm-ci:%build.number% \
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
         }

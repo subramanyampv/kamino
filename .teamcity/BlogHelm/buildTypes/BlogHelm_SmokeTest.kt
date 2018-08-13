@@ -29,13 +29,21 @@ object BlogHelm_SmokeTest : BuildType({
         exec {
             name = "Smoke test Docker image"
             path = "ci-scripts/smoke-test-docker-image.sh"
-            arguments = "%docker.registry%/blog-helm:%build.number%"
+            arguments = "%docker.registry%blog-helm:%build.number%"
         }
         script {
             name = "Logout from Docker registry"
             scriptContent = "docker logout %docker.server%"
             executionMode = BuildStep.ExecutionMode.ALWAYS
             enabled = false
+        }
+    }
+
+    dependencies {
+        add(AbsoluteId("BlogHelm_CommitStage")) {
+            snapshot {
+                onDependencyFailure = FailureAction.FAIL_TO_START
+            }
         }
     }
 

@@ -55,7 +55,7 @@ object BlogHelm_CommitStage : BuildType({
                 }
                 namesAndTags = """
                     blog-helm-ci:%env.IMAGE_TAG%
-                    %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%
+                    %docker.registry%blog-helm-ci:%env.IMAGE_TAG%
                 """.trimIndent()
             }
         }
@@ -86,7 +86,7 @@ object BlogHelm_CommitStage : BuildType({
                 }
                 namesAndTags = """
                     blog-helm:%env.IMAGE_TAG%
-                    %docker.registry%/blog-helm:%env.IMAGE_TAG%
+                    %docker.registry%blog-helm:%env.IMAGE_TAG%
                 """.trimIndent()
             }
         }
@@ -107,11 +107,13 @@ object BlogHelm_CommitStage : BuildType({
         }
         script {
             name = "Push Docker production image"
-            scriptContent = "docker push %docker.registry%/blog-helm:%env.IMAGE_TAG%"
+            scriptContent = "docker push %docker.registry%blog-helm:%env.IMAGE_TAG%"
+            enabled = false
         }
         script {
             name = "Push Docker CI image"
-            scriptContent = "docker push %docker.registry%/blog-helm-ci:%env.IMAGE_TAG%"
+            scriptContent = "docker push %docker.registry%blog-helm-ci:%env.IMAGE_TAG%"
+            enabled = false
         }
         script {
             name = "Logout from Docker registry"
@@ -146,12 +148,6 @@ object BlogHelm_CommitStage : BuildType({
             param("xmlReportParsing.reportType", "junit")
             param("xmlReportParsing.reportDirs", "test-reports/ci-*.xml")
             param("xmlReportParsing.verboseOutput", "true")
-        }
-        vcsLabeling {
-            vcsRootExtId = "BlogHelm_BlogHelm"
-            labelingPattern = "v%system.build.number%"
-            successfulOnly = true
-            enabled = false
         }
         sshAgent {
             teamcitySshKey = "ENVY"
