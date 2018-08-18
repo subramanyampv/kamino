@@ -76,3 +76,7 @@ Visit http://192.168.99.100:30200/ to configure TeamCity.
   - Store secure values outside of VCS
   - Settings format: Kotlin
   - at the prompt, select "Import settings from VCS"
+
+Set an environment variable on the root project named `KUBECTL_CONFIG` which
+will contain the base64 encoded contents of your kube config. You can create
+that value with `kubectl config view --flatten | base64 -w 0`

@@ -30,10 +30,8 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Deploy using Helm"
             scriptContent = """
-                mkdir -p $HOME/.kube
-                base64 -d "$KUBECTL_CONFIG" > $HOME/.kube/config
-                echo $HOME
-                cat $HOME/.kube/config
+                mkdir -p /root/.kube
+                base64 -d "%env.KUBECTL_CONFIG%" > /root/.kube/config
                 helm upgrade --install blog-helm-%app.env% \
                   ./artifacts/blog-helm-%build.number%.tgz \
                   --set image.tag=%build.number% \
