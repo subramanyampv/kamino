@@ -24,7 +24,7 @@ object BlogHelm_DeployProduction : BuildType({
 
     triggers {
         finishBuildTrigger {
-            buildTypeExtId = "BlogHelm_CommitStage"
+            buildTypeExtId = "BlogHelm_DeployAcceptance"
             successfulOnly = true
         }
     }

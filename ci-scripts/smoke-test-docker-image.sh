@@ -11,8 +11,6 @@ if [ -z "$FQ_IMAGE_NAME" ]; then
     exit 1
 fi
 
-docker pull $FQ_IMAGE_NAME
-
 # start the application in the background and get the container ID
 CONTAINER_ID=$(docker run -d $FQ_IMAGE_NAME)
 CONTAINER_STATUS=

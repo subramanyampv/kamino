@@ -4,6 +4,7 @@ import BlogHelm.vcsRoots.BlogHelm_BlogHelm
 import jetbrains.buildServer.configs.kotlin.v2018_1.*
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
+import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
 
 object BlogHelm_SmokeTest : BuildType({
     uuid = "d555deaf-076e-4997-8756-95da85e8d785"
@@ -48,6 +49,14 @@ object BlogHelm_SmokeTest : BuildType({
     features {
         feature {
             type = "perfmon"
+        }
+    }
+
+    triggers {
+        finishBuildTrigger {
+            buildTypeExtId = "BlogHelm_CommitStage"
+            successfulOnly = true
+            branchFilter   = "+:*"
         }
     }
 })
