@@ -19,7 +19,6 @@ object BlogHelm_DeployTemplate : Template({
         param("app.host", "")
         param("app.baseurl", "http://%app.host%")
         param("app.version.url", "%app.baseurl%/version")
-        param("helm.host", "192.168.99.101:30200")
     }
 
     vcs {
@@ -31,6 +30,10 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Deploy using Helm"
             scriptContent = """
+                mkdir -p $HOME/.kube
+                base64 -d "$KUBECTL_CONFIG" > $HOME/.kube/config
+                echo $HOME
+                cat $HOME/.kube/config
                 helm upgrade --install blog-helm-%app.env% \
                   ./artifacts/blog-helm-%build.number%.tgz \
                   --set image.tag=%build.number% \
@@ -39,7 +42,7 @@ object BlogHelm_DeployTemplate : Template({
                   --wait
             """.trimIndent()
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
-            dockerRunParameters = "--rm -e HELM_HOST=%helm.host%"
+            dockerRunParameters = "--rm"
         }
         exec {
             name = "Wait until the correct version is available"
