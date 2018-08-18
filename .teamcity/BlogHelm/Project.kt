@@ -21,6 +21,7 @@ object Project : Project({
     buildType(BlogHelm_DeployTest)
     buildType(BlogHelm_DeployAcceptance)
     buildType(BlogHelm_DeployProduction)
+    buildTypesOrderIds = arrayListOf(AbsoluteId("BlogHelm_CommitStage"), AbsoluteId("BlogHelm_SmokeTest"), AbsoluteId("BlogHelm_DeployTest"), AbsoluteId("BlogHelm_DeployAcceptance"), AbsoluteId("BlogHelm_DeployProduction"))
 
     template(BlogHelm_DeployTemplate)
 

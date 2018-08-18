@@ -100,6 +100,7 @@ object BlogHelm_CommitStage : BuildType({
                   ./helm/blog-helm
             """.trimIndent()
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
+            dockerRunParameters = "--rm"
         }
         script {
             name = "Login to Docker registry"
