@@ -3,7 +3,6 @@ package BlogHelm.buildTypes
 import BlogHelm.vcsRoots.BlogHelm_BlogHelm
 import jetbrains.buildServer.configs.kotlin.v2018_1.*
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
 
 object BlogHelm_SmokeTest : BuildType({
@@ -20,21 +19,10 @@ object BlogHelm_SmokeTest : BuildType({
     }
 
     steps {
-        script {
-            name = "Login to Docker registry"
-            scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
-            enabled = false
-        }
         exec {
             name = "Smoke test Docker image"
             path = "ci-scripts/smoke-test-docker-image.sh"
-            arguments = "%docker.registry%blog-helm:%build.number%"
-        }
-        script {
-            name = "Logout from Docker registry"
-            scriptContent = "docker logout %docker.server%"
-            executionMode = BuildStep.ExecutionMode.ALWAYS
-            enabled = false
+            arguments = "%docker.registry%%app.name%:%build.number%"
         }
     }
 

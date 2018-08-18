@@ -23,28 +23,22 @@ Run the app with:
 docker run -p 3000:3000 blog-helm
 ```
 
-Build the CI Docker image with:
+To lint the app using Docker:
 
 ```
-docker build -t blog-helm-ci -f Dockerfile-ci .
-```
-
-Use the CI Docker image to lint the app with:
-
-```
-docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint
+docker run --rm -v $(pwd):/src -w /src node:8-slim npm run lint
 ```
 
 For the XML report:
 
 ```
-docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci npm run lint-junit
+docker run --rm -v $(pwd):/src -w /src node:8-slim npm run lint-junit
 ```
 
 Correct user permissions if needed with:
 
 ```
-docker run --rm -v $(pwd)/test-reports:/app/test-reports blog-helm-ci chown -R $(id -u):$(id -g) test-reports
+docker run --rm -v $(pwd):/src -w /src node:8-slim chown -R $(id -u):$(id -g) test-reports
 ```
 
 ## WebdriverIO

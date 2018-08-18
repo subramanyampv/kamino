@@ -1,12 +1,10 @@
 package BlogHelm.buildTypes
 
-import BlogHelm.vcsRoots.BlogHelm_BlogHelm
-import jetbrains.buildServer.configs.kotlin.v2018_1.*
+import jetbrains.buildServer.configs.kotlin.v2018_1.BuildType
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildFeatures.sshAgent
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildFeatures.vcsLabeling
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.dockerCommand
 import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
 import jetbrains.buildServer.configs.kotlin.v2018_1.failureConditions.BuildFailureOnMetric
 import jetbrains.buildServer.configs.kotlin.v2018_1.failureConditions.failOnMetricChange
 import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.vcs
@@ -17,8 +15,8 @@ object BlogHelm_CommitStage : BuildType({
     name = "Commit Stage"
     enablePersonalBuilds = false
     artifactRules = """
-        blog-helm-%env.IMAGE_TAG%.tgz
-        helm/blog-helm/values-*.yaml
+        %app.name%-%env.IMAGE_TAG%.tgz
+        helm/%app.name%/values-*.yaml
     """.trimIndent()
     maxRunningBuilds = 1
 
@@ -32,12 +30,9 @@ object BlogHelm_CommitStage : BuildType({
     }
 
     steps {
-        script {
+        exec {
             name = "Basic diagnostics"
-            scriptContent = """
-                lsb_release -cdir
-                docker version
-            """.trimIndent()
+            path = "ci-scripts/diagnostics.sh"
         }
         exec {
             name = "Ensure feature branch is ahead of master"
@@ -48,36 +43,37 @@ object BlogHelm_CommitStage : BuildType({
             path = "ci-scripts/version.sh"
         }
         dockerCommand {
-            name = "Build CI Image"
+            name = "Build CI Image (includes phantomjs)"
             commandType = build {
                 source = path {
                     path = "Dockerfile-ci"
                 }
                 namesAndTags = """
-                    blog-helm-ci:%env.IMAGE_TAG%
-                    %docker.registry%blog-helm-ci:%env.IMAGE_TAG%
+                    %ci.image%:%build.number%
                 """.trimIndent()
                 commandArgs = ""
             }
         }
-        script {
-            name = "Run linting and unit tests"
-            scriptContent = """
-                docker run \
-                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%env.IMAGE_TAG% \
-                  npm run lint-junit
-
-                docker run \
-                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%env.IMAGE_TAG% \
-                  npm run nyc-junit
-
-                docker run \
-                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%env.IMAGE_TAG% \
-                  chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
-            """.trimIndent()
+        exec {
+            name = "Install dependencies (npm install)"
+            path = "npm"
+            arguments = "install"
+            dockerImage = "%ci.image%:%build.number%"
+            dockerRunParameters = "--rm"
+        }
+        exec {
+            name = "Linting"
+            path = "npm"
+            arguments = "run lint-junit"
+            dockerImage = "%ci.image%:%build.number%"
+            dockerRunParameters = "--rm"
+        }
+        exec {
+            name = "Unit Tests"
+            path = "npm"
+            arguments = "run nyc-junit"
+            dockerImage = "%ci.image%:%build.number%"
+            dockerRunParameters = "--rm"
         }
         dockerCommand {
             name = "Build production Docker image"
@@ -86,42 +82,30 @@ object BlogHelm_CommitStage : BuildType({
                     path = "Dockerfile"
                 }
                 namesAndTags = """
-                    blog-helm:%env.IMAGE_TAG%
-                    %docker.registry%blog-helm:%env.IMAGE_TAG%
+                    %docker.registry%%app.name%:%build.number%
                 """.trimIndent()
             }
         }
-        script {
-            name = "Package Helm Chart"
-            scriptContent = """
-                helm init --client-only
-                helm package --debug \
-                  --version %env.IMAGE_TAG% \
-                  ./helm/blog-helm
-            """.trimIndent()
+        exec {
+            name = "Helm Init"
+            path = "helm"
+            arguments = "init --client-only"
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
-            dockerRunParameters = "--rm"
+            dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
-        script {
-            name = "Login to Docker registry"
-            scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
-            enabled = false
+        exec {
+            name = "Helm Lint"
+            path = "helm"
+            arguments = "lint ./helm/%app.name%"
+            dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
+            dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
-        script {
-            name = "Push Docker production image"
-            scriptContent = "docker push %docker.registry%blog-helm:%env.IMAGE_TAG%"
-            enabled = false
-        }
-        script {
-            name = "Push Docker CI image"
-            scriptContent = "docker push %docker.registry%blog-helm-ci:%env.IMAGE_TAG%"
-            enabled = false
-        }
-        script {
-            name = "Logout from Docker registry"
-            scriptContent = "docker logout %docker.server%"
-            executionMode = BuildStep.ExecutionMode.ALWAYS
-            enabled = false
+        exec {
+            name = "Helm Package"
+            path = "helm"
+            arguments = "package --debug --version %build.number% ./helm/%app.name%"
+            dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
+            dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
     }
 

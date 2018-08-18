@@ -31,6 +31,8 @@ object Project : Project({
         param("docker.username", "")
         param("lachlanevenson.k8s-helm.tag", "v2.8.2")
         param("minikube.ip", "192.168.99.100")
+        param("app.name", "blog-helm")
+        param("ci.image", "%docker.registry%%app.name%-ci")
     }
 
     features {

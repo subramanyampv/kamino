@@ -27,13 +27,12 @@ object BlogHelm_DeployTemplate : Template({
     }
 
     steps {
-        script {
+        exec {
             name = "Deploy using Helm"
-            scriptContent = """
-                ./ci-scripts/deploy.sh "%env.KUBECTL_CONFIG%" %app.env% %build.number%
-            """.trimIndent()
+            path = "./ci-scripts/deploy.sh"
+            arguments = "--kube-config %env.KUBECTL_CONFIG% --env %app.env% --tag %build.number%"
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
-            dockerRunParameters = "--rm"
+            dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
         script {
             name = "Workaround for local HOSTS file"
@@ -49,33 +48,12 @@ object BlogHelm_DeployTemplate : Template({
             path = "ci-scripts/wait-for-version.sh"
             arguments = "%app.version.url% %build.number%"
         }
-        script {
-            name = "Login to Docker registry"
-            scriptContent = "docker login -u %docker.username% -p %docker.password% %docker.server%"
-            enabled = false
-        }
-        script {
+        exec {
             name = "Run WebdriverIO tests"
-            scriptContent = """
-                docker run \
-                    --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                    blog-helm-ci:%build.number% \
-                    ./ci-scripts/wdio-tests.sh \
-                        --url %app.baseurl% \
-                        --ip %minikube.ip% \
-                        --host %app.host%
-
-                docker run \
-                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%build.number% \
-                  chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
-            """.trimIndent()
-        }
-        script {
-            name = "Logout from Docker registry"
-            scriptContent = "docker logout %docker.server%"
-            executionMode = BuildStep.ExecutionMode.ALWAYS
-            enabled = false
+            path = "./ci-scripts/wdio-tests.sh"
+            arguments = "--url %app.baseurl% --ip %minikube.ip% --host %app.host%"
+            dockerImage = "%ci.image%:%build.number%"
+            dockerRunParameters = "--rm"
         }
     }
 

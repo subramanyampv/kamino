@@ -4,6 +4,7 @@
 set -e
 
 # make sure we have master branch and tags
+# fetching tags will allow GitVersion to operate correctly
 git fetch --tags origin
 
 # merge master into current feature branch

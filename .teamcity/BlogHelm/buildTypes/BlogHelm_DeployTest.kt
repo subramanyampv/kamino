@@ -11,7 +11,7 @@ object BlogHelm_DeployTest : BuildType({
 
     params {
         param("app.env", "test")
-        param("app.host", "test.blog-helm.local")
+        param("app.host", "test.%app.name%.local")
     }
 
     dependencies {

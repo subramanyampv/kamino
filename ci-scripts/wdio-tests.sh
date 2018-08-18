@@ -16,6 +16,21 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
 esac; shift; done
 if [[ "$1" == '--' ]]; then shift; fi
 
+if [ -z "$IP" ]; then
+    >&2 echo "Error: missing parameter IP (use --ip minikube-ip)"
+    exit 1
+fi
+
+if [ -z "$URL" ]; then
+    >&2 echo "Error: missing parameter URL"
+    exit 1
+fi
+
+if [ -z "$ENV_HOST" ]; then
+    >&2 echo "Error: missing parameter ENV_HOST"
+    exit 1
+fi
+
 # hosts workaround
 echo "$IP $ENV_HOST" >> /etc/hosts
 
