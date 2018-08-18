@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # $1 -> kubectl config
 # $2 -> app.env
 # $3 -> build.number
