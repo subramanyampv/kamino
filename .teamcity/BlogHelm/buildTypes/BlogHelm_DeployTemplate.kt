@@ -35,7 +35,7 @@ object BlogHelm_DeployTemplate : Template({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm"
         }
-        exec {
+        script {
             name = "Workaround for local HOSTS file"
             scriptContent = """
                 echo "%minikube.ip% %app.host%" >> /etc/hosts
