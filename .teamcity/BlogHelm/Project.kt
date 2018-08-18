@@ -22,6 +22,11 @@ object Project : Project({
     buildType(BlogHelm_DeployAcceptance)
     buildType(BlogHelm_DeployProduction)
 
+    buildTypesOrder = List(
+        BlogHelm_CommitStage,
+        BlogHelm_SmokeTest
+    )
+
     template(BlogHelm_DeployTemplate)
 
     params {
