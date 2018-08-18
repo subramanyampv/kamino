@@ -38,7 +38,10 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Workaround for local HOSTS file"
             scriptContent = """
-                echo "%minikube.ip% %app.host%" >> /etc/hosts
+                grep -v %app.host% /etc/hosts > /etc/hosts.tmp
+                echo "%minikube.ip% %app.host%" >> /etc/hosts.tmp
+                cat /etc/hosts.tmp > /etc/hosts
+                rm /etc/hosts.tmp
             """.trimIndent()
         }
         exec {
