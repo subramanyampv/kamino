@@ -56,7 +56,7 @@ object BlogHelm_DeployTemplate : Template({
             scriptContent = """
                 docker run \
                     --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                    blog-helm-ci:%env.IMAGE_TAG% \
+                    blog-helm-ci:%build.number%" \
                     ./ci-scripts/wdio-tests.sh \
                         --url %app.baseurl% \
                         --ip %minikube.ip% \
@@ -64,7 +64,7 @@ object BlogHelm_DeployTemplate : Template({
 
                 docker run \
                   --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
-                  blog-helm-ci:%env.IMAGE_TAG% \
+                  blog-helm-ci:%build.number%" \
                   chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
         }
