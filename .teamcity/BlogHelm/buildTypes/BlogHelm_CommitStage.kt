@@ -57,6 +57,7 @@ object BlogHelm_CommitStage : BuildType({
                     blog-helm-ci:%env.IMAGE_TAG%
                     %docker.registry%blog-helm-ci:%env.IMAGE_TAG%
                 """.trimIndent()
+                commandArgs = "--build-arg MINIKUBE_IP=%minikube.ip%"
             }
         }
         script {

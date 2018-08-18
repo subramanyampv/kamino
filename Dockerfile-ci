@@ -1,6 +1,8 @@
 # phantomJS does not work with alpine
 FROM node:8-slim
 
+ARG MINIKUBE_IP
+
 # dependencies
 RUN apt-get update && apt-get install -y \
     bzip2 \
@@ -18,3 +20,5 @@ COPY package*.json /app/
 RUN npm install
 COPY . /app
 VOLUME ["/app/test-reports"]
+
+RUN echo "${MINIKUBE_IP} test.blog-helm.local" >> /etc/hosts
