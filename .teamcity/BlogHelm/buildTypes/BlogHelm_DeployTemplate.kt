@@ -54,15 +54,19 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Run WebdriverIO tests"
             scriptContent = """
-                ./ci-scripts/wdio-tests.sh \
-                    --url %app.baseurl% \
-                    --uid ${'$'}(id -u) \
-                    --gid ${'$'}(id -g) \
-                    --ip %minikube.ip% \
-                    --host %app.host%
+                docker run \
+                    --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
+                    blog-helm-ci:%env.IMAGE_TAG% \
+                    ./ci-scripts/wdio-tests.sh \
+                        --url %app.baseurl% \
+                        --ip %minikube.ip% \
+                        --host %app.host%
+
+                docker run \
+                  --rm -v ${'$'}(pwd)/test-reports:/app/test-reports \
+                  blog-helm-ci:%env.IMAGE_TAG% \
+                  chown -R ${'$'}(id -u):${'$'}(id -g) test-reports
             """.trimIndent()
-            dockerImage = "%docker.registry%blog-helm-ci:%build.number%"
-            dockerRunParameters = "--rm"
         }
         script {
             name = "Logout from Docker registry"
