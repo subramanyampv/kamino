@@ -26,7 +26,11 @@ n=0
 until [ $n -ge $RETRY_COUNT ]
 do
     echo "Waiting for url $VERSION_URL to be at version $EXPECTED_VERSION, attempt $n..."
-    ACTUAL_VERSION=$(curl $VERSION_URL)
+    ACTUAL_VERSION=$(curl --connect-timeout 5 \
+     --max-time 10 \
+     --retry 5 \
+     --retry-delay 5 \
+     --retry-max-time 60 $VERSION_URL)
     if [ "$EXPECTED_VERSION" = "$ACTUAL_VERSION" ]; then
         echo "Version is correct!"
         exit 0

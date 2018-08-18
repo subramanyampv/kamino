@@ -29,18 +29,18 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "eslint": "^4.19.1",
-    "eslint-config-ngeor": "^0.2.1",
-    "eslint-plugin-import": "^2.11.0",
-    "mocha": "^5.1.1",
-    "nyc": "^11.7.1",
+    "eslint": "^5.4.0",
+    "eslint-config-ngeor": "^0.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
     "proxyquire": "^2.0.1",
-    "sinon": "^4.5.0",
-    "wdio-dot-reporter": "0.0.9",
-    "wdio-junit-reporter": "^0.4.2",
-    "wdio-mocha-framework": "^0.5.13",
+    "sinon": "^6.1.5",
+    "wdio-dot-reporter": "0.0.10",
+    "wdio-junit-reporter": "^0.4.4",
+    "wdio-mocha-framework": "^0.6.2",
     "wdio-phantomjs-service": "^0.2.2",
-    "webdriverio": "^4.12.0"
+    "webdriverio": "^4.13.2"
   },
   "nyc": {
     "all": true,
