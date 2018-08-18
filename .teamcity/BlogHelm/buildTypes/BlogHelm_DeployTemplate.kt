@@ -36,6 +36,12 @@ object BlogHelm_DeployTemplate : Template({
             dockerRunParameters = "--rm"
         }
         exec {
+            name = "Workaround for local HOSTS file"
+            scriptContent = """
+                echo "%minikube.ip% %app.host%" >> /etc/hosts
+            """.trimIndent()
+        }
+        exec {
             name = "Wait until the correct version is available"
             path = "ci-scripts/wait-for-version.sh"
             arguments = "%app.version.url% %build.number%"
