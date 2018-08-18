@@ -28,7 +28,7 @@ object Project : Project({
         param("docker.registry", "")
         param("docker.server", "")
         param("docker.username", "")
-        param("lachlanevenson.k8s-helm.tag", "v2.6.2")
+        param("lachlanevenson.k8s-helm.tag", "v2.8.2")
     }
 
     features {
