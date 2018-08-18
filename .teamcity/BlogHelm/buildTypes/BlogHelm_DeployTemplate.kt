@@ -30,14 +30,7 @@ object BlogHelm_DeployTemplate : Template({
         script {
             name = "Deploy using Helm"
             scriptContent = """
-                mkdir -p /root/.kube
-                base64 -d "%env.KUBECTL_CONFIG%" > /root/.kube/config
-                helm upgrade --install blog-helm-%app.env% \
-                  ./artifacts/blog-helm-%build.number%.tgz \
-                  --set image.tag=%build.number% \
-                  --values ./artifacts/values-%app.env%.yaml \
-                  --debug \
-                  --wait
+                ./ci-scripts/deploy.sh "%env.KUBECTL_CONFIG%" %app.env% %build.number%
             """.trimIndent()
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm"

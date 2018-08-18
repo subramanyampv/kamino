@@ -152,5 +152,11 @@ object BlogHelm_CommitStage : BuildType({
         sshAgent {
             teamcitySshKey = "ENVY"
         }
+
+        vcsLabeling {
+            vcsRootId = "BlogHelm_BlogHelm"
+            labelingPattern = "v%system.build.number%"
+            successfulOnly = true
+        }
     }
 })
