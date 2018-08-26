@@ -26,24 +26,24 @@ docker run -p 3000:3000 blog-helm
 To lint the app using Docker:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-slim npm run lint
+docker run --rm -v $(pwd):/src -w /src node:8-jessie npm run lint
 ```
 
 For the XML report:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-slim npm run lint-junit
+docker run --rm -v $(pwd):/src -w /src node:8-jessie npm run lint-junit
 ```
 
 Correct user permissions if needed with:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-slim chown -R $(id -u):$(id -g) test-reports
+docker run --rm -v $(pwd):/src -w /src node:8-jessie chown -R $(id -u):$(id -g) test-reports
 ```
 
 ## WebdriverIO
 
-To run tests against an app that runs on http://localhost:3000/ :
+To run tests against an app that already runs on http://localhost:3000/ :
 
 ```
 npm run wdio
@@ -54,3 +54,7 @@ To run tests against an app at a different base URL:
 ```
 npm run wdio -- -b http://some.other.url/
 ```
+
+## minikube
+
+Read the guide [here](./teamcity-server/README.md) about setting up minikube and TeamCity.

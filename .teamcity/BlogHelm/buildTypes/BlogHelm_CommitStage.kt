@@ -42,37 +42,25 @@ object BlogHelm_CommitStage : BuildType({
             name = "Determine version"
             path = "ci-scripts/version.sh"
         }
-        dockerCommand {
-            name = "Build CI Image (includes phantomjs)"
-            commandType = build {
-                source = path {
-                    path = "Dockerfile-ci"
-                }
-                namesAndTags = """
-                    %ci.image%:%build.number%
-                """.trimIndent()
-                commandArgs = ""
-            }
-        }
         exec {
             name = "Install dependencies (npm install)"
             path = "npm"
             arguments = "install"
-            dockerImage = "%ci.image%:%build.number%"
+            dockerImage = "%ci.image%"
             dockerRunParameters = "--rm"
         }
         exec {
             name = "Linting"
             path = "npm"
             arguments = "run lint-junit"
-            dockerImage = "%ci.image%:%build.number%"
+            dockerImage = "%ci.image%"
             dockerRunParameters = "--rm"
         }
         exec {
             name = "Unit Tests"
             path = "npm"
             arguments = "run nyc-junit"
-            dockerImage = "%ci.image%:%build.number%"
+            dockerImage = "%ci.image%"
             dockerRunParameters = "--rm"
         }
         dockerCommand {

@@ -80,3 +80,24 @@ Visit http://192.168.99.100:30200/ to configure TeamCity.
 Set an environment variable on the root project named `KUBECTL_CONFIG` which
 will contain the base64 encoded contents of your kube config. You can create
 that value with `kubectl config view --flatten | base64 -w 0`
+
+### DNS
+
+The following commands will allow minikube (and Docker Toolbox if you use it) to
+use whatever dummy hosts you add in your `C:\Windows\System32\drivers\etc\hosts` file.
+
+    # for Docker Toolbox
+    C:\Program Files\Oracle\VirtualBox> .\VBoxManage.exe modifyvm default --natdnshostresolver1 on
+    # for minikube
+    C:\Program Files\Oracle\VirtualBox> .\VBoxManage.exe modifyvm minikube --natdnshostresolver1 on
+
+Reference: https://www.virtualbox.org/manual/ch09.html#nat-adv-dns
+
+Add the following entries to your hosts file:
+
+    # minikube
+    192.168.99.101 test.blog-helm.local
+    192.168.99.101 acc.blog-helm.local
+    192.168.99.101 blog-helm.local
+
+The IP needs to match minikube's IP, which you can get with `minikube ip`.

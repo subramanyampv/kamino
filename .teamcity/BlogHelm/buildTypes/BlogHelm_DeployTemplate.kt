@@ -34,15 +34,6 @@ object BlogHelm_DeployTemplate : Template({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
-        script {
-            name = "Workaround for local HOSTS file"
-            scriptContent = """
-                grep -v %app.host% /etc/hosts > /etc/hosts.tmp
-                echo "%minikube.ip% %app.host%" >> /etc/hosts.tmp
-                cat /etc/hosts.tmp > /etc/hosts
-                rm /etc/hosts.tmp
-            """.trimIndent()
-        }
         exec {
             name = "Wait until the correct version is available"
             path = "ci-scripts/wait-for-version.sh"
@@ -50,9 +41,9 @@ object BlogHelm_DeployTemplate : Template({
         }
         exec {
             name = "Run WebdriverIO tests"
-            path = "./ci-scripts/wdio-tests.sh"
-            arguments = "--url %app.baseurl% --ip %minikube.ip% --host %app.host%"
-            dockerImage = "%ci.image%:%build.number%"
+            path = "npm"
+            arguments = "run wdio -- -b %app.baseurl%"
+            dockerImage = "%ci.image%"
             dockerRunParameters = "--rm"
         }
     }
