@@ -1,6 +1,8 @@
 # instarepo
 CLI automation tool to create repositories and activate their build pipeline
 
+[![Build Status](https://travis-ci.org/ngeor/instarepo.svg?branch=master)](https://travis-ci.org/ngeor/instarepo)
+
 ## Configuration
 
 ### Github
