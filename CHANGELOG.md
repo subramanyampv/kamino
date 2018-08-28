@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+- Adding unit tests for `semver.go`
+- Added "Developing" section in documentation.
+
 ## [1.3.0] - 2018-06-29
 
 ### Added

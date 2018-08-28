@@ -51,3 +51,10 @@ version with the new version.
 - `-message`: Optional: a commit message to specify when committing project files. Defaults to "Bumping version x.y.z"
 - `-no-commit`: Does not commit or create the tag (dry run)
 - `-no-push`: Does not push to remote (dry run)
+
+## Developing
+
+### Run test with coverage
+
+    go test -cover -coverprofile c.out
+    go tool cover -html c.out -o coverage.html

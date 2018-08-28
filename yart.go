@@ -57,7 +57,7 @@ func main() {
 	}
 
 	// Ensure semver is in expected format and it doesn't skip versions
-	err = ValidateSemVerTag(dir, version, currentVersion)
+	err = ValidateSemVerTag(version, currentVersion)
 	if err != nil {
 		panic(err)
 	}

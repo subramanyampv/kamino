@@ -52,7 +52,7 @@ func isSemVerFormat(version string) (bool, error) {
 // Additionally, it checks that no versions are skipped.
 // For example, if the current version is 1.2.3, the allowed versions are:
 // 1.2.4, 1.3.0 and 2.0.0
-func ValidateSemVerTag(dir string, newVersion string, currentVersion string) error {
+func ValidateSemVerTag(newVersion string, currentVersion string) error {
 	matched, err := isSemVerFormat(newVersion)
 	if err != nil {
 		return err
