@@ -4,6 +4,7 @@ GEM
     metaclass (0.0.4)
     mocha (1.7.0)
       metaclass (~> 0.0.1)
+    rake (12.3.1)
 
 PLATFORMS
   ruby
@@ -11,6 +12,7 @@ PLATFORMS
 
 DEPENDENCIES
   mocha
+  rake
 
 BUNDLED WITH
    1.16.1
