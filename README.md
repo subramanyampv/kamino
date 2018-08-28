@@ -1,6 +1,20 @@
 # instarepo
 CLI automation tool to create repositories and activate their build pipeline
 
+## Configuration
+
+### Github
+
+Username and password are set via environment variables `GITHUB_USERNAME`
+and `GITHUB_TOKEN` respectively.
+
+### Travis
+
+Travis token is set via environment variable `TRAVIS_TOKEN`. To obtain the token,
+you need to run `travis login` and `travis token`. You can read more here:
+
+https://developer.travis-ci.com/authentication
+
 ## Roadmap
 
 - Support GitHub with Travis
