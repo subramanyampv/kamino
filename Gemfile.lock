@@ -5,9 +5,6 @@ GEM
     mocha (1.7.0)
       metaclass (~> 0.0.1)
 
-PLATFORMS
-  x64-mingw32
-
 DEPENDENCIES
   mocha
 
