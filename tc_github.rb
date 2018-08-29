@@ -42,13 +42,13 @@ class TestGithub < Test::Unit::TestCase
 
     req = mock
     req.expects(:basic_auth).with('user', 'password')
-    req.expects(:body=).with(JSON.generate({
-      :name => 'test',
-      :description => 'a test repository created automatically',
-      :auto_init => true,
-      :gitignore_template => 'Maven',
-      :license_template => 'mit'
-    }))
+    req.expects(:body=).with(JSON.generate(
+                               name: 'test123',
+                               description: 'a test repository created automatically',
+                               auto_init: true,
+                               gitignore_template: 'Maven',
+                               license_template: 'mit'
+                             ))
 
     Net::HTTP::Post.expects(:new).with(uri).returns(req)
 
@@ -63,9 +63,24 @@ class TestGithub < Test::Unit::TestCase
              .returns(res)
 
     # act
-    repo = @github.create_repo
+    repo = @github.create_repo('test123')
 
     # assert
     assert_equal({ 'test' => true }, repo)
+  end
+
+  def test_clone_url
+    url = @github.clone_url('ngeor', 'instarepo')
+    assert_equal('git@github.com:ngeor/instarepo.git', url)
+  end
+
+  def test_clone_url_use_ssh_true
+    url = @github.clone_url('ngeor', 'instarepo', true)
+    assert_equal('git@github.com:ngeor/instarepo.git', url)
+  end
+
+  def test_clone_url_use_ssh_false
+    url = @github.clone_url('ngeor', 'instarepo', false)
+    assert_equal('https://github.com/ngeor/instarepo.git', url)
   end
 end

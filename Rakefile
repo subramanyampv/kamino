@@ -1,6 +1,8 @@
-task default: %w[test]
-
-task :test do
-  ruby "tc_github.rb"
-  ruby "tc_travis.rb"
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'test'
+  t.verbose = true
+  t.test_files = FileList['tc_*.rb']
 end
+
+task default: :test
