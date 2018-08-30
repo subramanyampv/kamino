@@ -1,4 +1,4 @@
-require_relative 'github'
+require_relative '../../github'
 
 require 'test/unit'
 require 'mocha/test_unit'
