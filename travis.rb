@@ -1,16 +1,12 @@
 require 'json'
 require 'net/http'
 
-##
 # Implements the Travis REST API and other Travis related functionality.
 class Travis
 
-  ##
   # Creates a new instance of this class.
-  #
-  # +owner+ The owner of the repository.
-  #
-  # +repo+  The name of the repository.
+  # +owner+:: The owner of the repository.
+  # +repo+::  The name of the repository.
   def initialize(owner, repo)
     @owner = owner
     @repo = repo

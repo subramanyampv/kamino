@@ -16,6 +16,7 @@ def clone_dir_root
   'C:\tmp'
 end
 
+# The local working directory of the cloned repository.
 def work_dir
   File.join(clone_dir_root, repo_name)
 end
@@ -41,6 +42,11 @@ end
 def add_travis_badge
   travis = Travis.new(repo_owner, repo_name)
   travis.add_badge_to_readme(work_dir)
+
+  git = GitWorkingDirectory.new(work_dir)
+  git.add 'README.md'
+  git.commit 'Added Travis badge in README.md'
+  git.push
 end
 
 create_repo
