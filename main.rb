@@ -1,3 +1,4 @@
+require_relative 'bitbucket'
 require_relative 'github'
 require_relative 'git'
 require_relative 'travis'
@@ -23,20 +24,23 @@ end
 
 def create_repo
   # create repository
-  github = Github.new
+  #github = Github.new
   #github.create_repo repo_name
+  bitbucket = Bitbucket.new
+  #bitbucket.delete_repo repo_owner, repo_name
+  bitbucket.create_repo repo_owner, repo_name
 end
 
 def clone
   # clone locally
   git = Git.new
-  # git.clone(github.clone_url(repo_owner, repo_name), clone_dir_root)
+  git.clone(github.clone_url(repo_owner, repo_name), clone_dir_root)
 end
 
 def activate_travis
   # activate travis
   travis = Travis.new(repo_owner, repo_name)
-  #travis.activate_repo repo_owner, repo_name
+  travis.activate_repo repo_owner, repo_name
 end
 
 def add_travis_badge
@@ -50,6 +54,6 @@ def add_travis_badge
 end
 
 create_repo
-clone
-activate_travis
-add_travis_badge
+#clone
+#activate_travis
+#add_travis_badge
