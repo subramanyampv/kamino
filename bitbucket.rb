@@ -1,7 +1,8 @@
 require 'json'
 require 'net/http'
+require_relative '/repo_provider_base'
 
-class Bitbucket
+class Bitbucket < RepoProviderBase
   def create_repo(owner, name)
     # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
     uri = URI("https://api.bitbucket.org/2.0/repositories/#{owner}/#{name}")

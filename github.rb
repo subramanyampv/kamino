@@ -1,7 +1,8 @@
 require 'json'
 require 'net/http'
+require_relative '/repo_provider_base'
 
-class Github
+class GitHub < RepoProviderBase
   def get_repos
     # curl -u username:password 'https://api.github.com/user/repos'
     # if 2FA is on, password needs to replaced by personal access token

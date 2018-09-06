@@ -3,9 +3,9 @@ require_relative '../../github'
 require 'test/unit'
 require 'mocha/test_unit'
 
-class TestGithub < Test::Unit::TestCase
+class TestGitHub < Test::Unit::TestCase
   def setup
-    @github = Github.new
+    @github = GitHub.new
     ENV['GITHUB_USERNAME'] = 'user'
     ENV['GITHUB_PASSWORD'] = 'password'
   end
