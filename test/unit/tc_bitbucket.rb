@@ -1,86 +1,49 @@
 require_relative '../../bitbucket'
+require_relative '../../rest_client'
+require_relative '../../options'
 
 require 'test/unit'
 require 'mocha/test_unit'
 
 class TestBitbucket < Test::Unit::TestCase
   def setup
-    @bitbucket = Bitbucket.new
-    ENV['BITBUCKET_USERNAME'] = 'user'
-    ENV['BITBUCKET_PASSWORD'] = 'password'
+    repo_options = RepoOptions.new
+    repo_options.name = 'instarepo'
+    repo_options.owner = 'ngeor'
+    repo_options.description = 'My brand new repo'
+    server_options = ServerOptions.new
+    server_options.username = 'user'
+    server_options.password = 'password'
+
+    @bitbucket = Bitbucket.new(
+      repo_options,
+      server_options
+    )
   end
 
   def test_create_repo
     # arrange
-    uri = URI('https://api.bitbucket.org/2.0/repositories/ngeor/instarepo')
-    req = mock
-    req.expects(:basic_auth).with('user', 'password')
-    req.expects(:content_type=).with('application/json')
-    req.expects(:body=).with(JSON.generate(
+    url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
+
+    RestClient.any_instance.expects(:post).with(url, {
       scm: 'git',
       is_private: true,
-      description: 'a test repository created automatically',
+      description: 'My brand new repo',
       language: 'java',
       fork_policy: 'no_forks',
       mainbranch: {
         type: 'branch',
         name: 'master'
       }
-    ))
-
-    Net::HTTP::Post.expects(:new).with(uri).returns(req)
-
-    res = Net::HTTPCreated.new(nil, 201, '')
-    res.expects(:body).returns('{"test": true}')
-
-    http = mock
-    http.expects(:request).with(req)
-
-    Net::HTTP.expects(:start).with('api.bitbucket.org', 443, use_ssl: true)
-      .yields(http)
-      .returns(res)
+    }, basic_auth: BasicAuth.new('user', 'password')).returns({
+      test: 42
+    })
 
     # act
-    repo = @bitbucket.create_repo('ngeor', 'instarepo')
+    repo = @bitbucket.create_repo
 
     # assert
-    assert_equal({ "test" => true }, repo)
-  end
-
-  def test_create_repo_failure
-    # arrange
-    uri = URI('https://api.bitbucket.org/2.0/repositories/ngeor/instarepo')
-    req = mock
-    req.expects(:basic_auth).with('user', 'password')
-    req.expects(:content_type=).with('application/json')
-    req.expects(:body=).with(JSON.generate(
-      scm: 'git',
-      is_private: true,
-      description: 'a test repository created automatically',
-      language: 'java',
-      fork_policy: 'no_forks',
-      mainbranch: {
-        type: 'branch',
-        name: 'master'
-      }
-    ))
-
-    Net::HTTP::Post.expects(:new).with(uri).returns(req)
-
-    res = Net::HTTPForbidden.new(nil, 403, 'Sorry')
-    res.expects(:body).returns('oops')
-
-    http = mock
-    http.expects(:request).with(req)
-
-    Net::HTTP.expects(:start).with('api.bitbucket.org', 443, use_ssl: true)
-      .yields(http)
-      .returns(res)
-
-    # act and assert
-    assert_raise(RuntimeError.new('403 - Sorry - oops')) {
-      @bitbucket.create_repo('ngeor', 'instarepo')
-    }
+    assert_equal({ test: 42 }, repo)
   end
 
 end
