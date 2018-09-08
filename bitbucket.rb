@@ -9,7 +9,6 @@ class Bitbucket < RepoProviderBase
   def create_repo
     # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
     url = "#{base_url}/repositories/#{repo_options.owner}/#{repo_options.name}"
-    rest_client = RestClient.new
     body = {
       scm: 'git',
       is_private: true,
@@ -27,23 +26,10 @@ class Bitbucket < RepoProviderBase
 
   def delete_repo
     url = "#{base_url}/repositories/#{repo_options.owner}/#{repo_options.name}"
-    rest_client = RestClient.new
     rest_client.delete(url, basic_auth: basic_auth)
   end
 
   private
-
-  def basic_auth
-    BasicAuth.new(username, password)
-  end
-
-  def username
-    server_options.username
-  end
-
-  def password
-    server_options.password
-  end
 
   def base_url
     'https://api.bitbucket.org/2.0'

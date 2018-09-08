@@ -94,6 +94,9 @@ end
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def interactive
+  repo_options = RepoOptions.new
+  server_options = ServerOptions.new
+
   puts 'Welcome to instarepo!'
   case read_yes_no('Would you like to create a new repository')
   when 'Y'
@@ -115,16 +118,31 @@ def interactive
     server_options.username = read_string('What is the username?')
     server_options.password = read_string('What is the password?')
 
-    puts "Creating repo #{repo_options.name}..."
     puts repo_options
     puts server_options
+
+    provider = nil
+    case server_options.provider
+    when 'GitHub'
+      provider = GitHub.new(repo_options, server_options)
+    when 'Bitbucket'
+      provider = Bitbucket.new(repo_options, server_options)
+    else
+      raise "Unsupported provider #{server_options.provider}"
+    end
+
+    if provider.repo_exists?
+      # it's ok
+      puts "Repo #{repo_options.name} already exists."
+    else
+      # create it!
+      puts "Creating repo #{repo_options.name}..."
+    end
+
   when 'N'
     puts 'Ok, skipping creation.'
   end
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-# create_repo
-# clone
-# activate_travis
-# add_travis_badge
+interactive
