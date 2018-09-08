@@ -18,7 +18,7 @@ class TestRestClient < Test::Unit::TestCase
 
     Net::HTTP::Get.expects(:new).with(uri).returns(req)
 
-    res = mock
+    res = Net::HTTPCreated.new(nil, 201, '')
     res.expects(:body).returns('{"test":42}')
 
     http = mock

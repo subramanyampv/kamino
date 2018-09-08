@@ -7,42 +7,60 @@ class RestClient
     uri = URI(url)
     req = Net::HTTP::Get.new(uri)
     req.content_type = 'application/json'
-    basic_auth.apply req if basic_auth
+    apply_basic_auth req, basic_auth
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(req)
     end
-    JSON.parse(res.body)
+
+    case res
+    when Net::HTTPSuccess then
+      JSON.parse(res.body)
+    else
+      raise "#{res.code} - #{res.message} - #{res.body}"
+    end
   end
 
   def post(url, body, basic_auth: nil)
     uri = URI(url)
     req = Net::HTTP::Post.new(uri)
     req.content_type = 'application/json'
-    basic_auth.apply req if basic_auth
+    apply_basic_auth req, basic_auth
     req.body = JSON.generate(body)
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(req)
     end
-    JSON.parse(res.body)
+
+    case res
+    when Net::HTTPSuccess then
+      JSON.parse(res.body)
+    else
+      raise "#{res.code} - #{res.message} - #{res.body}"
+    end
   end
 
   def put(url, body, basic_auth: nil)
     uri = URI(url)
     req = Net::HTTP::Put.new(uri)
     req.content_type = 'application/json'
-    basic_auth.apply req if basic_auth
+    apply_basic_auth req, basic_auth
     req.body = JSON.generate(body)
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(req)
     end
-    JSON.parse(res.body)
+
+    case res
+    when Net::HTTPSuccess then
+      JSON.parse(res.body)
+    else
+      raise "#{res.code} - #{res.message} - #{res.body}"
+    end
   end
 
   def delete(url, basic_auth: nil)
     uri = URI(url)
     req = Net::HTTP::Delete.new(uri)
     req.content_type = 'application/json'
-    basic_auth.apply req if basic_auth
+    apply_basic_auth req, basic_auth
     req.body = ''
     res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(req)
@@ -54,26 +72,12 @@ class RestClient
       raise "#{res.code} - #{res.message} - #{res.body}"
     end
   end
-end
 
-class BasicAuth
-  attr_reader :username
-  attr_reader :password
+  private
 
-  def initialize(username, password)
-    @username = username
-    @password = password
-  end
-
-  def empty?
-    username.to_s.empty?
-  end
-
-  def apply(req)
-    req.basic_auth username, password if !empty?
-  end
-
-  def ==(other)
-    username == other.username && password == other.password
+  def apply_basic_auth(req, basic_auth)
+    if !basic_auth.empty?
+      req.basic_auth basic_auth.username, basic_auth.password
+    end
   end
 end

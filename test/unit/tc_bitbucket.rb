@@ -1,6 +1,7 @@
 require_relative '../../bitbucket'
 require_relative '../../rest_client'
-require_relative '../../options'
+require_relative '../../repo_options'
+require_relative '../../server_options'
 
 require 'test/unit'
 require 'mocha/test_unit'

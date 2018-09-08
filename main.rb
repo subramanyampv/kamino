@@ -2,7 +2,8 @@ require_relative 'bitbucket'
 require_relative 'github'
 require_relative 'git'
 require_relative 'travis'
-require_relative 'options'
+require_relative 'repo_options'
+require_relative 'server_options'
 
 repo_options   = RepoOptions.new
 server_options = ServerOptions.new
@@ -55,8 +56,7 @@ def add_travis_badge
   git.push
 end
 
-puts "Welcome to instarepo!"
-
+# Read a yes/no answer from the CLI.
 def read_yes_no(prompt)
   answer = ''
   loop do
@@ -69,6 +69,7 @@ def read_yes_no(prompt)
   answer
 end
 
+# Read a non-empty string from the CLI.
 def read_string(prompt)
   answer = ''
   while answer.empty?
@@ -80,6 +81,7 @@ def read_string(prompt)
   answer
 end
 
+# Read a string from the CLI, constraint to the given options.
 def read_option(prompt, options)
   answer = ''
   while !options.include?(answer)
@@ -90,26 +92,30 @@ def read_option(prompt, options)
   answer
 end
 
-case read_yes_no("Would you like to create a new repository")
-when 'Y'
-  repo_options.name        = read_string("What should the repo name be?")
-  repo_options.description = read_string("What is the repo about? Describe it in a short sentence.")
-  repo_options.owner       = read_string("Who is the owner of the repository?")
-  repo_options.language    = read_option("What is the programming language?", [
-    "Java"
-  ])
+# Interactive flow
+def interactive
+  puts "Welcome to instarepo!"
+  case read_yes_no("Would you like to create a new repository")
+  when 'Y'
+    repo_options.name        = read_string("What should the repo name be?")
+    repo_options.description = read_string("What is the repo about? Describe it in a short sentence.")
+    repo_options.owner       = read_string("Who is the owner of the repository?")
+    repo_options.language    = read_option("What is the programming language?", [
+      "Java"
+    ])
 
-  server_options.provider  = read_option("Where should the repo be hosted?", [
-    "GitHub", "Bitbucket"
-  ])
-  server_options.username  = read_string("What is the username?")
-  server_options.password  = read_string("What is the password?")
+    server_options.provider  = read_option("Where should the repo be hosted?", [
+      "GitHub", "Bitbucket"
+    ])
+    server_options.username  = read_string("What is the username?")
+    server_options.password  = read_string("What is the password?")
 
-  puts "Creating repo #{repo_options.name}..."
-  puts repo_options
-  puts server_options
-when 'N'
-  puts "Ok, skipping creation."
+    puts "Creating repo #{repo_options.name}..."
+    puts repo_options
+    puts server_options
+  when 'N'
+    puts "Ok, skipping creation."
+  end
 end
 
 #create_repo
