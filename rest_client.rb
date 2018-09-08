@@ -4,44 +4,34 @@ require 'net/http'
 # Utility class to simplify REST calls
 class RestClient
   def get(url, basic_auth: nil)
-    uri = URI(url)
-    req = Net::HTTP::Get.new(uri)
-    req.content_type = 'application/json'
-    apply_basic_auth req, basic_auth
-    call uri, req
+    act(url, Net::HTTP::Get, nil, basic_auth)
   end
 
   def post(url, body, basic_auth: nil)
-    uri = URI(url)
-    req = Net::HTTP::Post.new(uri)
-    req.content_type = 'application/json'
-    apply_basic_auth req, basic_auth
-    req.body = JSON.generate(body)
-    call uri, req
+    act(url, Net::HTTP::Post, JSON.generate(body), basic_auth)
   end
 
   def put(url, body, basic_auth: nil)
-    uri = URI(url)
-    req = Net::HTTP::Put.new(uri)
-    req.content_type = 'application/json'
-    apply_basic_auth req, basic_auth
-    req.body = JSON.generate(body)
-    call uri, req
+    act(url, Net::HTTP::Put, JSON.generate(body), basic_auth)
   end
 
   def delete(url, basic_auth: nil)
-    uri = URI(url)
-    req = Net::HTTP::Delete.new(uri)
-    req.content_type = 'application/json'
-    apply_basic_auth req, basic_auth
-    req.body = ''
-    call uri, req
+    act(url, Net::HTTP::Delete, '', basic_auth)
   end
 
   private
 
+  def act(url, method, body, basic_auth)
+    uri = URI(url)
+    req = method.new(uri)
+    req.content_type = 'application/json'
+    apply_basic_auth req, basic_auth
+    req.body = body if body
+    call uri, req
+  end
+
   def apply_basic_auth(req, basic_auth)
-    return if basic_auth.empty?
+    return if !basic_auth || basic_auth.empty?
     req.basic_auth basic_auth.username, basic_auth.password
   end
 
@@ -56,11 +46,17 @@ class RestClient
   def handle_response_with_body(res)
     case res
     when Net::HTTPSuccess then
-      body = res.body
-      nil if !body || body.empty?
-      JSON.parse(body)
+      safe_parse_json res.body
     else
       raise RestClientError.new(res.code, res.message, res.body)
+    end
+  end
+
+  def safe_parse_json(body)
+    if !body || body.empty?
+      nil
+    else
+      JSON.parse(body)
     end
   end
 end

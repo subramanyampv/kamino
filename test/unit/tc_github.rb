@@ -75,4 +75,30 @@ class TestGitHub < Test::Unit::TestCase
     url = @github.clone_url(false)
     assert_equal('https://github.com/ngeor/instarepo.git', url)
   end
+
+  def test_repo_exists_true
+    url = 'https://api.github.com/repos/ngeor/instarepo'
+    RestClient.any_instance.expects(:get)
+              .with(url, basic_auth: BasicAuth.new('user', 'password'))
+              .returns(test: 42)
+    assert_true(@github.repo_exists?)
+  end
+
+  def test_repo_exists_false
+    url = 'https://api.github.com/repos/ngeor/instarepo'
+    RestClient.any_instance.expects(:get)
+              .with(url, basic_auth: BasicAuth.new('user', 'password'))
+              .raises(RestClientError.new('404', 'oops', 'An error'))
+    assert_false(@github.repo_exists?)
+  end
+
+  def test_repo_exists_forbidden
+    url = 'https://api.github.com/repos/ngeor/instarepo'
+    RestClient.any_instance.expects(:get)
+              .with(url, basic_auth: BasicAuth.new('user', 'password'))
+              .raises(RestClientError.new('403', 'oops', 'An error'))
+    assert_raise RestClientError do
+      @github.repo_exists?
+    end
+  end
 end
