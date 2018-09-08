@@ -6,16 +6,12 @@ class RepoProviderBase
   end
 
   def create_repo
-    fail NotImplementedException
+    raise NotImplementedException
   end
 
   protected
 
-  def repo_options
-    @repo_options
-  end
+  attr_reader :repo_options
 
-  def server_options
-    @server_options
-  end
+  attr_reader :server_options
 end

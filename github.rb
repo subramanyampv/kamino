@@ -3,8 +3,9 @@ require 'net/http'
 require_relative './repo_provider_base'
 require_relative './rest_client'
 
+# GitHub repository provider.
 class GitHub < RepoProviderBase
-  def get_repos
+  def repos
     # curl -u username:password 'https://api.github.com/user/repos'
     # if 2FA is on, password needs to replaced by personal access token
     url = 'https://api.github.com/user/repos'

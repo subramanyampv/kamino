@@ -6,6 +6,7 @@ require_relative '../../server_options'
 require 'test/unit'
 require 'mocha/test_unit'
 
+# Unit tests for GitHub.
 class TestGitHub < Test::Unit::TestCase
   def setup
     repo_options = RepoOptions.new
@@ -19,21 +20,22 @@ class TestGitHub < Test::Unit::TestCase
     @github = GitHub.new(repo_options, server_options)
   end
 
-  def test_get_repos
+  def test_repos
     # arrange
     url = 'https://api.github.com/user/repos'
 
     RestClient.any_instance.expects(:get)
-      .with(url, basic_auth: BasicAuth.new('user', 'password'))
-      .returns({ test: 42})
+              .with(url, basic_auth: BasicAuth.new('user', 'password'))
+              .returns(test: 42)
 
     # act
-    repos = @github.get_repos
+    repos = @github.repos
 
     # assert
     assert_equal({ test: 42 }, repos)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def test_create_repo
     # arrange
     url = 'https://api.github.com/user/repos'
@@ -46,9 +48,10 @@ class TestGitHub < Test::Unit::TestCase
       license_template: 'mit'
     }
 
+    expected_basic_auth = BasicAuth.new('user', 'password')
     RestClient.any_instance.expects(:post)
-      .with(url, expected_body, basic_auth: BasicAuth.new('user', 'password'))
-      .returns({ test: 42})
+              .with(url, expected_body, basic_auth: expected_basic_auth)
+              .returns(test: 42)
 
     # act
     repo = @github.create_repo
@@ -56,6 +59,7 @@ class TestGitHub < Test::Unit::TestCase
     # assert
     assert_equal({ test: 42 }, repo)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def test_clone_url
     url = @github.clone_url

@@ -2,6 +2,7 @@ require_relative '../../repo_options'
 
 require 'test/unit'
 
+# Unit tests for RepoOptions.
 class TestRepoOptions < Test::Unit::TestCase
   def test_create
     repo_options = RepoOptions.new
@@ -9,9 +10,13 @@ class TestRepoOptions < Test::Unit::TestCase
     assert_nil(repo_options.owner)
     assert_nil(repo_options.description)
     assert_nil(repo_options.language)
-    assert_equal("RepoOptions {name: , owner: , language: , description: }", repo_options.to_s)
+    assert_equal(
+      'RepoOptions {name: , owner: , language: , description: }',
+      repo_options.to_s
+    )
   end
 
+  # rubocop:disable Metrics/MethodLength
   def test_with_properties
     repo_options = RepoOptions.new
     repo_options.name = 'myrepo'
@@ -23,6 +28,11 @@ class TestRepoOptions < Test::Unit::TestCase
     assert_equal('ngeor', repo_options.owner)
     assert_equal('A new repo', repo_options.description)
     assert_equal('Java', repo_options.language)
-    assert_equal('RepoOptions {name: myrepo, owner: ngeor, language: Java, description: A new repo}', repo_options.to_s)
+    assert_equal(
+      'RepoOptions {name: myrepo, owner: ngeor, ' \
+      'language: Java, description: A new repo}',
+      repo_options.to_s
+    )
   end
+  # rubocop:enable Metrics/MethodLength
 end

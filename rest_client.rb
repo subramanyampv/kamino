@@ -2,6 +2,7 @@ require 'json'
 require 'net/http'
 
 # Utility class to simplify REST calls
+# rubocop:disable MethodLength
 class RestClient
   def get(url, basic_auth: nil)
     uri = URI(url)
@@ -68,6 +69,7 @@ class RestClient
 
     case res
     when Net::HTTPSuccess then
+      nil
     else
       raise "#{res.code} - #{res.message} - #{res.body}"
     end
@@ -76,8 +78,8 @@ class RestClient
   private
 
   def apply_basic_auth(req, basic_auth)
-    if !basic_auth.empty?
-      req.basic_auth basic_auth.username, basic_auth.password
-    end
+    return if basic_auth.empty?
+    req.basic_auth basic_auth.username, basic_auth.password
   end
 end
+# rubocop:enable MethodLength

@@ -1,3 +1,4 @@
+# Server options for the repository provider
 class ServerOptions
   # GitHub or Bitbucket
   attr_accessor :provider

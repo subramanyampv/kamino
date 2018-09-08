@@ -3,11 +3,13 @@ require_relative '../../rest_client'
 require 'test/unit'
 require 'mocha/test_unit'
 
+# Unit tests for RestClient
 class TestRestClient < Test::Unit::TestCase
   def setup
     @rest_client = RestClient.new
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def test_get_repos
     # arrange
     uri = URI('https://api.github.com/user/repos')
@@ -37,4 +39,5 @@ class TestRestClient < Test::Unit::TestCase
     # assert
     assert_equal({ 'test' => 42 }, result)
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 end

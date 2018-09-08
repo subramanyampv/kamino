@@ -1,3 +1,4 @@
+# Basic authentication credentials.
 class BasicAuth
   attr_reader :username
   attr_reader :password

@@ -6,7 +6,9 @@ require_relative '../../server_options'
 require 'test/unit'
 require 'mocha/test_unit'
 
+# Unit tests for Bitbucket.
 class TestBitbucket < Test::Unit::TestCase
+  # rubocop:disable Metrics/MethodLength
   def setup
     repo_options = RepoOptions.new
     repo_options.name = 'instarepo'
@@ -21,12 +23,13 @@ class TestBitbucket < Test::Unit::TestCase
       server_options
     )
   end
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def test_create_repo
     # arrange
     url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
-
-    RestClient.any_instance.expects(:post).with(url, {
+    expected_body = {
       scm: 'git',
       is_private: true,
       description: 'My brand new repo',
@@ -36,9 +39,12 @@ class TestBitbucket < Test::Unit::TestCase
         type: 'branch',
         name: 'master'
       }
-    }, basic_auth: BasicAuth.new('user', 'password')).returns({
-      test: 42
-    })
+    }
+
+    expected_basic_auth = BasicAuth.new('user', 'password')
+    RestClient.any_instance.expects(:post)
+              .with(url, expected_body, basic_auth: expected_basic_auth)
+              .returns(test: 42)
 
     # act
     repo = @bitbucket.create_repo
@@ -46,5 +52,5 @@ class TestBitbucket < Test::Unit::TestCase
     # assert
     assert_equal({ test: 42 }, repo)
   end
-
+  # rubocop:enable Metrics/MethodLength
 end

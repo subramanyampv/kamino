@@ -3,12 +3,14 @@ require_relative '../../travis'
 require 'test/unit'
 require 'mocha/test_unit'
 
+# Unit tests for Travis.
 class TestTravis < Test::Unit::TestCase
   def setup
     @travis = Travis.new('ngeor', 'instarepo')
     ENV['TRAVIS_TOKEN'] = 'secret'
   end
 
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def test_activate_repo
     # arrange
     uri = URI('https://api.travis-ci.org/repo/ngeor%2Finstarepo/activate')
@@ -35,20 +37,21 @@ class TestTravis < Test::Unit::TestCase
     # assert
     assert_equal({ 'test' => 42 }, result)
   end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def test_add_badge_to_readme_not_exists
     # arrange
-    readFile = [
-      '# my repo',
-      'another line'
-    ]
+    read_file = ['# my repo', 'another line']
     File.expects(:open).with('C:/tmp/myrepo/README.md')
-      .returns(readFile)
+        .returns(read_file)
 
-    writeFile = mock
-    writeFile.expects(:puts).with("\n[![Build Status](https://travis-ci.org/ngeor/instarepo.svg?branch=master)](https://travis-ci.org/ngeor/instarepo)")
+    write_file = mock
+    write_file.expects(:puts).with("\n[![Build Status]" \
+      '(https://travis-ci.org/ngeor/instarepo.svg?branch=master)]' \
+      '(https://travis-ci.org/ngeor/instarepo)')
     File.expects(:open).with('C:/tmp/myrepo/README.md', 'a')
-      .yields(writeFile)
+        .yields(write_file)
 
     # act
     result = @travis.add_badge_to_readme('C:/tmp/myrepo')
@@ -56,16 +59,17 @@ class TestTravis < Test::Unit::TestCase
     # assert
     assert_equal(true, result)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def test_add_badge_to_readme_exists
     # arrange
-    readFile = [
+    read_file = [
       '# my repo',
       'another line',
-      "[![Build Status](https://travis-ci.org/ngeor/instarepo.svg?branch=master)](https://travis-ci.org/ngeor/instarepo)"
+      '[![Build Status](https://travis-ci.org/ngeor/instarepo.svg?branch=master)](https://travis-ci.org/ngeor/instarepo)'
     ]
     File.expects(:open).with('C:/tmp/myrepo/README.md')
-      .returns(readFile)
+        .returns(read_file)
 
     # act
     result = @travis.add_badge_to_readme('C:/tmp/myrepo')
@@ -73,5 +77,4 @@ class TestTravis < Test::Unit::TestCase
     # assert
     assert_equal(false, result)
   end
-
 end

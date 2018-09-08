@@ -2,6 +2,7 @@ require_relative '../../basic_auth'
 
 require 'test/unit'
 
+# Unit test for BasicAuth.
 class TestBasicAuth < Test::Unit::TestCase
   def test_create
     basic_auth = BasicAuth.new('user', 'password')

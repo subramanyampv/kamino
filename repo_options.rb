@@ -1,3 +1,4 @@
+# Repository options for a new repository.
 class RepoOptions
   attr_accessor :name
   attr_accessor :owner

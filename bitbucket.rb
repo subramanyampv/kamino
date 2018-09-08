@@ -3,12 +3,14 @@ require 'net/http'
 require_relative './repo_provider_base'
 require_relative './rest_client'
 
+# Bitbucket Cloud repository provider.
 class Bitbucket < RepoProviderBase
+  # rubocop:disable Metrics/MethodLength
   def create_repo
     # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
-    url = "https://api.bitbucket.org/2.0/repositories/#{repo_options.owner}/#{repo_options.name}"
+    url = "#{base_url}/repositories/#{repo_options.owner}/#{repo_options.name}"
     rest_client = RestClient.new
-    rest_client.post(url, {
+    body = {
       scm: 'git',
       is_private: true,
       description: repo_options.description,
@@ -18,11 +20,13 @@ class Bitbucket < RepoProviderBase
         type: 'branch',
         name: 'master'
       }
-    }, basic_auth: basic_auth)
+    }
+    rest_client.post(url, body, basic_auth: basic_auth)
   end
+  # rubocop:enable Metrics/MethodLength
 
   def delete_repo
-    url = "https://api.bitbucket.org/2.0/repositories/#{repo_options.owner}/#{repo_options.name}"
+    url = "#{base_url}/repositories/#{repo_options.owner}/#{repo_options.name}"
     rest_client = RestClient.new
     rest_client.delete(url, basic_auth: basic_auth)
   end
@@ -39,5 +43,9 @@ class Bitbucket < RepoProviderBase
 
   def password
     server_options.password
+  end
+
+  def base_url
+    'https://api.bitbucket.org/2.0'
   end
 end

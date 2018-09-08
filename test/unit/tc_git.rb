@@ -3,6 +3,7 @@ require_relative '../../git'
 require 'test/unit'
 require 'mocha/test_unit'
 
+# Unit tests for Git.
 class TestGit < Test::Unit::TestCase
   def setup
     @git = Git.new
@@ -23,6 +24,7 @@ class TestGit < Test::Unit::TestCase
   end
 end
 
+# Unit tests for GitWorkingDirectory.
 class TestGitWorkingDirectory < Test::Unit::TestCase
   def setup
     @git = GitWorkingDirectory.new('C:/myrepo')
@@ -38,7 +40,9 @@ class TestGitWorkingDirectory < Test::Unit::TestCase
 
   def test_add_specific_file
     # arrange
-    Kernel.expects(:system).with('git add README.md', chdir: 'C:/myrepo').returns(42)
+    Kernel.expects(:system)
+          .with('git add README.md', chdir: 'C:/myrepo')
+          .returns(42)
 
     # act and assert
     assert_equal(42, @git.add('README.md'))
@@ -47,7 +51,7 @@ class TestGitWorkingDirectory < Test::Unit::TestCase
   def test_commit
     # arrange
     Kernel.expects(:system).with(
-      "git commit -m \"Added badge to README\"",
+      'git commit -m "Added badge to README"',
       chdir: 'C:/myrepo'
     ).returns(43)
 
