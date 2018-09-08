@@ -35,6 +35,15 @@ class Bitbucket < RepoProviderBase
     false
   end
 
+  def clone_url(use_ssh = true)
+    if use_ssh
+      "git@bitbucket.org:#{repo_options.owner}/#{repo_options.name}.git"
+    else
+      "https://#{server_options.username}@bitbucket.org/" \
+      "#{repo_options.owner}/#{repo_options.name}.git"
+    end
+  end
+
   private
 
   def base_url

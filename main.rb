@@ -5,38 +5,6 @@ require_relative 'travis'
 require_relative 'repo_options'
 require_relative 'server_options'
 
-def repo_owner
-  'ngeor'
-end
-
-def repo_name
-  'test'
-end
-
-def clone_dir_root
-  'C:\tmp'
-end
-
-# The local working directory of the cloned repository.
-def work_dir
-  File.join(clone_dir_root, repo_name)
-end
-
-def create_repo
-  # create repository
-  # github = GitHub.new
-  # github.create_repo repo_name
-  bitbucket = Bitbucket.new
-  # bitbucket.delete_repo repo_owner, repo_name
-  bitbucket.create_repo repo_owner, repo_name
-end
-
-def clone
-  # clone locally
-  git = Git.new
-  git.clone(github.clone_url(repo_owner, repo_name), clone_dir_root)
-end
-
 def activate_travis
   # activate travis
   travis = Travis.new(repo_owner, repo_name)
@@ -91,6 +59,26 @@ def read_option(prompt, options)
   answer
 end
 
+def create_provider(repo_options, server_options)
+  case server_options.provider
+  when 'GitHub'
+    GitHub.new(repo_options, server_options)
+  when 'Bitbucket'
+    Bitbucket.new(repo_options, server_options)
+  else
+    raise "Unsupported provider #{server_options.provider}"
+  end
+end
+
+def safe_clone(clone_url, repo_name, clone_dir_root)
+  raise "Directory #{clone_dir_root} does not exist" unless \
+    Dir.exist?(clone_dir_root)
+  work_dir = File.join(clone_dir_root, repo_name)
+  raise "Directory #{work_dir} already exists" if Dir.exist?(work_dir)
+  git = Git.new
+  raise 'Could not clone' unless git.clone(clone_url, clone_dir_root)
+end
+
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def interactive
@@ -121,15 +109,7 @@ def interactive
     puts repo_options
     puts server_options
 
-    provider = nil
-    case server_options.provider
-    when 'GitHub'
-      provider = GitHub.new(repo_options, server_options)
-    when 'Bitbucket'
-      provider = Bitbucket.new(repo_options, server_options)
-    else
-      raise "Unsupported provider #{server_options.provider}"
-    end
+    provider = create_provider(repo_options, server_options)
 
     if provider.repo_exists?
       # it's ok
@@ -137,12 +117,21 @@ def interactive
     else
       # create it!
       puts "Creating repo #{repo_options.name}..."
+      provider.create_repo
     end
 
+    clone_dir_root = read_string(
+      'In which directory should the repo be cloned?'
+    )
+
+    use_ssh = read_yes_no('Should we use SSH')
+
+    # TODO: clone or pull if git remote match
+    safe_clone provider.clone_url(use_ssh), repo_options.name, clone_dir_root
   when 'N'
     puts 'Ok, skipping creation.'
   end
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
-interactive
+interactive if $PROGRAM_NAME == __FILE__

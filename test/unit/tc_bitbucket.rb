@@ -91,4 +91,25 @@ class TestBitbucket < Test::Unit::TestCase
       @bitbucket.repo_exists?
     end
   end
+
+  def test_clone_url
+    assert_equal(
+      'git@bitbucket.org:ngeor/instarepo.git',
+      @bitbucket.clone_url
+    )
+  end
+
+  def test_clone_url_use_ssh_true
+    assert_equal(
+      'git@bitbucket.org:ngeor/instarepo.git',
+      @bitbucket.clone_url(true)
+    )
+  end
+
+  def test_clone_url_use_ssh_false
+    assert_equal(
+      'https://user@bitbucket.org/ngeor/instarepo.git',
+      @bitbucket.clone_url(false)
+    )
+  end
 end
