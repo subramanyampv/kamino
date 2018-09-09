@@ -70,15 +70,6 @@ def create_provider(repo_options, server_options)
   end
 end
 
-def safe_clone(clone_url, repo_name, clone_dir_root)
-  raise "Directory #{clone_dir_root} does not exist" unless \
-    Dir.exist?(clone_dir_root)
-  work_dir = File.join(clone_dir_root, repo_name)
-  raise "Directory #{work_dir} already exists" if Dir.exist?(work_dir)
-  git = Git.new
-  raise 'Could not clone' unless git.clone(clone_url, clone_dir_root)
-end
-
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def interactive
@@ -126,8 +117,13 @@ def interactive
 
     use_ssh = read_yes_no('Should we use SSH')
 
-    # TODO: clone or pull if git remote match
-    safe_clone provider.clone_url(use_ssh), repo_options.name, clone_dir_root
+    git = Git.new(
+      provider.clone_url(use_ssh),
+      repo_options.name,
+      clone_dir_root
+    )
+
+    git.clone_or_pull
   when 'N'
     puts 'Ok, skipping creation.'
   end
