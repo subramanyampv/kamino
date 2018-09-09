@@ -3,29 +3,30 @@ require 'net/http'
 
 # Utility class to simplify REST calls
 class RestClient
-  def get(url, basic_auth: nil)
-    act(url, Net::HTTP::Get, nil, basic_auth)
+  def get(url, basic_auth: nil, headers: nil)
+    act(url, Net::HTTP::Get, nil, basic_auth, headers)
   end
 
-  def post(url, body, basic_auth: nil)
-    act(url, Net::HTTP::Post, JSON.generate(body), basic_auth)
+  def post(url, body, basic_auth: nil, headers: nil)
+    act(url, Net::HTTP::Post, JSON.generate(body), basic_auth, headers)
   end
 
-  def put(url, body, basic_auth: nil)
-    act(url, Net::HTTP::Put, JSON.generate(body), basic_auth)
+  def put(url, body, basic_auth: nil, headers: nil)
+    act(url, Net::HTTP::Put, JSON.generate(body), basic_auth, headers)
   end
 
-  def delete(url, basic_auth: nil)
-    act(url, Net::HTTP::Delete, '', basic_auth)
+  def delete(url, basic_auth: nil, headers: nil)
+    act(url, Net::HTTP::Delete, '', basic_auth, headers)
   end
 
   private
 
-  def act(url, method, body, basic_auth)
+  def act(url, method, body, basic_auth, headers)
     uri = URI(url)
     req = method.new(uri)
     req.content_type = 'application/json'
     apply_basic_auth req, basic_auth
+    apply_headers req, headers if headers
     req.body = body if body
     call uri, req
   end
@@ -33,6 +34,12 @@ class RestClient
   def apply_basic_auth(req, basic_auth)
     return if !basic_auth || basic_auth.empty?
     req.basic_auth basic_auth.username, basic_auth.password
+  end
+
+  def apply_headers(req, headers)
+    headers.each do |k, v|
+      req[k] = v
+    end
   end
 
   def call(uri, req)

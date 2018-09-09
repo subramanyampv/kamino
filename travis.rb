@@ -1,26 +1,26 @@
-require 'json'
-require 'net/http'
+require_relative './rest_client'
 
 # Implements the Travis REST API and other Travis related functionality.
 class Travis
   # Creates a new instance of this class.
-  # +owner+:: The owner of the repository.
-  # +repo+::  The name of the repository.
-  def initialize(owner, repo)
-    @owner = owner
-    @repo = repo
+  # +repo_options+:: The repository options.
+  # +token+::        The Travis token.
+  def initialize(repo_options, token)
+    @repo_options = repo_options
+    @token = token
+    @rest_client = RestClient.new
   end
 
+  # for the unit tests
+  attr_accessor :rest_client
+
   def activate_repo
-    slug = "#{@owner}%2F#{@repo}"
-    uri = URI("https://api.travis-ci.org/repo/#{slug}/activate")
-    req = Net::HTTP::Post.new(uri)
-    req['Authorization'] = 'token ' + token
-    req['Travis-API-Version'] = '3'
-    res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-      http.request(req)
-    end
-    JSON.parse(res.body)
+    url = "https://api.travis-ci.org/repo/#{encoded_slug}/activate"
+
+    @rest_client.post(url, '', headers: {
+                        'Authorization' => "token #{@token}",
+                        'Travis-API-Version' => '3'
+                      })
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -44,13 +44,17 @@ class Travis
 
   private
 
-  def token
-    ENV['TRAVIS_TOKEN']
-  end
-
   def travis_badge_markdown
     '[![Build Status]' \
-    "(https://travis-ci.org/#{@owner}/#{@repo}.svg?branch=master)]" \
-    "(https://travis-ci.org/#{@owner}/#{@repo})"
+    "(https://travis-ci.org/#{slug}.svg?branch=master)]" \
+    "(https://travis-ci.org/#{slug})"
+  end
+
+  def slug
+    "#{@repo_options.owner}/#{@repo_options.name}"
+  end
+
+  def encoded_slug
+    "#{@repo_options.owner}%2F#{@repo_options.name}"
   end
 end

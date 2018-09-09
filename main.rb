@@ -5,22 +5,6 @@ require_relative 'travis'
 require_relative 'repo_options'
 require_relative 'server_options'
 
-def activate_travis
-  # activate travis
-  travis = Travis.new(repo_owner, repo_name)
-  travis.activate_repo repo_owner, repo_name
-end
-
-def add_travis_badge
-  travis = Travis.new(repo_owner, repo_name)
-  travis.add_badge_to_readme(work_dir)
-
-  git = GitWorkingDirectory.new(work_dir)
-  git.add 'README.md'
-  git.commit 'Added Travis badge in README.md'
-  git.push
-end
-
 # Read a yes/no answer from the CLI.
 def read_yes_no(prompt)
   answer = ''
@@ -72,6 +56,7 @@ end
 
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 def interactive
   repo_options = RepoOptions.new
   server_options = ServerOptions.new
@@ -124,10 +109,32 @@ def interactive
     )
 
     git.clone_or_pull
+
+    use_travis = server_options.provider == 'GitHub' && \
+                 read_yes_no('Would you like to use Travis')
+    use_bitbucket_pipelines = server_options.provider == 'Bitbucket' && \
+                              read_yes_no('Would you like to enable ' \
+                              'Bitbucket Pipelines')
+
+    if use_travis
+      token = read_string('What is your Travis token?')
+      travis = Travis.new(repo_options, token)
+      travis.activate_repo
+
+      travis.add_badge_to_readme(git.working_dir)
+      git.add 'README.md'
+      git.commit 'Added Travis badge in README.md'
+      git.push
+    end
+
+    if use_bitbucket_pipelines
+      # TODO: enable bitbucket pipelines
+    end
   when 'N'
     puts 'Ok, skipping creation.'
   end
 end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+# rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
 interactive if $PROGRAM_NAME == __FILE__

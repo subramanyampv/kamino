@@ -1,43 +1,37 @@
 require_relative '../../travis'
-
+require_relative '../../repo_options'
 require 'test/unit'
 require 'mocha/test_unit'
 
 # Unit tests for Travis.
 class TestTravis < Test::Unit::TestCase
   def setup
-    @travis = Travis.new('ngeor', 'instarepo')
-    ENV['TRAVIS_TOKEN'] = 'secret'
+    repo_options = RepoOptions.new
+    repo_options.name = 'instarepo'
+    repo_options.owner = 'ngeor'
+    @travis = Travis.new(repo_options, 'secret')
+    @travis.rest_client = mock
   end
 
-  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def test_activate_repo
     # arrange
-    uri = URI('https://api.travis-ci.org/repo/ngeor%2Finstarepo/activate')
+    url = 'https://api.travis-ci.org/repo/ngeor%2Finstarepo/activate'
 
-    req = mock
-    req.expects(:[]=).with('Authorization', 'token secret')
-    req.expects(:[]=).with('Travis-API-Version', '3')
+    headers = {
+      'Authorization' => 'token secret',
+      'Travis-API-Version' => '3'
+    }
 
-    Net::HTTP::Post.expects(:new).with(uri).returns(req)
-
-    res = mock
-    res.expects(:body).returns('{"test":42}')
-
-    http = mock
-    http.expects(:request).with(req)
-
-    Net::HTTP.expects(:start).with('api.travis-ci.org', 443, use_ssl: true)
-             .yields(http)
-             .returns(res)
+    @travis.rest_client.expects(:post)
+           .with(url, '', headers: headers)
+           .returns(test: 42)
 
     # act
     result = @travis.activate_repo
 
     # assert
-    assert_equal({ 'test' => 42 }, result)
+    assert_equal({ test: 42 }, result)
   end
-  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
   def test_add_badge_to_readme_not_exists

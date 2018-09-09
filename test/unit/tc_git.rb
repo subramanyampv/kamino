@@ -124,4 +124,8 @@ class TestGit < Test::Unit::TestCase
     # act and assert
     assert_equal(44, @git.push)
   end
+
+  def test_working_dir
+    assert_equal('C:/tmp/hey', @git.working_dir)
+  end
 end

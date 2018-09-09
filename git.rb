@@ -47,6 +47,10 @@ class Git
     system 'git push'
   end
 
+  def working_dir
+    File.join(@clone_dir_root, @repo_name)
+  end
+
   private
 
   # Gets the remote URL of the origin.
@@ -62,10 +66,6 @@ class Git
 
   def system(cmd)
     @shell.system cmd, chdir: working_dir
-  end
-
-  def working_dir
-    File.join(@clone_dir_root, @repo_name)
   end
 
   def ensure_clone_dir_root_exists

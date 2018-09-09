@@ -167,6 +167,42 @@ class TestRestClient < Test::Unit::TestCase
   # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
   # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+  def test_post_headers
+    # arrange
+    uri = URI('https://api.github.com/user/repos')
+
+    req = mock
+    req.expects(:content_type=).with('application/json')
+    req.expects(:body=).with('{"toast":"light"}')
+    req.expects(:[]=).with('Token', 'Secret')
+
+    Net::HTTP::Post.expects(:new).with(uri).returns(req)
+
+    res = Net::HTTPCreated.new(nil, 201, '')
+    res.expects(:body).returns('{"test":42}')
+
+    http = mock
+    http.expects(:request).with(req)
+
+    Net::HTTP.expects(:start).with('api.github.com', 443, use_ssl: true)
+             .yields(http)
+             .returns(res)
+
+    # act
+    result = @rest_client.post(
+      'https://api.github.com/user/repos',
+      { toast: 'light' },
+      headers: {
+        'Token' => 'Secret'
+      }
+    )
+
+    # assert
+    assert_equal({ 'test' => 42 }, result)
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+  # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
   def test_put_nil_basic_auth_empty_response_body
     # arrange
     uri = URI('https://api.github.com/user/repos')
