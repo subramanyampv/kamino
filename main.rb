@@ -4,6 +4,7 @@ require_relative 'git'
 require_relative 'travis'
 require_relative 'repo_options'
 require_relative 'server_options'
+require_relative 'arg_handler'
 
 # Read a yes/no answer from the CLI.
 def read_yes_no(prompt)
@@ -57,30 +58,27 @@ end
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-def interactive
-  repo_options = RepoOptions.new
-  server_options = ServerOptions.new
-
+def interactive(repo_options, server_options)
   puts 'Welcome to instarepo!'
   case read_yes_no('Would you like to create a new repository')
   when 'Y'
-    repo_options.name = read_string('What should the repo name be?')
-    repo_options.description = read_string(
+    repo_options.name ||= read_string('What should the repo name be?')
+    repo_options.description ||= read_string(
       'What is the repo about? Describe it in a short sentence.'
     )
-    repo_options.owner = read_string(
+    repo_options.owner ||= read_string(
       'Who is the owner of the repository?'
     )
-    repo_options.language = read_option(
+    repo_options.language ||= read_option(
       'What is the programming language?',
       %w[Java]
     )
-    server_options.provider = read_option(
+    server_options.provider ||= read_option(
       'Where should the repo be hosted?',
       %w[GitHub Bitbucket]
     )
-    server_options.username = read_string('What is the username?')
-    server_options.password = read_string('What is the password?')
+    server_options.username ||= read_string('What is the username?')
+    server_options.password ||= read_string('What is the password?')
 
     puts repo_options
     puts server_options
@@ -137,4 +135,60 @@ end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-interactive if $PROGRAM_NAME == __FILE__
+# rubocop:disable Metrics/MethodLength
+def cli_options
+  {
+    help: {
+      description: 'Prints this help message and exits',
+      help: true
+    },
+    name: {
+      description: 'The name of the repository'
+    },
+    owner: {
+      description: 'The owner of the repository'
+    },
+    language: {
+      description: 'The programming language'
+    },
+    description: {
+      description: 'The description of the repository'
+    },
+    provider: {
+      description: 'The provider of the git repository'
+    },
+    username: {
+      description: 'The username for the provider'
+    },
+    password: {
+      description: 'The password for the provider'
+    }
+  }
+end
+# rubocop:enable Metrics/MethodLength
+
+# entrypoint for the program
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+def main
+  repo_options = RepoOptions.new
+  server_options = ServerOptions.new
+
+  arg_handler = ArgHandler.new(cli_options)
+  cli = arg_handler.parse(ARGV)
+
+  # otherwise `gets` will try to open them as files
+  ARGV.clear
+
+  %i[name description owner language].each do |symbol|
+    repo_options.send(symbol.to_s + '=', cli[symbol])
+  end
+
+  %i[provider username password].each do |symbol|
+    server_options.send(symbol.to_s + '=', cli[symbol])
+  end
+
+  interactive repo_options, server_options
+end
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
+
+main if $PROGRAM_NAME == __FILE__
