@@ -1,29 +1,21 @@
 require_relative '../../bitbucket'
 require_relative '../../rest_client'
-require_relative '../../repo_options'
-require_relative '../../server_options'
 
 require 'test/unit'
 require 'mocha/test_unit'
 
 # Unit tests for Bitbucket.
 class TestBitbucket < Test::Unit::TestCase
-  # rubocop:disable Metrics/MethodLength
   def setup
-    repo_options = RepoOptions.new
-    repo_options.name = 'instarepo'
-    repo_options.owner = 'ngeor'
-    repo_options.description = 'My brand new repo'
-    server_options = ServerOptions.new
-    server_options.username = 'user'
-    server_options.password = 'password'
-
-    @bitbucket = Bitbucket.new(
-      repo_options,
-      server_options
-    )
+    options = {
+      name: 'instarepo',
+      owner: 'ngeor',
+      description: 'My brand new repo',
+      username: 'user',
+      password: 'password'
+    }
+    @bitbucket = Bitbucket.new(options)
   end
-  # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
   def test_create_repo

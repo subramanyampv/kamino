@@ -1,7 +1,5 @@
 require_relative '../../github'
 require_relative '../../rest_client'
-require_relative '../../repo_options'
-require_relative '../../server_options'
 
 require 'test/unit'
 require 'mocha/test_unit'
@@ -9,15 +7,15 @@ require 'mocha/test_unit'
 # Unit tests for GitHub.
 class TestGitHub < Test::Unit::TestCase
   def setup
-    repo_options = RepoOptions.new
-    repo_options.name = 'instarepo'
-    repo_options.owner = 'ngeor'
-    repo_options.description = 'My brand new repo'
-    server_options = ServerOptions.new
-    server_options.username = 'user'
-    server_options.password = 'password'
+    options = {
+      name: 'instarepo',
+      owner: 'ngeor',
+      description: 'My brand new repo',
+      username: 'user',
+      password: 'password'
+    }
 
-    @github = GitHub.new(repo_options, server_options)
+    @github = GitHub.new(options)
   end
 
   def test_repos

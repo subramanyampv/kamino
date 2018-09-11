@@ -14,8 +14,7 @@ class GitHub < RepoProviderBase
   end
 
   def repo_exists?
-    url = 'https://api.github.com/repos/' \
-    "#{repo_options.owner}/#{repo_options.name}"
+    url = "https://api.github.com/repos/#{slug}"
 
     begin
       rest_client.get(url, basic_auth: basic_auth)
@@ -30,8 +29,8 @@ class GitHub < RepoProviderBase
   def create_repo
     url = 'https://api.github.com/user/repos'
     body = {
-      name: repo_options.name,
-      description: repo_options.description,
+      name: options[:name],
+      description: options[:description],
       auto_init: true,
       gitignore_template: 'Maven',
       license_template: 'mit'
@@ -41,9 +40,15 @@ class GitHub < RepoProviderBase
 
   def clone_url(use_ssh = true)
     if use_ssh
-      "git@github.com:#{repo_options.owner}/#{repo_options.name}.git"
+      "git@github.com:#{slug}.git"
     else
-      "https://github.com/#{repo_options.owner}/#{repo_options.name}.git"
+      "https://github.com/#{slug}.git"
     end
+  end
+
+  private
+
+  def slug
+    "#{options[:owner]}/#{options[:name]}"
   end
 end

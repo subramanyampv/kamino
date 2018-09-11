@@ -1,10 +1,8 @@
+require_relative 'arg_handler'
 require_relative 'bitbucket'
 require_relative 'github'
 require_relative 'git'
 require_relative 'travis'
-require_relative 'repo_options'
-require_relative 'server_options'
-require_relative 'arg_handler'
 
 # Read a yes/no answer from the CLI.
 def read_yes_no(prompt)
@@ -44,79 +42,78 @@ def read_option(prompt, options)
   answer
 end
 
-def create_provider(repo_options, server_options)
-  case server_options.provider
-  when 'GitHub'
-    GitHub.new(repo_options, server_options)
-  when 'Bitbucket'
-    Bitbucket.new(repo_options, server_options)
+def create_provider(options)
+  case options[:provider]
+  when :github
+    GitHub.new(options)
+  when :bitbucket
+    Bitbucket.new(options)
   else
-    raise "Unsupported provider #{server_options.provider}"
+    raise "Unsupported provider #{options[:provider]}"
   end
 end
 
 # Interactive flow
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-def interactive(repo_options, server_options)
+def interactive(options)
   puts 'Welcome to instarepo!'
   case read_yes_no('Would you like to create a new repository')
   when 'Y'
-    repo_options.name ||= read_string('What should the repo name be?')
-    repo_options.description ||= read_string(
+    options[:name] ||= read_string('What should the repo name be?')
+    options[:description] ||= read_string(
       'What is the repo about? Describe it in a short sentence.'
     )
-    repo_options.owner ||= read_string(
+    options[:owner] ||= read_string(
       'Who is the owner of the repository?'
     )
-    repo_options.language ||= read_option(
+    options[:language] ||= read_option(
       'What is the programming language?',
       %w[Java]
     )
-    server_options.provider ||= read_option(
+    options[:provider] ||= read_option(
       'Where should the repo be hosted?',
       %w[GitHub Bitbucket]
     )
-    server_options.username ||= read_string('What is the username?')
-    server_options.password ||= read_string('What is the password?')
+    options[:username] ||= read_string('What is the username?')
+    options[:password] ||= read_string('What is the password?')
 
-    puts repo_options
-    puts server_options
+    puts options
 
-    provider = create_provider(repo_options, server_options)
+    provider = create_provider(options)
 
     if provider.repo_exists?
       # it's ok
-      puts "Repo #{repo_options.name} already exists."
+      puts "Repo #{options[:name]} already exists."
     else
       # create it!
-      puts "Creating repo #{repo_options.name}..."
+      puts "Creating repo #{options[:name]}..."
       provider.create_repo
     end
 
-    clone_dir_root = read_string(
+    options[:clone_dir_root] = read_string(
       'In which directory should the repo be cloned?'
     )
 
-    use_ssh = read_yes_no('Should we use SSH')
+    options[:use_ssh] = read_yes_no('Should we use SSH')
 
     git = Git.new(
-      provider.clone_url(use_ssh),
-      repo_options.name,
-      clone_dir_root
+      provider.clone_url(options[:use_ssh]),
+      options[:name],
+      options[:clone_dir_root]
     )
 
     git.clone_or_pull
 
-    use_travis = server_options.provider == 'GitHub' && \
-                 read_yes_no('Would you like to use Travis')
-    use_bitbucket_pipelines = server_options.provider == 'Bitbucket' && \
-                              read_yes_no('Would you like to enable ' \
-                              'Bitbucket Pipelines')
+    options[:use_travis] = options[:provider] == :github && \
+                           read_yes_no('Would you like to use Travis')
+    options[:use_bitbucket_pipelines] = \
+      server_options.provider == :bitbucket && \
+      read_yes_no('Would you like to enable Bitbucket Pipelines')
 
-    if use_travis
-      token = read_string('What is your Travis token?')
-      travis = Travis.new(repo_options, token)
+    if options[:use_travis]
+      options[:token] = read_string('What is your Travis token?')
+      travis = Travis.new(options)
       travis.activate_repo
 
       travis.add_badge_to_readme(git.working_dir)
@@ -125,7 +122,7 @@ def interactive(repo_options, server_options)
       git.push
     end
 
-    if use_bitbucket_pipelines
+    if options[:use_bitbucket_pipelines]
       # TODO: enable bitbucket pipelines
     end
   when 'N'
@@ -135,60 +132,11 @@ end
 # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
-# rubocop:disable Metrics/MethodLength
-def cli_options
-  {
-    help: {
-      description: 'Prints this help message and exits',
-      help: true
-    },
-    name: {
-      description: 'The name of the repository'
-    },
-    owner: {
-      description: 'The owner of the repository'
-    },
-    language: {
-      description: 'The programming language'
-    },
-    description: {
-      description: 'The description of the repository'
-    },
-    provider: {
-      description: 'The provider of the git repository'
-    },
-    username: {
-      description: 'The username for the provider'
-    },
-    password: {
-      description: 'The password for the provider'
-    }
-  }
-end
-# rubocop:enable Metrics/MethodLength
-
 # entrypoint for the program
-# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def main
-  repo_options = RepoOptions.new
-  server_options = ServerOptions.new
-
-  arg_handler = ArgHandler.new(cli_options)
-  cli = arg_handler.parse(ARGV)
-
-  # otherwise `gets` will try to open them as files
-  ARGV.clear
-
-  %i[name description owner language].each do |symbol|
-    repo_options.send(symbol.to_s + '=', cli[symbol])
-  end
-
-  %i[provider username password].each do |symbol|
-    server_options.send(symbol.to_s + '=', cli[symbol])
-  end
-
-  interactive repo_options, server_options
+  arg_handler = ArgHandler.new
+  options = arg_handler.parse(ARGV)
+  interactive options
 end
-# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 main if $PROGRAM_NAME == __FILE__

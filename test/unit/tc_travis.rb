@@ -1,15 +1,16 @@
 require_relative '../../travis'
-require_relative '../../repo_options'
 require 'test/unit'
 require 'mocha/test_unit'
 
 # Unit tests for Travis.
 class TestTravis < Test::Unit::TestCase
   def setup
-    repo_options = RepoOptions.new
-    repo_options.name = 'instarepo'
-    repo_options.owner = 'ngeor'
-    @travis = Travis.new(repo_options, 'secret')
+    options = {
+      name: 'instarepo',
+      owner: 'ngeor',
+      token: 'secret'
+    }
+    @travis = Travis.new(options)
     @travis.rest_client = mock
   end
 

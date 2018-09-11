@@ -3,9 +3,8 @@ require_relative './rest_client'
 
 # Base class for git repository providers
 class RepoProviderBase
-  def initialize(repo_options, server_options)
-    @repo_options   = repo_options
-    @server_options = server_options
+  def initialize(options)
+    @options = options
   end
 
   def create_repo
@@ -14,9 +13,7 @@ class RepoProviderBase
 
   protected
 
-  attr_reader :repo_options
-
-  attr_reader :server_options
+  attr_reader :options
 
   def basic_auth
     BasicAuth.new(username, password)
@@ -29,10 +26,10 @@ class RepoProviderBase
   private
 
   def username
-    server_options.username
+    options[:username]
   end
 
   def password
-    server_options.password
+    options[:password]
   end
 end

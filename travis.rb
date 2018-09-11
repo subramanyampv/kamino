@@ -3,11 +3,9 @@ require_relative './rest_client'
 # Implements the Travis REST API and other Travis related functionality.
 class Travis
   # Creates a new instance of this class.
-  # +repo_options+:: The repository options.
-  # +token+::        The Travis token.
-  def initialize(repo_options, token)
-    @repo_options = repo_options
-    @token = token
+  # +options+:: The options.
+  def initialize(options)
+    @options = options
     @rest_client = RestClient.new
   end
 
@@ -18,7 +16,7 @@ class Travis
     url = "https://api.travis-ci.org/repo/#{encoded_slug}/activate"
 
     @rest_client.post(url, '', headers: {
-                        'Authorization' => "token #{@token}",
+                        'Authorization' => "token #{token}",
                         'Travis-API-Version' => '3'
                       })
   end
@@ -51,10 +49,14 @@ class Travis
   end
 
   def slug
-    "#{@repo_options.owner}/#{@repo_options.name}"
+    "#{@options[:owner]}/#{@options[:name]}"
   end
 
   def encoded_slug
-    "#{@repo_options.owner}%2F#{@repo_options.name}"
+    "#{@options[:owner]}%2F#{@options[:name]}"
+  end
+
+  def token
+    @options[:token]
   end
 end

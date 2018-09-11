@@ -11,7 +11,7 @@ class Bitbucket < RepoProviderBase
     body = {
       scm: 'git',
       is_private: true,
-      description: repo_options.description,
+      description: options[:description],
       language: 'java',
       fork_policy: 'no_forks',
       mainbranch: {
@@ -37,10 +37,9 @@ class Bitbucket < RepoProviderBase
 
   def clone_url(use_ssh = true)
     if use_ssh
-      "git@bitbucket.org:#{repo_options.owner}/#{repo_options.name}.git"
+      "git@bitbucket.org:#{slug}.git"
     else
-      "https://#{server_options.username}@bitbucket.org/" \
-      "#{repo_options.owner}/#{repo_options.name}.git"
+      "https://#{options[:username]}@bitbucket.org/#{slug}.git"
     end
   end
 
@@ -51,6 +50,10 @@ class Bitbucket < RepoProviderBase
   end
 
   def repo_url
-    "#{base_url}/repositories/#{repo_options.owner}/#{repo_options.name}"
+    "#{base_url}/repositories/#{slug}"
+  end
+
+  def slug
+    "#{options[:owner]}/#{options[:name]}"
   end
 end

@@ -1,63 +1,46 @@
+require 'optparse'
+
 # Parses arguments passed directly to the CLI
 class ArgHandler
-  def initialize(options)
-    @options = options
-  end
-
+  # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
   def parse(argv)
-    @state = :needs_key
-    @last_key = nil
-    @values = {}
+    options = {}
+    OptionParser.new do |opts|
+      opts.banner = 'Usage: main.rb [options]'
+      opts.on('-nNAME', '--name=NAME', 'The name of the repository') do |v|
+        options[:name] = v
+      end
 
-    argv.each do |arg|
-      parse_arg arg
-    end
+      opts.on('-oOWNER', '--owner=OWNER', 'The owner of the repository') do |v|
+        options[:owner] = v
+      end
 
-    raise "Missing argument for --#{@last_key}" if @state == :needs_value
-    @values
+      opts.on('--description=DESCRIPTION',
+              'A short description of the repository') do |v|
+        options[:description] = v
+      end
+
+      opts.on('-lLANGUAGE', '--language=LANGUAGE',
+              'The programming language') do |v|
+        options[:language] = v
+      end
+
+      opts.on('-pPROVIDER', '--provider=PROVIDER', %i[github bitbucket],
+              'Select provider (github, bitbucket)') do |v|
+        options[:provider] = v
+      end
+
+      opts.on('-uUSERNAME', '--username=USERNAME',
+              'The username to connect to the git provider') do |v|
+        options[:username] = v
+      end
+
+      opts.on('--password=PASSWORD',
+              'The password to connect to the git provider') do |v|
+        options[:password] = v
+      end
+    end.parse!(argv)
+    options
   end
-
-  private
-
-  def parse_arg(arg)
-    if @state == :needs_key
-      parse_arg_key arg
-    elsif @state == :needs_value
-      parse_arg_value arg
-    else
-      raise 'Unexpected state'
-    end
-  end
-
-  def parse_arg_key(arg)
-    # ensure it starts with '--'
-    @last_key = arg[2..arg.length - 1].to_sym
-    option = @options[@last_key]
-    unless option
-      puts "Unknown argument #{arg}"
-      exit 1
-    end
-
-    show_help_and_exit if option[:help]
-
-    @state = :needs_value
-  end
-
-  def parse_arg_value(arg)
-    @values[@last_key] = arg
-    @state = :needs_key
-    @last_key = nil
-  end
-
-  def show_help_and_exit
-    help
-    exit
-  end
-
-  def help
-    puts 'instarepo!'
-    @options.each do |flag, v|
-      puts "--#{flag}\t#{v[:description]}"
-    end
-  end
+  # rubocop:enable Metrics/BlockLength, Metrics/MethodLength
 end
