@@ -1,4 +1,4 @@
-require_relative 'arg_handler'
+require_relative './cli/arg_handler'
 require_relative 'bitbucket'
 require_relative 'github'
 require_relative 'git'
@@ -17,7 +17,7 @@ end
 
 # entrypoint for the program
 def main
-  arg_handler = ArgHandler.new
+  arg_handler = CLI::ArgHandler.new
   options = arg_handler.parse(ARGV)
   puts options
 end

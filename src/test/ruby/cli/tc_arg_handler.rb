@@ -1,11 +1,11 @@
-require_relative '../../main/ruby/arg_handler'
+require_relative '../../../main/ruby/cli/arg_handler'
 require 'test/unit'
 require 'mocha/test_unit'
 
 # Unit tests for ArgHandler
 class TestArgHandler < Test::Unit::TestCase
   def setup
-    @arg_handler = ArgHandler.new
+    @arg_handler = CLI::ArgHandler.new
   end
 
   def test_name
