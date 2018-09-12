@@ -5,7 +5,7 @@ require 'rubocop/rake_task'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
   t.verbose = true
-  t.pattern = 'test/**/*.rb'
+  t.pattern = 'src/test/**/*.rb'
 end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|

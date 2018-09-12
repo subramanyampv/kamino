@@ -1,4 +1,4 @@
-require_relative '../../arg_handler'
+require_relative '../../main/ruby/arg_handler'
 require 'test/unit'
 require 'mocha/test_unit'
 
@@ -9,19 +9,19 @@ class TestArgHandler < Test::Unit::TestCase
   end
 
   def test_name
-    result = @arg_handler.parse(['--name', 'my-repo'])
+    result = @arg_handler.parse(['create', '--name', 'my-repo'])
     assert_equal({ name: 'my-repo' }, result)
   end
 
   def test_name_missing
     assert_raise(OptionParser::MissingArgument) do
-      @arg_handler.parse(['--name'])
+      @arg_handler.parse(['create', '--name'])
     end
   end
 
   def test_unknown_argument
     assert_raise(OptionParser::InvalidOption) do
-      @arg_handler.parse(['--namee'])
+      @arg_handler.parse(['create', '--namee'])
     end
   end
 end

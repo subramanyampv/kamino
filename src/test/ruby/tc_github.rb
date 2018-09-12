@@ -1,5 +1,5 @@
-require_relative '../../github'
-require_relative '../../rest_client'
+require_relative '../../main/ruby/github'
+require_relative '../../main/ruby/rest_client'
 
 require 'test/unit'
 require 'mocha/test_unit'

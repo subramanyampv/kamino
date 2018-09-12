@@ -1,5 +1,5 @@
-require_relative '../../basic_auth'
-require_relative '../../rest_client'
+require_relative '../../main/ruby/basic_auth'
+require_relative '../../main/ruby/rest_client'
 
 require 'test/unit'
 require 'mocha/test_unit'

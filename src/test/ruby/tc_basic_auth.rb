@@ -1,4 +1,4 @@
-require_relative '../../basic_auth'
+require_relative '../../main/ruby/basic_auth'
 
 require 'test/unit'
 

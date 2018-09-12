@@ -3,10 +3,23 @@ require 'optparse'
 # Parses arguments passed directly to the CLI
 class ArgHandler
   # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize, Layout/IndentHeredoc
   def parse(argv)
     options = {}
-    OptionParser.new do |opts|
-      opts.banner = 'Usage: main.rb [options]'
+
+    help = <<HELP
+Available commands:
+  create: Creates a new repository
+HELP
+
+    global = OptionParser.new do |opts|
+      opts.banner = 'Usage: main.rb [global options] [subcommand [options]]'
+      opts.separator ''
+      opts.separator help
+    end
+
+    create_subcommand = OptionParser.new do |opts|
+      opts.banner = 'Usage: main.rb [global options] create [options]'
       opts.on('-nNAME', '--name=NAME', 'The name of the repository') do |v|
         options[:name] = v
       end
@@ -39,8 +52,17 @@ class ArgHandler
               'The password to connect to the git provider') do |v|
         options[:password] = v
       end
-    end.parse!(argv)
+    end
+
+    subcommands = {
+      create: create_subcommand
+    }
+
+    global.order!(argv)
+    command = argv.shift
+    subcommands[command.to_sym].order!(argv)
     options
   end
   # rubocop:enable Metrics/BlockLength, Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize, Layout/IndentHeredoc
 end

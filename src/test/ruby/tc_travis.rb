@@ -1,4 +1,4 @@
-require_relative '../../travis'
+require_relative '../../main/ruby/travis'
 require 'test/unit'
 require 'mocha/test_unit'
 
