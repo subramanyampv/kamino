@@ -1,13 +1,26 @@
 require 'optparse'
+require_relative './create_sub_command'
 
 module CLI
   # Parses arguments passed directly to the CLI
   class ArgHandler
-    # rubocop:disable Metrics/BlockLength, Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize, Layout/IndentHeredoc
+    def initialize(sub_command_classes = [CreateSubCommand])
+      @sub_command_classes = sub_command_classes
+    end
+
     def parse(argv)
       options = {}
+      handle_global_options(argv)
+      sub_command = argv.shift
+      raise OptionParser::MissingArgument, 'No command specified' \
+        if sub_command.to_s.empty?
+      handle_sub_command(sub_command, argv, options)
+    end
 
+    private
+
+    # rubocop:disable Layout/IndentHeredoc
+    def handle_global_options(argv)
       help = <<HELP
 Available commands:
   create: Creates a new repository
@@ -19,53 +32,28 @@ HELP
         opts.separator help
       end
 
-      create_subcommand = OptionParser.new do |opts|
-        opts.banner = 'Usage: main.rb [global options] create [options]'
-        opts.on('-nNAME', '--name=NAME', 'The name of the repository') do |v|
-          options[:name] = v
-        end
+      global.order!(argv)
+    end
+    # rubocop:enable Layout/IndentHeredoc
 
-        opts.on('-oOWNER', '--owner=OWNER',
-                'The owner of the repository') do |v|
-          options[:owner] = v
-        end
+    def handle_sub_command(command_name, argv, options)
+      sub_command = lookup_command(command_name)
+      raise OptionParser::InvalidOption, "Unknown command #{command_name}" \
+        unless sub_command
+      sub_command.order!(options, argv)
+    end
 
-        opts.on('--description=DESCRIPTION',
-                'A short description of the repository') do |v|
-          options[:description] = v
-        end
-
-        opts.on('-lLANGUAGE', '--language=LANGUAGE',
-                'The programming language') do |v|
-          options[:language] = v
-        end
-
-        opts.on('-pPROVIDER', '--provider=PROVIDER', %i[github bitbucket],
-                'Select provider (github, bitbucket)') do |v|
-          options[:provider] = v
-        end
-
-        opts.on('-uUSERNAME', '--username=USERNAME',
-                'The username to connect to the git provider') do |v|
-          options[:username] = v
-        end
-
-        opts.on('--password=PASSWORD',
-                'The password to connect to the git provider') do |v|
-          options[:password] = v
+    def lookup_command(command_name)
+      result = nil
+      @sub_command_classes.each do |sub_command_class|
+        sub_command = sub_command_class.new
+        if command_name == sub_command.name
+          result = sub_command
+          break
         end
       end
 
-      subcommands = {
-        create: create_subcommand
-      }
-
-      global.order!(argv)
-      command = argv.shift
-      subcommands[command.to_sym].order!(argv)
-      options
+      result
     end
-    # rubocop:enable Metrics/BlockLength, Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize, Layout/IndentHeredoc
   end
 end
