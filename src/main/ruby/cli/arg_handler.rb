@@ -10,7 +10,7 @@ module CLI
 
     def parse(argv)
       options = {}
-      handle_global_options(argv)
+      handle_global_options(argv, options)
       sub_command = argv.shift
       raise OptionParser::MissingArgument, 'No command specified' \
         if sub_command.to_s.empty?
@@ -20,26 +20,33 @@ module CLI
     private
 
     # rubocop:disable Layout/IndentHeredoc
-    def handle_global_options(argv)
-      help = <<HELP
+    def help
+      result = <<HELP
 Available commands:
   create: Creates a new repository
 HELP
+      result
+    end
+    # rubocop:enable Layout/IndentHeredoc
 
+    def handle_global_options(argv, options)
       global = OptionParser.new do |opts|
         opts.banner = 'Usage: main.rb [global options] [subcommand [options]]'
         opts.separator ''
         opts.separator help
+        opts.on('--dry-run', 'Do not actually change anything') do |v|
+          options[:dry_run] = v
+        end
       end
 
       global.order!(argv)
     end
-    # rubocop:enable Layout/IndentHeredoc
 
     def handle_sub_command(command_name, argv, options)
       sub_command = lookup_command(command_name)
       raise OptionParser::InvalidOption, "Unknown command #{command_name}" \
         unless sub_command
+      options[:command] = command_name.to_sym
       sub_command.order!(options, argv)
     end
 

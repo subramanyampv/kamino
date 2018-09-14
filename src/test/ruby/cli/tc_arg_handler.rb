@@ -10,7 +10,12 @@ class TestArgHandler < Test::Unit::TestCase
 
   def test_name
     result = @arg_handler.parse(['create', '--name', 'my-repo'])
-    assert_equal({ name: 'my-repo' }, result)
+    assert_equal({ command: :create, name: 'my-repo' }, result)
+  end
+
+  def test_dry_run
+    result = @arg_handler.parse(['--dry-run', 'create', '--name', 'my-repo'])
+    assert_equal({ command: :create, name: 'my-repo', dry_run: true }, result)
   end
 
   def test_name_missing

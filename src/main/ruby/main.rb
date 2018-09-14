@@ -1,18 +1,10 @@
 require_relative './cli/arg_handler'
-require_relative 'bitbucket'
-require_relative 'github'
-require_relative 'git'
-require_relative 'travis'
+require_relative './commands/create_command'
 
-def create_provider(options)
-  case options[:provider]
-  when :github
-    GitHub.new(options)
-  when :bitbucket
-    Bitbucket.new(options)
-  else
-    raise "Unsupported provider #{options[:provider]}"
-  end
+def command_classes
+  {
+    create: Commands::CreateCommand
+  }
 end
 
 # entrypoint for the program
@@ -20,6 +12,8 @@ def main
   arg_handler = CLI::ArgHandler.new
   options = arg_handler.parse(ARGV)
   puts options
+  command = command_classes[options[:command]].new(options)
+  command.run
 end
 
 main if $PROGRAM_NAME == __FILE__

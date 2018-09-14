@@ -5,6 +5,7 @@ require_relative './rest_client'
 class RepoProviderBase
   def initialize(options)
     @options = options
+    raise 'Owner is mandatory' if options[:owner].to_s.empty?
   end
 
   def create_repo
