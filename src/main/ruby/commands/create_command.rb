@@ -1,34 +1,19 @@
-require_relative '../bitbucket'
-require_relative '../github'
+require_relative '../repo_providers/factory'
 
 module Commands
   # Creates a new repository.
   class CreateCommand
-    def initialize(options)
+    def initialize(options, provider_factory = RepoProviders::Factory)
       @options = options
+      @provider_factory = provider_factory
     end
 
     def run
-      provider = create_provider
+      provider = @provider_factory.new(@options).create
       if provider.repo_exists?
         puts 'Repo already exists'
-      elsif @options[:dry_run]
-        puts 'Would create repo'
       else
         provider.create_repo unless provider.repo_exists?
-      end
-    end
-
-    private
-
-    def create_provider
-      case @options[:provider]
-      when :github
-        GitHub.new(@options)
-      when :bitbucket
-        Bitbucket.new(@options)
-      else
-        raise "Unsupported provider #{@options[:provider]}"
       end
     end
   end

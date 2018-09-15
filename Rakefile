@@ -10,7 +10,7 @@ end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.rdoc_files.include('*.rb')
+  rdoc.rdoc_files.include('src/main/ruby/**/*.rb')
 end
 
 RuboCop::RakeTask.new(:rubocop) do |t|
