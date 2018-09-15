@@ -1,41 +1,40 @@
-require_relative '../../../main/ruby/cli/create_sub_command'
+require_relative '../../../main/ruby/cli/create_repo_parser'
 require 'test/unit'
 require 'mocha/test_unit'
 
 module CLI
-  # Unit tests for CreateSubCommand
-  class TestCreateSubCommand < Test::Unit::TestCase
+  # Unit tests for CreateRepoParser
+  class TestCreateRepoParser < Test::Unit::TestCase
     def setup
-      @command = CreateSubCommand.new
+      @parser = CreateRepoParser.new
     end
 
     def test_name
-      assert_equal('create', @command.name)
+      assert_equal('create', @parser.name)
     end
 
     # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
     def test_short_options
-      options = {}
       argv = [
         '-nrepo',
         '-ongeor',
         '-ljava',
         '-pgithub',
-        '-usecret'
+        '-usecret',
+        '--password=redacted'
       ]
 
-      result = @command.order!(options, argv)
+      result = @parser.parse(argv)
 
-      assert_equal(result, options)
       assert_equal('repo', result[:name])
       assert_equal('ngeor', result[:owner])
       assert_equal('java', result[:language])
       assert_equal(:github, result[:provider])
       assert_equal('secret', result[:username])
+      assert_equal('redacted', result[:password])
     end
 
     def test_long_options
-      options = {}
       argv = [
         '--name',
         'repo',
@@ -53,9 +52,8 @@ module CLI
         'some fancy repo'
       ]
 
-      result = @command.order!(options, argv)
+      result = @parser.parse(argv)
 
-      assert_equal(result, options)
       assert_equal('repo', result[:name])
       assert_equal('ngeor', result[:owner])
       assert_equal('java', result[:language])

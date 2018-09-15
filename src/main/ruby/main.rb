@@ -1,4 +1,4 @@
-require_relative './cli/arg_handler'
+require_relative './cli/global_parser'
 require_relative './commands/create_command'
 
 def command_classes
@@ -9,8 +9,8 @@ end
 
 # entrypoint for the program
 def main
-  arg_handler = CLI::ArgHandler.new
-  options = arg_handler.parse(ARGV)
+  parser = CLI::GlobalParser.new
+  options = parser.parse(ARGV)
   puts options
   command = command_classes[options[:command]].new(options)
   command.run

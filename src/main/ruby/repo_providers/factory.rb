@@ -1,3 +1,5 @@
+require 'delegate'
+
 module RepoProviders
   # Factory for a repo provider.
   class Factory
