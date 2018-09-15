@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../main/ruby/shell'
 require 'test/unit'
 require 'mocha/test_unit'

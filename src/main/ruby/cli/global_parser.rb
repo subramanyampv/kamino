@@ -1,10 +1,16 @@
+# frozen_string_literal: true
+
 require 'optparse'
 require_relative './create_repo_parser'
+require_relative './delete_repo_parser'
 
 module CLI
   # Parses arguments passed directly to the CLI
   class GlobalParser
-    def initialize(sub_parser_classes = [CreateRepoParser])
+    def initialize(sub_parser_classes = [
+      CreateRepoParser,
+      DeleteRepoParser
+    ])
       @sub_parser_classes = sub_parser_classes
     end
 
@@ -34,19 +40,22 @@ module CLI
       options
     end
 
-    # rubocop:disable Layout/IndentHeredoc
+    # rubocop:disable Metrics/MethodLength
     def define_global_options(opts, options)
-      opts.banner = 'Usage: main.rb [global options] [subcommand [options]]'
+      opts.banner = 'Usage: main.rb [global options] [command [options]]'
       opts.separator ''
-      opts.separator <<HELP
-Available commands:
-  create: Creates a new repository
-HELP
+      opts.separator <<~HELP
+        Available commands:
+          create: Creates a new repository
+          delete: Deletes an existing repository
+
+        Global options:
+      HELP
       opts.on('--dry-run', 'Do not actually change anything') do |v|
         options[:dry_run] = v
       end
     end
-    # rubocop:enable Layout/IndentHeredoc
+    # rubocop:enable Metrics/MethodLength
 
     def lookup_parser(command_name)
       raise OptionParser::MissingArgument, 'No command specified' \

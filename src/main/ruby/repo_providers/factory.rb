@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 require 'delegate'
+require_relative './github'
+require_relative './bitbucket'
 
 module RepoProviders
   # Factory for a repo provider.

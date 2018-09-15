@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../../main/ruby/repo_providers/bitbucket'
 require_relative '../../../main/ruby/rest_client'
 

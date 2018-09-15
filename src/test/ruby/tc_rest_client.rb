@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../main/ruby/basic_auth'
 require_relative '../../main/ruby/rest_client'
 

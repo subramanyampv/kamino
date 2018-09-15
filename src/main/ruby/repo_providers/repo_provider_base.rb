@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../basic_auth'
 require_relative '../rest_client'
 
@@ -7,7 +9,6 @@ module RepoProviders
     def initialize(options, rest_client = RestClient.new)
       @options = options
       @rest_client = rest_client
-      raise 'Owner is mandatory' if options[:owner].to_s.empty?
     end
 
     protected

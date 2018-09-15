@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Basic authentication credentials.
 class BasicAuth
   attr_reader :username

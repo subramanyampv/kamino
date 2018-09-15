@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Wrapper for Kernel.` and Kernel.system for easier unit testing
 class Shell
   def backticks(cmd, chdir: '')

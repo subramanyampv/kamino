@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 require_relative './cli/global_parser'
-require_relative './commands/create_command'
+require_relative './commands/create_repo_command'
+require_relative './commands/delete_repo_command'
 
 def command_classes
   {
-    create: Commands::CreateCommand
+    create: Commands::CreateRepoCommand,
+    delete: Commands::DeleteRepoCommand
   }
 end
 

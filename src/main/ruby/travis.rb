@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './rest_client'
 
 # Implements the Travis REST API and other Travis related functionality.

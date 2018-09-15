@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative './shell'
 
 # Handles git operations. Requires the git executable on the PATH.
