@@ -5,9 +5,10 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 group :test do
-  gem 'mocha'
   gem 'rake'
+  gem 'rspec-core'
+  gem 'rspec-expectations'
+  gem 'rspec-mocks'
   gem 'rubocop'
   gem 'simplecov', require: false
-  gem 'test-unit'
 end

@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require 'rake/testtask'
 require 'rdoc/task'
+require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'test'
-  t.verbose = true
-  t.pattern = 'src/test/**/*.rb'
+RSpec::Core::RakeTask.new(:test) do |rspec|
+  rspec.pattern = 'src/test/ruby/**/*_spec.rb'
+  rspec.rspec_opts = '-r ./src/test/ruby/_helper/helper -f documentation'
 end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
