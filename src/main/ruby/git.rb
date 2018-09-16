@@ -9,15 +9,12 @@ class Git
   # +repo_name+::      The name of the repository.
   # +clone_dir_root+:: The parent directory in which to clone. The repository
   #                    will be cloned in a directory inside that directory.
-  def initialize(clone_url, repo_name, clone_dir_root)
+  def initialize(clone_url, repo_name, clone_dir_root, shell = Shell.new)
     @clone_url = clone_url
     @repo_name = repo_name
     @clone_dir_root = clone_dir_root
-    @shell = Shell.new
+    @shell = shell
   end
-
-  # for tests
-  attr_accessor :shell
 
   # Stages changes of a git repository.
   # +pattern+:: Specifies which changes to stage.

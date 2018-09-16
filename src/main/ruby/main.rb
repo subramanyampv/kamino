@@ -3,6 +3,7 @@
 require_relative './cli/global_parser'
 require_relative './commands/create_repo_command'
 require_relative './commands/delete_repo_command'
+require_relative './commands/init_repo_command'
 
 # Main class
 class Main
@@ -11,7 +12,8 @@ end
 def command_classes
   {
     create: Commands::CreateRepoCommand,
-    delete: Commands::DeleteRepoCommand
+    delete: Commands::DeleteRepoCommand,
+    init: Commands::InitRepoCommand
   }
 end
 

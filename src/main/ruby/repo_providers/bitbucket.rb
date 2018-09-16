@@ -37,6 +37,7 @@ module RepoProviders
       false
     end
 
+    # TODO: use_ssh should come from options
     def clone_url(use_ssh = true)
       if use_ssh
         "git@bitbucket.org:#{slug}.git"

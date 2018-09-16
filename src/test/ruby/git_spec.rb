@@ -4,14 +4,14 @@ require_relative '../../main/ruby/git'
 
 RSpec.describe Git do
   before(:example) do
-    @git = Git.new('https://whatever/hey.git', 'hey', 'C:/tmp')
-    @git.shell = double('shell')
+    @shell = double('shell')
+    @git = Git.new('https://whatever/hey.git', 'hey', 'C:/tmp', @shell)
   end
 
   describe('#add') do
     it('should add all by default') do
       # arrange
-      allow(@git.shell).to receive(:system)
+      allow(@shell).to receive(:system)
         .with('git add .', chdir: 'C:/tmp/hey')
         .and_return(42)
 
@@ -21,7 +21,7 @@ RSpec.describe Git do
 
     it('should add specific file') do
       # arrange
-      allow(@git.shell).to receive(:system)
+      allow(@shell).to receive(:system)
         .with('git add README.md', chdir: 'C:/tmp/hey')
         .and_return(42)
 
@@ -33,7 +33,7 @@ RSpec.describe Git do
   describe('#commit') do
     it('should commit') do
       # arrange
-      allow(@git.shell).to receive(:system).with(
+      allow(@shell).to receive(:system).with(
         'git commit -m "Added badge to README"',
         chdir: 'C:/tmp/hey'
       ).and_return(43)
@@ -58,7 +58,7 @@ RSpec.describe Git do
       # arrange
       allow(Dir).to receive(:exist?).with('C:/tmp').and_return(true)
       allow(Dir).to receive(:exist?).with('C:/tmp/hey').and_return(false)
-      allow(@git.shell).to receive(:system)
+      allow(@shell).to receive(:system)
         .with('git clone https://whatever/hey.git', chdir: 'C:/tmp')
         .and_return(42)
 
@@ -70,7 +70,7 @@ RSpec.describe Git do
       # arrange
       allow(Dir).to receive(:exist?).with('C:/tmp').and_return(true)
       allow(Dir).to receive(:exist?).with('C:/tmp/hey').and_return(true)
-      allow(@git.shell).to receive(:backticks)
+      allow(@shell).to receive(:backticks)
         .with('git remote get-url origin', chdir: 'C:/tmp/hey')
         .and_return('https://some-other-repo')
 
@@ -84,10 +84,10 @@ RSpec.describe Git do
       # arrange
       allow(Dir).to receive(:exist?).with('C:/tmp').and_return(true)
       allow(Dir).to receive(:exist?).with('C:/tmp/hey').and_return(true)
-      allow(@git.shell).to receive(:backticks)
+      allow(@shell).to receive(:backticks)
         .with('git remote get-url origin', chdir: 'C:/tmp/hey')
         .and_return('https://whatever/hey.git')
-      allow(@git.shell).to receive(:backticks)
+      allow(@shell).to receive(:backticks)
         .with('git branch -la', chdir: 'C:/tmp/hey')
         .and_return('')
 
@@ -99,13 +99,13 @@ RSpec.describe Git do
       # arrange
       allow(Dir).to receive(:exist?).with('C:/tmp').and_return(true)
       allow(Dir).to receive(:exist?).with('C:/tmp/hey').and_return(true)
-      allow(@git.shell).to receive(:backticks)
+      allow(@shell).to receive(:backticks)
         .with('git remote get-url origin', chdir: 'C:/tmp/hey')
         .and_return('https://whatever/hey.git')
-      allow(@git.shell).to receive(:backticks)
+      allow(@shell).to receive(:backticks)
         .with('git branch -la', chdir: 'C:/tmp/hey')
         .and_return('master')
-      allow(@git.shell).to receive(:system)
+      allow(@shell).to receive(:system)
         .with('git pull', chdir: 'C:/tmp/hey')
         .and_return(42)
 
@@ -117,7 +117,7 @@ RSpec.describe Git do
   describe('#push') do
     it('should push') do
       # arrange
-      allow(@git.shell).to receive(:system)
+      allow(@shell).to receive(:system)
         .with('git push', chdir: 'C:/tmp/hey')
         .and_return(44)
 

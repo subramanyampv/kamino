@@ -3,13 +3,15 @@
 require 'optparse'
 require_relative './create_repo_parser'
 require_relative './delete_repo_parser'
+require_relative './init_repo_parser'
 
 module CLI
   # Parses arguments passed directly to the CLI
   class GlobalParser
     def initialize(sub_parser_classes = [
       CreateRepoParser,
-      DeleteRepoParser
+      DeleteRepoParser,
+      InitRepoParser
     ])
       @sub_parser_classes = sub_parser_classes
     end
@@ -46,8 +48,9 @@ module CLI
       opts.separator ''
       opts.separator <<~HELP
         Available commands:
-          create: Creates a new repository
-          delete: Deletes an existing repository
+          create : Creates a new repository
+          delete : Deletes an existing repository
+          init   : Initializes an existing repository with essentials
 
         Global options:
       HELP
