@@ -5,7 +5,10 @@ require_relative '../../main/ruby/git'
 RSpec.describe Git do
   before(:example) do
     @shell = double('shell')
-    @git = Git.new('https://whatever/hey.git', 'hey', 'C:/tmp', @shell)
+    @git = Git.new(shell: @shell)
+    @git.clone_url = 'https://whatever/hey.git'
+    @git.repo_name = 'hey'
+    @git.clone_dir = 'C:/tmp'
   end
 
   describe('#add') do
@@ -44,7 +47,7 @@ RSpec.describe Git do
   end
 
   describe('#clone_or_pull') do
-    it('should throw when the clone_dir_root is missing') do
+    it('should throw when the clone_dir is missing') do
       # arrange
       allow(Dir).to receive(:exist?).with('C:/tmp').and_return(false)
 
@@ -129,6 +132,51 @@ RSpec.describe Git do
   describe('#working_dir') do
     it('should have the expected value') do
       expect(@git.working_dir).to eq('C:/tmp/hey')
+    end
+  end
+end
+
+RSpec.describe DryRunGitDecorator do
+  before(:example) do
+    @decorator = DryRunGitDecorator.new('')
+  end
+
+  describe '#add' do
+    it 'should just print' do
+      expect(@decorator).to receive(:puts)
+        .with('Would have added files with pattern *.txt')
+      @decorator.add '*.txt'
+    end
+  end
+
+  describe '#commit' do
+    it 'should just print' do
+      expect(@decorator).to receive(:puts)
+        .with('Would have committed with message WIP')
+      @decorator.commit 'WIP'
+    end
+  end
+
+  describe '#push' do
+    it 'should just print' do
+      expect(@decorator).to receive(:puts)
+        .with('Would have pushed changes')
+      @decorator.push
+    end
+  end
+end
+
+RSpec.describe GitFactory do
+  describe '#create' do
+    it 'should create a regular git' do
+      git = GitFactory.new.create(dry_run: false)
+      expect(git).to be_instance_of(Git)
+    end
+
+    it 'should create a dry run git' do
+      git = GitFactory.new.create(dry_run: true)
+      expect(git).to be_instance_of(DryRunGitDecorator)
+      expect(git.__getobj__).to be_instance_of(Git)
     end
   end
 end

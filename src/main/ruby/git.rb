@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
+require 'delegate'
 require_relative './shell'
 
 # Handles git operations. Requires the git executable on the PATH.
 class Git
   # Creates an instance of this class.
-  # +clone_url+::      The URL of the remote repository.
-  # +repo_name+::      The name of the repository.
-  # +clone_dir_root+:: The parent directory in which to clone. The repository
-  #                    will be cloned in a directory inside that directory.
-  def initialize(clone_url, repo_name, clone_dir_root, shell = Shell.new)
-    @clone_url = clone_url
-    @repo_name = repo_name
-    @clone_dir_root = clone_dir_root
+  def initialize(shell: Shell.new)
     @shell = shell
   end
+
+  attr_accessor :clone_url
+  attr_accessor :repo_name
+  attr_accessor :clone_dir
 
   # Stages changes of a git repository.
   # +pattern+:: Specifies which changes to stage.
@@ -30,13 +28,13 @@ class Git
   end
 
   def clone_or_pull
-    ensure_clone_dir_root_exists
+    ensure_clone_dir_exists
     if Dir.exist?(working_dir)
       ensure_remotes_match
       system 'git pull' unless empty_repo?
     else
       @shell.system(
-        "git clone #{@clone_url}", chdir: @clone_dir_root
+        "git clone #{@clone_url}", chdir: @clone_dir
       )
     end
   end
@@ -47,7 +45,7 @@ class Git
   end
 
   def working_dir
-    File.join(@clone_dir_root, @repo_name)
+    File.join(@clone_dir, @repo_name)
   end
 
   private
@@ -67,13 +65,40 @@ class Git
     @shell.system cmd, chdir: working_dir
   end
 
-  def ensure_clone_dir_root_exists
-    raise "Directory #{@clone_dir_root} does not exist" \
-      unless Dir.exist?(@clone_dir_root)
+  def ensure_clone_dir_exists
+    raise "Directory #{@clone_dir} does not exist" \
+      unless Dir.exist?(@clone_dir)
   end
 
   def ensure_remotes_match
     raise "Directory #{working_dir} exists and points to different remote" \
       unless remote_url == @clone_url
+  end
+end
+
+# Decorator for Git that cancels out all operations that cause changes.
+class DryRunGitDecorator < SimpleDelegator
+  def add(pattern = '.')
+    puts "Would have added files with pattern #{pattern}"
+  end
+
+  def commit(message)
+    puts "Would have committed with message #{message}"
+  end
+
+  def push
+    puts 'Would have pushed changes'
+  end
+end
+
+# Factory for git.
+class GitFactory
+  def create(dry_run: false, shell: Shell.new)
+    git = Git.new(shell: shell)
+    if dry_run
+      DryRunGitDecorator.new(git)
+    else
+      git
+    end
   end
 end

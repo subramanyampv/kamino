@@ -1,21 +1,20 @@
 # frozen_string_literal: true
 
-require_relative '../repo_providers/factory'
-require_relative '../git'
-
 module Commands
   # Initializes an existing repository.
   class InitRepoCommand
-    def initialize(options, provider_factory = RepoProviders::Factory)
+    def initialize(options)
       @options = options
-      @provider_factory = provider_factory
     end
 
+    attr_accessor :provider
+    attr_accessor :git
+    attr_accessor :file_system
+
     def run
-      provider = @provider_factory.new(@options).create
-      if provider.repo_exists?
-        git = clone_or_pull(provider)
-        add_readme(git)
+      if @provider.repo_exists?
+        clone_or_pull
+        add_readme
         true
       else
         puts 'Repo does not exist'
@@ -25,30 +24,32 @@ module Commands
 
     private
 
-    def clone_or_pull(provider)
-      clone_url = provider.clone_url
-      repo_name = @options[:name]
-      clone_dir = @options[:clone_dir]
-      git = Git.new(clone_url, repo_name, clone_dir)
-      git.clone_or_pull
-      git
+    def clone_or_pull
+      @git.clone_url = @provider.clone_url
+      @git.repo_name = @options[:name]
+      @git.clone_dir = @options[:clone_dir]
+      @git.clone_or_pull
     end
 
-    def add_readme(git)
-      readme_file = File.join(git.working_dir, 'README.md')
-      if File.file?(readme_file)
+    def add_readme
+      readme_file = File.join(@git.working_dir, 'README.md')
+      if @file_system.file?(readme_file)
         puts 'Readme already exists, skipping'
       else
-        puts 'Creating new readme file'
-        # TODO: support dry run
-        # File.open(readme_file, 'w') do |f|
-        #   f.puts("# #{@options[:name]}")
-        #   f.puts(@options[:description])
-        # end
-        # git.add 'README.md'
-        # git.commit 'Added README'
-        # git.push
+        do_add_readme readme_file
       end
+    end
+
+    def do_add_readme(readme_file)
+      puts 'Creating new readme file'
+      contents = <<~HERE
+        # #{@options[:name]}
+        #{@options[:description]}
+      HERE
+      @file_system.write(readme_file, contents)
+      @git.add 'README.md'
+      @git.commit 'Added README'
+      @git.push
     end
   end
 end

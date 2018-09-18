@@ -1,20 +1,15 @@
 # frozen_string_literal: true
 
 require_relative '../../../main/ruby/commands/create_repo_command'
-require_relative '../../../main/ruby/repo_providers/factory'
 
 RSpec.describe Commands::CreateRepoCommand do
   before(:example) do
     options = {
       name: 'dummy'
     }
-    factory = double('factory')
     @provider = double('provider')
-    expect(RepoProviders::Factory).to receive(:new)
-      .with(options)
-      .and_return(factory)
-    allow(factory).to receive(:create).and_return(@provider)
     @command = Commands::CreateRepoCommand.new(options)
+    @command.provider = @provider
   end
 
   context 'when repo exists' do

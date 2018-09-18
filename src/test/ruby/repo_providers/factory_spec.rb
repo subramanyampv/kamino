@@ -6,28 +6,28 @@ require_relative '../../../main/ruby/repo_providers/bitbucket'
 
 RSpec.describe RepoProviders::Factory do
   describe '#create' do
+    before(:example) do
+      @factory = RepoProviders::Factory.new
+    end
+
     it 'should support github' do
-      factory = RepoProviders::Factory.new(provider: :github)
-      provider = factory.create
+      provider = @factory.create(provider: :github)
       expect(provider).to be_instance_of(RepoProviders::GitHub)
     end
 
     it 'should support bitbucket' do
-      factory = RepoProviders::Factory.new(provider: :bitbucket)
-      provider = factory.create
+      provider = @factory.create(provider: :bitbucket)
       expect(provider).to be_instance_of(RepoProviders::Bitbucket)
     end
 
     it 'should throw on unknown' do
-      factory = RepoProviders::Factory.new(provider: :sourceforge)
-      expect { factory.create }.to raise_error(
+      expect { @factory.create(provider: :sourceforge) }.to raise_error(
         'Unsupported provider sourceforge'
       )
     end
 
     it 'should support dry run' do
-      factory = RepoProviders::Factory.new(provider: :github, dry_run: true)
-      provider = factory.create
+      provider = @factory.create(provider: :github, dry_run: true)
       expect(provider).to be_instance_of(
         RepoProviders::DryRunProviderDecorator
       )

@@ -7,32 +7,25 @@ require_relative './bitbucket'
 module RepoProviders
   # Factory for a repo provider.
   class Factory
-    def initialize(options)
-      @options = options
-    end
-
-    def create
-      decorate_with_dry_run(create_provider)
-    end
-
-    private
-
-    def decorate_with_dry_run(provider)
-      if @options[:dry_run]
+    def create(options)
+      provider = create_provider(options)
+      if options[:dry_run]
         DryRunProviderDecorator.new(provider)
       else
         provider
       end
     end
 
-    def create_provider
-      case @options[:provider]
+    private
+
+    def create_provider(options)
+      case options[:provider]
       when :github
-        GitHub.new(@options)
+        GitHub.new(options)
       when :bitbucket
-        Bitbucket.new(@options)
+        Bitbucket.new(options)
       else
-        raise "Unsupported provider #{@options[:provider]}"
+        raise "Unsupported provider #{options[:provider]}"
       end
     end
   end
