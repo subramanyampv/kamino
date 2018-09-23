@@ -78,3 +78,44 @@ RSpec.describe Travis do
     end
   end
 end
+
+RSpec.describe DryRunTravis do
+  before(:example) do
+    @travis = DryRunTravis.new(Travis.new(owner: 'ngeor'))
+  end
+
+  describe '#activate_repo' do
+    it 'should only print' do
+      expect(@travis).to receive(:puts)
+        .with('Would have activated repo in Travis')
+      @travis.activate_repo
+    end
+  end
+
+  describe '#deactivate_repo' do
+    it 'should only print' do
+      expect(@travis).to receive(:puts)
+        .with('Would have deactivated repo in Travis')
+      @travis.deactivate_repo
+    end
+  end
+end
+
+RSpec.describe TravisFactory do
+  before(:example) do
+    @factory = TravisFactory.new
+  end
+
+  describe '#create' do
+    it 'should create real' do
+      travis = @factory.create(owner: 'ngeor')
+      expect(travis).to be_instance_of(Travis)
+    end
+
+    it 'should create dry-run' do
+      travis = @factory.create(owner: 'ngeor', dry_run: true)
+      expect(travis).to be_instance_of(DryRunTravis)
+      expect(travis.__getobj__).to be_instance_of(Travis)
+    end
+  end
+end

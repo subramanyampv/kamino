@@ -23,6 +23,15 @@ class Travis
                       })
   end
 
+  def deactivate_repo
+    url = "https://api.travis-ci.org/repo/#{encoded_slug}/deactivate"
+
+    @rest_client.post(url, '', headers: {
+                        'Authorization' => "token #{token}",
+                        'Travis-API-Version' => '3'
+                      })
+  end
+
   # rubocop:disable Metrics/MethodLength
   def add_badge_to_readme(work_dir)
     readme_file = File.join(work_dir, 'README.md')
@@ -60,5 +69,28 @@ class Travis
 
   def token
     @options[:token]
+  end
+end
+
+# Decorator for Travis that cancels out operations that cause changes.
+class DryRunTravis < SimpleDelegator
+  def activate_repo
+    puts 'Would have activated repo in Travis'
+  end
+
+  def deactivate_repo
+    puts 'Would have deactivated repo in Travis'
+  end
+end
+
+# Factory for Travis
+class TravisFactory
+  def create(options)
+    travis = Travis.new(options)
+    if options[:dry_run]
+      DryRunTravis.new(travis)
+    else
+      travis
+    end
   end
 end

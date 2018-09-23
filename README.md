@@ -59,8 +59,8 @@ policy.
 
 ### Travis
 
-Travis token is set via environment variable `TRAVIS_TOKEN`. To obtain the token,
-you need to run `travis login` and `travis token`. You can read more here:
+To obtain the token for Travis, you need the Travis CLI.
+You need to run `travis login` and `travis token`. You can read more here:
 
 https://developer.travis-ci.com/authentication
 

@@ -26,6 +26,11 @@ class CommandWithFileSystem < CommandWithOptions
   attr_accessor :file_system
 end
 
+# Dummy command which accepts travis
+class CommandWithTravis < CommandWithOptions
+  attr_accessor :travis
+end
+
 RSpec.describe CommandFactory do
   describe '#create_command' do
     it 'should create a command with just options' do
@@ -149,6 +154,28 @@ RSpec.describe CommandFactory do
       expect(command).to be_instance_of(CommandWithFileSystem)
       expect(command.options).to eq(options)
       expect(command.file_system).to eq(file_system)
+    end
+
+    it 'should create a command with travis' do
+      options = {
+        command: :dummy,
+        hello: 'world'
+      }
+
+      travis_factory = double('travis_factory')
+      allow(TravisFactory).to receive(:new)
+        .and_return(travis_factory)
+
+      travis = double('travis')
+      allow(travis_factory).to receive(:create)
+        .with(options)
+        .and_return(travis)
+
+      factory = CommandFactory.new(dummy: CommandWithTravis)
+      command = factory.create_command(options)
+      expect(command).to be_instance_of(CommandWithTravis)
+      expect(command.options).to eq(options)
+      expect(command.travis).to eq(travis)
     end
   end
 end

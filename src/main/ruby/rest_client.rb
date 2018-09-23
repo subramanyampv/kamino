@@ -10,11 +10,11 @@ class RestClient
   end
 
   def post(url, body, basic_auth: nil, headers: nil)
-    act(url, Net::HTTP::Post, JSON.generate(body), basic_auth, headers)
+    act(url, Net::HTTP::Post, json(body), basic_auth, headers)
   end
 
   def put(url, body, basic_auth: nil, headers: nil)
-    act(url, Net::HTTP::Put, JSON.generate(body), basic_auth, headers)
+    act(url, Net::HTTP::Put, json(body), basic_auth, headers)
   end
 
   def delete(url, basic_auth: nil, headers: nil)
@@ -22,6 +22,10 @@ class RestClient
   end
 
   private
+
+  def json(body)
+    JSON.generate(body) if body && !body.empty?
+  end
 
   def act(url, method, body, basic_auth, headers)
     uri = URI(url)
@@ -72,17 +76,16 @@ end
 
 # An error that is thrown when the RestClient gets a non-successful code.
 class RestClientError < StandardError
-  def initialize(code, message, body)
+  def initialize(code, response_message, body)
     @code = code
-    @message = message
+    @response_message = response_message
     @body = body
+    super("#{@code} - #{@response_message} - #{@body}")
   end
 
   attr_reader :code
-  attr_reader :message
-  attr_reader :body
 
-  def to_s
-    "#{@code} - #{@message} - #{@body}"
-  end
+  # Not using :message to avoid overriding the base message
+  attr_reader :response_message
+  attr_reader :body
 end

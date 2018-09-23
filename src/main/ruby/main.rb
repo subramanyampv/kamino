@@ -4,9 +4,11 @@ require_relative './cli/global_parser'
 require_relative './commands/create_repo_command'
 require_relative './commands/delete_repo_command'
 require_relative './commands/init_repo_command'
+require_relative './commands/activate_travis_repo_command'
 require_relative './repo_providers/factory'
 require_relative './file_system'
 require_relative './git'
+require_relative './travis'
 
 # Creates command handler instances
 class CommandFactory
@@ -14,7 +16,8 @@ class CommandFactory
     {
       create: Commands::CreateRepoCommand,
       delete: Commands::DeleteRepoCommand,
-      init: Commands::InitRepoCommand
+      init: Commands::InitRepoCommand,
+      'activate-travis-repo': Commands::ActivateTravisRepoCommand
     })
     @command_classes = command_classes
   end
@@ -24,6 +27,7 @@ class CommandFactory
     set_provider(command, options) if command.respond_to?(:provider=)
     set_git(command, options) if command.respond_to?(:git=)
     set_file_system(command, options) if command.respond_to?(:file_system=)
+    set_travis(command, options) if command.respond_to?(:travis=)
     command
   end
 
@@ -41,6 +45,10 @@ class CommandFactory
     command.file_system = FileSystemFactory.new.create(
       dry_run: options[:dry_run] == true
     )
+  end
+
+  def set_travis(command, options)
+    command.travis = TravisFactory.new.create(options)
   end
 end
 
