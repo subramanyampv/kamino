@@ -1,23 +1,12 @@
 # frozen_string_literal: true
 
 require 'optparse'
-require_relative './create_repo_parser'
-require_relative './delete_repo_parser'
-require_relative './init_repo_parser'
-require_relative './activate_travis_repo_parser'
-require_relative './deactivate_travis_repo_parser'
 
 module CLI
   # Parses arguments passed directly to the CLI
   class GlobalParser
-    def initialize(sub_parser_classes = [
-      CreateRepoParser,
-      DeleteRepoParser,
-      InitRepoParser,
-      ActivateTravisRepoParser,
-      DeactivateTravisRepoParser
-    ])
-      @sub_parser_classes = sub_parser_classes
+    def initialize(sub_parsers = parsers)
+      @sub_parsers = sub_parsers
     end
 
     def parse(argv)
@@ -46,17 +35,13 @@ module CLI
       options
     end
 
-    # rubocop:disable Metrics/MethodLength
     def define_global_options(opts, options)
       opts.banner = 'Usage: main.rb [global options] [command [options]]'
       opts.separator ''
       opts.separator <<~HELP
         Available commands:
-          create                 : Creates a new repository
-          delete                 : Deletes an existing repository
-          init                   : Initializes an existing repository with essentials
-          activate-travis-repo   : Activates a repo in Travis
-          deactivate-travis-repo : Deactivates a repo in Travis
+
+        #{commands_help}
 
         Global options:
       HELP
@@ -64,19 +49,42 @@ module CLI
         options[:dry_run] = v
       end
     end
-    # rubocop:enable Metrics/MethodLength
+
+    def commands_help
+      @sub_parsers.map { |p| "  #{p.name}: #{p.help}" }.join("\n")
+    end
 
     def lookup_parser(command_name)
       raise OptionParser::MissingArgument, 'No command specified' \
         if command_name.to_s.empty?
 
-      result = @sub_parser_classes
-               .collect(&:new) # create new parser instance
+      result = @sub_parsers
                .find { |parser| parser.name == command_name }
 
       raise OptionParser::InvalidOption, "Unknown command #{command_name}" \
         unless result
       result
+    end
+
+    def load_command_parser(file)
+      # keep only filename without extension
+      filename = File.basename(file, '.*')
+
+      # load the module
+      require_relative filename
+
+      # convert filename to class name
+      class_name = filename.split('_').collect(&:capitalize).join
+
+      # get the class
+      clazz = CLI.const_get(class_name)
+      clazz.new
+    end
+
+    def parsers
+      Dir[File.join(__dir__, '*.rb')]
+        .reject { |file| file == __FILE__ }
+        .map { |file| load_command_parser(file) }
     end
   end
 end

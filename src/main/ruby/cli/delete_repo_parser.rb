@@ -15,6 +15,10 @@ module CLI
       'delete'
     end
 
+    def help
+      'Deletes a git repository'
+    end
+
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = 'Usage: main.rb [global options] delete [options]'

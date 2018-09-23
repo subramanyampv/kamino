@@ -15,6 +15,10 @@ module CLI
       'create'
     end
 
+    def help
+      'Creates a new git repository'
+    end
+
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = 'Usage: main.rb [global options] create [options]'

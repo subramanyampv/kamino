@@ -14,6 +14,10 @@ module CLI
       'init'
     end
 
+    def help
+      'Initializes a repository'
+    end
+
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = 'Usage: main.rb [global options] init [options]'

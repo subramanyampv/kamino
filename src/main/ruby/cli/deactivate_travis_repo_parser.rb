@@ -15,6 +15,10 @@ module CLI
       'deactivate-travis-repo'
     end
 
+    def help
+      'Deactivates a repository in Travis'
+    end
+
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = <<~HERE

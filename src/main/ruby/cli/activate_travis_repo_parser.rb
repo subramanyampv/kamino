@@ -15,6 +15,10 @@ module CLI
       'activate-travis-repo'
     end
 
+    def help
+      'Activates a repository in Travis, allowing it to run builds'
+    end
+
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = <<~HERE

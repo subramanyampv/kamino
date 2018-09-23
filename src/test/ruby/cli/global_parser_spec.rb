@@ -8,6 +8,10 @@ class DummyParser
     'dummy'
   end
 
+  def help
+    'dummy help'
+  end
+
   def parse(argv)
     { dummy: argv }
   end
@@ -15,7 +19,7 @@ end
 
 RSpec.describe CLI::GlobalParser do
   before(:example) do
-    @parser = CLI::GlobalParser.new([DummyParser])
+    @parser = CLI::GlobalParser.new([DummyParser.new])
   end
 
   describe '#parse' do
