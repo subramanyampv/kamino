@@ -5,6 +5,7 @@ require_relative './create_repo_parser'
 require_relative './delete_repo_parser'
 require_relative './init_repo_parser'
 require_relative './activate_travis_repo_parser'
+require_relative './deactivate_travis_repo_parser'
 
 module CLI
   # Parses arguments passed directly to the CLI
@@ -13,7 +14,8 @@ module CLI
       CreateRepoParser,
       DeleteRepoParser,
       InitRepoParser,
-      ActivateTravisRepoParser
+      ActivateTravisRepoParser,
+      DeactivateTravisRepoParser
     ])
       @sub_parser_classes = sub_parser_classes
     end
@@ -50,10 +52,11 @@ module CLI
       opts.separator ''
       opts.separator <<~HELP
         Available commands:
-          create               : Creates a new repository
-          delete               : Deletes an existing repository
-          init                 : Initializes an existing repository with essentials
-          activate-travis-repo : Activates a repo in Travis
+          create                 : Creates a new repository
+          delete                 : Deletes an existing repository
+          init                   : Initializes an existing repository with essentials
+          activate-travis-repo   : Activates a repo in Travis
+          deactivate-travis-repo : Deactivates a repo in Travis
 
         Global options:
       HELP
