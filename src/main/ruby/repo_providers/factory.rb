@@ -40,5 +40,9 @@ module RepoProviders
     def delete_repo
       puts 'Would have deleted repo'
     end
+
+    def activate_repo
+      puts 'Would have activated repo'
+    end
   end
 end

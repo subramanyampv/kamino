@@ -5,6 +5,7 @@ require_relative './delete_repo_command'
 require_relative './init_repo_command'
 require_relative './activate_travis_repo_command'
 require_relative './deactivate_travis_repo_command'
+require_relative './activate_pipelines_repo_command'
 require_relative '../repo_providers/factory'
 require_relative '../file_system'
 require_relative '../git'
@@ -19,7 +20,8 @@ module Commands
         delete: Commands::DeleteRepoCommand,
         init: Commands::InitRepoCommand,
         'activate-travis-repo': Commands::ActivateTravisRepoCommand,
-        'deactivate-travis-repo': Commands::DeactivateTravisRepoCommand
+        'deactivate-travis-repo': Commands::DeactivateTravisRepoCommand,
+        'activate-pipelines-repo': Commands::ActivatePipelinesRepoCommand
       })
       @command_classes = command_classes
     end

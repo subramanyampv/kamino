@@ -46,6 +46,15 @@ module RepoProviders
       end
     end
 
+    # Activates Bitbucket Pipelines for the repo
+    def activate_repo
+      body = {
+        enabled: true
+      }
+      url = repo_url + '/pipelines_config'
+      rest_client.put(url, body, basic_auth: basic_auth)
+    end
+
     private
 
     def base_url
