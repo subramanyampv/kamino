@@ -68,20 +68,37 @@ RSpec.describe CLI::GlobalParser do
       @parser = CLI::GlobalParser.new
     end
 
-    it 'should parse create repo' do
-      options = @parser.parse([
-                                'create', '-nname', '-oowner',
-                                '-pgithub', '-uusername',
-                                '--password', 'secret'
-                              ])
-      expect(options).to eq(
-        command: :create,
-        name: 'name',
-        owner: 'owner',
-        password: 'secret',
-        provider: :github,
-        username: 'username'
-      )
+    describe 'create command' do
+      it 'should parse create repo' do
+        valid_options = [
+          'create', '-nname', '-oowner',
+          '-pgithub', '-uusername',
+          '--password', 'secret'
+        ]
+        options = @parser.parse(valid_options)
+        expect(options).to eq(
+          command: :create,
+          name: 'name',
+          owner: 'owner',
+          password: 'secret',
+          provider: :github,
+          username: 'username'
+        )
+      end
+
+      required_parameters = ['-n', '-o', '-p', '-u']
+      required_parameters.each do |field|
+        it "should require #{field} parameter" do
+          valid_options = [
+            'create', '-nname', '-oowner',
+            '-pgithub', '-uusername',
+            '--password', 'secret'
+          ].reject { |item| item.start_with?(field) }
+          expect do
+            @parser.parse(valid_options)
+          end.to raise_error(OptionParser::MissingArgument)
+        end
+      end
     end
   end
 end
