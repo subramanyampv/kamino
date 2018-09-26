@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 require_relative './rest_client'
+require_relative './repo'
 
 # Implements the Travis REST API and other Travis related functionality.
 class Travis
   # Creates a new instance of this class.
-  # +options+:: The options.
-  def initialize(options)
-    @options = options
+  def initialize
     @rest_client = RestClient.new
   end
 
-  # for the unit tests
-  attr_accessor :rest_client
+  include Repo
+
+  attr_accessor :token
 
   def activate_repo
     url = "https://api.travis-ci.org/repo/#{encoded_slug}/activate"
@@ -58,18 +58,6 @@ class Travis
     "(https://travis-ci.org/#{slug}.svg?branch=master)]" \
     "(https://travis-ci.org/#{slug})"
   end
-
-  def slug
-    "#{@options[:owner]}/#{@options[:name]}"
-  end
-
-  def encoded_slug
-    "#{@options[:owner]}%2F#{@options[:name]}"
-  end
-
-  def token
-    @options[:token]
-  end
 end
 
 # Decorator for Travis that cancels out operations that cause changes.
@@ -86,7 +74,10 @@ end
 # Factory for Travis
 class TravisFactory
   def create(options)
-    travis = Travis.new(options)
+    travis = Travis.new
+    travis.name = options[:name]
+    travis.owner = options[:owner]
+    travis.token = options[:token]
     if options[:dry_run]
       DryRunTravis.new(travis)
     else

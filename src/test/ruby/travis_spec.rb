@@ -4,13 +4,13 @@ require_relative '../../main/ruby/travis'
 
 RSpec.describe Travis do
   before(:example) do
-    options = {
-      name: 'instarepo',
-      owner: 'ngeor',
-      token: 'secret'
-    }
-    @travis = Travis.new(options)
-    @travis.rest_client = double('rest_client')
+    @rest_client = double('rest_client')
+    expect(RestClient).to receive(:new)
+      .and_return(@rest_client)
+    @travis = Travis.new
+    @travis.name = 'instarepo'
+    @travis.owner = 'ngeor'
+    @travis.token = 'secret'
   end
 
   describe('#activate_repo') do
@@ -23,7 +23,7 @@ RSpec.describe Travis do
         'Travis-API-Version' => '3'
       }
 
-      allow(@travis.rest_client).to receive(:post)
+      allow(@rest_client).to receive(:post)
         .with(url, '', headers: headers)
         .and_return(test: 42)
 
@@ -81,7 +81,7 @@ end
 
 RSpec.describe DryRunTravis do
   before(:example) do
-    @travis = DryRunTravis.new(Travis.new(owner: 'ngeor'))
+    @travis = DryRunTravis.new(Travis.new)
   end
 
   describe '#activate_repo' do
