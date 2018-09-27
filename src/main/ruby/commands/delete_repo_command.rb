@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
+require_relative '../repo_providers/factory'
+
 module Commands
   # Deletes an existing repository.
   class DeleteRepoCommand
     def initialize(options)
       @options = options
+      @provider = RepoProviders.create(options)
     end
-
-    attr_accessor :provider
 
     def run
       if @provider.repo_exists?

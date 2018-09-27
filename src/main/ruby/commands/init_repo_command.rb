@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
+require_relative '../repo_providers/factory'
+
 module Commands
   # Initializes an existing repository.
   class InitRepoCommand
     def initialize(options)
       @options = options
+      @provider = RepoProviders.create(options)
     end
 
-    attr_accessor :provider
     attr_accessor :git
     attr_accessor :file_system
 

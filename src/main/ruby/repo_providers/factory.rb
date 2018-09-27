@@ -4,9 +4,10 @@ require 'delegate'
 require_relative './github'
 require_relative './bitbucket'
 
+# Module regarding git repository providers.
 module RepoProviders
-  # Factory for a repo provider.
-  class Factory
+  class << self
+    # Factory for a repo provider.
     def create(options)
       provider = create_provider(options)
       if options[:dry_run]

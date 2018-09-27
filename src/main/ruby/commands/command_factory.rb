@@ -6,7 +6,6 @@ require_relative './init_repo_command'
 require_relative './activate_travis_repo_command'
 require_relative './deactivate_travis_repo_command'
 require_relative './activate_pipelines_repo_command'
-require_relative '../repo_providers/factory'
 require_relative '../file_system'
 require_relative '../git'
 require_relative '../travis'
@@ -28,7 +27,6 @@ module Commands
 
     def create_command(options)
       command = @command_classes[options[:command]].new(options)
-      set_provider(command, options) if command.respond_to?(:provider=)
       set_git(command, options) if command.respond_to?(:git=)
       set_file_system(command, options) if command.respond_to?(:file_system=)
       set_travis(command, options) if command.respond_to?(:travis=)
@@ -36,10 +34,6 @@ module Commands
     end
 
     private
-
-    def set_provider(command, options)
-      command.provider = RepoProviders::Factory.new.create(options)
-    end
 
     def set_git(command, options)
       command.git = GitFactory.new.create(dry_run: options[:dry_run] == true)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../../main/ruby/commands/delete_repo_command'
+require_relative '../../../main/ruby/repo_providers/factory'
 
 RSpec.describe Commands::DeleteRepoCommand do
   before(:example) do
@@ -8,8 +9,11 @@ RSpec.describe Commands::DeleteRepoCommand do
       name: 'dummy'
     }
     @provider = double('provider')
+    expect(RepoProviders).to receive(:create)
+      .with(options)
+      .and_return(@provider)
+
     @command = Commands::DeleteRepoCommand.new(options)
-    @command.provider = @provider
   end
 
   context 'when repo exists' do

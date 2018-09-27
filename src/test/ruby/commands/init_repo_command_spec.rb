@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../../main/ruby/commands/init_repo_command'
+require_relative '../../../main/ruby/repo_providers/factory'
 
 RSpec.describe Commands::InitRepoCommand do
   before(:example) do
@@ -14,8 +15,11 @@ RSpec.describe Commands::InitRepoCommand do
     @git = double('git')
     @file_system = double('file_system')
 
+    expect(RepoProviders).to receive(:create)
+      .with(options)
+      .and_return(@provider)
+
     @command = Commands::InitRepoCommand.new(options)
-    @command.provider = @provider
     @command.git = @git
     @command.file_system = @file_system
   end

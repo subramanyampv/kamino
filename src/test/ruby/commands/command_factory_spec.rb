@@ -11,11 +11,6 @@ class CommandWithOptions
   attr_reader :options
 end
 
-# Dummy command which accepts a provider
-class CommandWithProvider < CommandWithOptions
-  attr_accessor :provider
-end
-
 # Dummy command which accepts git
 class CommandWithGit < CommandWithOptions
   attr_accessor :git
@@ -42,28 +37,6 @@ RSpec.describe Commands::CommandFactory do
       command = factory.create_command(options)
       expect(command).to be_instance_of(CommandWithOptions)
       expect(command.options).to eq(options)
-    end
-
-    it 'should create a command with provider' do
-      options = {
-        command: :dummy,
-        hello: 'world'
-      }
-
-      provider_factory = double('provider_factory')
-      allow(RepoProviders::Factory).to receive(:new)
-        .and_return(provider_factory)
-
-      provider = double('provider')
-      allow(provider_factory).to receive(:create)
-        .with(options)
-        .and_return(provider)
-
-      factory = Commands::CommandFactory.new(dummy: CommandWithProvider)
-      command = factory.create_command(options)
-      expect(command).to be_instance_of(CommandWithProvider)
-      expect(command.options).to eq(options)
-      expect(command.provider).to eq(provider)
     end
 
     it 'should create a command with git' do
