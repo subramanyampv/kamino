@@ -8,8 +8,10 @@ RSpec.describe Commands::DeactivateTravisRepoCommand do
       name: 'dummy'
     }
     @travis = double('travis')
+    expect(TravisFactory).to receive(:create)
+      .with(options)
+      .and_return(@travis)
     @command = Commands::DeactivateTravisRepoCommand.new(options)
-    @command.travis = @travis
   end
 
   describe '#run' do

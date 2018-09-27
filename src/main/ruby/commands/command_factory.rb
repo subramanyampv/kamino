@@ -8,7 +8,6 @@ require_relative './deactivate_travis_repo_command'
 require_relative './activate_pipelines_repo_command'
 require_relative '../file_system'
 require_relative '../git'
-require_relative '../travis'
 
 module Commands
   # Creates command handler instances
@@ -28,7 +27,6 @@ module Commands
     def create_command(options)
       command = @command_classes[options[:command]].new(options)
       set_file_system(command, options) if command.respond_to?(:file_system=)
-      set_travis(command, options) if command.respond_to?(:travis=)
       command
     end
 
@@ -38,10 +36,6 @@ module Commands
       command.file_system = FileSystemFactory.new.create(
         dry_run: options[:dry_run] == true
       )
-    end
-
-    def set_travis(command, options)
-      command.travis = TravisFactory.new.create(options)
     end
   end
 end

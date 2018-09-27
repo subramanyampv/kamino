@@ -72,8 +72,8 @@ class DryRunTravis < SimpleDelegator
 end
 
 # Factory for Travis
-class TravisFactory
-  def create(options)
+module TravisFactory
+  def self.create(options)
     travis = Travis.new
     travis.name = options[:name]
     travis.owner = options[:owner]

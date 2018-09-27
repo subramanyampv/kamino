@@ -102,18 +102,14 @@ RSpec.describe DryRunTravis do
 end
 
 RSpec.describe TravisFactory do
-  before(:example) do
-    @factory = TravisFactory.new
-  end
-
   describe '#create' do
     it 'should create real' do
-      travis = @factory.create(owner: 'ngeor')
+      travis = TravisFactory.create(owner: 'ngeor')
       expect(travis).to be_instance_of(Travis)
     end
 
     it 'should create dry-run' do
-      travis = @factory.create(owner: 'ngeor', dry_run: true)
+      travis = TravisFactory.create(owner: 'ngeor', dry_run: true)
       expect(travis).to be_instance_of(DryRunTravis)
       expect(travis.__getobj__).to be_instance_of(Travis)
     end
