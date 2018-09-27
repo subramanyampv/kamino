@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Mixin for repository.
-module Repo
+module RepoMixin
   attr_accessor :name
   attr_accessor :owner
 

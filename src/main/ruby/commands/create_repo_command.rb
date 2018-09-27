@@ -13,7 +13,7 @@ module Commands
       if @provider.repo_exists?
         puts 'Repo already exists'
       else
-        @provider.create_repo
+        @provider.create_repo(description: @options[:description])
       end
     end
   end

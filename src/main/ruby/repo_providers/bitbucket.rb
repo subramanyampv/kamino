@@ -2,18 +2,31 @@
 
 require 'json'
 require 'net/http'
-require_relative './repo_provider_base'
+require_relative '../basic_auth'
+require_relative '../repo'
+require_relative '../rest_client'
 
 module RepoProviders
   # Bitbucket Cloud repository provider.
-  class Bitbucket < RepoProviderBase
+  class Bitbucket
+    def initialize(options)
+      @rest_client = RestClient.new
+      @username = options[:username]
+      @password = options[:password]
+      @name = options[:name]
+      @owner = options[:owner]
+    end
+
+    include BasicAuthMixin
+    include RepoMixin
+
     # rubocop:disable Metrics/MethodLength
-    def create_repo
+    def create_repo(description: '')
       # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
       body = {
         scm: 'git',
         is_private: true,
-        description: options[:description],
+        description: description,
         language: 'java',
         fork_policy: 'no_forks',
         mainbranch: {
@@ -21,28 +34,27 @@ module RepoProviders
           name: 'master'
         }
       }
-      rest_client.post(repo_url, body, basic_auth: basic_auth)
+      @rest_client.post(repo_url, body, basic_auth: basic_auth)
     end
     # rubocop:enable Metrics/MethodLength
 
     def delete_repo
-      rest_client.delete(repo_url, basic_auth: basic_auth)
+      @rest_client.delete(repo_url, basic_auth: basic_auth)
     end
 
     def repo_exists?
-      rest_client.get(repo_url, basic_auth: basic_auth)
+      @rest_client.get(repo_url, basic_auth: basic_auth)
       true
     rescue RestClientError => ex
       raise ex unless ex.code.to_s == '404'
       false
     end
 
-    # TODO: use_ssh should come from options
-    def clone_url(use_ssh = true)
+    def clone_url(use_ssh: true)
       if use_ssh
         "git@bitbucket.org:#{slug}.git"
       else
-        "https://#{options[:username]}@bitbucket.org/#{slug}.git"
+        "https://#{username}@bitbucket.org/#{slug}.git"
       end
     end
 
@@ -52,7 +64,7 @@ module RepoProviders
         enabled: true
       }
       url = repo_url + '/pipelines_config'
-      rest_client.put(url, body, basic_auth: basic_auth)
+      @rest_client.put(url, body, basic_auth: basic_auth)
     end
 
     private
@@ -65,8 +77,8 @@ module RepoProviders
       "#{base_url}/repositories/#{slug}"
     end
 
-    def slug
-      "#{options[:owner]}/#{options[:name]}"
+    def basic_auth
+      BasicAuth.new(username, password)
     end
   end
 end

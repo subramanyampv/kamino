@@ -10,7 +10,7 @@ class Travis
     @rest_client = RestClient.new
   end
 
-  include Repo
+  include RepoMixin
 
   attr_accessor :token
 

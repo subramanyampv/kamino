@@ -8,14 +8,13 @@ RSpec.describe RepoProviders::GitHub do
     options = {
       name: 'instarepo',
       owner: 'ngeor',
-      description: 'My brand new repo',
       username: 'user',
       password: 'password'
     }
 
     @rest_client = double('rest_client')
-
-    @github = RepoProviders::GitHub.new(options, @rest_client)
+    expect(RestClient).to receive(:new).and_return(@rest_client)
+    @github = RepoProviders::GitHub.new(options)
   end
 
   describe('#repos') do
@@ -54,7 +53,7 @@ RSpec.describe RepoProviders::GitHub do
         .and_return(test: 42)
 
       # act
-      repo = @github.create_repo
+      repo = @github.create_repo(description: 'My brand new repo')
 
       # assert
       expect(repo).to eq(test: 42)
@@ -68,12 +67,12 @@ RSpec.describe RepoProviders::GitHub do
     end
 
     it('should use ssh explicitly') do
-      url = @github.clone_url(true)
+      url = @github.clone_url(use_ssh: true)
       expect(url).to eq('git@github.com:ngeor/instarepo.git')
     end
 
     it('should support https') do
-      url = @github.clone_url(false)
+      url = @github.clone_url(use_ssh: false)
       expect(url).to eq('https://github.com/ngeor/instarepo.git')
     end
   end

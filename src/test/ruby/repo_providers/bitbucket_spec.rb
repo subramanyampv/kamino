@@ -8,12 +8,12 @@ RSpec.describe RepoProviders::Bitbucket do
     options = {
       name: 'instarepo',
       owner: 'ngeor',
-      description: 'My brand new repo',
       username: 'user',
       password: 'password'
     }
     @rest_client = double('rest_client')
-    @bitbucket = RepoProviders::Bitbucket.new(options, @rest_client)
+    expect(RestClient).to receive(:new).and_return(@rest_client)
+    @bitbucket = RepoProviders::Bitbucket.new(options)
   end
 
   describe '#create_repo' do
@@ -38,7 +38,7 @@ RSpec.describe RepoProviders::Bitbucket do
         .and_return(test: 42)
 
       # act
-      repo = @bitbucket.create_repo
+      repo = @bitbucket.create_repo(description: 'My brand new repo')
 
       # assert
       expect(repo).to eq(test: 42)
@@ -93,13 +93,13 @@ RSpec.describe RepoProviders::Bitbucket do
     end
 
     it 'should use ssh explicitly' do
-      expect(@bitbucket.clone_url(true)).to eq(
+      expect(@bitbucket.clone_url(use_ssh: true)).to eq(
         'git@bitbucket.org:ngeor/instarepo.git'
       )
     end
 
     it 'should support https' do
-      expect(@bitbucket.clone_url(false)).to eq(
+      expect(@bitbucket.clone_url(use_ssh: false)).to eq(
         'https://user@bitbucket.org/ngeor/instarepo.git'
       )
     end
