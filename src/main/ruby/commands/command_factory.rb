@@ -27,17 +27,12 @@ module Commands
 
     def create_command(options)
       command = @command_classes[options[:command]].new(options)
-      set_git(command, options) if command.respond_to?(:git=)
       set_file_system(command, options) if command.respond_to?(:file_system=)
       set_travis(command, options) if command.respond_to?(:travis=)
       command
     end
 
     private
-
-    def set_git(command, options)
-      command.git = GitFactory.new.create(dry_run: options[:dry_run] == true)
-    end
 
     def set_file_system(command, options)
       command.file_system = FileSystemFactory.new.create(

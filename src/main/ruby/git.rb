@@ -6,8 +6,8 @@ require_relative './shell'
 # Handles git operations. Requires the git executable on the PATH.
 class Git
   # Creates an instance of this class.
-  def initialize(shell: Shell.new)
-    @shell = shell
+  def initialize
+    @shell = Shell.new
   end
 
   attr_accessor :clone_url
@@ -92,9 +92,9 @@ class DryRunGitDecorator < SimpleDelegator
 end
 
 # Factory for git.
-class GitFactory
-  def create(dry_run: false, shell: Shell.new)
-    git = Git.new(shell: shell)
+module GitFactory
+  def self.create(dry_run: false)
+    git = Git.new
     if dry_run
       DryRunGitDecorator.new(git)
     else

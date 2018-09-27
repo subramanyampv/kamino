@@ -5,7 +5,8 @@ require_relative '../../main/ruby/git'
 RSpec.describe Git do
   before(:example) do
     @shell = double('shell')
-    @git = Git.new(shell: @shell)
+    expect(Shell).to receive(:new).and_return(@shell)
+    @git = Git.new
     @git.clone_url = 'https://whatever/hey.git'
     @git.repo_name = 'hey'
     @git.clone_dir = 'C:/tmp'
@@ -169,12 +170,12 @@ end
 RSpec.describe GitFactory do
   describe '#create' do
     it 'should create a regular git' do
-      git = GitFactory.new.create(dry_run: false)
+      git = GitFactory.create(dry_run: false)
       expect(git).to be_instance_of(Git)
     end
 
     it 'should create a dry run git' do
-      git = GitFactory.new.create(dry_run: true)
+      git = GitFactory.create(dry_run: true)
       expect(git).to be_instance_of(DryRunGitDecorator)
       expect(git.__getobj__).to be_instance_of(Git)
     end

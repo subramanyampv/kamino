@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../repo_providers/factory'
+require_relative '../git'
 
 module Commands
   # Initializes an existing repository.
@@ -8,9 +9,9 @@ module Commands
     def initialize(options)
       @options = options
       @provider = RepoProviders.create(options)
+      @git = GitFactory.create(dry_run: options[:dry_run] == true)
     end
 
-    attr_accessor :git
     attr_accessor :file_system
 
     def run

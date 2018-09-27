@@ -11,11 +11,6 @@ class CommandWithOptions
   attr_reader :options
 end
 
-# Dummy command which accepts git
-class CommandWithGit < CommandWithOptions
-  attr_accessor :git
-end
-
 # Dummy command which accepts a file system
 class CommandWithFileSystem < CommandWithOptions
   attr_accessor :file_system
@@ -37,51 +32,6 @@ RSpec.describe Commands::CommandFactory do
       command = factory.create_command(options)
       expect(command).to be_instance_of(CommandWithOptions)
       expect(command.options).to eq(options)
-    end
-
-    it 'should create a command with git' do
-      options = {
-        command: :dummy,
-        hello: 'world'
-      }
-
-      git_factory = double('git_factory')
-      allow(GitFactory).to receive(:new)
-        .and_return(git_factory)
-
-      git = double('git')
-      allow(git_factory).to receive(:create)
-        .with(dry_run: false)
-        .and_return(git)
-
-      factory = Commands::CommandFactory.new(dummy: CommandWithGit)
-      command = factory.create_command(options)
-      expect(command).to be_instance_of(CommandWithGit)
-      expect(command.options).to eq(options)
-      expect(command.git).to eq(git)
-    end
-
-    it 'should create a command with git in dry run mode' do
-      options = {
-        command: :dummy,
-        hello: 'world',
-        dry_run: true
-      }
-
-      git_factory = double('git_factory')
-      allow(GitFactory).to receive(:new)
-        .and_return(git_factory)
-
-      git = double('git')
-      allow(git_factory).to receive(:create)
-        .with(dry_run: true)
-        .and_return(git)
-
-      factory = Commands::CommandFactory.new(dummy: CommandWithGit)
-      command = factory.create_command(options)
-      expect(command).to be_instance_of(CommandWithGit)
-      expect(command.options).to eq(options)
-      expect(command.git).to eq(git)
     end
 
     it 'should create a command with file system' do
