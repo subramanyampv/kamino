@@ -8,7 +8,7 @@ module Commands
     def initialize(options)
       @options = options
       @options[:provider] = :bitbucket
-      @bitbucket = RepoProviders::Factory.new.create(@options)
+      @bitbucket = RepoProviders.create(@options)
     end
 
     def run

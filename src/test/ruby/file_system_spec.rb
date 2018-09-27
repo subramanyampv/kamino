@@ -48,12 +48,12 @@ end
 RSpec.describe FileSystemFactory do
   describe '#create' do
     it 'should create a regular file system' do
-      file_system = FileSystemFactory.new.create(dry_run: false)
+      file_system = FileSystemFactory.create(dry_run: false)
       expect(file_system).to be_instance_of(FileSystem)
     end
 
     it 'should create a dry-run file system' do
-      file_system = FileSystemFactory.new.create(dry_run: true)
+      file_system = FileSystemFactory.create(dry_run: true)
       expect(file_system).to be_instance_of(DryRunFileSystemDecorator)
       expect(file_system.__getobj__).to be_instance_of(FileSystem)
     end

@@ -23,8 +23,8 @@ class DryRunFileSystemDecorator < SimpleDelegator
 end
 
 # Creates a new instance of FileSystem.
-class FileSystemFactory
-  def create(dry_run: false)
+module FileSystemFactory
+  def self.create(dry_run: false)
     if dry_run
       DryRunFileSystemDecorator.new(FileSystem.new)
     else

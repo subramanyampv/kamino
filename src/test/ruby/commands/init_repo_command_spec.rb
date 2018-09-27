@@ -2,11 +2,12 @@
 
 require_relative '../../../main/ruby/commands/init_repo_command'
 require_relative '../../../main/ruby/repo_providers/factory'
+require_relative '../../../main/ruby/file_system'
 require_relative '../../../main/ruby/git'
 
 RSpec.describe Commands::InitRepoCommand do
   context 'in dry run' do
-    it 'should create git in dry run mode' do
+    it 'should create in dry run mode' do
       options = {
         dry_run: true
       }
@@ -14,6 +15,8 @@ RSpec.describe Commands::InitRepoCommand do
       expect(RepoProviders).to receive(:create)
         .with(options)
       expect(GitFactory).to receive(:create)
+        .with(dry_run: true)
+      expect(FileSystemFactory).to receive(:create)
         .with(dry_run: true)
 
       @command = Commands::InitRepoCommand.new(options)
@@ -40,8 +43,11 @@ RSpec.describe Commands::InitRepoCommand do
         .with(dry_run: false)
         .and_return(@git)
 
+      expect(FileSystemFactory).to receive(:create)
+        .with(dry_run: false)
+        .and_return(@file_system)
+
       @command = Commands::InitRepoCommand.new(options)
-      @command.file_system = @file_system
     end
 
     context 'when repo exists' do

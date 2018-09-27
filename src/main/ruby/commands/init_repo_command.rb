@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../repo_providers/factory'
+require_relative '../file_system'
 require_relative '../git'
 
 module Commands
@@ -8,11 +9,11 @@ module Commands
   class InitRepoCommand
     def initialize(options)
       @options = options
+      dry_run = options[:dry_run] == true
       @provider = RepoProviders.create(options)
-      @git = GitFactory.create(dry_run: options[:dry_run] == true)
+      @git = GitFactory.create(dry_run: dry_run)
+      @file_system = FileSystemFactory.create(dry_run: dry_run)
     end
-
-    attr_accessor :file_system
 
     def run
       if @provider.repo_exists?
