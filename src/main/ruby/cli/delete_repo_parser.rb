@@ -11,10 +11,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'delete'
-    end
-
     def help
       'Deletes a git repository'
     end

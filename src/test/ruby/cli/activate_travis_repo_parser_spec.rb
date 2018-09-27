@@ -7,12 +7,6 @@ RSpec.describe CLI::ActivateTravisRepoParser do
     @parser = CLI::ActivateTravisRepoParser.new
   end
 
-  describe '#name' do
-    it 'should have the expected name' do
-      expect(@parser.name).to eq('activate-travis-repo')
-    end
-  end
-
   describe '#parse' do
     it 'should work with short options' do
       argv = [

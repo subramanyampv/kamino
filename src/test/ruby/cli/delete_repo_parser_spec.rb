@@ -7,12 +7,6 @@ RSpec.describe CLI::DeleteRepoParser do
     @parser = CLI::DeleteRepoParser.new
   end
 
-  describe '#name' do
-    it 'should have the expected name' do
-      expect(@parser.name).to eq('delete')
-    end
-  end
-
   describe '#parse' do
     it 'should work with short options' do
       argv = [

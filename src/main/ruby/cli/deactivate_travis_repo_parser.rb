@@ -11,10 +11,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'deactivate-travis-repo'
-    end
-
     def help
       'Deactivates a repository in Travis'
     end

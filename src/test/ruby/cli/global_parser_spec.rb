@@ -3,11 +3,7 @@
 require_relative '../../../main/ruby/cli/global_parser'
 
 # Dummy sub-command parser for this unit test file.
-class DummyParser
-  def name
-    'dummy'
-  end
-
+class DummyRepoParser
   def help
     'dummy help'
   end
@@ -20,14 +16,14 @@ end
 RSpec.describe CLI::GlobalParser do
   describe 'with dummy parser' do
     before(:example) do
-      @parser = CLI::GlobalParser.new([DummyParser.new])
+      @parser = CLI::GlobalParser.new([DummyRepoParser.new])
     end
 
     describe '#parse' do
       it 'should parse command without extra arguments' do
         result = @parser.parse(['dummy'])
         expect(result).to eq(
-          command: :dummy,
+          command: 'dummy',
           dummy: []
         )
       end
@@ -35,7 +31,7 @@ RSpec.describe CLI::GlobalParser do
       it 'should parse command with extra arguments' do
         result = @parser.parse(['dummy', '--oops'])
         expect(result).to eq(
-          command: :dummy,
+          command: 'dummy',
           dummy: ['--oops']
         )
       end
@@ -43,7 +39,7 @@ RSpec.describe CLI::GlobalParser do
       it 'should recognize dry-run' do
         result = @parser.parse(['--dry-run', 'dummy'])
         expect(result).to eq(
-          command: :dummy,
+          command: 'dummy',
           dummy: [],
           dry_run: true
         )
@@ -77,7 +73,7 @@ RSpec.describe CLI::GlobalParser do
         ]
         options = @parser.parse(valid_options)
         expect(options).to eq(
-          command: :create,
+          command: 'create',
           name: 'name',
           owner: 'owner',
           password: 'secret',

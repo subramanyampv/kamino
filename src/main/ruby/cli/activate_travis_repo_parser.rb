@@ -11,10 +11,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'activate-travis-repo'
-    end
-
     def help
       'Activates a repository in Travis, allowing it to run builds'
     end

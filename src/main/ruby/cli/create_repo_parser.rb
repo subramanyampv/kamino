@@ -11,10 +11,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'create'
-    end
-
     def help
       'Creates a new git repository'
     end

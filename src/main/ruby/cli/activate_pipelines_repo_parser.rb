@@ -11,10 +11,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'activate-pipelines-repo'
-    end
-
     def help
       'Activates a repository in Bitbucket Pipelines, allowing it to run builds'
     end

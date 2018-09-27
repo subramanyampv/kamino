@@ -7,12 +7,6 @@ RSpec.describe CLI::CreateRepoParser do
     @parser = CLI::CreateRepoParser.new
   end
 
-  describe '#name' do
-    it 'should have the expected name' do
-      expect(@parser.name).to eq('create')
-    end
-  end
-
   describe '#parse' do
     it 'should work with short options' do
       argv = [

@@ -10,10 +10,6 @@ module CLI
       @options = {}
     end
 
-    def name
-      'init'
-    end
-
     def help
       'Initializes a repository'
     end

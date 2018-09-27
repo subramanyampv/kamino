@@ -19,7 +19,7 @@ module CLI
       command_options = parser.parse(argv)
 
       # assign command to the options as symbol
-      command_options[:command] = command_name.to_sym
+      command_options[:command] = command_name
       global_options.merge(command_options)
     end
 
@@ -51,15 +51,22 @@ module CLI
     end
 
     def commands_help
-      @sub_parsers.map { |p| "  #{p.name}: #{p.help}" }.join("\n")
+      @sub_parsers.map { |p| "  #{parser_name(p)}: #{p.help}" }.join("\n")
+    end
+
+    def parser_name(parser)
+      parser.class.name
     end
 
     def lookup_parser(command_name)
       raise OptionParser::MissingArgument, 'No command specified' \
         if command_name.to_s.empty?
 
+      class_name = command_name.split('-').collect(&:capitalize).join + \
+                   'RepoParser'
+
       result = @sub_parsers
-               .find { |parser| parser.name == command_name }
+               .find { |parser| parser.class.name.end_with?(class_name) }
 
       raise OptionParser::InvalidOption, "Unknown command #{command_name}" \
         unless result
