@@ -9,12 +9,8 @@ require_relative '../rest_client'
 module RepoProviders
   # GitHub repository provider.
   class GitHub
-    def initialize(options)
+    def initialize
       @rest_client = RestClient.new
-      @username = options[:username]
-      @password = options[:password]
-      @name = options[:name]
-      @owner = options[:owner]
     end
 
     include BasicAuthMixin

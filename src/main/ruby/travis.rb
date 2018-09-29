@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'delegate'
 require_relative './rest_client'
 require_relative './repo'
 

@@ -6,7 +6,6 @@ module Commands
   # Deletes an existing repository.
   class DeleteCommand
     def initialize(options)
-      @options = options
       @provider = RepoProviders.create(options)
     end
 

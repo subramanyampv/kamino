@@ -9,11 +9,18 @@ RSpec.describe Commands::InitCommand do
   context 'in dry run' do
     it 'should create in dry run mode' do
       options = {
+        name: 'dummy',
+        owner: 'owner',
+        username: 'username',
+        password: 'secret',
+        provider: :github,
         dry_run: true
       }
 
       expect(RepoProviders).to receive(:create)
         .with(options)
+        .and_return(@provider)
+
       expect(GitFactory).to receive(:create)
         .with(dry_run: true)
       expect(FileSystemFactory).to receive(:create)
@@ -28,7 +35,11 @@ RSpec.describe Commands::InitCommand do
       options = {
         name: 'dummy',
         description: 'my new awesome repo',
-        clone_dir: 'C:/tmp'
+        clone_dir: 'C:/tmp',
+        owner: 'owner',
+        username: 'username',
+        password: 'secret',
+        provider: :github
       }
 
       @provider = double('provider')

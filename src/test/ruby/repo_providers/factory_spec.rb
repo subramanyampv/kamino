@@ -31,5 +31,19 @@ RSpec.describe RepoProviders do
         RepoProviders::GitHub
       )
     end
+
+    it 'should initialize provider options' do
+      provider = RepoProviders.create(
+        provider: :github,
+        name: 'repo',
+        owner: 'ngeor',
+        username: 'user1',
+        password: 'secret'
+      )
+      expect(provider.name).to eq('repo')
+      expect(provider.owner).to eq('ngeor')
+      expect(provider.username).to eq('user1')
+      expect(provider.password).to eq('secret')
+    end
   end
 end

@@ -6,7 +6,11 @@ require_relative '../../../main/ruby/repo_providers/factory'
 RSpec.describe Commands::DeleteCommand do
   before(:example) do
     options = {
-      name: 'dummy'
+      name: 'dummy',
+      owner: 'owner',
+      username: 'username',
+      password: 'secret',
+      provider: :github
     }
     @provider = double('provider')
     expect(RepoProviders).to receive(:create)

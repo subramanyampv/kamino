@@ -9,24 +9,28 @@ module RepoProviders
   class << self
     # Factory for a repo provider.
     def create(options)
-      provider = create_provider(options)
+      instance = create_provider(options[:provider])
+      instance.name = options[:name]
+      instance.owner = options[:owner]
+      instance.username = options[:username]
+      instance.password = options[:password]
       if options[:dry_run]
-        DryRunProviderDecorator.new(provider)
+        DryRunProviderDecorator.new(instance)
       else
-        provider
+        instance
       end
     end
 
     private
 
-    def create_provider(options)
-      case options[:provider]
+    def create_provider(provider)
+      case provider
       when :github
-        GitHub.new(options)
+        GitHub.new
       when :bitbucket
-        Bitbucket.new(options)
+        Bitbucket.new
       else
-        raise "Unsupported provider #{options[:provider]}"
+        raise "Unsupported provider #{provider}"
       end
     end
   end

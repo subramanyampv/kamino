@@ -9,12 +9,8 @@ require_relative '../rest_client'
 module RepoProviders
   # Bitbucket Cloud repository provider.
   class Bitbucket
-    def initialize(options)
+    def initialize
       @rest_client = RestClient.new
-      @username = options[:username]
-      @password = options[:password]
-      @name = options[:name]
-      @owner = options[:owner]
     end
 
     include BasicAuthMixin

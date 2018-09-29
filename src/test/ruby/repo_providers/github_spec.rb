@@ -5,16 +5,13 @@ require_relative '../../../main/ruby/rest_client'
 
 RSpec.describe RepoProviders::GitHub do
   before(:example) do
-    options = {
-      name: 'instarepo',
-      owner: 'ngeor',
-      username: 'user',
-      password: 'password'
-    }
-
     @rest_client = double('rest_client')
     expect(RestClient).to receive(:new).and_return(@rest_client)
-    @github = RepoProviders::GitHub.new(options)
+    @github = RepoProviders::GitHub.new
+    @github.name = 'instarepo'
+    @github.owner = 'ngeor'
+    @github.username = 'user'
+    @github.password = 'password'
   end
 
   describe('#repos') do

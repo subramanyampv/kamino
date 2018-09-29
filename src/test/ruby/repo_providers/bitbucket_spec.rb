@@ -5,15 +5,13 @@ require_relative '../../../main/ruby/rest_client'
 
 RSpec.describe RepoProviders::Bitbucket do
   before(:example) do
-    options = {
-      name: 'instarepo',
-      owner: 'ngeor',
-      username: 'user',
-      password: 'password'
-    }
     @rest_client = double('rest_client')
     expect(RestClient).to receive(:new).and_return(@rest_client)
-    @bitbucket = RepoProviders::Bitbucket.new(options)
+    @bitbucket = RepoProviders::Bitbucket.new
+    @bitbucket.name = 'instarepo'
+    @bitbucket.owner = 'ngeor'
+    @bitbucket.username = 'user'
+    @bitbucket.password = 'password'
   end
 
   describe '#create_repo' do

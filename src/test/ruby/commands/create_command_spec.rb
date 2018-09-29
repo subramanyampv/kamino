@@ -7,7 +7,11 @@ RSpec.describe Commands::CreateCommand do
   before(:example) do
     options = {
       name: 'dummy',
-      description: 'super duper repo'
+      description: 'super duper repo',
+      owner: 'owner',
+      username: 'username',
+      password: 'secret',
+      provider: :github
     }
     @provider = double('provider')
     expect(RepoProviders).to receive(:create)

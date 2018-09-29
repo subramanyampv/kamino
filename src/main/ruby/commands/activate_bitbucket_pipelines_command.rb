@@ -6,9 +6,7 @@ module Commands
   # Activates a repository in Bitbucket Pipelines.
   class ActivateBitbucketPipelinesCommand
     def initialize(options)
-      @options = options
-      @options[:provider] = :bitbucket
-      @bitbucket = RepoProviders.create(@options)
+      @bitbucket = RepoProviders.create(options.merge(provider: :bitbucket))
     end
 
     def run

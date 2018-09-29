@@ -2,8 +2,8 @@
 
 # Mixin which adds username and password fields.
 module BasicAuthMixin
-  attr_reader :username
-  attr_reader :password
+  attr_accessor :username
+  attr_accessor :password
 end
 
 # Basic authentication credentials.
