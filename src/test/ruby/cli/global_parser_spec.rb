@@ -3,7 +3,7 @@
 require_relative '../../../main/ruby/cli/global_parser'
 
 # Dummy sub-command parser for this unit test file.
-class DummyRepoParser
+class DummyParser
   def help
     'dummy help'
   end
@@ -16,7 +16,7 @@ end
 RSpec.describe CLI::GlobalParser do
   describe 'with dummy parser' do
     before(:example) do
-      @parser = CLI::GlobalParser.new([DummyRepoParser.new])
+      @parser = CLI::GlobalParser.new([DummyParser.new])
     end
 
     describe '#parse' do

@@ -6,7 +6,7 @@ require_relative '../git'
 
 module Commands
   # Initializes an existing repository.
-  class InitRepoCommand
+  class InitCommand
     def initialize(options)
       @options = options
       dry_run = options[:dry_run] == true

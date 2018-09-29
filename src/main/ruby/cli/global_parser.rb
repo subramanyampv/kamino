@@ -63,7 +63,7 @@ module CLI
         if command_name.to_s.empty?
 
       class_name = command_name.split('-').collect(&:capitalize).join + \
-                   'RepoParser'
+                   'Parser'
 
       result = @sub_parsers
                .find { |parser| parser.class.name.end_with?(class_name) }
@@ -88,6 +88,8 @@ module CLI
       clazz.new
     end
 
+    # Loads all command parsers from the current directory,
+    # excluding this fisle.
     def parsers
       Dir[File.join(__dir__, '*.rb')]
         .reject { |file| file == __FILE__ }

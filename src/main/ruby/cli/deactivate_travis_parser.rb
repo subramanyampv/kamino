@@ -5,7 +5,7 @@ require 'optparse'
 module CLI
   # Parser for the deactivate travis repo sub-command,
   # which deactivates an existing repo in Travis.
-  class DeactivateTravisRepoParser
+  class DeactivateTravisParser
     def initialize
       # collect options here
       @options = {}

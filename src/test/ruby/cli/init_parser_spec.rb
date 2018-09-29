@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../../../main/ruby/cli/init_repo_parser'
+require_relative '../../../main/ruby/cli/init_parser'
 
-RSpec.describe CLI::InitRepoParser do
+RSpec.describe CLI::InitParser do
   before(:example) do
-    @parser = CLI::InitRepoParser.new
+    @parser = CLI::InitParser.new
   end
 
   describe '#parse' do

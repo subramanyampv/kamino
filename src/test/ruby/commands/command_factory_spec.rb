@@ -11,7 +11,7 @@ RSpec.describe Commands do
         provider: :github
       }
       command = Commands.create_command(options)
-      expect(command).to be_instance_of(Commands::CreateRepoCommand)
+      expect(command).to be_instance_of(Commands::CreateCommand)
     end
   end
 end

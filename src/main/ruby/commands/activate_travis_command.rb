@@ -3,15 +3,15 @@
 require_relative '../travis'
 
 module Commands
-  # Deactivates a repository in Travis.
-  class DeactivateTravisRepoCommand
+  # Activates a repository in Travis.
+  class ActivateTravisCommand
     def initialize(options)
       @options = options
       @travis = TravisFactory.create(options)
     end
 
     def run
-      @travis.deactivate_repo
+      @travis.activate_repo
     end
   end
 end

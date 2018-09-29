@@ -3,21 +3,21 @@
 require 'optparse'
 
 module CLI
-  # Parser for the create repository sub-command which creates a new
-  # repository.
-  class CreateRepoParser
+  # Parser for the delete repository sub-command which deletes an
+  # existing repository.
+  class DeleteParser
     def initialize
       # collect options here
       @options = {}
     end
 
     def help
-      'Creates a new git repository'
+      'Deletes a git repository'
     end
 
     def parse(argv)
       option_parser = OptionParser.new do |opts|
-        opts.banner = 'Usage: main.rb [global options] create [options]'
+        opts.banner = 'Usage: main.rb [global options] delete [options]'
         define_options(opts)
       end
 
@@ -31,8 +31,6 @@ module CLI
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
-      description_option(opts)
-      language_option(opts)
       provider_option(opts)
       username_option(opts)
       password_option(opts)
@@ -47,20 +45,6 @@ module CLI
     def owner_option(opts)
       opts.on('-oOWNER', '--owner=OWNER', 'The owner of the repository') do |v|
         @options[:owner] = v
-      end
-    end
-
-    def description_option(opts)
-      hint = 'A short description of the repository'
-      opts.on('--description=DESCRIPTION', hint) do |v|
-        @options[:description] = v
-      end
-    end
-
-    def language_option(opts)
-      hint = 'The programming language'
-      opts.on('-lLANGUAGE', '--language=LANGUAGE', hint) do |v|
-        @options[:language] = v
       end
     end
 

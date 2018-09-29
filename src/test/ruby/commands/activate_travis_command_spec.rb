@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../../../main/ruby/commands/deactivate_travis_repo_command'
+require_relative '../../../main/ruby/commands/activate_travis_command'
 
-RSpec.describe Commands::DeactivateTravisRepoCommand do
+RSpec.describe Commands::ActivateTravisCommand do
   before(:example) do
     options = {
       name: 'dummy'
@@ -11,12 +11,12 @@ RSpec.describe Commands::DeactivateTravisRepoCommand do
     expect(TravisFactory).to receive(:create)
       .with(options)
       .and_return(@travis)
-    @command = Commands::DeactivateTravisRepoCommand.new(options)
+    @command = Commands::ActivateTravisCommand.new(options)
   end
 
   describe '#run' do
-    it 'should deactivate the repo' do
-      expect(@travis).to receive(:deactivate_repo)
+    it 'should activate the repo' do
+      expect(@travis).to receive(:activate_repo)
         .and_return(42)
       expect(@command.run).to eq(42)
     end

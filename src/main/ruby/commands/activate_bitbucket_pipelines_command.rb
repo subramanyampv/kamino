@@ -4,7 +4,7 @@ require_relative '../repo_providers/factory'
 
 module Commands
   # Activates a repository in Bitbucket Pipelines.
-  class ActivatePipelinesRepoCommand
+  class ActivateBitbucketPipelinesCommand
     def initialize(options)
       @options = options
       @options[:provider] = :bitbucket

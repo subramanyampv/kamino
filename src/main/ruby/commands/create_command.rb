@@ -3,18 +3,18 @@
 require_relative '../repo_providers/factory'
 
 module Commands
-  # Deletes an existing repository.
-  class DeleteRepoCommand
+  # Creates a new repository.
+  class CreateCommand
     def initialize(options)
-      @options = options
+      @description = options[:description]
       @provider = RepoProviders.create(options)
     end
 
     def run
       if @provider.repo_exists?
-        @provider.delete_repo
+        puts 'Repo already exists'
       else
-        puts 'Repo does not exist'
+        @provider.create_repo(description: @description)
       end
     end
   end

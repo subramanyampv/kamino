@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative '../../../main/ruby/commands/init_repo_command'
+require_relative '../../../main/ruby/commands/init_command'
 require_relative '../../../main/ruby/repo_providers/factory'
 require_relative '../../../main/ruby/file_system'
 require_relative '../../../main/ruby/git'
 
-RSpec.describe Commands::InitRepoCommand do
+RSpec.describe Commands::InitCommand do
   context 'in dry run' do
     it 'should create in dry run mode' do
       options = {
@@ -19,7 +19,7 @@ RSpec.describe Commands::InitRepoCommand do
       expect(FileSystemFactory).to receive(:create)
         .with(dry_run: true)
 
-      @command = Commands::InitRepoCommand.new(options)
+      @command = Commands::InitCommand.new(options)
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe Commands::InitRepoCommand do
         .with(dry_run: false)
         .and_return(@file_system)
 
-      @command = Commands::InitRepoCommand.new(options)
+      @command = Commands::InitCommand.new(options)
     end
 
     context 'when repo exists' do

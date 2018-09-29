@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../../../main/ruby/cli/delete_repo_parser'
+require_relative '../../../main/ruby/cli/deactivate_travis_parser'
 
-RSpec.describe CLI::DeleteRepoParser do
+RSpec.describe CLI::DeactivateTravisParser do
   before(:example) do
-    @parser = CLI::DeleteRepoParser.new
+    @parser = CLI::DeactivateTravisParser.new
   end
 
   describe '#parse' do
@@ -12,9 +12,7 @@ RSpec.describe CLI::DeleteRepoParser do
       argv = [
         '-nrepo',
         '-ongeor',
-        '-pgithub',
-        '-usecret',
-        '--password=redacted'
+        '-ttoken'
       ]
 
       result = @parser.parse(argv)
@@ -22,9 +20,7 @@ RSpec.describe CLI::DeleteRepoParser do
       expect(result).to eq(
         name: 'repo',
         owner: 'ngeor',
-        provider: :github,
-        username: 'secret',
-        password: 'redacted'
+        token: 'token'
       )
     end
 
@@ -34,12 +30,8 @@ RSpec.describe CLI::DeleteRepoParser do
         'repo',
         '--owner',
         'ngeor',
-        '--provider',
-        'github',
-        '--username',
-        'secret',
-        '--password',
-        'sesame'
+        '--token',
+        'secret'
       ]
 
       result = @parser.parse(argv)
@@ -47,9 +39,7 @@ RSpec.describe CLI::DeleteRepoParser do
       expect(result).to eq(
         name: 'repo',
         owner: 'ngeor',
-        provider: :github,
-        username: 'secret',
-        password: 'sesame'
+        token: 'secret'
       )
     end
   end

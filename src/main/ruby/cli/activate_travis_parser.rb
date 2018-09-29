@@ -5,7 +5,7 @@ require 'optparse'
 module CLI
   # Parser for the activate travis repo sub-command,
   # which activates an existing repo in Travis.
-  class ActivateTravisRepoParser
+  class ActivateTravisParser
     def initialize
       # collect options here
       @options = {}

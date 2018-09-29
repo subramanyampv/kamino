@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../../../main/ruby/cli/activate_travis_repo_parser'
+require_relative '../../../main/ruby/cli/activate_travis_parser'
 
-RSpec.describe CLI::ActivateTravisRepoParser do
+RSpec.describe CLI::ActivateTravisParser do
   before(:example) do
-    @parser = CLI::ActivateTravisRepoParser.new
+    @parser = CLI::ActivateTravisParser.new
   end
 
   describe '#parse' do
