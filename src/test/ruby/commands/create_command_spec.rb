@@ -22,7 +22,7 @@ RSpec.describe Commands::CreateCommand do
 
   context 'when repo exists' do
     before(:example) do
-      allow(@provider).to receive(:repo_exists?).and_return(true)
+      allow(@provider).to receive(:repo_exist?).and_return(true)
     end
 
     it 'should not create the repo' do
@@ -33,7 +33,7 @@ RSpec.describe Commands::CreateCommand do
 
   context 'when repo does not exist' do
     before(:example) do
-      allow(@provider).to receive(:repo_exists?).and_return(false)
+      allow(@provider).to receive(:repo_exist?).and_return(false)
     end
 
     it 'should create the repo' do

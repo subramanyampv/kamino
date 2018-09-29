@@ -139,6 +139,22 @@ RSpec.describe CLI::GlobalParser do
       end
     end
 
+    describe 'deactivate bitbucket pipelines command' do
+      valid_options = [
+        'deactivate-bitbucket-pipelines',
+        '-nname',
+        '-oowner',
+        '-pbitbucket',
+        '-uusername',
+        '--password',
+        'secret'
+      ]
+      it 'should parse deactivate bitbucket pipelines with short options' do
+        options = @parser.parse(valid_options)
+        expect(options[:command]).to eq('deactivate-bitbucket-pipelines')
+      end
+    end
+
     describe 'activate travis command' do
       valid_options = [
         'activate-travis',

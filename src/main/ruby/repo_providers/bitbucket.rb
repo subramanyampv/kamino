@@ -38,7 +38,7 @@ module RepoProviders
       @rest_client.delete(repo_url, basic_auth: basic_auth)
     end
 
-    def repo_exists?
+    def repo_exist?
       @rest_client.get(repo_url, basic_auth: basic_auth)
       true
     rescue RestClientError => ex
@@ -58,6 +58,15 @@ module RepoProviders
     def activate_repo
       body = {
         enabled: true
+      }
+      url = repo_url + '/pipelines_config'
+      @rest_client.put(url, body, basic_auth: basic_auth)
+    end
+
+    # Deactivates Bitbucket Pipelines for the repo
+    def deactivate_repo
+      body = {
+        enabled: false
       }
       url = repo_url + '/pipelines_config'
       @rest_client.put(url, body, basic_auth: basic_auth)

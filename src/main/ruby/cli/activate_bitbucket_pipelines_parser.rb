@@ -18,7 +18,7 @@ module CLI
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = <<~HERE
-          Usage: main.rb [global options] activate-pipelines-repo [options]
+          Usage: main.rb [global options] activate-bitbucket-pipelines [options]
         HERE
         define_options(opts)
       end

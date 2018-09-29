@@ -3,6 +3,7 @@
 require_relative '../../../main/ruby/repo_providers/factory'
 require_relative '../../../main/ruby/repo_providers/github'
 require_relative '../../../main/ruby/repo_providers/bitbucket'
+require_relative '../../../main/ruby/repo_providers/dry_run'
 
 RSpec.describe RepoProviders do
   describe '#create' do

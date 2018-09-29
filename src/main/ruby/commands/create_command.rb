@@ -11,7 +11,7 @@ module Commands
     end
 
     def run
-      if @provider.repo_exists?
+      if @provider.repo_exist?
         puts 'Repo already exists'
       else
         @provider.create_repo(description: @description)

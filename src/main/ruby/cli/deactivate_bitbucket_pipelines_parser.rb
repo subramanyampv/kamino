@@ -3,22 +3,22 @@
 require 'optparse'
 
 module CLI
-  # Parser for the deactivate travis repo sub-command,
-  # which deactivates an existing repo in Travis.
-  class DeactivateTravisParser
+  # Parser for the deactivate Bitbucket pipelines sub-command,
+  # which deactivates an existing repo in Bitbucket Pipelines.
+  class DeactivateBitbucketPipelinesParser
     def initialize
       # collect options here
       @options = {}
     end
 
     def help
-      'Deactivates a repository in Travis'
+      'Deactivates a repository in Bitbucket Pipelines'
     end
 
     def parse(argv)
       option_parser = OptionParser.new do |opts|
         opts.banner = <<~HERE
-          Usage: main.rb [global options] deactivate-travis [options]
+          Usage: main.rb [global options] deactivate-bitbucket-pipelines [options]
         HERE
         define_options(opts)
       end
@@ -33,7 +33,8 @@ module CLI
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
-      token_option(opts)
+      username_option(opts)
+      password_option(opts)
     end
 
     def name_option(opts)
@@ -48,15 +49,22 @@ module CLI
       end
     end
 
-    def token_option(opts)
-      hint = 'The token to connect to Travis'
-      opts.on('-tTOKEN', '--token=PASSWORD', hint) do |v|
-        @options[:token] = v
+    def username_option(opts)
+      hint = 'The username to connect to the git provider'
+      opts.on('-uUSERNAME', '--username=USERNAME', hint) do |v|
+        @options[:username] = v
+      end
+    end
+
+    def password_option(opts)
+      hint = 'The password to connect to the git provider'
+      opts.on('--password=PASSWORD', hint) do |v|
+        @options[:password] = v
       end
     end
 
     def check_missing_options
-      mandatory = %i[name owner token]
+      mandatory = %i[name owner username password]
       missing = mandatory.select { |p| @options[p].nil? }
       raise OptionParser::MissingArgument, missing.join(', ') \
         unless missing.empty?

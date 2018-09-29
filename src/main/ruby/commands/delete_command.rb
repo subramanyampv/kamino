@@ -10,7 +10,7 @@ module Commands
     end
 
     def run
-      if @provider.repo_exists?
+      if @provider.repo_exist?
         @provider.delete_repo
       else
         puts 'Repo does not exist'

@@ -24,7 +24,7 @@ module RepoProviders
       @rest_client.get(url, basic_auth: basic_auth)
     end
 
-    def repo_exists?
+    def repo_exist?
       url = "https://api.github.com/repos/#{slug}"
 
       begin

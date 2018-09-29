@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'delegate'
 require_relative './github'
 require_relative './bitbucket'
+require_relative './dry_run'
 
 # Module regarding git repository providers.
 module RepoProviders
@@ -32,22 +32,6 @@ module RepoProviders
       else
         raise "Unsupported provider #{provider}"
       end
-    end
-  end
-
-  # A decorator for a repo provider which does not execute actions
-  # such as create or delete repository.
-  class DryRunProviderDecorator < SimpleDelegator
-    def create_repo
-      puts 'Would have created repo'
-    end
-
-    def delete_repo
-      puts 'Would have deleted repo'
-    end
-
-    def activate_repo
-      puts 'Would have activated repo'
     end
   end
 end

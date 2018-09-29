@@ -16,7 +16,7 @@ module Commands
     end
 
     def run
-      if @provider.repo_exists?
+      if @provider.repo_exist?
         clone_or_pull
         add_readme
         true

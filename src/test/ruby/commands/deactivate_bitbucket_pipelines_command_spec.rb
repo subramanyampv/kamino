@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 # rubocop:disable Metrics/LineLength
-require_relative '../../../main/ruby/commands/activate_bitbucket_pipelines_command'
+require_relative '../../../main/ruby/commands/deactivate_bitbucket_pipelines_command'
 require_relative '../../../main/ruby/repo_providers/factory'
 # rubocop:enable Metrics/LineLength
 
-RSpec.describe Commands::ActivateBitbucketPipelinesCommand do
+RSpec.describe Commands::DeactivateBitbucketPipelinesCommand do
   before(:example) do
     options = {
       name: 'dummy',
@@ -23,12 +23,12 @@ RSpec.describe Commands::ActivateBitbucketPipelinesCommand do
       )
       .and_return(@bitbucket)
 
-    @command = Commands::ActivateBitbucketPipelinesCommand.new(options)
+    @command = Commands::DeactivateBitbucketPipelinesCommand.new(options)
   end
 
   describe '#run' do
-    it 'should activate the repo' do
-      expect(@bitbucket).to receive(:activate_repo)
+    it 'should deactivate the repo' do
+      expect(@bitbucket).to receive(:deactivate_repo)
         .and_return(42)
       expect(@command.run).to eq(42)
     end

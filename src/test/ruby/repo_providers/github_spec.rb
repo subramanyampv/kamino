@@ -80,7 +80,7 @@ RSpec.describe RepoProviders::GitHub do
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: BasicAuth.new('user', 'password'))
         .and_return(test: 42)
-      expect(@github.repo_exists?).to be true
+      expect(@github.repo_exist?).to be true
     end
 
     it('should return false when the repo does not exist') do
@@ -88,7 +88,7 @@ RSpec.describe RepoProviders::GitHub do
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: BasicAuth.new('user', 'password'))
         .and_raise(RestClientError.new('404', 'oops', 'An error'))
-      expect(@github.repo_exists?).to be false
+      expect(@github.repo_exist?).to be false
     end
 
     it('should throw an error when the repo is forbidden') do
@@ -96,7 +96,7 @@ RSpec.describe RepoProviders::GitHub do
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: BasicAuth.new('user', 'password'))
         .and_raise(RestClientError.new('403', 'oops', 'An error'))
-      expect { @github.repo_exists? }.to raise_error(RestClientError)
+      expect { @github.repo_exist? }.to raise_error(RestClientError)
     end
   end
 end

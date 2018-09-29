@@ -63,7 +63,7 @@ RSpec.describe Commands::InitCommand do
 
     context 'when repo exists' do
       before(:example) do
-        allow(@provider).to receive(:repo_exists?).and_return(true)
+        allow(@provider).to receive(:repo_exist?).and_return(true)
         allow(@provider).to receive(:clone_url).and_return('ssh://host')
 
         allow(@git).to receive(:clone_url=).with('ssh://host')
@@ -106,7 +106,7 @@ RSpec.describe Commands::InitCommand do
 
     context 'when repo does not exist' do
       before(:example) do
-        allow(@provider).to receive(:repo_exists?).and_return(false)
+        allow(@provider).to receive(:repo_exist?).and_return(false)
       end
 
       it 'should not initialize the repo' do
