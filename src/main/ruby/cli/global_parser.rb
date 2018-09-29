@@ -5,6 +5,9 @@ require 'optparse'
 module CLI
   # Parses arguments passed directly to the CLI
   class GlobalParser
+    # Creates an instance of this class.
+    # sub_parsers is a Hash where keys are the command names
+    # and values are instances of command parsers.
     def initialize(sub_parsers = parsers)
       @sub_parsers = sub_parsers
     end
@@ -50,9 +53,11 @@ module CLI
       end
     end
 
+    # rubocop:disable Metrics/LineLength
     def commands_help
-      @sub_parsers.map { |p| "  #{parser_name(p)}: #{p.help}" }.join("\n")
+      @sub_parsers.map { |command_name, parser| "  #{command_name}: #{parser.help}" }.join("\n")
     end
+    # rubocop:enable Metrics/LineLength
 
     def parser_name(parser)
       parser.class.name
@@ -62,21 +67,40 @@ module CLI
       raise OptionParser::MissingArgument, 'No command specified' \
         if command_name.to_s.empty?
 
-      class_name = command_name.split('-').collect(&:capitalize).join + \
-                   'Parser'
-
-      result = @sub_parsers
-               .find { |parser| parser.class.name.end_with?(class_name) }
+      result = @sub_parsers[command_name]
 
       raise OptionParser::InvalidOption, "Unknown command #{command_name}" \
         unless result
       result
     end
 
-    def load_command_parser(file)
+    # Loads all command parsers from the current directory,
+    # excluding this file.
+    def parsers
+      key_value_array = Dir[File.join(__dir__, '*.rb')]
+                        .reject { |file| file == __FILE__ }
+                        .map { |file| create_parser_key_value(file) }
+      Hash[key_value_array]
+    end
+
+    # Creates a key-value pair consisting of a command name
+    # and a parser instance.
+    # The command name is based on the filename by replacing
+    # underscores with hyphens, removing the 'parser' suffix.
+    def create_parser_key_value(file)
       # keep only filename without extension
       filename = File.basename(file, '.*')
+      parser = create_parser(filename)
+      command_name = filename.gsub('_parser', '').tr('_', '-')
+      [command_name, parser]
+    end
 
+    # Creates a new instance by loading the given filename.
+    # The file must contain a class with the same name,
+    # but with PascalCase convention.
+    # Example: if the filename is create_parser, the expected class
+    # is CreateParser.
+    def create_parser(filename)
       # load the module
       require_relative filename
 
@@ -86,14 +110,6 @@ module CLI
       # get the class
       clazz = CLI.const_get(class_name)
       clazz.new
-    end
-
-    # Loads all command parsers from the current directory,
-    # excluding this fisle.
-    def parsers
-      Dir[File.join(__dir__, '*.rb')]
-        .reject { |file| file == __FILE__ }
-        .map { |file| load_command_parser(file) }
     end
   end
 end

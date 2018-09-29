@@ -16,7 +16,9 @@ end
 RSpec.describe CLI::GlobalParser do
   describe 'with dummy parser' do
     before(:example) do
-      @parser = CLI::GlobalParser.new([DummyParser.new])
+      @parser = CLI::GlobalParser.new(
+        'dummy' => DummyParser.new
+      )
     end
 
     describe '#parse' do
