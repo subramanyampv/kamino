@@ -19,26 +19,21 @@ module RepoProviders
     def repos
       # curl -u username:password 'https://api.github.com/user/repos'
       # if 2FA is on, password needs to replaced by personal access token
-      url = 'https://api.github.com/user/repos'
-
+      url = "#{base_url}/user/repos"
       @rest_client.get(url, basic_auth: basic_auth)
     end
 
     def repo_exist?
-      url = "https://api.github.com/repos/#{slug}"
-
-      begin
-        @rest_client.get(url, basic_auth: basic_auth)
-      rescue RestClientError => e
-        raise e unless e.code.to_s == '404'
-        false
-      else
-        true
-      end
+      url = "#{base_url}/repos/#{slug}"
+      @rest_client.get(url, basic_auth: basic_auth)
+      true
+    rescue RestClientError => e
+      raise e unless e.code.to_s == '404'
+      false
     end
 
     def create_repo(description: '')
-      url = 'https://api.github.com/user/repos'
+      url = "#{base_url}/user/repos"
       body = {
         name: name,
         description: description,
@@ -47,6 +42,12 @@ module RepoProviders
         license_template: 'mit'
       }
       @rest_client.post(url, body, basic_auth: basic_auth)
+    end
+
+    def delete_repo
+      # https://developer.github.com/v3/repos/#delete-a-repository
+      url = "#{base_url}/repos/#{slug}"
+      @rest_client.delete(url, basic_auth: basic_auth)
     end
 
     def clone_url(use_ssh: true)
@@ -61,6 +62,10 @@ module RepoProviders
 
     def basic_auth
       BasicAuth.new(username, password)
+    end
+
+    def base_url
+      'https://api.github.com'
     end
   end
 end

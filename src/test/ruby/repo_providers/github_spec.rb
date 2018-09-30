@@ -57,6 +57,17 @@ RSpec.describe RepoProviders::GitHub do
     end
   end
 
+  describe '#delete_repo' do
+    it 'should delete the repo' do
+      url = 'https://api.github.com/repos/ngeor/instarepo'
+      expected_basic_auth = BasicAuth.new('user', 'password')
+      allow(@rest_client).to receive(:delete)
+        .with(url, basic_auth: expected_basic_auth)
+        .and_return(nil)
+      expect(@github.delete_repo).to be_nil
+    end
+  end
+
   describe('#clone_url') do
     it('should use ssh by default') do
       url = @github.clone_url
