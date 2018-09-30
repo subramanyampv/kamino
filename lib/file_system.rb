@@ -14,6 +14,12 @@ class FileSystem
     end
   end
 
+  def append(file, contents)
+    File.open(file, 'a') do |f|
+      f.puts("\n" + contents)
+    end
+  end
+
   # Searches for a line in a text file.
   def line_exist?(file, line_to_find)
     found = false
@@ -35,8 +41,8 @@ end
 
 # Creates a new instance of FileSystem.
 module FileSystemFactory
-  def self.create(dry_run: false)
-    if dry_run
+  def self.create(options)
+    if options[:dry_run]
       DryRunFileSystemDecorator.new(FileSystem.new)
     else
       FileSystem.new

@@ -60,6 +60,22 @@ RSpec.describe FileSystem do
       expect(@file_system.line_exist?('hello.txt', 'jkl')).to eq(false)
     end
   end
+
+  describe '#append' do
+    it 'should append the contents' do
+      f = double('file')
+      expect(File).to receive(:open)
+        .with('C:/test.txt', 'a')
+        .and_yield(f)
+        .and_return(42)
+      expect(f).to receive(:puts)
+        .with("\ncontents of the file")
+
+      expect(
+        @file_system.append('C:/test.txt', 'contents of the file')
+      ).to eq(42)
+    end
+  end
 end
 
 RSpec.describe DryRunFileSystemDecorator do

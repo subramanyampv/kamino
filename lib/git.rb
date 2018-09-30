@@ -93,9 +93,9 @@ end
 
 # Factory for git.
 module GitFactory
-  def self.create(dry_run: false)
+  def self.create(options)
     git = Git.new
-    if dry_run
+    if options[:dry_run]
       DryRunGitDecorator.new(git)
     else
       git

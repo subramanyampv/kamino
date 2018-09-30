@@ -101,7 +101,8 @@ empty repository with no commits at all.
       --name name \
       --language language \
       --description description \
-      --clone-dir clone-dir
+      --clone-dir clone-dir \
+      --travis-badge
 
 In addition to the parameters defined by the create command, init expects:
 
@@ -109,6 +110,8 @@ In addition to the parameters defined by the create command, init expects:
   be cloned. If you specify `C:\Projects` and the name of the
   repository is `my-project`, then the repository will end up
   being cloned in `C:\Projects\my-project`.
+- `--travis-badge` is an optional flag. If specified, a Travis badge will be
+  added to the README file.
 
 ### Activate Travis builds
 

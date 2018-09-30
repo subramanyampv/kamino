@@ -67,5 +67,41 @@ RSpec.describe CLI::InitParser do
         clone_dir: 'C:/tmp'
       )
     end
+
+    it 'should work with optional options' do
+      argv = [
+        '--name',
+        'repo',
+        '--owner',
+        'ngeor',
+        '--provider',
+        'github',
+        '--username',
+        'secret',
+        '--password',
+        'sesame',
+        '--language',
+        'pascal',
+        '--description',
+        'fancy repo',
+        '--clone-dir',
+        'C:/tmp',
+        '--travis-badge'
+      ]
+
+      result = @parser.parse(argv)
+
+      expect(result).to eq(
+        name: 'repo',
+        owner: 'ngeor',
+        provider: :github,
+        username: 'secret',
+        password: 'sesame',
+        language: 'pascal',
+        description: 'fancy repo',
+        clone_dir: 'C:/tmp',
+        travis_badge: true
+      )
+    end
   end
 end

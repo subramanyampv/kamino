@@ -36,6 +36,7 @@ module CLI
       username_option(opts)
       password_option(opts)
       clone_dir_option(opts)
+      travis_badge_option(opts)
     end
 
     def name_option(opts)
@@ -90,6 +91,12 @@ module CLI
       hint = 'The directory where the repo should be cloned'
       opts.on('--clone-dir=CLONE_DIR', hint) do |v|
         @options[:clone_dir] = v
+      end
+    end
+
+    def travis_badge_option(opts)
+      opts.on('--travis-badge', 'Add Travis Badge to README file') do |v|
+        @options[:travis_badge] = v
       end
     end
 
