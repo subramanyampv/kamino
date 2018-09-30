@@ -3,12 +3,14 @@
 require 'delegate'
 require_relative './rest_client'
 require_relative './repo'
+require_relative './file_system'
 
 # Implements the Travis REST API and other Travis related functionality.
 class Travis
   # Creates a new instance of this class.
   def initialize
     @rest_client = RestClient.new
+    @file_system = FileSystem.new
   end
 
   include RepoMixin
@@ -33,15 +35,9 @@ class Travis
                       })
   end
 
-  # rubocop:disable Metrics/MethodLength
   def add_badge_to_readme(work_dir)
     readme_file = File.join(work_dir, 'README.md')
-    badge_exists = false
-    File.open(readme_file).each do |line|
-      badge_exists = line.strip == travis_badge_markdown
-      break if badge_exists
-    end
-
+    badge_exists = @file_system.line_exist?(readme_file, travis_badge_markdown)
     unless badge_exists
       File.open(readme_file, 'a') do |f|
         f.puts("\n" + travis_badge_markdown)
@@ -50,7 +46,6 @@ class Travis
 
     !badge_exists
   end
-  # rubocop:enable Metrics/MethodLength
 
   private
 

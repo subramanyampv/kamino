@@ -5,8 +5,11 @@ require 'travis'
 RSpec.describe Travis do
   before(:example) do
     @rest_client = double('rest_client')
-    expect(RestClient).to receive(:new)
-      .and_return(@rest_client)
+    expect(RestClient).to receive(:new).and_return(@rest_client)
+
+    @file_system = double('file_system')
+    expect(FileSystem).to receive(:new).and_return(@file_system)
+
     @travis = Travis.new
     @travis.name = 'instarepo'
     @travis.owner = 'ngeor'
@@ -38,10 +41,12 @@ RSpec.describe Travis do
   describe('#add_badge_to_readme') do
     it('should add the badge when it does not exist') do
       # arrange
-      read_file = ['# my repo', 'another line']
-      allow(File).to receive(:open)
-        .with('C:/tmp/myrepo/README.md')
-        .and_return(read_file)
+      badge = '[![Build Status]' \
+      '(https://travis-ci.org/ngeor/instarepo.svg?branch=master)]' \
+      '(https://travis-ci.org/ngeor/instarepo)'
+      allow(@file_system).to receive(:line_exist?)
+        .with('C:/tmp/myrepo/README.md', badge)
+        .and_return(false)
 
       write_file = double('write_file')
       allow(write_file).to receive(:puts)
@@ -61,14 +66,12 @@ RSpec.describe Travis do
 
     it('should not add the badge when it already exists') do
       # arrange
-      read_file = [
-        '# my repo',
-        'another line',
-        '[![Build Status](https://travis-ci.org/ngeor/instarepo.svg?branch=master)](https://travis-ci.org/ngeor/instarepo)'
-      ]
-      allow(File).to receive(:open)
-        .with('C:/tmp/myrepo/README.md')
-        .and_return(read_file)
+      badge = '[![Build Status]' \
+      '(https://travis-ci.org/ngeor/instarepo.svg?branch=master)]' \
+      '(https://travis-ci.org/ngeor/instarepo)'
+      allow(@file_system).to receive(:line_exist?)
+        .with('C:/tmp/myrepo/README.md', badge)
+        .and_return(true)
 
       # act
       result = @travis.add_badge_to_readme('C:/tmp/myrepo')

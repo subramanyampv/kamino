@@ -13,6 +13,17 @@ class FileSystem
       f.puts(contents)
     end
   end
+
+  # Searches for a line in a text file.
+  def line_exist?(file, line_to_find)
+    found = false
+    File.open(file).each do |line|
+      found = line.strip == line_to_find
+      break if found
+    end
+
+    found
+  end
 end
 
 # Decorator for FileSystem that cancels out all operations that cause changes.

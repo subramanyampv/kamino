@@ -32,6 +32,34 @@ RSpec.describe FileSystem do
       ).to eq(42)
     end
   end
+
+  describe '#line_exist?' do
+    before(:example) do
+      expect(File).to receive(:open)
+        .with('hello.txt')
+        .and_return(["abc\n", "def\r\n", 'ghi'])
+    end
+
+    it 'should find it even with newline' do
+      expect(@file_system.line_exist?('hello.txt', 'abc')).to eq(true)
+    end
+
+    it 'should find it even with CR LF' do
+      expect(@file_system.line_exist?('hello.txt', 'def')).to eq(true)
+    end
+
+    it 'should find it without newlines' do
+      expect(@file_system.line_exist?('hello.txt', 'ghi')).to eq(true)
+    end
+
+    it 'should not match partial text' do
+      expect(@file_system.line_exist?('hello.txt', 'gh')).to eq(false)
+    end
+
+    it 'should not match missing text' do
+      expect(@file_system.line_exist?('hello.txt', 'jkl')).to eq(false)
+    end
+  end
 end
 
 RSpec.describe DryRunFileSystemDecorator do
