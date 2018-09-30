@@ -50,12 +50,12 @@ The following options are available:
 To create a new repository on GitHub:
 
     ruby lib/main.rb create --provider github \
-    --username secret \
-    --password secret \
-    --owner ngeor \
-    --name instarepo \
-    --language java \
-    --description "A cool new project"
+      --username secret \
+      --password secret \
+      --owner ngeor \
+      --name instarepo \
+      --language java \
+      --description "A cool new project"
 
 The repository will be _public_ and it will be automatically initialized by
 GitHub with a README file, a `.gitignore` file (currently only for Maven)
@@ -66,12 +66,12 @@ and a `LICENSE` file (currently only MIT license).
 To create a new repository on Bitbucket Cloud:
 
     ruby lib/main.rb create --provider bitbucket \
-    --username secret \
-    --password secret \
-    --owner ngeor \
-    --name instarepo \
-    --language java \
-    --description "A cool new project"
+      --username secret \
+      --password secret \
+      --owner ngeor \
+      --name instarepo \
+      --language java \
+      --description "A cool new project"
 
 The repository will be _private_ and it will be empty. It will have a no fork
 policy.
