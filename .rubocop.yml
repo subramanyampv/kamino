@@ -3,4 +3,4 @@ AllCops:
 
 Metrics/BlockLength:
   Exclude:
-    - 'src/test/**/*_spec.rb'
+    - 'test/**/*_spec.rb'

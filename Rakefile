@@ -5,13 +5,13 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
 RSpec::Core::RakeTask.new(:test) do |rspec|
-  rspec.pattern = 'src/test/ruby/**/*_spec.rb'
-  rspec.rspec_opts = '-r ./src/test/ruby/_helper/helper -f documentation'
+  rspec.pattern = 'test/**/*_spec.rb'
+  rspec.rspec_opts = '-r ./test/_helper/helper -f documentation'
 end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.rdoc_files.include('src/main/ruby/**/*.rb')
+  rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
 RuboCop::RakeTask.new(:rubocop) do |t|
