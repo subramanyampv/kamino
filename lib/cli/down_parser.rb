@@ -4,23 +4,20 @@ require 'optparse'
 require_relative './common_options'
 
 module CLI
-  # Parser for the activate travis repo sub-command,
-  # which activates an existing repo in Travis.
-  class ActivateTravisParser
+  # Parser for the down command.
+  class DownParser
     def initialize
       # collect options here
       @options = {}
     end
 
     def help
-      'Activates a repository in Travis, allowing it to run builds'
+      'Composite command which deactivates CI and deletes a git repository'
     end
 
     def parse(argv)
       option_parser = OptionParser.new do |opts|
-        opts.banner = <<~HERE
-          Usage: main.rb [global options] activate-travis [options]
-        HERE
+        opts.banner = 'Usage: main.rb [global options] down [options]'
         define_options(opts)
       end
 
@@ -36,11 +33,14 @@ module CLI
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
+      provider_option(opts)
+      username_option(opts)
+      password_option(opts)
       token_option(opts)
     end
 
     def check_missing_options
-      mandatory = %i[name owner token]
+      mandatory = %i[name owner provider username password]
       missing = mandatory.select { |p| @options[p].nil? }
       raise OptionParser::MissingArgument, missing.join(', ') \
         unless missing.empty?

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require_relative './common_options'
 
 module CLI
   # Parser for the deactivate travis repo sub-command,
@@ -30,29 +31,12 @@ module CLI
 
     private
 
+    include CommonOptionsMixin
+
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
       token_option(opts)
-    end
-
-    def name_option(opts)
-      opts.on('-nNAME', '--name=NAME', 'The name of the repository') do |v|
-        @options[:name] = v
-      end
-    end
-
-    def owner_option(opts)
-      opts.on('-oOWNER', '--owner=OWNER', 'The owner of the repository') do |v|
-        @options[:owner] = v
-      end
-    end
-
-    def token_option(opts)
-      hint = 'The token to connect to Travis'
-      opts.on('-tTOKEN', '--token=PASSWORD', hint) do |v|
-        @options[:token] = v
-      end
     end
 
     def check_missing_options

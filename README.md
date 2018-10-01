@@ -169,6 +169,29 @@ repositories.
 
 The parameters are the same with the Activate Bitbucket Pipelines command.
 
+### Down
+
+This is a composite command that deactivates builds and deletes repository.
+
+#### Example: Deactivate Travis and delete GitHub Repository
+
+    ruby lib/main.rb down \
+      --name name \
+      --owner owner \
+      --username username \
+      --password password \
+      --provider github \
+      --token travis-token
+
+#### Example: Delete Bitbucket Pipelines and Repository
+
+    ruby lib/main.rb down \
+      --name name \
+      --owner owner \
+      --username username \
+      --password password \
+      --provider bitbucket
+
 ## Authentication
 
 ### Travis

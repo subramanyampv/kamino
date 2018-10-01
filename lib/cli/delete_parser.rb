@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require_relative './common_options'
 
 module CLI
   # Parser for the delete repository sub-command which deletes an
@@ -28,46 +29,14 @@ module CLI
 
     private
 
+    include CommonOptionsMixin
+
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
       provider_option(opts)
       username_option(opts)
       password_option(opts)
-    end
-
-    def name_option(opts)
-      opts.on('-nNAME', '--name=NAME', 'The name of the repository') do |v|
-        @options[:name] = v
-      end
-    end
-
-    def owner_option(opts)
-      opts.on('-oOWNER', '--owner=OWNER', 'The owner of the repository') do |v|
-        @options[:owner] = v
-      end
-    end
-
-    def provider_option(opts)
-      hint = 'Select provider (github, bitbucket)'
-      providers = %i[github bitbucket]
-      opts.on('-pPROVIDER', '--provider=PROVIDER', providers, hint) do |v|
-        @options[:provider] = v
-      end
-    end
-
-    def username_option(opts)
-      hint = 'The username to connect to the git provider'
-      opts.on('-uUSERNAME', '--username=USERNAME', hint) do |v|
-        @options[:username] = v
-      end
-    end
-
-    def password_option(opts)
-      hint = 'The password to connect to the git provider'
-      opts.on('--password=PASSWORD', hint) do |v|
-        @options[:password] = v
-      end
     end
 
     def check_missing_options

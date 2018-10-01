@@ -77,7 +77,7 @@ module CLI
     # Loads all command parsers from the current directory,
     # excluding this file.
     def parsers
-      key_value_array = Dir[File.join(__dir__, '*.rb')]
+      key_value_array = Dir[File.join(__dir__, '*_parser.rb')]
                         .reject { |file| file == __FILE__ }
                         .map { |file| create_parser_key_value(file) }
       Hash[key_value_array]
