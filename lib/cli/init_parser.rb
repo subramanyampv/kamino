@@ -33,40 +33,13 @@ module CLI
     def define_options(opts)
       name_option(opts)
       owner_option(opts)
-      description_option(opts)
-      language_option(opts)
       provider_option(opts)
       username_option(opts)
       password_option(opts)
+      description_option(opts)
+      language_option(opts)
       clone_dir_option(opts)
       travis_badge_option(opts)
-    end
-
-    def description_option(opts)
-      hint = 'A short description of the repository'
-      opts.on('--description=DESCRIPTION', hint) do |v|
-        @options[:description] = v
-      end
-    end
-
-    def language_option(opts)
-      hint = 'The programming language'
-      opts.on('-lLANGUAGE', '--language=LANGUAGE', hint) do |v|
-        @options[:language] = v
-      end
-    end
-
-    def clone_dir_option(opts)
-      hint = 'The directory where the repo should be cloned'
-      opts.on('--clone-dir=CLONE_DIR', hint) do |v|
-        @options[:clone_dir] = v
-      end
-    end
-
-    def travis_badge_option(opts)
-      opts.on('--travis-badge', 'Add Travis Badge to README file') do |v|
-        @options[:travis_badge] = v
-      end
     end
 
     def check_missing_options
