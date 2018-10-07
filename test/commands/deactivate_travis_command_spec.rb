@@ -16,7 +16,9 @@ RSpec.describe Commands::DeactivateTravisCommand do
 
   describe '#run' do
     it 'should deactivate the repo' do
+      expect(@travis).to receive(:sync).ordered
       expect(@travis).to receive(:deactivate_repo)
+        .ordered
         .and_return(42)
       expect(@command.run).to eq(42)
     end

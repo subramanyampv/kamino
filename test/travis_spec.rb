@@ -49,6 +49,37 @@ RSpec.describe Travis do
       expect(result).to eq(expected_badge)
     end
   end
+
+  describe('#sync') do
+    it 'should sync repos' do
+      url = 'https://api.travis-ci.org/user'
+
+      headers = {
+        'Authorization' => 'token secret',
+        'Travis-API-Version' => '3'
+      }
+
+      user = {
+        'id' => 1234,
+        'is_syncing' => false
+      }
+
+      expect(@rest_client).to receive(:get)
+        .at_least(:once)
+        .with(url, headers: headers)
+        .and_return(user)
+
+      expect(@rest_client).to receive(:post)
+        .with(
+          'https://api.travis-ci.org/user/1234/sync',
+          '',
+          headers: headers
+        )
+
+      # act
+      @travis.sync
+    end
+  end
 end
 
 RSpec.describe DryRunTravis do
@@ -69,6 +100,14 @@ RSpec.describe DryRunTravis do
       expect(@travis).to receive(:puts)
         .with('Would have deactivated repo in Travis')
       @travis.deactivate_repo
+    end
+  end
+
+  describe '#sync' do
+    it 'should only print' do
+      expect(@travis).to receive(:puts)
+        .with('Would have synced repositories in Travis')
+      @travis.sync
     end
   end
 end

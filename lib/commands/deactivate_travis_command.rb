@@ -11,6 +11,7 @@ module Commands
     end
 
     def run
+      @travis.sync
       @travis.deactivate_repo
     end
   end

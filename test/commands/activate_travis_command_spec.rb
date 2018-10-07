@@ -16,7 +16,9 @@ RSpec.describe Commands::ActivateTravisCommand do
 
   describe '#run' do
     it 'should activate the repo' do
+      expect(@travis).to receive(:sync).ordered
       expect(@travis).to receive(:activate_repo)
+        .ordered
         .and_return(42)
       expect(@command.run).to eq(42)
     end
