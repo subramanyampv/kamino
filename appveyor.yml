@@ -1,7 +1,8 @@
-# appveyor.yml
+version: "{build}"
+
 build: off
 
-clone_folder: c:\gopath\src\github.com\$username\$project
+clone_folder: c:\gopath\src\github.com\ngeor\yart
 
 environment:
   GOPATH: c:\gopath
@@ -13,3 +14,4 @@ before_test:
 
 test_script:
   - go test ./...
+  - go build
