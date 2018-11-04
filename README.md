@@ -2,6 +2,7 @@
 yart is yet another release tool
 
 [![Build Status](https://travis-ci.org/ngeor/yart.svg?branch=master)](https://travis-ci.org/ngeor/yart)
+[![Build status](https://ci.appveyor.com/api/projects/status/6pp0uohpqa1cao4v/branch/master?svg=true)](https://ci.appveyor.com/project/ngeor/yart/branch/master)
 
 ## Overview
 
