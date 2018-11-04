@@ -19,3 +19,13 @@ test_script:
 artifacts:
 - path: yart.exe
   name: yart.exe
+
+deploy:
+  provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  description: $(APPVEYOR_REPO_TAG_NAME)
+  artifact: yart.exe
+  auth_token:
+    secure: N+BZDjoKy1FxA8vuKILBLoWdLUnAlXfuv0GInzDhBzwJTsqj08iwq95f/goqGjZz
+  on:
+    APPVEYOR_REPO_TAG: true
