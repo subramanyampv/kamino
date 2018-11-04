@@ -10,8 +10,12 @@ environment:
 stack: go 1.10
 
 before_test:
-  - go vet ./...
+- go vet ./...
 
 test_script:
-  - go test ./...
-  - go build
+- go test -v ./...
+- go build
+
+artifacts:
+- path: yart.exe
+  name: yart.exe
