@@ -1,6 +1,9 @@
 # dirloop
 CLI utility that runs a command on multiple directories
 
+[![Build Status](https://travis-ci.org/ngeor/dirloop.svg?branch=master)](https://travis-ci.org/ngeor/dirloop)
+[![Build status](https://ci.appveyor.com/api/projects/status/k3n8te2844hk8v64/branch/master?svg=true)](https://ci.appveyor.com/project/ngeor/dirloop/branch/master)
+
 ## Typical use case
 
 I want to run a series of git commands on multiple directories. They are all in
