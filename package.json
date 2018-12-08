@@ -1,6 +1,6 @@
 {
   "name": "@ngeor/clone-all",
-  "version": "5.4.1",
+  "version": "5.4.2",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
   "scripts": {
@@ -43,6 +43,9 @@
   },
   "engines": {
     "node": ">=8.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "eslintIgnore": [
     "coverage/"
