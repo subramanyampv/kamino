@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.4.0] - 2018-12-08
+
+- Migrated ESLint configuration to AirBnB rules.
+
 ## [5.3.0] - 2018-04-30
 
 - Parameter `ssh-username` replaces the username on the URL only when it's `git@`.
