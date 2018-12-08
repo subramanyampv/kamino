@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.5.0] - 2018-12-08
+
+- Ability to filter out archived projects.
+
 ## [5.4.0] - 2018-12-08
 
 - Migrated ESLint configuration to AirBnB rules.

@@ -182,6 +182,19 @@ describe('options_parser', () => {
     });
   });
 
+  describe('no-archived', () => {
+    it('should be true when --no-archived is missing', () => {
+      options = optionsParser.parse();
+      expect(options.archived).to.be.true;
+    });
+
+    it('should be false when --no-archived is present', () => {
+      process.argv.push('--no-archived');
+      options = optionsParser.parse();
+      expect(options.archived).to.be.false;
+    });
+  });
+
   describe('list', () => {
     it('should be false when --list is missing', () => {
       options = optionsParser.parse();

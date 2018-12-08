@@ -63,56 +63,105 @@ describe('repoFetcher', () => {
     expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3, 4, 5]);
   });
 
-  it('should filter out forks', async () => {
+  describe('filtering', () => {
+    const responseConverter = response => response;
     const request = {
       path: '/repos',
     };
 
-    const responseConverter = response => response;
+    beforeEach(() => {
+      httpsPromise.resolves('not a json');
+      httpsPromise.withArgs({
+        path: '/repos',
+      }).resolves([
+        {
+          id: 1,
+          fork: false,
+          archived: false,
+        },
+        {
+          id: 2,
+          fork: true,
+          archived: false,
+        },
+      ]);
+      httpsPromise.withArgs({
+        path: '/repos?page=2',
+      }).resolves([
+        {
+          id: 3,
+          fork: true,
+          archived: true,
+        },
+        {
+          id: 4,
+          fork: false,
+          archived: true,
+        },
+      ]);
+      httpsPromise.withArgs({
+        path: '/repos?page=3',
+      }).resolves([]);
+    });
 
-    const options = {
-      pagination: true,
-      forks: false,
-    };
+    it('should include forks', async () => {
+      // arrange
+      const options = {
+        pagination: true,
+        forks: true,
+        archived: true,
+      };
 
-    httpsPromise.resolves('not a json');
-    httpsPromise.withArgs({
-      path: '/repos',
-    }).resolves([
-      {
-        id: 1,
-        fork: false,
-      },
-      {
-        id: 2,
-        fork: true,
-      },
-    ]);
-    httpsPromise.withArgs({
-      path: '/repos?page=2',
-    }).resolves([
-      {
-        id: 3,
-        fork: true,
-      },
-      {
-        id: 4,
-        fork: false,
-      },
-    ]);
-    httpsPromise.withArgs({
-      path: '/repos?page=3',
-    }).resolves([]);
+      // act
+      const result = await repoFetcher(request, responseConverter, options);
 
-    expect(await repoFetcher(request, responseConverter, options)).to.eql([
-      {
-        id: 1,
-        fork: false,
-      },
-      {
-        id: 4,
-        fork: false,
-      },
-    ]);
+      // assert
+      expect(result.map(r => r.id)).to.eql([1, 2, 3, 4]);
+    });
+
+    it('should filter out forks', async () => {
+      // arrange
+      const options = {
+        pagination: true,
+        forks: false,
+        archived: true,
+      };
+
+      // act
+      const result = await repoFetcher(request, responseConverter, options);
+
+      // assert
+      expect(result.map(r => r.id)).to.eql([1, 4]);
+    });
+
+    it('should include archived', async () => {
+      // arrange
+      const options = {
+        pagination: true,
+        forks: true,
+        archived: true,
+      };
+
+      // act
+      const result = await repoFetcher(request, responseConverter, options);
+
+      // assert
+      expect(result.map(r => r.id)).to.eql([1, 2, 3, 4]);
+    });
+
+    it('should filter out archived', async () => {
+      // arrange
+      const options = {
+        pagination: true,
+        forks: true,
+        archived: false,
+      };
+
+      // act
+      const result = await repoFetcher(request, responseConverter, options);
+
+      // assert
+      expect(result.map(r => r.id)).to.eql([1, 2]);
+    });
   });
 });

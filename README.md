@@ -65,6 +65,7 @@ Command Line Options
 *   --ssh-username: specify a different username for cloning over ssh (instead of `git@`)
 *   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --no-forks: Do not clone forked repositories
+*   --no-archived: Do not clone archived repositories
 
 Bitbucket Cloud options:
 
