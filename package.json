@@ -1,0 +1,28 @@
+{
+  "name": "dirloop",
+  "version": "0.0.2",
+  "description": "CLI utility that runs a command on multiple directories",
+  "main": "dirloop.js",
+  "scripts": {
+    "test": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/dirloop.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/dirloop/issues"
+  },
+  "homepage": "https://github.com/ngeor/dirloop#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.19.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}

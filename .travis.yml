@@ -1,13 +1,3 @@
-language: go
-script:
-- go test ./...
-- go build
-deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: NBUlWRmIEQSKZv2XLWbE2jJWn+nxaLeWa9FJfYweUrQaRnZCBxnr3ZOLu3GJMGccgzrxnifS8WGxYDZOwyhTD0iJQ0+nZzEGGbB1T2+wYjW8OBCg9+0aHx9JvXdh0/i9Fko0tZXDpl0UHXHSh2P8+qxwQdI1mbr8HlfsBf8G9fXajBiZC+T/SoY/IEvQA7q4DySqnv6enXGyx8Bsgdh2SeOTr4up3kiV/uHssiptvphT6Km2TaHY7sVcprBJtRvh7I0ixLO4OeTt6cs1KZPCwNIRPNHVUpmNKTHyIsaPEei/HI4uj6TyOP0bXxh8r1StG+ST8kTL2lNF5KYlsuHWL6CcdtTeB9Y7kyKf02dKxR89vGtv5OUlmmPoouyVdYX34jgbIVP+yV1OJD4CIzdw0kytFSBPUzWi3xRySgYDFZqKcCTPr/g2zOVfUieZo/wF3oCEx2vj6bTOvkT/hXayvyrPKfCv0PJZz8Bxk07cAMnCZpTlK7TYOhvAGKL88r/joFTwwf65A3wzeejgpzH7akpZafG30dcZJoS7gJ2w9uGD4b2xNToS9GhMJW3Qfye2K4rDCQEJOMggcddUp6Hv3eEj7rUzEKsfJPQjH+Wg8L1+6Og4Ws2gcZzKOD20iqxqgKC/EmjVEUTZ3Nzcb3xNs51S1cf7gRs83UKass/UUPw=
-  file: dirloop
-  on:
-    repo: ngeor/dirloop
-    tags: true
+language: node_js
+node_js:
+  - "lts/*"
