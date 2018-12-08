@@ -1,6 +1,6 @@
 {
-  "name": "clone-all",
-  "version": "5.4.0",
+  "name": "@ngeor/clone-all",
+  "version": "5.4.1",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
   "scripts": {
