@@ -1,124 +1,123 @@
-const chai = require('chai');
-const expect = chai.expect;
+const { expect } = require('chai');
 const proxyquire = require('proxyquire').noCallThru();
 const sinon = require('sinon');
 
 describe('repositoriesToCloneInstances', () => {
-    let sandbox;
-    let repositoriesToCloneInstances;
+  let sandbox;
+  let repositoriesToCloneInstances;
 
-    beforeEach(() => {
-        sandbox = sinon.createSandbox();
-        repositoriesToCloneInstances = proxyquire('../../lib/repositories_to_clone_instances', {
-            path: {
-                join: (a, b) => a + '/' + b
-            }
-        });
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+    repositoriesToCloneInstances = proxyquire('../../lib/repositories_to_clone_instances', {
+      path: {
+        join: (a, b) => `${a}/${b}`,
+      },
     });
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    it('should use HTTPS', () => {
-        // arrange
-        const repositories = [
-            {
-                name: 'abc',
-                clone_url: 'https://host/abc' // eslint-disable-line camelcase
-            },
-            {
-                name: 'def',
-                clone_url: 'https://host/def' // eslint-disable-line camelcase
-            }
-        ];
+  it('should use HTTPS', () => {
+    // arrange
+    const repositories = [
+      {
+        name: 'abc',
+        clone_url: 'https://host/abc', // eslint-disable-line camelcase
+      },
+      {
+        name: 'def',
+        clone_url: 'https://host/def', // eslint-disable-line camelcase
+      },
+    ];
 
-        const options = {
-            output: '../target',
-            protocol: 'https'
-        };
+    const options = {
+      output: '../target',
+      protocol: 'https',
+    };
 
-        // act
-        const result = repositoriesToCloneInstances(repositories, options);
+    // act
+    const result = repositoriesToCloneInstances(repositories, options);
 
-        // assert
-        expect(result).to.eql([
-            {
-                name: 'abc',
-                url: 'https://host/abc',
-                location: '../target/abc'
-            },
+    // assert
+    expect(result).to.eql([
+      {
+        name: 'abc',
+        url: 'https://host/abc',
+        location: '../target/abc',
+      },
 
-            {
-                name: 'def',
-                url: 'https://host/def',
-                location: '../target/def'
-            }
-        ]);
-    });
+      {
+        name: 'def',
+        url: 'https://host/def',
+        location: '../target/def',
+      },
+    ]);
+  });
 
-    it('should use SSH', () => {
-        // arrange
-        const repositories = [
-            {
-                name: 'abc',
-                ssh_url: 'ssh://host/abc' // eslint-disable-line camelcase
-            },
-            {
-                name: 'def',
-                ssh_url: 'ssh://host/def' // eslint-disable-line camelcase
-            }
-        ];
+  it('should use SSH', () => {
+    // arrange
+    const repositories = [
+      {
+        name: 'abc',
+        ssh_url: 'ssh://host/abc', // eslint-disable-line camelcase
+      },
+      {
+        name: 'def',
+        ssh_url: 'ssh://host/def', // eslint-disable-line camelcase
+      },
+    ];
 
-        const options = {
-            output: '../target',
-            protocol: 'ssh'
-        };
+    const options = {
+      output: '../target',
+      protocol: 'ssh',
+    };
 
-        // act
-        const result = repositoriesToCloneInstances(repositories, options);
+    // act
+    const result = repositoriesToCloneInstances(repositories, options);
 
-        // assert
-        expect(result).to.eql([
-            {
-                name: 'abc',
-                url: 'ssh://host/abc',
-                location: '../target/abc'
-            },
+    // assert
+    expect(result).to.eql([
+      {
+        name: 'abc',
+        url: 'ssh://host/abc',
+        location: '../target/abc',
+      },
 
-            {
-                name: 'def',
-                url: 'ssh://host/def',
-                location: '../target/def'
-            }
-        ]);
-    });
+      {
+        name: 'def',
+        url: 'ssh://host/def',
+        location: '../target/def',
+      },
+    ]);
+  });
 
-    it('should use SSH with override username', () => {
-        // arrange
-        const repositories = [
-            {
-                name: 'abc',
-                ssh_url: 'git@github.com:ngeor/clone-all.git' // eslint-disable-line camelcase
-            }
-        ];
+  it('should use SSH with override username', () => {
+    // arrange
+    const repositories = [
+      {
+        name: 'abc',
+        ssh_url: 'git@github.com:ngeor/clone-all.git', // eslint-disable-line camelcase
+      },
+    ];
 
-        const options = {
-            output: '../target',
-            protocol: 'ssh',
-            sshUsername: 'nemo'
-        };
+    const options = {
+      output: '../target',
+      protocol: 'ssh',
+      sshUsername: 'nemo',
+    };
 
-        // act
-        const result = repositoriesToCloneInstances(repositories, options);
+    // act
+    const result = repositoriesToCloneInstances(repositories, options);
 
-        // assert
-        expect(result).to.eql([
-            {
-                location: '../target/abc',
-                name: 'abc',
-                url: 'nemo@github.com:ngeor/clone-all.git'
-            }
-        ]);
-    });
+    // assert
+    expect(result).to.eql([
+      {
+        location: '../target/abc',
+        name: 'abc',
+        url: 'nemo@github.com:ngeor/clone-all.git',
+      },
+    ]);
+  });
 });

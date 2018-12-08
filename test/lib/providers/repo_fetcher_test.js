@@ -1,119 +1,118 @@
-const chai = require('chai');
-const expect = chai.expect;
+const { expect } = require('chai');
 const proxyquire = require('proxyquire').noCallThru();
 const sinon = require('sinon');
 
 describe('repoFetcher', () => {
-    let sandbox;
-    let repoFetcher;
-    let httpsPromise;
+  let sandbox;
+  let repoFetcher;
+  let httpsPromise;
 
-    beforeEach(() => {
-        sandbox = sinon.createSandbox();
-        httpsPromise = sandbox.stub();
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+    httpsPromise = sandbox.stub();
 
-        repoFetcher = proxyquire('../../../lib/providers/repo_fetcher', {
-            '../https_promise': httpsPromise
-        });
+    repoFetcher = proxyquire('../../../lib/providers/repo_fetcher', {
+      '../https_promise': httpsPromise,
     });
+  });
 
-    afterEach(() => {
-        sandbox.restore();
-    });
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-    it('should work when no pagination is enabled', async() => {
-        const request = {
-            path: '/repos'
-        };
+  it('should work when no pagination is enabled', async () => {
+    const request = {
+      path: '/repos',
+    };
 
-        const responseConverter = (response) => JSON.parse(response).repos;
+    const responseConverter = response => JSON.parse(response).repos;
 
-        const options = {
-            pagination: false,
-            forks: true
-        };
+    const options = {
+      pagination: false,
+      forks: true,
+    };
 
-        httpsPromise.withArgs(request).resolves('{ "repos": [1,2,3]}');
+    httpsPromise.withArgs(request).resolves('{ "repos": [1,2,3]}');
 
-        expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3]);
-    });
+    expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3]);
+  });
 
-    it('should work when pagination is enabled', async() => {
-        const request = {
-            path: '/repos'
-        };
+  it('should work when pagination is enabled', async () => {
+    const request = {
+      path: '/repos',
+    };
 
-        const responseConverter = (response) => JSON.parse(response).repos;
+    const responseConverter = response => JSON.parse(response).repos;
 
-        const options = {
-            pagination: true,
-            forks: true
-        };
+    const options = {
+      pagination: true,
+      forks: true,
+    };
 
-        httpsPromise.resolves('not a json');
-        httpsPromise.withArgs({
-            path: '/repos'
-        }).resolves('{ "repos": [1,2,3]}');
-        httpsPromise.withArgs({
-            path: '/repos?page=2'
-        }).resolves('{ "repos": [4,5]}');
-        httpsPromise.withArgs({
-            path: '/repos?page=3'
-        }).resolves('{ "repos": []}');
+    httpsPromise.resolves('not a json');
+    httpsPromise.withArgs({
+      path: '/repos',
+    }).resolves('{ "repos": [1,2,3]}');
+    httpsPromise.withArgs({
+      path: '/repos?page=2',
+    }).resolves('{ "repos": [4,5]}');
+    httpsPromise.withArgs({
+      path: '/repos?page=3',
+    }).resolves('{ "repos": []}');
 
-        expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3, 4, 5]);
-    });
+    expect(await repoFetcher(request, responseConverter, options)).to.eql([1, 2, 3, 4, 5]);
+  });
 
-    it('should filter out forks', async() => {
-        const request = {
-            path: '/repos'
-        };
+  it('should filter out forks', async () => {
+    const request = {
+      path: '/repos',
+    };
 
-        const responseConverter = (response) => response;
+    const responseConverter = response => response;
 
-        const options = {
-            pagination: true,
-            forks: false
-        };
+    const options = {
+      pagination: true,
+      forks: false,
+    };
 
-        httpsPromise.resolves('not a json');
-        httpsPromise.withArgs({
-            path: '/repos'
-        }).resolves([
-            {
-                id: 1,
-                fork: false
-            },
-            {
-                id: 2,
-                fork: true
-            }
-        ]);
-        httpsPromise.withArgs({
-            path: '/repos?page=2'
-        }).resolves([
-            {
-                id: 3,
-                fork: true
-            },
-            {
-                id: 4,
-                fork: false
-            }
-        ]);
-        httpsPromise.withArgs({
-            path: '/repos?page=3'
-        }).resolves([]);
+    httpsPromise.resolves('not a json');
+    httpsPromise.withArgs({
+      path: '/repos',
+    }).resolves([
+      {
+        id: 1,
+        fork: false,
+      },
+      {
+        id: 2,
+        fork: true,
+      },
+    ]);
+    httpsPromise.withArgs({
+      path: '/repos?page=2',
+    }).resolves([
+      {
+        id: 3,
+        fork: true,
+      },
+      {
+        id: 4,
+        fork: false,
+      },
+    ]);
+    httpsPromise.withArgs({
+      path: '/repos?page=3',
+    }).resolves([]);
 
-        expect(await repoFetcher(request, responseConverter, options)).to.eql([
-            {
-                id: 1,
-                fork: false
-            },
-            {
-                id: 4,
-                fork: false
-            }
-        ]);
-    });
+    expect(await repoFetcher(request, responseConverter, options)).to.eql([
+      {
+        id: 1,
+        fork: false,
+      },
+      {
+        id: 4,
+        fork: false,
+      },
+    ]);
+  });
 });

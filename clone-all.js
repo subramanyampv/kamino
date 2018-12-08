@@ -13,13 +13,13 @@ const listAllRepos = require('./lib/list_all_repos');
  * @private
  */
 async function getRepositories(options) {
-    const repositories = await repoProvider.getRepositories(options);
-    if (!repositories) {
-        throw new Error('No repositories found!');
-    }
+  const repositories = await repoProvider.getRepositories(options);
+  if (!repositories) {
+    throw new Error('No repositories found!');
+  }
 
-    logger.verbose(`Found ${repositories.length} repositories`);
-    return repositories;
+  logger.verbose(`Found ${repositories.length} repositories`);
+  return repositories;
 }
 
 /**
@@ -30,14 +30,14 @@ async function getRepositories(options) {
  * @private
  */
 function processRepositories(repositories, options) {
-    if (options.list) {
-        return listAllRepos(repositories, options);
-    }
+  if (options.list) {
+    return listAllRepos(repositories, options);
+  }
 
-    return cloneAllRepos(
-        repositories,
-        options
-    );
+  return cloneAllRepos(
+    repositories,
+    options,
+  );
 }
 
 /**
@@ -45,20 +45,21 @@ function processRepositories(repositories, options) {
  * @returns {array} The combined result of all operations.
  */
 async function main() {
-    const options = optionsParser.parse();
+  const options = optionsParser.parse();
 
-    try {
-        const repositories = await getRepositories(options);
-        return await processRepositories(repositories, options);
-    } catch (err) {
-        process.exitCode = 2;
-        logger.error('An unexpected error occurred');
-        logger.error(err);
-    }
+  try {
+    const repositories = await getRepositories(options);
+    return await processRepositories(repositories, options);
+  } catch (err) {
+    process.exitCode = 2;
+    logger.error('An unexpected error occurred');
+    logger.error(err);
+    return null;
+  }
 }
 
 if (!Object.prototype.hasOwnProperty.call(process.env, 'LOADED_MOCHA_OPTS')) {
-    main();
+  main();
 }
 
 module.exports = main;
