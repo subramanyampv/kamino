@@ -6,4 +6,12 @@ after_success:
 - npm run coveralls
 cache:
   directories:
-    - "node_modules"
+  - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: WVbqnl7MfhbUB7/xz3V9aPVSRBgz6RtNmqRraceMkghYRBp9c59tle1oSp5Dwe5nCOdnwXC3wMbj6Yv8vRoLZaoiCjpG0bJh4dd541wm1TnaYMeVPmN54nRK0lpEVrRoQp71tIFtHBOIbbCKPjN6oCMGE5ZLDrhXLhIXBuet1u0iLV3i3ofifY01uxFjhGQdIt4MQ9D8Axq1dfleZkowl8mzIgfj3TPcZqlt7psEzlsesSZJ9GL6mlF4SQPS6C8Jgys1KtnfATpLTt9ZHpAobHaiLjIFIQDyTi2CbOi8IX8xa2dt7Yd6CXCNObZZJsI+5QXpjIXTE+OFsXC3k0ULCKheL6acXwJrcsYZBpzwc+pE7NxSdaw3IqJArpSqJ121NI4kWjrMxFFBNxrJ59VJw/KirDB1MwgjTD83By9UBM6PFtYOAFxbyOKBbD4GuvkeMpmmVqoMEU+I/IZfe7wmH2D01f+xnwdmfT2+N0ubJVAO8hbBUMQFqW/tycceQjY1/aFFpb1p5wNdkJh6WJltLexvUFChLAcyBu+ZD2G8WoPN2PW3dM4KTz1Y/i/DNsy3P7A+6Zo6ZOrsMW6XFBrGsltAqt/7UKYXNSL/UoN4aftKUyHtPCDYSULyOUK4FG/gVcrLHuKbKkJe4Igqors3FFdCZ2AGU/vEr8xV1Xi8vDc=
+  on:
+    tags: true
+    repo: ngeor/clone-all
