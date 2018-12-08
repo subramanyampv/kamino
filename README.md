@@ -20,13 +20,12 @@ Usage
 ### Cloning
 
 You need a directory into which clone-all will clone all your repositories.
-From the clone-all directory, run:
 
 ```
-npx @ngeor/clone-all --provider github --username ngeor --output ../target/
+npx @ngeor/clone-all --provider github --username ngeor --output ./repositories/
 ```
 
-This will clone all the repositories of the `ngeor` user into the `target` sibling folder.
+This will clone all the repositories of the `ngeor` user into the `repositoris` folder.
 If the repositories are already cloned, it will pull instead.
 
 ### Creating bundles
@@ -34,7 +33,7 @@ If the repositories are already cloned, it will pull instead.
 In addition to cloning, you can also create git bundles for your repositories in a separate directory.
 
 ```
-npx @ngeor/clone-all --provider github --username ngeor --output ../target/ --bundle-dir ../bundles/
+npx @ngeor/clone-all --provider github --username ngeor --output ./repositories/ --bundle-dir ./bundles/
 ```
 
 ### Listing repository information
@@ -67,7 +66,7 @@ Command Line Options
 *   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --no-forks: Do not clone forked repositories
 
-Bitbucket cloud options:
+Bitbucket Cloud options:
 
 *   --owner: the user owning the repositories
 *   --username: the username to use against Bitbucket REST API
