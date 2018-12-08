@@ -4,6 +4,7 @@ clone-all
 Automatically clone all your GitHub repositories.
 
 [![Build Status](https://travis-ci.org/ngeor/clone-all.svg?branch=master)](https://travis-ci.org/ngeor/clone-all)
+[![npm (scoped)](https://img.shields.io/npm/v/@ngeor/clone-all.svg)](https://www.npmjs.com/package/@ngeor/clone-all)
 [![Coverage Status](https://coveralls.io/repos/github/ngeor/clone-all/badge.svg)](https://coveralls.io/github/ngeor/clone-all)
 [![Dependencies](https://david-dm.org/ngeor/clone-all.svg)](https://david-dm.org/ngeor/clone-all)
 [![devDependencies Status](https://david-dm.org/ngeor/clone-all/dev-status.svg)](https://david-dm.org/ngeor/clone-all?type=dev)
@@ -11,13 +12,7 @@ Automatically clone all your GitHub repositories.
 Requirements
 ------------
 
-clone-all requires [Node.js](http://nodejs.org/) version 8 or higher.
-
-Installation
-------------
-
-*   Clone this repository from github.
-*   Install the node dependencies with `npm install`
+clone-all requires [Node.js](http://nodejs.org/) version 10 or higher.
 
 Usage
 -----
@@ -28,7 +23,7 @@ You need a directory into which clone-all will clone all your repositories.
 From the clone-all directory, run:
 
 ```
-node clone-all.js --provider github --username ngeor --output ../target/
+npx @ngeor/clone-all --provider github --username ngeor --output ../target/
 ```
 
 This will clone all the repositories of the `ngeor` user into the `target` sibling folder.
@@ -39,7 +34,7 @@ If the repositories are already cloned, it will pull instead.
 In addition to cloning, you can also create git bundles for your repositories in a separate directory.
 
 ```
-node clone-all.js --provider github --username ngeor --output ../target/ --bundle-dir ../bundles/
+npx @ngeor/clone-all --provider github --username ngeor --output ../target/ --bundle-dir ../bundles/
 ```
 
 ### Listing repository information
@@ -47,7 +42,7 @@ node clone-all.js --provider github --username ngeor --output ../target/ --bundl
 This command prints information about repositories without cloning them.
 
 ```
-node clone-all.js -p github --username ngeor --list
+npx @ngeor/clone-all -p github --username ngeor --list
 ```
 
 Example output (fields are tab separated):
@@ -91,4 +86,3 @@ Bitbucket cloud options:
 
 *   -v: increases verbosity
 *   --dry-run: don't clone anything, just show what would happen
-
