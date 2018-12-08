@@ -1,8 +1,9 @@
 {
   "name": "@ngeor/clone-all",
-  "version": "5.4.2",
+  "version": "5.4.3",
   "description": "Clones all public git repositories",
   "main": "clone-all.js",
+  "bin": "clone-all.js",
   "scripts": {
     "test": "npm-run-all eslint mocha nyc",
     "clean": "rimraf coverage",
