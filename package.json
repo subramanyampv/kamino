@@ -1,0 +1,37 @@
+{
+  "name": "yart",
+  "version": "1.5.0",
+  "description": "yet another release tool",
+  "main": "yart.js",
+  "bin": "yart.js",
+  "scripts": {
+    "test": "npm-run-all eslint mocha",
+    "eslint": "eslint .",
+    "mocha": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/yart.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/yart/issues"
+  },
+  "homepage": "https://github.com/ngeor/yart#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "commander": "^2.19.0",
+    "sax": "^1.2.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
