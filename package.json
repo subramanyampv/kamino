@@ -1,6 +1,6 @@
 {
   "name": "@ngeor/dirloop",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CLI utility that runs a command on multiple directories",
   "main": "dirloop.js",
   "bin": "dirloop.js",
@@ -17,6 +17,9 @@
     "url": "https://github.com/ngeor/dirloop/issues"
   },
   "homepage": "https://github.com/ngeor/dirloop#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.19.0"
