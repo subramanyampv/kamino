@@ -10,16 +10,16 @@ I want to run a series of git commands on multiple directories. They are all in
 the same parent directory.
 
 ```
-$ node dirloop.js git gc
-$ node dirloop.js git fetch -p -t
-$ node dirloop.js git checkout -- .
-$ node dirloop.js git checkout master
-$ node dirloop.js git reset --hard origin/master
+$ npx @ngeor/dirloop git gc
+$ npx @ngeor/dirloop git fetch -p -t
+$ npx @ngeor/dirloop git checkout -- .
+$ npx @ngeor/dirloop git checkout master
+$ npx @ngeor/dirloop git reset --hard origin/master
 ```
 
 ## Syntax
 
-`node dirloop.js [parameters] command [command arguments]`
+`npx @ngeor/dirloop [parameters] command [command arguments]`
 
 ### Parameters
 

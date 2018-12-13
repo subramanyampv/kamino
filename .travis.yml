@@ -1,3 +1,11 @@
 language: node_js
 node_js:
-  - "lts/*"
+- lts/*
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: dwCQfGsHZYVf75r3mjYIc8c6TrXoKme6vyHgDgdbkUHin0LJ91jSXvUWhPJz044KDJIG9wIgS9W9R+2t6fiJRv5aEJibpiRXyeH7fD1eh6aLjI0OfBUK0VsX/KrSTomtHeXNjya08pc0tbbMBXeQjBwYmpvInrpDYjiHIQbY5LQorulKDgdMfMJifqyXtmuIYIY/HtDV5rpWvG5HKMCvgynFClotMLwgLHBmBH/ityosRRog7Rz7EyQEDrFVMyzs5f2w4b+GE34PxflXu9Dd4cYW7aV34VBXMbyP3+lsTCvLeuefJp6RNmjKxEQFvo++6scZC74PPuPygc5fu3MWBQNJinL7DNiSoxiFcp1NrVKshRl4czaZeECNc2SKVm0tymLD2OXT4TW83vExSWiIfSZQGpOjpSk1Dyk02U4XvOux5O3uCqpB8qQNMZ8xgpEZT2jnzHFujat4wwdw18ER4w7LcZXGzfhyYrqYYqAf70rRWTyxMpgcFiRKrdqeMqyYtlmNEZuOY7otHQURzfnWC9H45ks3C37rUsAveXWkaZVDbQ8EuJvHWhk4VreNauax0muJm0vajZ3hf9ES1Le0rLSRyv8AF2rAThoc0byv5oCO9UhyLKl3l8pL045ROQmDBgekmAri8wVjmudFmg3B91F4wa59pWastVAEUQVqW3E=
+  on:
+    tags: true
+    repo: ngeor/dirloop
