@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [0.0.3] - 2018-12-13
+## [0.0.4] - 2018-12-13
 
 - Rewrite in nodeJS.
 
@@ -15,6 +15,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release
 
-[unreleased]: https://github.com/ngeor/dirloop/compare/v0.0.3...HEAD
-[0.0.3]: https://github.com/ngeor/dirloop/tree/v0.0.3
+[unreleased]: https://github.com/ngeor/dirloop/compare/v0.0.4...HEAD
+[0.0.4]: https://github.com/ngeor/dirloop/compare/v0.0.1...v0.0.4
 [0.0.1]: https://github.com/ngeor/dirloop/tree/v0.0.1
