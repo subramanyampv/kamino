@@ -1,16 +1,16 @@
 {
   "name": "@ngeor/clone-all",
-  "version": "5.5.0",
+  "version": "5.6.0",
   "description": "Clones all public git repositories",
-  "main": "clone-all.js",
-  "bin": "clone-all.js",
+  "main": "lib/main.js",
+  "bin": "lib/main.js",
   "scripts": {
     "test": "npm-run-all eslint mocha nyc",
     "clean": "rimraf coverage",
     "eslint": "eslint .",
-    "mocha": "mocha --recursive",
+    "mocha": "mocha lib/*.test.js lib/**/*test.js",
     "nyc": "nyc npm run mocha",
-    "coveralls": "nyc mocha && nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
     "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
   },
   "repository": {
@@ -39,11 +39,11 @@
     "nyc": "^13.1.0",
     "proxyquire": "^2.1.0",
     "rimraf": "^2.6.2",
-    "sinon": "^7.1.1",
+    "sinon": "^7.2.2",
     "sinon-chai": "^3.3.0"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=10.14.1"
   },
   "publishConfig": {
     "access": "public"

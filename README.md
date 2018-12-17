@@ -77,6 +77,8 @@ Bitbucket Cloud options:
 
 *   --output: the folder in which to clone the repositories
 *   --bundle-dir: creates bundles of the cloned repositories in the given directory
+*   --no-clone: Do not clone missing repositories, only pull the ones that are already present
+*   --no-pull: Do not pull existing repositories, only clone the ones that are missing locally
 
 ### List options
 

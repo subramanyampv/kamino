@@ -1,4 +1,5 @@
-test/
 .travis.yml
 .nyc_output/
 coverage/
+lib/**/*.test.js
+test-utils.js
