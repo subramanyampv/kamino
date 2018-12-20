@@ -1,0 +1,15 @@
+language: node_js
+sudo: false
+node_js:
+- lts/*
+after_success:
+- npm run coveralls
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  on:
+    tags: true
+    repo: ngeor/js-cli-logger
