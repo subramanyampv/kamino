@@ -10,6 +10,8 @@ cache:
 deploy:
   provider: npm
   email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: uuKHW0akhQ0//6GbF+Axlyl9QsPLXZBWP9rtO/8teBWPYXD5wgYOP1v5zb/tcE62fKuZ/Sf9brKmLBXm2ydLgbWA+v+bB6zgCDAh+mgYLMIdb3hBAjV0EU9GUklsKskiyCiPOEKn0ZMiJalDLxYPdjzANGiqq+K7MyX6vZ0GNJjjjaW33gCZzH7A449wy43BzHiTX7bvUcQ4ajQf9c1MneXoMt9WhpWTEWZ5t/FuInK12NBV8j0idL4fT4IIz/DnWcCL2tSUnfFx3j0UOhiyrvgBaPQqN+yfmKwKlsHk6UI0pl3GcpYaV35jEjdDr+RKiEoxLjNFAyGi7bhgEKX9AnL3NLGPf4uzToBa+zjyzA4+DCGe62ghyfuHcXQtWHssXJ7nfkxZJVW+9gJjYRgRq5+Rkg7MdlmSCmvbjCUaxIGO3Q7sJPF09ahB92ehJwS/D89m+qgbJv66qgS7abQ4qGH0/p5lSUaZj8KQpoABXscCWa0l5UystTjLYzT9sKqI9+mcLAi6h/mx5+bj9ARmsqPHTDbra2DZcqm1T2aKqQgtkmeNBS7LIxFeokpGIci4qq/yyuool+bocytt66lVbyxpNLb7Qck0EzkUu+ruLpKochJtjrypQukZCo+AhVpdgwXAukSWCn84IBlg/mFbOcnzzuJdFwDav75ezOsOiLM=
   on:
     tags: true
     repo: ngeor/generator-nodejs
