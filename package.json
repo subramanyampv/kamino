@@ -2,7 +2,7 @@
   "name": "@ngeor/generator-nodejs",
   "version": "0.1.1",
   "description": "A Yeoman generator for nodeJS libraries",
-  "main": "index.js",
+  "main": "generator/index.js",
   "scripts": {
     "test": "eslint .",
     "eslint": "eslint ."
@@ -11,7 +11,7 @@
     "yeoman-generator"
   ],
   "files": [
-    "templates"
+    "generator"
   ],
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "templates/"
   ],
   "dependencies": {
-    "yeoman-generator": "^3.1.1"
+    "yeoman-generator": "^3.2.0"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
