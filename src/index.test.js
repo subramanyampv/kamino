@@ -8,6 +8,7 @@ chai.use(require('sinon-chai'));
 describe('logger', () => {
   beforeEach(() => {
     sinon.spy(console, 'log');
+    sinon.spy(console, 'error');
   });
 
   afterEach(() => {
@@ -38,6 +39,13 @@ describe('logger', () => {
       logger.setVerboseEnabled(true);
       logger.verbose('hello world');
       expect(console.log).calledOnceWith('hello world');
+    });
+  });
+
+  describe('error', () => {
+    it('should log a message', () => {
+      logger.error('hello world');
+      expect(console.error).calledOnceWith('hello world');
     });
   });
 });

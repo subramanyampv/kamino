@@ -23,10 +23,16 @@ function info(message) {
   log(message);
 }
 
+function error(message) {
+  // eslint-disable-next-line no-console
+  console.error(message);
+}
+
 module.exports = {
   log,
   isVerboseEnabled,
   setVerboseEnabled,
   verbose,
   info,
+  error,
 };
