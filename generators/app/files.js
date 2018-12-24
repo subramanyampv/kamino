@@ -11,7 +11,7 @@ function getFiles() {
     '.gitattributes',
     '_gitignore',
     '.npmignore',
-    '.travis.yml',
+    '_travis.yml',
     'package.json',
     'README.md',
     path.join('src', 'index.js'),
