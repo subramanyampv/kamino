@@ -10,6 +10,9 @@
   "keywords": [
     "yeoman-generator"
   ],
+  "files": [
+    "templates"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngeor/generator-nodejs.git"
