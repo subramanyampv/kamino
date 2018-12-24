@@ -5,7 +5,8 @@
   "main": "generators/app/index.js",
   "scripts": {
     "test": "eslint .",
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "postversion": "git push --follow-tags"
   },
   "keywords": [
     "yeoman-generator"
