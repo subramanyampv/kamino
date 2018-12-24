@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/ngeor/clone-all#readme",
   "dependencies": {
-    "chalk": "^2.4.1",
+    "@ngeor/js-cli-logger": "^0.2.0",
     "commander": "^2.19.0"
   },
   "devDependencies": {
