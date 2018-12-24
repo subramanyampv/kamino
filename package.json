@@ -10,7 +10,8 @@
     "mocha": "mocha src/*.test.js src/**/*test.js",
     "nyc": "nyc npm run mocha",
     "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
-    "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
+    "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc .",
+    "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
