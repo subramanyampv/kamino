@@ -1,5 +1,5 @@
-const path = require('path');
 const Generator = require('yeoman-generator');
+const files = require('./files');
 
 class NpmGenerator extends Generator {
   async prompting() {
@@ -25,20 +25,9 @@ class NpmGenerator extends Generator {
       description: this.answers.description,
     };
 
-    [
-      '.editorconfig',
-      '.eslintrc.js',
-      '.gitattributes',
-      '.gitignore',
-      '.npmignore',
-      '.travis.yml',
-      'package.json',
-      'README.md',
-      path.join('src', 'index.js'),
-      path.join('src', 'index.test.js'),
-    ].forEach(file => this.fs.copyTpl(
-      this.templatePath(file),
-      this.destinationPath(file),
+    files.getFiles().forEach(f => this.fs.copyTpl(
+      this.templatePath(f.src),
+      this.destinationPath(f.dest),
       context,
     ));
 
