@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { parse } = require('./args');
 const { updateProjectFiles } = require('./update');
 const fsFactory = require('./fs-factory').factory;
