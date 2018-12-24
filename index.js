@@ -7,15 +7,15 @@ class NpmGenerator extends Generator {
       type: 'input',
       name: 'name',
       message: 'Your project name',
-      default: this.appname // Default to current folder name
+      default: this.appname, // Default to current folder name
     }, {
       type: 'input',
       name: 'description',
-      message: 'A short description of the project'
+      message: 'A short description of the project',
     }, {
       type: 'confirm',
       name: 'bin',
-      message: 'Would you like to create a CLI app?'
+      message: 'Would you like to create a CLI app?',
     }]);
   }
 
@@ -39,7 +39,7 @@ class NpmGenerator extends Generator {
     ].forEach(file => this.fs.copyTpl(
       this.templatePath(file),
       this.destinationPath(file),
-      context
+      context,
     ));
 
     if (!this.answers.bin) {
@@ -47,12 +47,12 @@ class NpmGenerator extends Generator {
     }
 
     const contents = {
-      bin: 'src/index.js'
+      bin: 'src/index.js',
     };
 
     this.fs.extendJSON(
       this.destinationPath('package.json'),
-      contents
+      contents,
     );
   }
 
