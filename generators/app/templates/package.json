@@ -1,5 +1,5 @@
 {
-  "name": "@ngeor/<%= name %>",
+  "name": "<%= scopedName %>",
   "version": "0.1.0",
   "description": "<%= description %>",
   "main": "src/index.js",

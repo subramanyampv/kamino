@@ -13,6 +13,10 @@ class NpmGenerator extends Generator {
       name: 'description',
       message: 'A short description of the project',
     }, {
+      type: 'input',
+      name: 'scope',
+      message: 'The scope of the package (including the @ symbol)',
+    }, {
       type: 'confirm',
       name: 'bin',
       message: 'Would you like to create a CLI app?',
@@ -22,6 +26,7 @@ class NpmGenerator extends Generator {
   writing() {
     const context = {
       name: this.answers.name,
+      scopedName: this.answers.scope ? `${this.answers.scope}/${this.answers.name}` : this.answers.name,
       description: this.answers.description,
     };
 
