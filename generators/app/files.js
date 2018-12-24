@@ -10,7 +10,7 @@ function getFiles() {
     '.eslintrc.js',
     '.gitattributes',
     '_gitignore',
-    '.npmignore',
+    '_npmignore',
     '_travis.yml',
     'package.json',
     'README.md',
