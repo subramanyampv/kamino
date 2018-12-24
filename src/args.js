@@ -1,5 +1,5 @@
 const { Command } = require('commander');
-const { name, version } = require('./package.json');
+const { name, version } = require('../package.json');
 
 /**
  * @typedef CLIArguments

@@ -7,3 +7,9 @@ after_success:
 cache:
   directories:
   - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  on:
+    tags: true
+    repo: ngeor/yart

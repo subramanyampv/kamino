@@ -1,14 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const { expect } = require('chai');
-const { updatePomFiles } = require('../pom');
+const { updatePomFiles } = require('./pom');
 
 describe('pom', () => {
   describe('simple', () => {
     /**
      * The directory containing the test data.
      */
-    const testDir = path.join(__dirname, 'simple');
+    const testDir = path.join(__dirname, '../test', 'simple');
 
     /**
      * The full file path to the pom.xml under test.
@@ -84,7 +84,7 @@ describe('pom', () => {
     /**
      * The directory containing the test data.
      */
-    const testDir = path.join(__dirname, 'multi-module');
+    const testDir = path.join(__dirname, '../test', 'multi-module');
 
     /**
      * Directories containing pom files.

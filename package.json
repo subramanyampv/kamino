@@ -1,37 +1,68 @@
 {
-  "name": "yart",
-  "version": "1.5.0",
+  "name": "@ngeor/yart",
+  "version": "1.4.2",
   "description": "yet another release tool",
-  "main": "yart.js",
-  "bin": "yart.js",
+  "main": "src/yart.js",
   "scripts": {
-    "test": "npm-run-all eslint mocha",
+    "test": "npm-run-all eslint mocha nyc",
+    "clean": "rimraf coverage",
     "eslint": "eslint .",
-    "mocha": "mocha"
+    "mocha": "mocha src/*.test.js src/**/*test.js",
+    "nyc": "nyc npm run mocha",
+    "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
+    "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngeor/yart.git"
   },
-  "author": "Nikolaos Georgiou",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ngeor/yart/issues"
   },
   "homepage": "https://github.com/ngeor/yart#readme",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "eslint": "^5.10.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "mocha": "^5.2.0",
-    "npm-run-all": "^4.1.5"
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintIgnore": [
+    "coverage/"
+  ],
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 48,
+    "statements": 47,
+    "functions": 42,
+    "branches": 33,
+    "include": [
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "all": true
   },
   "dependencies": {
     "commander": "^2.19.0",
     "sax": "^1.2.4"
   },
-  "publishConfig": {
-    "access": "public"
+  "bin": "src/yart.js",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.11.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^13.1.0",
+    "proxyquire": "^2.1.0",
+    "rimraf": "^2.6.2",
+    "sinon": "^7.2.2",
+    "sinon-chai": "^3.3.0"
   }
 }

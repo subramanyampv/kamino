@@ -2,17 +2,22 @@
 yart is yet another release tool
 
 [![Build Status](https://travis-ci.org/ngeor/yart.svg?branch=master)](https://travis-ci.org/ngeor/yart)
+[![npm (scoped)](https://img.shields.io/npm/v/@ngeor/yart.svg)](https://www.npmjs.com/package/@ngeor/yart)
+[![Coverage Status](https://coveralls.io/repos/github/ngeor/yart/badge.svg)](https://coveralls.io/github/ngeor/yart)
+[![Dependencies](https://david-dm.org/ngeor/yart.svg)](https://david-dm.org/ngeor/yart)
+[![devDependencies Status](https://david-dm.org/ngeor/yart/dev-status.svg)](https://david-dm.org/ngeor/yart?type=dev)
 
 ## Overview
 
 You can use yart to automatically bump up the version of a project in a
 consistent way, ensuring no gaps exist in SemVer sequences.
 
-## Download
+Currently only Maven projects are supported.
 
-yart is written in [Go](https://golang.org/) so it's available as a standalone
-executable. Please get the latest version from the
-[releases](https://github.com/ngeor/yart/releases).
+## Usage
+
+You can use yart without installing it with `npx @ngeor/yart`. If you prefer, you
+can install it with `npm i -g @ngeor/yart` and then run it with `yart`.
 
 ## Tags
 
@@ -58,10 +63,3 @@ version with the new version.
   files. Defaults to "Bumping version x.y.z"
 - `-no-commit`: Does not commit or create the tag (dry run)
 - `-no-push`: Does not push to remote (dry run)
-
-## Developing
-
-### Run test with coverage
-
-    go test -cover -coverprofile c.out
-    go tool cover -html c.out -o coverage.html
