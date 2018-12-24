@@ -24,7 +24,7 @@
     "access": "public"
   },
   "eslintIgnore": [
-    "coverage/"
+    "templates/"
   ],
   "dependencies": {
     "yeoman-generator": "^3.1.1"
