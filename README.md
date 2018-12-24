@@ -1,8 +1,13 @@
-# dirloop
+dirloop
+=========
 
 CLI utility that runs a command on multiple directories
 
 [![Build Status](https://travis-ci.org/ngeor/dirloop.svg?branch=master)](https://travis-ci.org/ngeor/dirloop)
+[![npm (scoped)](https://img.shields.io/npm/v/@ngeor/dirloop.svg)](https://www.npmjs.com/package/@ngeor/dirloop)
+[![Coverage Status](https://coveralls.io/repos/github/ngeor/dirloop/badge.svg)](https://coveralls.io/github/ngeor/dirloop)
+[![Dependencies](https://david-dm.org/ngeor/dirloop.svg)](https://david-dm.org/ngeor/dirloop)
+[![devDependencies Status](https://david-dm.org/ngeor/dirloop/dev-status.svg)](https://david-dm.org/ngeor/dirloop?type=dev)
 
 ## Typical use case
 

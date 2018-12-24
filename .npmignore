@@ -1,4 +1,4 @@
-test/
+**/*.test.js
 .travis.yml
 .nyc_output/
 coverage/

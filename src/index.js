@@ -4,27 +4,13 @@ const fs = require('fs');
 require('process');
 const { spawnSync } = require('child_process');
 const path = require('path');
-const chalk = require('chalk');
-const { name, version } = require('./package.json');
+const logger = require('@ngeor/js-cli-logger');
+const { name, version } = require('../package.json');
 
 /**
  * @type {{dir: string, dirPrefix: string, args: string[], dryRun: boolean}}
  */
 let args = null;
-
-function log(message) {
-  console.log(message);
-}
-
-function logVerbose(message) {
-  if (args.verbose) {
-    log(chalk.blue(message));
-  }
-}
-
-function logError(message) {
-  log(chalk.red(message));
-}
 
 /**
  * Checks if the given argument represents a directory
@@ -72,7 +58,7 @@ function parseArguments() {
   });
 
   if (!commander.args || !commander.args.length) {
-    logError('Command to run was not specified');
+    logger.error('Command to run was not specified');
     commander.outputHelp();
     process.exit(1);
   }
@@ -83,11 +69,11 @@ function parseArguments() {
 function runCommand(file) {
   const absDir = path.resolve(args.dir, file.name);
   if (args.dryRun) {
-    log(`Would have run command ${args.args.join(' ')} in ${absDir}`);
+    logger.log(`Would have run command ${args.args.join(' ')} in ${absDir}`);
     return;
   }
 
-  logVerbose(`Running command in ${absDir}`);
+  logger.verbose(`Running command in ${absDir}`);
 
   const result = spawnSync(
     args.args[0],
@@ -101,13 +87,13 @@ function runCommand(file) {
   const { status } = result;
 
   if (status) {
-    logError(chalk.red(`Command returned exit code ${status}`));
+    logger.error(`Command returned exit code ${status}`);
   }
 }
 
 function main() {
   args = parseArguments();
-
+  logger.setVerboseEnabled(args.verbose);
   const files = fs.readdirSync(args.dir, { withFileTypes: true });
   files.forEach((file) => {
     const matches = isMatchingDir(file);
