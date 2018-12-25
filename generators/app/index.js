@@ -1,3 +1,4 @@
+const { EOL } = require('os');
 const Generator = require('yeoman-generator');
 const files = require('./files');
 
@@ -28,6 +29,7 @@ class NpmGenerator extends Generator {
       name: this.answers.name,
       scopedName: this.answers.scope ? `${this.answers.scope}/${this.answers.name}` : this.answers.name,
       description: this.answers.description,
+      shebang: this.answers.bin ? `#!/usr/bin/env node${EOL}` : '',
     };
 
     files.getFiles().forEach(f => this.fs.copyTpl(

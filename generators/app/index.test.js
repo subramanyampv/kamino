@@ -30,6 +30,10 @@ describe('index', () => {
         name: 'mylib',
       });
     });
+
+    it('should not add shebang on the main file', () => {
+      assert.fileContent('src/index.js', /^function add/);
+    });
   });
 
   describe('scoped', () => {
@@ -62,6 +66,10 @@ describe('index', () => {
         main: 'src/index.js',
         bin: 'src/index.js',
       });
+    });
+
+    it('shoud have the shebang on the main file', () => {
+      assert.fileContent('src/index.js', /^#!\/usr\/bin\/env node\sfunction/);
     });
   });
 });
