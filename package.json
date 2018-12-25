@@ -1,6 +1,6 @@
 {
   "name": "@ngeor/dirloop",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "CLI utility that runs a command on multiple directories",
   "main": "src/index.js",
   "scripts": {
