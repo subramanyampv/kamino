@@ -1,27 +1,27 @@
 const fs = require('fs');
 const path = require('path');
 
-function dirPrefixMatches(file, args) {
-  return !args.dirPrefix
+function dirPrefixMatches(file, cliArgs) {
+  return !cliArgs.dirPrefix
     || (
-      args.dirPrefix
-      && args.dirPrefix.length > 0
-      && args.dirPrefix.find(p => file.name.startsWith(p))
+      cliArgs.dirPrefix
+      && cliArgs.dirPrefix.length > 0
+      && !!cliArgs.dirPrefix.find(p => file.name.startsWith(p))
     );
 }
 
-function hasFileMatches(file, args) {
-  return !args.hasFile || fs.existsSync(path.resolve(args.dir, file.name, args.hasFile));
+function hasFileMatches(file, cliArgs) {
+  return !cliArgs.hasFile || fs.existsSync(path.resolve(cliArgs.dir, file.name, cliArgs.hasFile));
 }
 
 /**
  * Checks if the given argument represents a directory
  * and that directory's name matches the directory pattern.
  */
-function isMatchingDir(file, args) {
+function isMatchingDir(file, cliArgs) {
   return file.isDirectory()
-    && dirPrefixMatches(file, args)
-    && hasFileMatches(file, args);
+    && dirPrefixMatches(file, cliArgs)
+    && hasFileMatches(file, cliArgs);
 }
 
 module.exports = {

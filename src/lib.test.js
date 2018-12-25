@@ -9,200 +9,112 @@ describe('lib', () => {
   let dirloop = null;
   let fs = null;
   let logger = null;
-  let path = null;
-  let oldArgV = null;
   let run = null;
-
-  function assertRun(dir, args) {
-    expect(run.runCommand).calledWith(
-      sinon.match({ name: dir }, args),
-    );
-  }
+  let filter = null;
+  let args = null;
 
   beforeEach(() => {
-    oldArgV = process.argv;
-    process.argv = [];
-
     fs = {
-      existsSync: sinon.stub(),
-      readdirSync: sinon.stub(),
+      readdirSync: sinon.stub().returns([]),
     };
-
-    path = {
-      resolve: (...args) => args.join('/'),
-    };
-
-    fs['@global'] = true;
-    path['@global'] = true;
 
     // eslint-disable-next-line global-require
     logger = sinon.stub(require('@ngeor/js-cli-logger'));
-    logger['@global'] = true;
 
     run = {
       runCommand: sinon.stub(),
     };
 
+    filter = {
+      isMatchingDir: sinon.stub(),
+    };
+
+    args = {
+      parseArguments: sinon.stub(),
+    };
+
     dirloop = proxyquire('./lib', {
       fs,
-      path,
       '@ngeor/js-cli-logger': logger,
+      './args': args,
       './run': run,
+      './filter': filter,
     });
   });
 
   afterEach(() => {
     sinon.restore();
-    process.argv = oldArgV;
   });
 
-  describe('when only files are found', () => {
-    beforeEach(() => {
-      process.argv = ['node', 'index.js', 'echo'];
-      fs.readdirSync.returns([{
-        name: 'tmp',
-        isDirectory: () => false,
-      }]);
-    });
-
-    it('should ignore files', () => {
-      // act
-      dirloop.main();
-
-      // assert
-      expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
-      expect(run.runCommand).not.called;
-    });
-  });
-
-  describe('--dir-prefix', () => {
-    beforeEach(() => {
-      fs.readdirSync.returns([
-        {
-          name: 'tmp',
-          isDirectory: () => true,
-        },
-        {
-          name: 'temp',
-          isDirectory: () => true,
-        },
-      ]);
-    });
-
-    describe('when the directory prefix does not match', () => {
+  describe('--verbose', () => {
+    describe('verbose off', () => {
       beforeEach(() => {
-        process.argv = ['node', 'index.js', '--dir-prefix', 'tmz', 'echo'];
+        args.parseArguments.returns({});
       });
 
-      it('should not run the command', () => {
-        // act
+      it('should disable verbose', () => {
         dirloop.main();
-
-        // assert
-        expect(run.runCommand).not.called;
+        expect(logger.setVerboseEnabled).calledOnceWith(false);
       });
     });
 
-    describe('when the directory prefix matches one directory', () => {
+    describe('verbose on', () => {
       beforeEach(() => {
-        process.argv = ['node', 'index.js', '--dir-prefix', 'tm', 'echo'];
+        args.parseArguments.returns({ verbose: true });
       });
 
-      it('should run the command', () => {
-        // act
+      it('should enable verbose', () => {
         dirloop.main();
-
-        // assert
-        expect(run.runCommand).calledOnce;
-      });
-    });
-
-    describe('when the directory prefix matches two directories', () => {
-      beforeEach(() => {
-        process.argv = ['node', 'index.js', '--dir-prefix', 't', 'echo'];
-      });
-
-      it('should run the command twice', () => {
-        // act
-        dirloop.main();
-
-        // assert
-        expect(run.runCommand).calledTwice;
-        assertRun('tmp', { dir: '.', args: ['echo'] });
-        assertRun('temp', { dir: '.', args: ['echo'] });
-      });
-    });
-
-    describe('when given multiple prefixes', () => {
-      beforeEach(() => {
-        process.argv = ['node', 'index.js', '--dir-prefix', 'temp,tmp', 'echo'];
-      });
-
-      it('should run the command twice', () => {
-        // act
-        dirloop.main();
-
-        // assert
-        expect(run.runCommand).calledTwice;
-        assertRun('tmp', { dir: '.', args: ['echo'] });
-        assertRun('temp', { dir: '.', args: ['echo'] });
-      });
-    });
-
-    describe('when using also a has-file filter', () => {
-      beforeEach(() => {
-        process.argv = ['node', 'index.js', '--dir-prefix', 'temp,tmp', '--has-file', 'pom.xml', 'echo'];
-        fs.existsSync.withArgs('./tmp/pom.xml').returns(true);
-      });
-
-      it('should match only one directory', () => {
-        // act
-        dirloop.main();
-
-        // assert
-        expect(run.runCommand).calledOnce;
-        assertRun('tmp', { dir: '.', args: ['echo'] });
+        expect(logger.setVerboseEnabled).calledOnceWith(true);
       });
     });
   });
 
-  describe('--has-file', () => {
-    beforeEach(() => {
-      process.argv = ['node', 'index.js', '--has-file', 'pom.xml', 'echo'];
-      fs.readdirSync.returns([{
+  const cliArgs = { dir: '.' };
+  beforeEach(() => {
+    args.parseArguments.returns(cliArgs);
+
+    const directories = [
+      {
         name: 'tmp',
         isDirectory: () => true,
-      }]);
-    });
+      },
+      {
+        name: 'temp',
+        isDirectory: () => true,
+      },
+      {
+        name: 'temp.txt',
+        isDirectory: () => false,
+      },
+    ];
 
-    describe('when the file exists', () => {
-      beforeEach(() => {
-        fs.existsSync.returns(true);
-      });
+    fs.readdirSync.withArgs('.', { withFileTypes: true }).returns(directories);
+    filter.isMatchingDir.withArgs(
+      sinon.match({ name: 'tmp' }),
+      cliArgs,
+    ).returns(true);
+    filter.isMatchingDir.withArgs(
+      sinon.match({ name: 'temp' }),
+      cliArgs,
+    ).returns(true);
+    filter.isMatchingDir.withArgs(
+      sinon.match({ name: 'temp.txt' }),
+      cliArgs,
+    ).returns(false);
+  });
 
-      it('should run the command', () => {
-        // act
-        dirloop.main();
+  it('should run the command', () => {
+    dirloop.main();
 
-        // assert
-        expect(run.runCommand).calledOnce;
-        expect(fs.existsSync).calledOnceWithExactly('./tmp/pom.xml');
-      });
-    });
-
-    describe('when the file does not exist', () => {
-      beforeEach(() => {
-        fs.existsSync.returns(false);
-      });
-
-      it('should not run the command', () => {
-        // act
-        dirloop.main();
-
-        // assert
-        expect(run.runCommand).not.called;
-        expect(fs.existsSync).calledOnceWithExactly('./tmp/pom.xml');
-      });
-    });
+    expect(run.runCommand).calledWith(
+      sinon.match({ name: 'tmp' }),
+      cliArgs,
+    );
+    expect(run.runCommand).calledWith(
+      sinon.match({ name: 'temp' }),
+      cliArgs,
+    );
+    expect(run.runCommand).calledTwice;
   });
 });

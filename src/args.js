@@ -15,12 +15,12 @@ function parseArguments() {
     .name(name)
     .version(version)
     .option('--dir <dir>', 'The root directory containing other directories', '.')
-    .option('--dir-prefix <prefix>', 'An optional set of prefixes to select only some directories', list)
+    .option('--dir-prefix <prefix>', 'An optional set of prefixes to select only some directories', list, [])
     .option('--has-file <file>', 'Only match directories containing the given filename')
     .option('--dry-run', "Don't actually run any command")
-    .option('-- <command> [options...]', 'The command to run')
     .option('-v, --verbose', 'Verbose output')
     .option('--no-shell', 'Do not run the command inside a shell')
+    .option('-- <command> [options...]', 'The command to run')
     .parse(process.argv);
 
   return commander;
