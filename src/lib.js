@@ -5,11 +5,11 @@ const { parseArguments } = require('./args');
 const { runCommand } = require('./run');
 
 function main() {
-  const args = parseArguments();
-  logger.setVerboseEnabled(args.verbose);
-  fs.readdirSync(args.dir, { withFileTypes: true })
-    .filter(f => isMatchingDir(f, args))
-    .forEach(f => runCommand(f, args));
+  const cliArgs = parseArguments();
+  logger.setVerboseEnabled(cliArgs.verbose);
+  fs.readdirSync(cliArgs.dir, { withFileTypes: true })
+    .filter(f => isMatchingDir(f, cliArgs))
+    .forEach(f => runCommand(f, cliArgs));
 }
 
 module.exports = {

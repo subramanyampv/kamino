@@ -2,31 +2,42 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 const logger = require('@ngeor/js-cli-logger');
 
-function runCommand(file, args) {
-  const absDir = path.resolve(args.dir, file.name);
-  const noCommandSpecified = !args.args || !args.args.length;
+function runCommand(file, cliArgs) {
+  const {
+    dir,
+    dryRun,
+    args,
+  } = cliArgs;
+
+  const absDir = path.resolve(dir, file.name);
+  const noCommandSpecified = !args || !args.length;
   if (noCommandSpecified) {
     logger.log(absDir);
     return;
   }
 
-  if (args.dryRun) {
-    logger.log(`Would have run command ${args.args.join(' ')} in ${absDir}`);
+  if (dryRun) {
+    logger.log(`Would have run command ${args.join(' ')} in ${absDir}`);
     return;
   }
 
   logger.verbose(`Running command in ${absDir}`);
 
   const result = spawnSync(
-    args.args[0],
-    args.args.slice(1),
+    args[0],
+    args.slice(1),
     {
       cwd: absDir,
       stdio: 'inherit',
+      shell: true,
     },
   );
 
-  const { status } = result;
+  const { error, status } = result;
+
+  if (error) {
+    logger.error(`Command failed: ${error}`);
+  }
 
   if (status) {
     logger.error(`Command returned exit code ${status}`);
