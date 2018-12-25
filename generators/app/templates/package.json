@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "npm-run-all eslint mocha nyc",
+    "postversion": "git push --follow-tags",
     "clean": "rimraf coverage",
     "eslint": "eslint .",
     "mocha": "mocha src/*.test.js src/**/*test.js",

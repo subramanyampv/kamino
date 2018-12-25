@@ -31,6 +31,14 @@ describe('index', () => {
       });
     });
 
+    it('should have the expected scripts', () => {
+      assert.jsonFileContent('package.json', {
+        scripts: {
+          postversion: 'git push --follow-tags',
+        },
+      });
+    });
+
     it('should not add shebang on the main file', () => {
       assert.fileContent('src/index.js', /^function add/);
     });
