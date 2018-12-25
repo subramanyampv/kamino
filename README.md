@@ -21,3 +21,11 @@ Install the generator with `npm i -g yo @ngeor/generator-nodejs`.
 - Enable the project in Coveralls.
 - Add the implementation.
 - Run `travis setup npm`.
+
+## Developing
+
+Run tests with Docker locally with:
+
+```
+docker run --rm -v $PWD:/code -w /code node:10 npm test
+```

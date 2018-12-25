@@ -34,7 +34,7 @@ describe('index', () => {
   describe('scoped', () => {
     before(() => helpers.run(__dirname)
       .withPrompts({
-        name: 'mylib',
+        name: 'mylib2',
         description: 'my lib is awesome',
         scope: '@ngeor',
       }));
