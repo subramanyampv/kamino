@@ -7,6 +7,7 @@ describe('index', () => {
       .withPrompts({
         name: 'mylib',
         description: 'my lib is awesome',
+        bin: false,
       }));
 
     it('should create the expected files', () => {
@@ -37,11 +38,29 @@ describe('index', () => {
         name: 'mylib2',
         description: 'my lib is awesome',
         scope: '@ngeor',
+        bin: false,
       }));
 
     it('should have the expected package name', () => {
       assert.jsonFileContent('package.json', {
         name: '@ngeor/mylib2',
+      });
+    });
+  });
+
+  describe('cli app', () => {
+    before(() => helpers.run(__dirname)
+      .withPrompts({
+        name: 'mylib2',
+        description: 'my lib is awesome',
+        bin: true,
+      }));
+
+    it('should have the expected package name', () => {
+      assert.jsonFileContent('package.json', {
+        name: 'mylib2',
+        main: 'src/index.js',
+        bin: 'src/index.js',
       });
     });
   });
