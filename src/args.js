@@ -20,6 +20,7 @@ function parseArguments() {
     .option('--dry-run', "Don't actually run any command")
     .option('-- <command> [options...]', 'The command to run')
     .option('-v, --verbose', 'Verbose output')
+    .option('--no-shell', 'Do not run the command inside a shell')
     .parse(process.argv);
 
   return commander;

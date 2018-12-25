@@ -7,6 +7,7 @@ function runCommand(file, cliArgs) {
     dir,
     dryRun,
     args,
+    shell,
   } = cliArgs;
 
   const absDir = path.resolve(dir, file.name);
@@ -29,7 +30,7 @@ function runCommand(file, cliArgs) {
     {
       cwd: absDir,
       stdio: 'inherit',
-      shell: true,
+      shell,
     },
   );
 

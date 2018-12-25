@@ -44,6 +44,7 @@ $ dirloop git reset --hard origin/master
   sub-directories (e.g. `--dir-prefix app`, `--dir-prefix src,test`).
 - `has-file` Only match directories that contain this filename (e.g. `--has-file package.json`).
 - `dry-run` Don't actually run the command, just see what would happen.
+- `no-shell` Do not run the command inside a shell process.
 - `help` Show help about the command
 
 ###  Without command

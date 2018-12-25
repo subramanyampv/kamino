@@ -83,6 +83,7 @@ describe('run', () => {
   describe('when the command does not have extra arguments', () => {
     beforeEach(() => {
       args.args = ['echo'];
+      args.shell = true;
       childProcess.spawnSync.returns({});
     });
 
@@ -104,6 +105,7 @@ describe('run', () => {
   describe('when the command has extra arguments', () => {
     beforeEach(() => {
       args.args = ['echo', 'hello'];
+      args.shell = false;
       childProcess.spawnSync.returns({});
     });
 
@@ -116,7 +118,7 @@ describe('run', () => {
         {
           cwd: '/c/tmp',
           stdio: 'inherit',
-          shell: true,
+          shell: false,
         },
       );
     });
