@@ -28,7 +28,6 @@ describe('lib', () => {
 
     process = {
       argv: [],
-      exit: sinon.stub().throws(new Error('exit')),
     };
 
     // eslint-disable-next-line global-require
@@ -52,10 +51,20 @@ describe('lib', () => {
       process.argv = ['node', 'index.js'];
     });
 
-    it('should exit', () => {
-      // act and assert
-      expect(() => dirloop.main()).throws('exit');
-      expect(process.exit).calledOnceWith(1);
+    it('should print the folders', () => {
+      // arrange
+      fs.readdirSync.returns([{
+        name: 'tmp',
+        isDirectory: () => true,
+      }]);
+
+      // act
+      dirloop.main();
+
+      // assert
+      expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
+      expect(childProcess.spawnSync).not.called;
+      expect(logger.log).calledOnceWithExactly('./tmp');
     });
   });
 
@@ -88,6 +97,7 @@ describe('lib', () => {
           stdio: 'inherit',
         },
       );
+      expect(logger.verbose).calledOnceWithExactly('Running command in ./tmp');
     });
   });
 
@@ -197,6 +207,7 @@ describe('lib', () => {
       // assert
       expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
       expect(childProcess.spawnSync).not.called;
+      expect(logger.log).calledOnceWithExactly('Would have run command echo in ./tmp');
     });
   });
 

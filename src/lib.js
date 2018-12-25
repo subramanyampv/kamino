@@ -56,17 +56,17 @@ function parseArguments() {
     commander[key] = commander[key] || defaults[key];
   });
 
-  if (!commander.args || !commander.args.length) {
-    logger.error('Command to run was not specified');
-    commander.outputHelp();
-    process.exit(1);
-  }
-
   return commander;
 }
 
 function runCommand(file) {
   const absDir = path.resolve(args.dir, file.name);
+  const noCommandSpecified = !args.args || !args.args.length;
+  if (noCommandSpecified) {
+    logger.log(absDir);
+    return;
+  }
+
   if (args.dryRun) {
     logger.log(`Would have run command ${args.args.join(' ')} in ${absDir}`);
     return;
