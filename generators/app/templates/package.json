@@ -4,12 +4,13 @@
   "description": "<%= description %>",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm-run-all eslint mocha nyc",
+    "pretest": "eslint .",
+    "test": "nyc mocha src/*.test.js src/**/*test.js",
     "postversion": "git push --follow-tags",
     "clean": "rimraf coverage",
     "eslint": "eslint .",
     "mocha": "mocha src/*.test.js src/**/*test.js",
-    "nyc": "nyc npm run mocha",
+    "nyc": "nyc mocha src/*.test.js src/**/*test.js",
     "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
     "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
   },

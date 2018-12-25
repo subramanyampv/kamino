@@ -61,7 +61,6 @@ class NpmGenerator extends Generator {
       'eslint-plugin-import',
       'jsdoc',
       'mocha',
-      'npm-run-all',
       'nyc',
       'proxyquire',
       'rimraf',

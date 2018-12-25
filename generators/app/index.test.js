@@ -34,7 +34,12 @@ describe('index', () => {
     it('should have the expected scripts', () => {
       assert.jsonFileContent('package.json', {
         scripts: {
+          pretest: 'eslint .',
+          test: 'nyc mocha src/*.test.js src/**/*test.js',
           postversion: 'git push --follow-tags',
+          eslint: 'eslint .',
+          mocha: 'mocha src/*.test.js src/**/*test.js',
+          nyc: 'nyc mocha src/*.test.js src/**/*test.js',
         },
       });
     });
