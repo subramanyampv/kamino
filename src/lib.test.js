@@ -11,9 +11,11 @@ describe('lib', () => {
   let fs = null;
   let logger = null;
   let path = null;
-  let process = null;
+  let oldArgV = null;
 
   beforeEach(() => {
+    oldArgV = process.argv;
+    process.argv = [];
     childProcess = {
       spawnSync: sinon.stub(),
     };
@@ -27,24 +29,25 @@ describe('lib', () => {
       resolve: (...args) => args.join('/'),
     };
 
-    process = {
-      argv: [],
-    };
+    childProcess['@global'] = true;
+    fs['@global'] = true;
+    path['@global'] = true;
 
     // eslint-disable-next-line global-require
     logger = sinon.stub(require('@ngeor/js-cli-logger'));
+    logger['@global'] = true;
 
     dirloop = proxyquire('./lib', {
       child_process: childProcess,
       fs,
       path,
-      process,
       '@ngeor/js-cli-logger': logger,
     });
   });
 
   afterEach(() => {
     sinon.restore();
+    process.argv = oldArgV;
   });
 
   describe('when the command to run is missing', () => {
@@ -52,7 +55,7 @@ describe('lib', () => {
       process.argv = ['node', 'index.js'];
     });
 
-    it('should print the folders', () => {
+    it('should print the directories', () => {
       // arrange
       fs.readdirSync.returns([{
         name: 'tmp',
@@ -155,10 +158,16 @@ describe('lib', () => {
 
   describe('--dir-prefix', () => {
     beforeEach(() => {
-      fs.readdirSync.returns([{
-        name: 'tmp',
-        isDirectory: () => true,
-      }]);
+      fs.readdirSync.returns([
+        {
+          name: 'tmp',
+          isDirectory: () => true,
+        },
+        {
+          name: 'temp',
+          isDirectory: () => true,
+        },
+      ]);
       childProcess.spawnSync.returns({ status: 0 });
     });
 
@@ -176,7 +185,7 @@ describe('lib', () => {
       });
     });
 
-    describe('when the directory prefix matches', () => {
+    describe('when the directory prefix matches one directory', () => {
       beforeEach(() => {
         process.argv = ['node', 'index.js', '--dir-prefix', 'tm', 'echo'];
       });
@@ -187,6 +196,53 @@ describe('lib', () => {
 
         // assert
         expect(childProcess.spawnSync).calledOnce;
+      });
+    });
+
+    describe('when the directory prefix matches two directories', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dir-prefix', 't', 'echo'];
+      });
+
+      it('should run the command twice', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).calledTwice;
+        expect(childProcess.spawnSync).calledWith('echo', [], { cwd: './tmp', stdio: 'inherit' });
+        expect(childProcess.spawnSync).calledWith('echo', [], { cwd: './temp', stdio: 'inherit' });
+      });
+    });
+
+    describe('when given multiple prefixes', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dir-prefix', 'temp,tmp', 'echo'];
+      });
+
+      it('should run the command twice', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).calledTwice;
+        expect(childProcess.spawnSync).calledWith('echo', [], { cwd: './tmp', stdio: 'inherit' });
+        expect(childProcess.spawnSync).calledWith('echo', [], { cwd: './temp', stdio: 'inherit' });
+      });
+    });
+
+    describe('when using also a has-file filter', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dir-prefix', 'temp,tmp', '--has-file', 'pom.xml', 'echo'];
+        fs.existsSync.withArgs('./tmp/pom.xml').returns(true);
+      });
+
+      it('should match only one directory', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).calledOnceWith('echo', [], { cwd: './tmp', stdio: 'inherit' });
       });
     });
   });

@@ -40,8 +40,8 @@ $ dirloop git reset --hard origin/master
 
 - `dir` The parent directory. It contains the directories in which the command
   will be run. Defaults to the current directory.
-- `dir-prefix` An optional prefix to select only some of the
-  sub-directories.
+- `dir-prefix` An optional set of prefixes, in order to select only some of the
+  sub-directories (e.g. `--dir-prefix app`, `--dir-prefix src,test`).
 - `has-file` Only match directories that contain this filename (e.g. `--has-file package.json`).
 - `dry-run` Don't actually run the command, just see what would happen.
 - `help` Show help about the command
