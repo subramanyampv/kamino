@@ -4,9 +4,12 @@
   "description": "A Yeoman generator for nodeJS libraries",
   "main": "generators/app/index.js",
   "scripts": {
-    "test": "eslint .",
+    "pretest": "eslint .",
+    "test": "nyc mocha generators/app/*.test.js",
+    "postversion": "git push --follow-tags",
     "eslint": "eslint .",
-    "postversion": "git push --follow-tags"
+    "mocha": "mocha generators/app/*.test.js",
+    "nyc": "nyc mocha generators/app/*.test.js"
   },
   "keywords": [
     "yeoman-generator"
@@ -27,15 +30,32 @@
   "publishConfig": {
     "access": "public"
   },
-  "eslintIgnore": [
-    "templates/"
-  ],
   "dependencies": {
     "yeoman-generator": "^3.2.0"
   },
   "devDependencies": {
     "eslint": "^5.10.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "yeoman-assert": "^3.1.1",
+    "yeoman-test": "^1.9.1"
+  },
+  "eslintIgnore": [
+    "templates/"
+  ],
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 99,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99,
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ]
   }
 }
