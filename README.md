@@ -42,6 +42,7 @@ $ dirloop git reset --hard origin/master
   will be run. Defaults to the current directory.
 - `dir-prefix` An optional prefix to select only some of the
   sub-directories.
+- `has-file` Only match directories that contain this filename (e.g. `--has-file package.json`).
 - `dry-run` Don't actually run the command, just see what would happen.
 - `help` Show help about the command
 

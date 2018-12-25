@@ -24,6 +24,10 @@ function isMatchingDir(file) {
     return file.name.startsWith(args.dirPrefix);
   }
 
+  if (args.hasFile) {
+    return fs.existsSync(path.resolve(args.dir, file.name, args.hasFile));
+  }
+
   return true;
 }
 
@@ -36,25 +40,13 @@ function parseArguments() {
   commander
     .name(name)
     .version(version)
-    .option('--dir <dir>', 'The root directory containing other directories')
-    .option(
-      '--dir-prefix <prefix>',
-      'An optional prefix to select only some directories',
-    )
+    .option('--dir <dir>', 'The root directory containing other directories', '.')
+    .option('--dir-prefix <prefix>', 'An optional prefix to select only some directories')
+    .option('--has-file <file>', 'Only match directories containing the given filename')
     .option('--dry-run', "Don't actually run any command")
     .option('-- <command> [options...]', 'The command to run')
     .option('-v, --verbose', 'Verbose output')
     .parse(process.argv);
-
-  const defaults = {
-    dir: '.',
-    dirPrefix: '',
-    dryRun: false,
-  };
-
-  Object.keys(defaults).forEach((key) => {
-    commander[key] = commander[key] || defaults[key];
-  });
 
   return commander;
 }

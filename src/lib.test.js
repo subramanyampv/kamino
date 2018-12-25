@@ -19,6 +19,7 @@ describe('lib', () => {
     };
 
     fs = {
+      existsSync: sinon.stub(),
       readdirSync: sinon.stub(),
     };
 
@@ -152,28 +153,8 @@ describe('lib', () => {
     });
   });
 
-  describe('when the directory prefix does not match', () => {
+  describe('--dir-prefix', () => {
     beforeEach(() => {
-      process.argv = ['node', 'index.js', '--dir-prefix', 'tmz', 'echo'];
-      fs.readdirSync.returns([{
-        name: 'tmp',
-        isDirectory: () => true,
-      }]);
-    });
-
-    it('should not run the command', () => {
-      // act
-      dirloop.main();
-
-      // assert
-      expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
-      expect(childProcess.spawnSync).not.called;
-    });
-  });
-
-  describe('when the directory prefix matches', () => {
-    beforeEach(() => {
-      process.argv = ['node', 'index.js', '--dir-prefix', 'tm', 'echo'];
       fs.readdirSync.returns([{
         name: 'tmp',
         isDirectory: () => true,
@@ -181,33 +162,54 @@ describe('lib', () => {
       childProcess.spawnSync.returns({ status: 0 });
     });
 
-    it('should run the command', () => {
-      // act
-      dirloop.main();
+    describe('when the directory prefix does not match', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dir-prefix', 'tmz', 'echo'];
+      });
 
-      // assert
-      expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
-      expect(childProcess.spawnSync).calledOnce;
+      it('should not run the command', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).not.called;
+      });
+    });
+
+    describe('when the directory prefix matches', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dir-prefix', 'tm', 'echo'];
+      });
+
+      it('should run the command', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).calledOnce;
+      });
     });
   });
 
-  describe('when dry run mode is on', () => {
-    beforeEach(() => {
-      process.argv = ['node', 'index.js', '--dry-run', 'echo'];
-      fs.readdirSync.returns([{
-        name: 'tmp',
-        isDirectory: () => true,
-      }]);
-    });
+  describe('--dry-run', () => {
+    describe('when dry run mode is on', () => {
+      beforeEach(() => {
+        process.argv = ['node', 'index.js', '--dry-run', 'echo'];
+        fs.readdirSync.returns([{
+          name: 'tmp',
+          isDirectory: () => true,
+        }]);
+      });
 
-    it('should not run command', () => {
-      // act
-      dirloop.main();
+      it('should not run command', () => {
+        // act
+        dirloop.main();
 
-      // assert
-      expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
-      expect(childProcess.spawnSync).not.called;
-      expect(logger.log).calledOnceWithExactly('Would have run command echo in ./tmp');
+        // assert
+        expect(fs.readdirSync).calledOnceWithExactly('.', { withFileTypes: true });
+        expect(childProcess.spawnSync).not.called;
+        expect(logger.log).calledOnceWithExactly('Would have run command echo in ./tmp');
+      });
     });
   });
 
@@ -232,6 +234,50 @@ describe('lib', () => {
 
       // assert
       expect(logger.error).calledOnceWith('Command returned exit code 1');
+    });
+  });
+
+  describe('--has-file', () => {
+    beforeEach(() => {
+      process.argv = ['node', 'index.js', '--has-file', 'pom.xml', 'echo'];
+      fs.readdirSync.returns([{
+        name: 'tmp',
+        isDirectory: () => true,
+      }]);
+
+      childProcess.spawnSync.returns({
+        status: 0,
+      });
+    });
+
+    describe('when the file exists', () => {
+      beforeEach(() => {
+        fs.existsSync.returns(true);
+      });
+
+      it('should run the command', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).calledOnce;
+        expect(fs.existsSync).calledOnceWithExactly('./tmp/pom.xml');
+      });
+    });
+
+    describe('when the file does not exist', () => {
+      beforeEach(() => {
+        fs.existsSync.returns(false);
+      });
+
+      it('should not run the command', () => {
+        // act
+        dirloop.main();
+
+        // assert
+        expect(childProcess.spawnSync).not.called;
+        expect(fs.existsSync).calledOnceWithExactly('./tmp/pom.xml');
+      });
     });
   });
 });
