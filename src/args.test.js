@@ -190,4 +190,28 @@ describe('args', () => {
       expect(result.args).to.eql(['echo', '--hello']);
     });
   });
+
+  describe('--eval-js', () => {
+    it('should default to empty', () => {
+      // arrange
+      process.argv = ['node', 'index.js'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.evalJs).to.eql('');
+    });
+
+    it('should read from parameter', () => {
+      // arrange
+      process.argv = ['node', 'index.js', '--eval-js', 'var x = 42;'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.evalJs).to.eql('var x = 42;');
+    });
+  });
 });
