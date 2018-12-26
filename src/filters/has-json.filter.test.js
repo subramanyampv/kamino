@@ -23,6 +23,10 @@ describe('has-json.filter', () => {
     expect(act(null)).to.be.true;
   });
 
+  it('should not match when hasJson is empty', () => {
+    expect(act(';')).to.be.false;
+  });
+
   it('should not match when the directory does not have the requested file', () => {
     fs.existsSync.withArgs('/c/tmp/package.json').returns(false);
     expect(act('package.json')).to.be.false;
@@ -41,6 +45,14 @@ describe('has-json.filter', () => {
     it('should not match when the file is not json', () => {
       fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns('<pom></pom>');
       expect(act('package.json')).to.be.false;
+    });
+
+    it('should match when no query is provided', () => {
+      fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns(JSON.stringify({
+        test: 1,
+      }));
+
+      expect(act('package.json;')).to.be.true;
     });
 
     it('should not match when the requested property does not exist', () => {
@@ -90,7 +102,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;nyc.reporter contains text')).to.be.false;
+        expect(act('package.json;nyc.reporter.indexOf(\'text\') >= 0')).to.be.false;
       });
 
       it('should match on array element', () => {
@@ -103,7 +115,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;nyc.reporter contains text-summary')).to.be.true;
+        expect(act('package.json;nyc.reporter.indexOf(\'text-summary\') >= 0')).to.be.true;
       });
     });
 
@@ -115,7 +127,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;devDependencies.eslint == ^5.11.0')).to.be.true;
+        expect(act('package.json;devDependencies.eslint === \'^5.11.0\'')).to.be.true;
       });
 
       it('should not match on string property', () => {
@@ -125,7 +137,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;devDependencies.eslint == ^5.12.0')).to.be.false;
+        expect(act('package.json;devDependencies.eslint === \'^5.12.0\'')).to.be.false;
       });
     });
 
@@ -137,7 +149,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;devDependencies.eslint != ^5.11.0')).to.be.false;
+        expect(act('package.json;devDependencies.eslint !== \'^5.11.0\'')).to.be.false;
       });
 
       it('should match on string property', () => {
@@ -147,7 +159,7 @@ describe('has-json.filter', () => {
           },
         }));
 
-        expect(act('package.json;devDependencies.eslint != ^5.12.0')).to.be.true;
+        expect(act('package.json;devDependencies.eslint !== \'^5.12.0\'')).to.be.true;
       });
     });
   });

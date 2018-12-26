@@ -73,19 +73,19 @@ The property `devDependencies.eslint` must exist:
 The property `devDependencies.eslint` must be equal to `^5.10.0`:
 
 ```
---has-json package.json;devDependencies.eslint == ^5.10.0
+--has-json package.json;devDependencies.eslint === '^5.10.0'
 ```
 
 The property `devDependencies.eslint` must exist and not be equal to `^5.10.0`:
 
 ```
---has-json package.json;devDependencies.eslint != ^5.10.0
+--has-json package.json;devDependencies.eslint !== '^5.10.0'
 ```
 
 The property `nyc.reporter` must be an array containing `text-summary`:
 
 ```
---has-json package.json;nyc.reporter contains text-summary
+--has-json package.json;nyc.reporter.indexOf('text-summary') >= 0
 ```
 
 #### `--eval-js <nodejs-script>`
