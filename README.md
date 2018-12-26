@@ -112,6 +112,18 @@ Don't actually run the command, just see what would happen.
 
 Do not run the command inside a shell process.
 
-##  Without command
+#### `--set-json <file;expression>`
+
+Modify a JSON file.
+
+**Examples**
+
+To set the version of ESLint:
+
+```
+--set-json "package.json;j.devDependencies.eslint='^5.11.10'"
+```
+
+####  Without command
 
 If you don't specify the command to run, dirloop will print the matching directories (absolute paths).

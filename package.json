@@ -45,7 +45,8 @@
   },
   "dependencies": {
     "@ngeor/js-cli-logger": "^0.2.0",
-    "commander": "^2.19.0"
+    "commander": "^2.19.0",
+    "lodash": "^4.17.11"
   },
   "bin": "src/index.js",
   "devDependencies": {

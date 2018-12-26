@@ -238,4 +238,28 @@ describe('args', () => {
       expect(result.hasJson).to.eql('package.json;devDependencies.eslint');
     });
   });
+
+  describe('--set-json', () => {
+    it('should default to empty', () => {
+      // arrange
+      process.argv = ['node', 'index.js'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.setJson).to.eql('');
+    });
+
+    it('should read from parameter', () => {
+      // arrange
+      process.argv = ['node', 'index.js', '--set-json', 'package.json;devDependencies.eslint'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.setJson).to.eql('package.json;devDependencies.eslint');
+    });
+  });
 });

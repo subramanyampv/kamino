@@ -1,47 +1,22 @@
-const { spawnSync } = require('child_process');
 const path = require('path');
 const logger = require('@ngeor/js-cli-logger');
+const runAction = require('./actions/run.action');
+const setJsonAction = require('./actions/set-json.action');
 
 function runCommand(file, cliArgs) {
   const {
     dir,
-    dryRun,
     args,
-    shell,
+    setJson,
   } = cliArgs;
 
-  const absDir = path.resolve(dir, file.name);
-  const noCommandSpecified = !args || !args.length;
-  if (noCommandSpecified) {
+  if (setJson) {
+    setJsonAction(file, cliArgs);
+  } else if (args && args.length) {
+    runAction(file, cliArgs);
+  } else {
+    const absDir = path.resolve(dir, file.name);
     logger.log(absDir);
-    return;
-  }
-
-  if (dryRun) {
-    logger.log(`Would have run command ${args.join(' ')} in ${absDir}`);
-    return;
-  }
-
-  logger.verbose(`Running command in ${absDir}`);
-
-  const result = spawnSync(
-    args[0],
-    args.slice(1),
-    {
-      cwd: absDir,
-      stdio: 'inherit',
-      shell,
-    },
-  );
-
-  const { error, status } = result;
-
-  if (error) {
-    logger.error(`Command failed: ${error}`);
-  }
-
-  if (status) {
-    logger.error(`Command returned exit code ${status}`);
   }
 }
 
