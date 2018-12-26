@@ -17,6 +17,7 @@ function parseArguments() {
     .option('--dir <dir>', 'The root directory containing other directories', '.')
     .option('--dir-prefix <prefix>', 'An optional set of prefixes to select only some directories', list, [])
     .option('--has-file <file>', 'Only match directories containing the given filename')
+    .option('--has-json <file,jsonpath>', 'Only matches directories containing the given JSON file with the given JSON content', '')
     .option('--eval-js <script>', 'A nodeJS script to determine if the directory should be included', '')
     .option('--dry-run', "Don't actually run any command")
     .option('-v, --verbose', 'Verbose output')

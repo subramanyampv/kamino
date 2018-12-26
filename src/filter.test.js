@@ -1,193 +1,104 @@
-const chai = require('chai');
+const proxyquire = require('proxyquire').noCallThru();
 const sinon = require('sinon');
-const childProcess = require('child_process');
-const path = require('path');
-const fs = require('fs');
-const filter = require('./filter');
+const chai = require('chai');
 
 const { expect } = chai;
 chai.use(require('sinon-chai'));
 
+const filters = [
+  'dir-prefix',
+  'has-file',
+  'has-json',
+  'eval-js',
+];
+
+const filterIncludes = filters.map(f => `./filters/${f}.filter`);
+
 describe('filter', () => {
   const file = {};
   const cliArgs = {};
+  let filter;
+  let stubs;
+
+  function makeStubFilter(name) {
+    const result = {};
+    result[name] = sinon.stub();
+    return result;
+  }
 
   beforeEach(() => {
     file.name = 'tmp';
     file.isDirectory = sinon.stub();
     cliArgs.dir = '/c';
 
-    sinon.stub(path, 'resolve');
-    sinon.stub(fs, 'existsSync');
-    sinon.stub(childProcess, 'spawnSync');
+    stubs = Object.assign(
+      {},
+      ...filterIncludes.map(f => makeStubFilter(f)),
+    );
+
+    filter = proxyquire('./filter', stubs);
   });
 
   afterEach(() => sinon.restore());
 
-  function directory(fn) {
-    describe('when it is a directory', () => {
-      beforeEach(() => {
-        file.isDirectory.returns(true);
-      });
-
-      fn(true);
-    });
-
-    describe('when it is not a directory', () => {
-      beforeEach(() => {
-        file.isDirectory.returns(false);
-      });
-
-      fn(false);
-    });
-  }
-
-  function dirPrefix(prevValue, fn) {
-    describe('when null dir prefix is provided', () => {
-      beforeEach(() => {
-        cliArgs.dirPrefix = null;
-      });
-
-      fn(prevValue);
-    });
-
-    describe('when no dir prefix is provided', () => {
-      beforeEach(() => {
-        cliArgs.dirPrefix = [];
-      });
-
-      fn(prevValue);
-    });
-
-    describe('when provided dir prefix matches', () => {
-      beforeEach(() => {
-        cliArgs.dirPrefix = ['t'];
-      });
-
-      fn(prevValue);
-    });
-
-
-    describe('when provided dir prefix does not match', () => {
-      beforeEach(() => {
-        cliArgs.dirPrefix = ['m'];
-      });
-
-      fn(false);
-    });
-  }
-
-  function hasFile(prevValue, fn) {
-    describe('when --has-file is not provided', () => {
-      beforeEach(() => {
-        cliArgs.hasFile = null;
-      });
-
-      fn(prevValue);
-    });
-
-    describe('when requested file exists', () => {
-      beforeEach(() => {
-        cliArgs.hasFile = 'pom.xml';
-        path.resolve.withArgs('/c', 'tmp', 'pom.xml').returns('/c/tmp/pom.xml');
-        fs.existsSync.withArgs('/c/tmp/pom.xml').returns(true);
-      });
-
-      fn(prevValue);
-    });
-
-    describe('when requested file does not exist', () => {
-      beforeEach(() => {
-        cliArgs.hasFile = 'pom.xml';
-        path.resolve.withArgs('/c', 'tmp', 'pom.xml').returns('/c/tmp/pom.xml');
-        fs.existsSync.withArgs('/c/tmp/pom.xml').returns(false);
-      });
-
-      fn(false);
-    });
-  }
-
-  function evalGroup(prevValue, fn) {
+  describe('when it is not a directory', () => {
     beforeEach(() => {
-      path.resolve.withArgs('/c', 'tmp').returns('/c/tmp');
+      file.isDirectory.returns(false);
     });
 
-    describe('when no eval script is provided', () => {
+    it('should not match', () => {
+      expect(filter.isMatchingDir(file, cliArgs)).to.be.false;
+    });
+
+    filterIncludes.forEach((f) => {
+      it(`should not call filter ${f}`, () => {
+        // act
+        filter.isMatchingDir(file, cliArgs);
+
+        // assert
+        expect(stubs[f]).not.called;
+      });
+    });
+  });
+
+  describe('when it is a directory', () => {
+    beforeEach(() => {
+      file.isDirectory.returns(true);
+    });
+
+    describe('when all filters return false', () => {
       beforeEach(() => {
-        cliArgs.evalJs = '';
+        // eslint-disable-next-line no-unused-vars
+        Object.entries(stubs).forEach(([_, stub]) => stub.withArgs(file, cliArgs).returns(false));
       });
 
-      fn(prevValue);
-    });
-
-    describe('when eval script is provided and returns successfully', () => {
-      beforeEach(() => {
-        cliArgs.evalJs = 'var x = 42;';
-        childProcess.spawnSync.withArgs('node', ['-e', 'var x = 42;'], { cwd: '/c/tmp', stdio: 'ignore' }).returns({
-          error: null,
-          status: 0,
-        });
-      });
-
-      fn(prevValue);
-    });
-
-    describe('when eval script is provided and returns error', () => {
-      beforeEach(() => {
-        cliArgs.evalJs = 'var x = 42;';
-        childProcess.spawnSync.withArgs('node', ['-e', 'var x = 42;'], { cwd: '/c/tmp', stdio: 'ignore' }).returns({
-          error: 'oops',
-        });
-      });
-
-      fn(false);
-    });
-
-    describe('when eval script is provided and returns non-zero exit code', () => {
-      beforeEach(() => {
-        cliArgs.evalJs = 'var x = 42;';
-        childProcess.spawnSync.withArgs('node', ['-e', 'var x = 42;'], { cwd: '/c/tmp', stdio: 'ignore' }).returns({
-          status: 1,
-        });
-      });
-
-      fn(false);
-    });
-  }
-
-  function act(expectedResult) {
-    if (expectedResult) {
-      it('should match', () => {
-        expect(filter.isMatchingDir(file, cliArgs)).to.be.true;
-      });
-    } else {
       it('should not match', () => {
         expect(filter.isMatchingDir(file, cliArgs)).to.be.false;
       });
-    }
-  }
+    });
 
-  const allFunctions = [
-    directory,
-    dirPrefix,
-    hasFile,
-    evalGroup,
-    act,
-  ];
+    describe('when all filters return true', () => {
+      beforeEach(() => {
+        // eslint-disable-next-line no-unused-vars
+        Object.entries(stubs).forEach(([_, stub]) => stub.withArgs(file, cliArgs).returns(true));
+      });
 
-  function callFunctions(prevValue, functions) {
-    const [first, ...rest] = functions;
-    if (rest.length > 0) {
-      first(prevValue, resultOfFirst => callFunctions(resultOfFirst, rest));
-    } else {
-      first(prevValue);
-    }
-  }
+      it('should match', () => {
+        expect(filter.isMatchingDir(file, cliArgs)).to.be.true;
+      });
+    });
 
-  function callFirstFunction(functions) {
-    const [first, ...rest] = functions;
-    first(resultOfFirst => callFunctions(resultOfFirst, rest));
-  }
+    filterIncludes.forEach((f) => {
+      describe(`when all filters return true except ${f}`, () => {
+        beforeEach(() => {
+          Object.entries(stubs)
+            .forEach(([key, stub]) => stub.withArgs(file, cliArgs).returns(key !== f));
+        });
 
-  callFirstFunction(allFunctions);
+        it('should not match', () => {
+          expect(filter.isMatchingDir(file, cliArgs)).to.be.false;
+        });
+      });
+    });
+  });
 });

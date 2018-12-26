@@ -58,6 +58,24 @@ sub-directories (e.g. `--dir-prefix app`, `--dir-prefix src,test`).
 
 Only match directories that contain this filename (e.g. `--has-file package.json`).
 
+#### `--has-json <filename;query>`
+
+Only match directories that contain this filename. The file must be JSON and it needs to meet the given query.
+
+Examples:
+
+```
+--has-json package.json;devDependencies.eslint == ^5.10.0
+```
+
+```
+--has-json package.json;devDependencies.eslint != ^5.10.0
+```
+
+```
+--has-json package.json;nyc.reporter contains text-summary
+```
+
 #### `--eval-js <nodejs-script>`
 
 Only match directories in which the given nodeJS script evaluates
