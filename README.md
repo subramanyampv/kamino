@@ -62,15 +62,27 @@ Only match directories that contain this filename (e.g. `--has-file package.json
 
 Only match directories that contain this filename. The file must be JSON and it needs to meet the given query.
 
-Examples:
+**Examples**
+
+The property `devDependencies.eslint` must exist:
+
+```
+--has-json package.json;devDependencies.eslint
+```
+
+The property `devDependencies.eslint` must be equal to `^5.10.0`:
 
 ```
 --has-json package.json;devDependencies.eslint == ^5.10.0
 ```
 
+The property `devDependencies.eslint` must exist and not be equal to `^5.10.0`:
+
 ```
 --has-json package.json;devDependencies.eslint != ^5.10.0
 ```
+
+The property `nyc.reporter` must be an array containing `text-summary`:
 
 ```
 --has-json package.json;nyc.reporter contains text-summary
