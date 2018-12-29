@@ -11,6 +11,7 @@ describe('filename_convert', () => {
     ['app/index.js', 'app/index.js'],
     ['app/_gitignore', 'app/.gitignore'],
     ['MyLib.sln', 'SomeLib.sln'],
+    ['abc_def.js', 'abc_def.js'],
   ];
 
   const options = {
