@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const { EOL } = require('os');
 const Generator = require('yeoman-generator');
 const files = require('./files');
@@ -38,6 +39,10 @@ class NpmGenerator extends Generator {
       context,
     ));
 
+    this._addBinScriptToPackageJson();
+  }
+
+  _addBinScriptToPackageJson() {
     if (!this.answers.bin) {
       return;
     }
