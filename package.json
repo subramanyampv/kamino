@@ -41,8 +41,8 @@
     ],
     "reporter": [
       "lcov",
-      "text-summary",
-      "html"
+      "html",
+      "text"
     ],
     "all": true
   },
@@ -54,7 +54,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "coveralls": "^3.0.2",
-    "eslint": "^5.11.0",
+    "eslint": "^5.11.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "jsdoc": "^3.5.5",
