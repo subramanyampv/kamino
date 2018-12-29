@@ -5,8 +5,9 @@
   "main": "app/index.js",
   "repository": "ngeor/generator-csharp-cli-app",
   "scripts": {
-    "test": "gulp",
-    "coverage": "nyc mocha",
+    "pretest": "eslint .",
+    "test": "nyc mocha",
+    "postversion": "git push --follow-tags",
     "coveralls": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
   },
   "keywords": [
@@ -16,21 +17,19 @@
   "license": "MIT",
   "dependencies": {
     "ejs": "^2.6.1",
-    "uuid": "^3.2.1",
-    "yeoman-generator": "^2.0.5"
+    "uuid": "^3.3.2",
+    "yeoman-generator": "^3.2.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "coveralls": "^3.0.1",
-    "eslint": "^5.0.0",
-    "eslint-config-ngeor": "^0.2.1",
-    "gulp": "^3.9.1",
-    "gulp-eslint": "^4.0.2",
-    "gulp-mocha": "^6.0.0",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.11.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "nyc": "^12.0.2",
+    "nyc": "^13.1.0",
     "yeoman-assert": "^3.1.1",
-    "yeoman-test": "^1.7.2"
+    "yeoman-test": "^1.9.1"
   },
   "nyc": {
     "check-coverage": true,

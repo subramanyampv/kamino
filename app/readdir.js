@@ -7,8 +7,8 @@ const path = require('path');
  * @returns {boolean} true if the path is a directory, false otherwise.
  */
 function isDirectory(dirname) {
-    const s = fs.statSync(dirname);
-    return s.isDirectory();
+  const s = fs.statSync(dirname);
+  return s.isDirectory();
 }
 
 /**
@@ -17,17 +17,17 @@ function isDirectory(dirname) {
  * @returns {string[]} A collection of paths.
  */
 function readdirSyncRecursive(dirname) {
-    const contents = fs.readdirSync(dirname);
-    let result = [];
-    contents.map(f => path.join(dirname, f)).forEach(f => {
-        if (isDirectory(f)) {
-            result = result.concat(readdirSyncRecursive(f));
-        } else {
-            result.push(f);
-        }
-    });
+  const contents = fs.readdirSync(dirname);
+  let result = [];
+  contents.map(f => path.join(dirname, f)).forEach((f) => {
+    if (isDirectory(f)) {
+      result = result.concat(readdirSyncRecursive(f));
+    } else {
+      result.push(f);
+    }
+  });
 
-    return result;
+  return result;
 }
 
 module.exports = readdirSyncRecursive;
