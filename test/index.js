@@ -95,11 +95,11 @@ describe('app', () => {
      */
     class YearHandler {
       /**
-             * Checks if the file might contain the present year.
-             * @param {string} filename - The filename to check.
-             * @returns {boolean} A value indicating whether the file is
-             * expected to contain the present year.
-             */
+       * Checks if the file might contain the present year.
+       * @param {string} filename - The filename to check.
+       * @returns {boolean} A value indicating whether the file is
+       * expected to contain the present year.
+       */
       shouldHandle(filename) {
         const ext = path.extname(filename);
         return ext === '.csproj';
@@ -131,7 +131,7 @@ describe('app', () => {
       ];
       expectedFiles.forEach((fixtureFile) => {
         const sourceFile = fixtureFile;
-        const destFile = filenameConvert(fixtureFile);
+        const destFile = filenameConvert(fixtureFile, { name: 'SomeLib', templateName: 'MyLib' });
         it(`should map ${sourceFile} to ${destFile}`, () => {
           let actualData = fs.readFileSync(destFile, 'utf8');
           const expectedFile = path.join(expectedDataDirectory, sourceFile);
