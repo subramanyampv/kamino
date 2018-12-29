@@ -37,15 +37,15 @@ describe('app', () => {
     });
 
     /**
-         * Removes GUIDs from files.
-         */
+     * Removes GUIDs from files.
+     */
     class GuidHandler {
       /**
-             * Checks if the file might contain GUIDs.
-             * @param {string} filename - The filename to check.
-             * @returns {boolean} A value indicating whether the file is
-             * expected to contain GUIDs.
-             */
+       * Checks if the file might contain GUIDs.
+       * @param {string} filename - The filename to check.
+       * @returns {boolean} A value indicating whether the file is
+       * expected to contain GUIDs.
+       */
       shouldHandle(filename) {
         const ext = path.extname(filename);
         return ext === '.sln';
@@ -64,15 +64,15 @@ describe('app', () => {
     }
 
     /**
-         * Converts dates in files.
-         */
+     * Converts dates in files.
+     */
     class DateHandler {
       /**
-             * Checks if the file might contain the present date.
-             * @param {string} filename - The filename to check.
-             * @returns {boolean} A value indicating whether the file is
-             * expected to contain the present date.
-             */
+       * Checks if the file might contain the present date.
+       * @param {string} filename - The filename to check.
+       * @returns {boolean} A value indicating whether the file is
+       * expected to contain the present date.
+       */
       shouldHandle(filename) {
         const basename = path.basename(filename);
         return basename === 'CHANGELOG.md';
@@ -91,8 +91,8 @@ describe('app', () => {
     }
 
     /**
-         * Converts years in files.
-         */
+     * Converts years in files.
+     */
     class YearHandler {
       /**
              * Checks if the file might contain the present year.
@@ -118,8 +118,8 @@ describe('app', () => {
     }
 
     /**
-         * Creates a unit test for every file.
-         */
+     * Creates a unit test for every file.
+     */
     function templateTests() {
       const expectedDataDirectory = path.join(__dirname, 'data');
       const expectedFiles = readdirSyncRecursive(expectedDataDirectory)
