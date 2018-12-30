@@ -1,29 +1,25 @@
 # git-analyze
 Analyze git repositories and gather statistical information about the code
 
+[![Build Status](https://travis-ci.org/ngeor/git-analyze.svg?branch=master)](https://travis-ci.org/ngeor/git-analyze)
+
 ## Usage
 
 ```
-git-analyze.sh COMMAND OPTIONS
+python git-analyze.py --since SINCE --metric {commits,files}
 ```
 
-COMMAND is one of:
+### Parameters
 
-- commits: list number of commits per month
-- merges: list number of merge commits per month (merged pull requests)
-- files: list number of files and total LOC per month
-
-OPTIONS are:
-
-- --work-tree=path
-- --git-dir=path
+- `--since` is mandatory. It accepts the ISO formatted date since when analysis will start (e.g. 2017-01-01)
+- `--metric` determines what kind of report will be produced.
 
 ## Example
 
-To get a CSV report listing merges per month you can run:
+To get a CSV report listing commits per month you can run:
 
 ```
-git-analyze.sh merges --work-tree=../my-project/ --git-dir=../my-project/.git/
+python git-analyze.py --since 2016-01-01 --metric commits
 ```
 
 Which will print a report like this one:
