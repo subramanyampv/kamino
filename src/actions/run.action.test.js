@@ -153,4 +153,31 @@ describe('run', () => {
       expect(logger.log).calledOnceWith('tmp,13');
     });
   });
+
+  describe('when in csv mode with line count', () => {
+    beforeEach(() => {
+      cliArgs.csv = true;
+      cliArgs.lineCount = true;
+      cliArgs.args = ['echo'];
+      cliArgs.shell = true;
+      childProcess.spawnSync.returns({
+        stdout: '13\n12\n\n',
+      });
+    });
+
+    it('should run the command', () => {
+      act();
+      expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
+      expect(childProcess.spawnSync).calledOnceWith(
+        'echo',
+        [],
+        {
+          cwd: '/c/tmp',
+          encoding: 'utf8',
+          shell: true,
+        },
+      );
+      expect(logger.log).calledOnceWith('tmp,2');
+    });
+  });
 });

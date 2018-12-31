@@ -23,7 +23,8 @@ function parseArguments() {
     .option('--csv', 'Capture output and print it together with the directory name in a single line')
     .option('--dry-run', "Don't actually run any command")
     .option('-v, --verbose', 'Verbose output')
-    .option('--no-shell', 'Do not run the command inside a shell')
+    .option('--shell', 'Run the command inside a shell')
+    .option('--line-count', 'Print the number of non-empty lines that the command produced (in combination with --csv)')
     .option('-- <command> [options...]', 'The command to run')
     .parse(process.argv);
 

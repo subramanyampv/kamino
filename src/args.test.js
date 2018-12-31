@@ -143,8 +143,8 @@ describe('args', () => {
     });
   });
 
-  describe('--no-shell', () => {
-    it('should default to true', () => {
+  describe('--shell', () => {
+    it('should default to falsy', () => {
       // arrange
       process.argv = ['node', 'index.js'];
 
@@ -152,18 +152,18 @@ describe('args', () => {
       const result = args.parseArguments();
 
       // assert
-      expect(result.shell).to.be.true;
+      expect(result.shell).to.be.undefined;
     });
 
     it('should read from parameter', () => {
       // arrange
-      process.argv = ['node', 'index.js', '--no-shell'];
+      process.argv = ['node', 'index.js', '--shell'];
 
       // act
       const result = args.parseArguments();
 
       // assert
-      expect(result.shell).to.be.false;
+      expect(result.shell).to.be.true;
     });
   });
 
@@ -284,6 +284,30 @@ describe('args', () => {
 
       // assert
       expect(result.csv).to.be.true;
+    });
+  });
+
+  describe('--line-count', () => {
+    it('should default to falsy', () => {
+      // arrange
+      process.argv = ['node', 'index.js'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.lineCount).to.be.undefined;
+    });
+
+    it('should read from parameter', () => {
+      // arrange
+      process.argv = ['node', 'index.js', '--line-count'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.lineCount).to.be.true;
     });
   });
 });

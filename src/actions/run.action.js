@@ -38,6 +38,7 @@ module.exports = function runAction(file, cliArgs) {
     dryRun,
     args,
     csv,
+    lineCount,
   } = cliArgs;
 
   const absDir = path.resolve(dir, file.name);
@@ -60,6 +61,10 @@ module.exports = function runAction(file, cliArgs) {
   }
 
   if (csv) {
-    logger.log(`${file.name},${stdout.trim()}`);
+    if (lineCount) {
+      logger.log(`${file.name},${stdout.split(/[\r\n]/).map(x => x.trim()).filter(x => !!x).length}`);
+    } else {
+      logger.log(`${file.name},${stdout.trim()}`);
+    }
   }
 };

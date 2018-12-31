@@ -108,9 +108,9 @@ will match directories that do not use the `chai` dev dependency.
 
 Don't actually run the command, just see what would happen.
 
-#### `--no-shell`
+#### `--shell`
 
-Do not run the command inside a shell process.
+Run the command inside a shell process.
 
 #### `--set-json <file;expression>`
 
@@ -136,7 +136,7 @@ the name of the directory in order to generate a CSV report.
 Print the number of commits on all repos since January 1st, 2018:
 
 ```
-dirloop --csv -- "git rev-list --since=2018-01-01 master | wc -l"
+dirloop --csv --line-count -- git rev-list --since=2018-01-01 master
 ```
 
 Will print a report like this:
@@ -145,6 +145,14 @@ Will print a report like this:
 clone-all,31
 dirloop,10
 ```
+
+### Output transformation parameters
+
+#### `--line-count`
+
+Instead of printing the output of the command, print the number of non-empty lines it produced.
+
+Works only when combined with `--csv`.
 
 ####  Without command
 
