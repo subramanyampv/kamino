@@ -262,4 +262,28 @@ describe('args', () => {
       expect(result.setJson).to.eql('package.json;devDependencies.eslint');
     });
   });
+
+  describe('--csv', () => {
+    it('should default to falsy', () => {
+      // arrange
+      process.argv = ['node', 'index.js'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.csv).to.be.undefined;
+    });
+
+    it('should read from parameter', () => {
+      // arrange
+      process.argv = ['node', 'index.js', '--csv'];
+
+      // act
+      const result = args.parseArguments();
+
+      // assert
+      expect(result.csv).to.be.true;
+    });
+  });
 });

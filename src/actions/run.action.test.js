@@ -10,10 +10,10 @@ describe('run', () => {
   let path = null;
   let logger = null;
   let run = null;
-  let args = null;
+  let cliArgs = null;
 
   function act(name = 'tmp') {
-    run({ name }, args);
+    run({ name }, cliArgs);
   }
 
   beforeEach(() => {
@@ -28,7 +28,7 @@ describe('run', () => {
     // eslint-disable-next-line global-require
     logger = sinon.stub(require('@ngeor/js-cli-logger'));
 
-    args = {
+    cliArgs = {
       dir: '/c',
     };
 
@@ -45,8 +45,8 @@ describe('run', () => {
 
   describe('when in dry run mode', () => {
     beforeEach(() => {
-      args.dryRun = true;
-      args.args = ['echo', '--hello'];
+      cliArgs.dryRun = true;
+      cliArgs.args = ['echo', '--hello'];
     });
 
     it('should log what would have happened', () => {
@@ -58,8 +58,8 @@ describe('run', () => {
 
   describe('when the command does not have extra arguments', () => {
     beforeEach(() => {
-      args.args = ['echo'];
-      args.shell = true;
+      cliArgs.args = ['echo'];
+      cliArgs.shell = true;
       childProcess.spawnSync.returns({});
     });
 
@@ -80,8 +80,8 @@ describe('run', () => {
 
   describe('when the command has extra arguments', () => {
     beforeEach(() => {
-      args.args = ['echo', 'hello'];
-      args.shell = false;
+      cliArgs.args = ['echo', 'hello'];
+      cliArgs.shell = false;
       childProcess.spawnSync.returns({});
     });
 
@@ -102,7 +102,7 @@ describe('run', () => {
 
   describe('when the command fails', () => {
     beforeEach(() => {
-      args.args = ['echo'];
+      cliArgs.args = ['echo'];
       childProcess.spawnSync.returns({
         error: 'ENOENT',
       });
@@ -116,7 +116,7 @@ describe('run', () => {
 
   describe('when the command errors', () => {
     beforeEach(() => {
-      args.args = ['echo'];
+      cliArgs.args = ['echo'];
       childProcess.spawnSync.returns({
         status: 1,
       });
@@ -125,6 +125,32 @@ describe('run', () => {
     it('should report an error', () => {
       act();
       expect(logger.error).calledOnceWith('Command returned exit code 1');
+    });
+  });
+
+  describe('when in csv mode', () => {
+    beforeEach(() => {
+      cliArgs.csv = true;
+      cliArgs.args = ['echo'];
+      cliArgs.shell = true;
+      childProcess.spawnSync.returns({
+        stdout: '13\n',
+      });
+    });
+
+    it('should run the command', () => {
+      act();
+      expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
+      expect(childProcess.spawnSync).calledOnceWith(
+        'echo',
+        [],
+        {
+          cwd: '/c/tmp',
+          encoding: 'utf8',
+          shell: true,
+        },
+      );
+      expect(logger.log).calledOnceWith('tmp,13');
     });
   });
 });

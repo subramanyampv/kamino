@@ -124,6 +124,28 @@ To set the version of ESLint:
 --set-json "package.json;j.devDependencies.eslint='^5.11.10'"
 ```
 
+#### `--csv`
+
+Captures the output of the commands and prints them together with the name of the directory.
+
+This is useful when the command is going to generate a single line of text that needs to be combined with
+the name of the directory in order to generate a CSV report.
+
+**Example**
+
+Print the number of commits on all repos since January 1st, 2018:
+
+```
+dirloop --csv -- "git rev-list --since=2018-01-01 master | wc -l"
+```
+
+Will print a report like this:
+
+```
+clone-all,31
+dirloop,10
+```
+
 ####  Without command
 
 If you don't specify the command to run, dirloop will print the matching directories (absolute paths).

@@ -20,6 +20,7 @@ function parseArguments() {
     .option('--has-json <file,query>', 'Only matches directories containing the given JSON file with the specified JSON content', '')
     .option('--eval-js <script>', 'A nodeJS script to determine if the directory should be included', '')
     .option('--set-json <file,query>', 'Update the specified JSON file', '')
+    .option('--csv', 'Capture output and print it together with the directory name in a single line')
     .option('--dry-run', "Don't actually run any command")
     .option('-v, --verbose', 'Verbose output')
     .option('--no-shell', 'Do not run the command inside a shell')
