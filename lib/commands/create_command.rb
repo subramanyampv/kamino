@@ -6,7 +6,7 @@ module Commands
   # Creates a new repository.
   class CreateCommand
     def initialize(options)
-      @description = options[:description]
+      @options = options
       @provider = RepoProviders.create(options)
     end
 
@@ -14,7 +14,7 @@ module Commands
       if @provider.repo_exist?
         puts 'Repo already exists'
       else
-        @provider.create_repo(description: @description)
+        @provider.create_repo(@options)
       end
     end
   end

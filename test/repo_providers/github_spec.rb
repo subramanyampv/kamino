@@ -55,6 +55,33 @@ RSpec.describe RepoProviders::GitHub do
       # assert
       expect(repo).to eq(test: 42)
     end
+
+    it('should create a new python repo') do
+      # arrange
+      url = 'https://api.github.com/user/repos'
+
+      expected_body = {
+        name: 'instarepo',
+        description: 'My brand new repo',
+        auto_init: true,
+        gitignore_template: 'Python',
+        license_template: 'mit'
+      }
+
+      expected_basic_auth = BasicAuth.new('user', 'password')
+      allow(@rest_client).to receive(:post)
+        .with(url, expected_body, basic_auth: expected_basic_auth)
+        .and_return(test: 42)
+
+      # act
+      repo = @github.create_repo(
+        description: 'My brand new repo',
+        language: 'python'
+      )
+
+      # assert
+      expect(repo).to eq(test: 42)
+    end
   end
 
   describe '#delete_repo' do

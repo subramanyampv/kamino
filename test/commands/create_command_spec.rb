@@ -5,7 +5,7 @@ require 'repo_providers/factory'
 
 RSpec.describe Commands::CreateCommand do
   before(:example) do
-    options = {
+    @options = {
       name: 'dummy',
       description: 'super duper repo',
       owner: 'owner',
@@ -15,9 +15,9 @@ RSpec.describe Commands::CreateCommand do
     }
     @provider = double('provider')
     expect(RepoProviders).to receive(:create)
-      .with(options)
+      .with(@options)
       .and_return(@provider)
-    @command = Commands::CreateCommand.new(options)
+    @command = Commands::CreateCommand.new(@options)
   end
 
   context 'when repo exists' do
@@ -38,7 +38,7 @@ RSpec.describe Commands::CreateCommand do
 
     it 'should create the repo' do
       allow(@provider).to receive(:create_repo)
-        .with(description: 'super duper repo')
+        .with(@options)
         .and_return('hello')
       expect(@command.run).to eq('hello')
     end

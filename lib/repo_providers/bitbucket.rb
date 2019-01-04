@@ -17,13 +17,13 @@ module RepoProviders
     include RepoMixin
 
     # rubocop:disable Metrics/MethodLength
-    def create_repo(description: '')
+    def create_repo(options)
       # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
       body = {
         scm: 'git',
         is_private: true,
-        description: description,
-        language: 'java',
+        description: options[:description],
+        language: options[:language],
         fork_policy: 'no_forks',
         mainbranch: {
           type: 'branch',

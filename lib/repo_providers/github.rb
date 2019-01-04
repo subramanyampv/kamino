@@ -32,13 +32,13 @@ module RepoProviders
       false
     end
 
-    def create_repo(description: '')
+    def create_repo(options)
       url = "#{base_url}/user/repos"
       body = {
         name: name,
-        description: description,
+        description: options[:description],
         auto_init: true,
-        gitignore_template: 'Maven',
+        gitignore_template: gitignore_template(options),
         license_template: 'mit'
       }
       @rest_client.post(url, body, basic_auth: basic_auth)
@@ -66,6 +66,15 @@ module RepoProviders
 
     def base_url
       'https://api.github.com'
+    end
+
+    def gitignore_template(options)
+      language = options[:language]
+      if language == 'python'
+        'Python'
+      else
+        'Maven'
+      end
     end
   end
 end

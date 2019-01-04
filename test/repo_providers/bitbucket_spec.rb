@@ -36,7 +36,10 @@ RSpec.describe RepoProviders::Bitbucket do
         .and_return(test: 42)
 
       # act
-      repo = @bitbucket.create_repo(description: 'My brand new repo')
+      repo = @bitbucket.create_repo(
+        description: 'My brand new repo',
+        language: 'java'
+      )
 
       # assert
       expect(repo).to eq(test: 42)
