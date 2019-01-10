@@ -71,7 +71,8 @@ Bitbucket Cloud options:
 
 *   --owner: the user owning the repositories
 *   --username: the username to use against Bitbucket REST API
-*   --password: the password to use against Bitbucket REST API
+*   --password: the password to use against Bitbucket REST API. It is possible to specify this parameter via
+    the `BITBUCKET_PASSWORD` environment variable. CLI option has precedence.
 
 ### Cloning options
 
