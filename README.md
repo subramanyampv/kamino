@@ -2,5 +2,4 @@
 Script that deletes git branches
 
 [![Build Status](https://travis-ci.org/ngeor/bclean.svg?branch=master)](https://travis-ci.org/ngeor/bclean)
-
-[bclean on PyPI](https://pypi.org/project/bclean/)
+[![PyPI](https://img.shields.io/pypi/v/bclean.svg)](https://pypi.org/project/bclean/)

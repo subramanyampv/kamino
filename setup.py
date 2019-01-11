@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='bclean',
-      version='0.0.2',
+      version='0.0.3',
       description='Delete git branches',
       url='https://github.com/ngeor/bclean',
       author='Nikolaos Georgiou',
