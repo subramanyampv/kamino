@@ -2,6 +2,9 @@ import subprocess
 
 
 def should_delete_branch(branch):
+  '''
+  Checks if the given branch should be deleted.
+  '''
   return branch and branch != 'master' and not branch.startswith('*')
 
 
