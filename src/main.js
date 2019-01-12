@@ -29,7 +29,7 @@ function reTag(cliArgs, currentVersion) {
 
   // push?
   if (cliArgs.push) {
-    git.push();
+    git.push('push');
   }
 }
 
@@ -48,8 +48,7 @@ async function main() {
     return;
   }
 
-  const newVersion = cliArgs.V;
-  validateTransition(currentVersion, newVersion);
+  const newVersion = validateTransition(currentVersion, cliArgs.V);
 
   // process files
   await updateProjectFiles({
@@ -66,7 +65,7 @@ async function main() {
 
     // push?
     if (cliArgs.push) {
-      git.push();
+      git.push('follow');
     }
   }
 }

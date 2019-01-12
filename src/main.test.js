@@ -2,6 +2,7 @@ const proxyquire = require('proxyquire').noCallThru();
 const sinon = require('sinon');
 const chai = require('chai');
 const fs = require('fs');
+const path = require('path');
 
 const { expect } = chai;
 chai.use(require('sinon-chai'));
@@ -117,6 +118,42 @@ describe('main (integration test)', () => {
 
     // assert
     expect(git.tag).calledOnceWith('0.9.2');
-    expect(git.push).calledOnce;
+    expect(git.push).calledOnceWith('push');
+  });
+
+  it('should tag on a folder with multi-module pom', async () => {
+    // arrange
+    const git = {
+      latestVersion: sinon.stub(),
+      add: sinon.stub(),
+      commit: sinon.stub(),
+      tag: sinon.stub(),
+      push: sinon.stub(),
+    };
+
+    git.latestVersion.returns('3.12.0');
+
+    gitModule.createGit.withArgs('./test/multi-module').returns(git);
+
+    process.argv = [
+      'node',
+      'main.js',
+      '-v',
+      'minor',
+      '--dir',
+      './test/multi-module',
+    ];
+
+    // act
+    await main();
+
+    // assert
+    expect(git.add).calledWith('pom.xml');
+    expect(git.add).calledWith(path.join('bar-child-module', 'pom.xml'));
+    expect(git.add).calledWith(path.join('foo-child-module', 'pom.xml'));
+    expect(git.add).calledThrice;
+    expect(git.commit).calledOnceWith('Bumping version 3.13.0');
+    expect(git.tag).calledOnceWith('3.13.0');
+    expect(git.push).calledOnceWith('follow');
   });
 });

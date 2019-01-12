@@ -56,8 +56,11 @@ version with the new version.
 ## Options
 
 -  `-V, --version`        :  output the version number
--  `-v <version>`         :  The new version to use. Must be semver and not leave gaps from previous version.
--  `-s --source <source>` :  The source of the tag information. Valid values are git, pom. (default: "git")
+-  `-v <version>`         :  The new version to use. Must be semver and not
+   leave gaps from previous version. It can also be one of major, minor, patch
+   to automatically increment to the next version.
+-  `-s --source <source>` :  The source of the tag information. Valid values are
+   git, pom. (default: "git")
 -  `--dir [dir]`          :  The directory to run the command in (default: ".")
 -  `--message [message]`  :  An optional commit message
 -  `--dry-run`            :  Do not perform any changes, see what would happen

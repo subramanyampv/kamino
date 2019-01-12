@@ -24,7 +24,8 @@ function parse() {
   commander
     .name(name) // needed for unit tests
     .version(version)
-    .option('-v <version>', 'The new version to use. Must be semver and not leave gaps from previous version.')
+    .option('-v <version>', 'The new version to use. Must be semver and not leave gaps from '
+      + 'previous version. It can also be one of major, minor, patch to automatically increment to the next version.')
     .option('-s --source <source>', 'The source of the tag information. Valid values are git, pom.', /^(git|pom)$/, 'git')
     .option('--dir [dir]', 'The directory to run the command in', '.')
     .option('--message [message]', 'An optional commit message')

@@ -18,7 +18,27 @@ describe('validate-transition', () => {
     expect(() => validateTransition('1.0.0', '1.0.2')).to.throw('Version 1.0.2 is not allowed. Use one of 1.0.1, 1.1.0, 2.0.0');
   });
 
-  it('should allow a valid version', () => {
-    expect(validateTransition('1.0.0', '1.0.1')).to.be.true;
+  it('should allow patch explicitly', () => {
+    expect(validateTransition('1.0.0', '1.0.1')).to.equal('1.0.1');
+  });
+
+  it('should allow patch automatically', () => {
+    expect(validateTransition('1.0.0', 'patch')).to.equal('1.0.1');
+  });
+
+  it('should allow minor explicitly', () => {
+    expect(validateTransition('1.0.0', '1.1.0')).to.equal('1.1.0');
+  });
+
+  it('should allow minor automatically', () => {
+    expect(validateTransition('1.0.0', 'minor')).to.equal('1.1.0');
+  });
+
+  it('should allow major explicitly', () => {
+    expect(validateTransition('1.0.0', '2.0.0')).to.equal('2.0.0');
+  });
+
+  it('should allow major automatically', () => {
+    expect(validateTransition('1.0.0', 'major')).to.equal('2.0.0');
   });
 });
