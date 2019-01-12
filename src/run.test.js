@@ -14,7 +14,7 @@ describe('run', () => {
   let setJsonAction;
 
   function act() {
-    run.runCommand('tmp', cliArgs);
+    return run.runCommand('tmp', cliArgs);
   }
 
   beforeEach(() => {
@@ -50,10 +50,11 @@ describe('run', () => {
     });
 
     it('should only log', () => {
-      act();
+      const result = act();
       expect(logger.log).calledOnceWith('/c/tmp');
       expect(runAction).not.called;
       expect(setJsonAction).not.called;
+      expect(result).to.be.false;
     });
   });
 
@@ -63,10 +64,11 @@ describe('run', () => {
     });
 
     it('should only log', () => {
-      act();
+      const result = act();
       expect(logger.log).calledOnceWith('/c/tmp');
       expect(runAction).not.called;
       expect(setJsonAction).not.called;
+      expect(result).to.be.false;
     });
   });
 
@@ -76,12 +78,36 @@ describe('run', () => {
     });
 
     it('should run the command', () => {
-      act();
+      // arrange
+      runAction.returns(false);
+
+      // act
+      const result = act();
+
+      // assert
       expect(runAction).calledOnceWith(
         'tmp',
         cliArgs,
       );
       expect(setJsonAction).not.called;
+      expect(result).to.be.false;
+    });
+
+
+    it('should return true if the command failed', () => {
+      // arrange
+      runAction.returns(true);
+
+      // act
+      const result = act();
+
+      // assert
+      expect(runAction).calledOnceWith(
+        'tmp',
+        cliArgs,
+      );
+      expect(setJsonAction).not.called;
+      expect(result).to.be.true;
     });
   });
 
@@ -91,12 +117,13 @@ describe('run', () => {
     });
 
     it('should set the json', () => {
-      act();
+      const result = act();
       expect(setJsonAction).calledOnceWith(
         'tmp',
         cliArgs,
       );
       expect(runAction).not.called;
+      expect(result).to.be.false;
     });
   });
 });

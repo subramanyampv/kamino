@@ -7,6 +7,7 @@ const setJsonAction = require('./actions/set-json.action');
  * Runs a command in the given subdirectory.
  * @param {string} subDir The subdirectory.
  * @param {*} cliArgs The CLI arguments.
+ * @returns {boolean} A value indicating if the command failed.
  */
 function runCommand(subDir, cliArgs) {
   const {
@@ -15,14 +16,18 @@ function runCommand(subDir, cliArgs) {
     setJson,
   } = cliArgs;
 
+  let failed = false;
+
   if (setJson) {
     setJsonAction(subDir, cliArgs);
   } else if (args && args.length) {
-    runAction(subDir, cliArgs);
+    failed = runAction(subDir, cliArgs);
   } else {
     const absDir = path.resolve(dir, subDir);
     logger.log(absDir);
   }
+
+  return failed;
 }
 
 module.exports = {

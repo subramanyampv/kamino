@@ -9,7 +9,13 @@ function main() {
   logger.setVerboseEnabled(!!cliArgs.verbose);
   fs.readdirSync(cliArgs.dir, { withFileTypes: true })
     .filter(f => isMatchingDir(f, cliArgs))
-    .forEach(f => runCommand(f.name, cliArgs));
+    .map(f => f.name)
+    .map(subDir => ({
+      subDir,
+      failed: runCommand(subDir, cliArgs),
+    }))
+    .filter(x => x.failed)
+    .forEach(x => logger.error(`Command failed in ${x.subDir}`));
 }
 
 module.exports = {

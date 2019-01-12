@@ -70,51 +70,101 @@ describe('lib', () => {
     });
   });
 
-  const cliArgs = { dir: '.' };
-  beforeEach(() => {
-    args.parseArguments.returns(cliArgs);
+  describe('on a folder with two sub-folders and a file', () => {
+    const cliArgs = { dir: '.' };
+    beforeEach(() => {
+      args.parseArguments.returns(cliArgs);
 
-    const directories = [
-      {
-        name: 'tmp',
-        isDirectory: () => true,
-      },
-      {
-        name: 'temp',
-        isDirectory: () => true,
-      },
-      {
-        name: 'temp.txt',
-        isDirectory: () => false,
-      },
-    ];
+      const directories = [
+        {
+          name: 'tmp',
+          isDirectory: () => true,
+        },
+        {
+          name: 'temp',
+          isDirectory: () => true,
+        },
+        {
+          name: 'temp.txt',
+          isDirectory: () => false,
+        },
+      ];
 
-    fs.readdirSync.withArgs('.', { withFileTypes: true }).returns(directories);
-    filter.isMatchingDir.withArgs(
-      sinon.match({ name: 'tmp' }),
-      cliArgs,
-    ).returns(true);
-    filter.isMatchingDir.withArgs(
-      sinon.match({ name: 'temp' }),
-      cliArgs,
-    ).returns(true);
-    filter.isMatchingDir.withArgs(
-      sinon.match({ name: 'temp.txt' }),
-      cliArgs,
-    ).returns(false);
-  });
+      fs.readdirSync.withArgs('.', { withFileTypes: true }).returns(directories);
 
-  it('should run the command', () => {
-    dirloop.main();
+      filter.isMatchingDir.withArgs(
+        sinon.match({ name: 'temp.txt' }),
+        cliArgs,
+      ).returns(false);
+    });
 
-    expect(run.runCommand).calledWith(
-      'tmp',
-      cliArgs,
-    );
-    expect(run.runCommand).calledWith(
-      'temp',
-      cliArgs,
-    );
-    expect(run.runCommand).calledTwice;
+    describe('when both folders match filter', () => {
+      beforeEach(() => {
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'tmp' }),
+          cliArgs,
+        ).returns(true);
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'temp' }),
+          cliArgs,
+        ).returns(true);
+      });
+
+      it('should run the command', () => {
+        dirloop.main();
+
+        expect(run.runCommand).calledWith(
+          'tmp',
+          cliArgs,
+        );
+        expect(run.runCommand).calledWith(
+          'temp',
+          cliArgs,
+        );
+        expect(run.runCommand).calledTwice;
+      });
+    });
+
+    describe('when one folder matches filter', () => {
+      beforeEach(() => {
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'tmp' }),
+          cliArgs,
+        ).returns(true);
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'temp' }),
+          cliArgs,
+        ).returns(false);
+      });
+
+      it('should run the command', () => {
+        dirloop.main();
+
+        expect(run.runCommand).calledWith(
+          'tmp',
+          cliArgs,
+        );
+        expect(run.runCommand).calledOnce;
+      });
+    });
+
+    describe('when the command fails in one folder', () => {
+      beforeEach(() => {
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'tmp' }),
+          cliArgs,
+        ).returns(true);
+        filter.isMatchingDir.withArgs(
+          sinon.match({ name: 'temp' }),
+          cliArgs,
+        ).returns(true);
+        run.runCommand.withArgs('tmp').returns(true);
+      });
+
+      it('should report the errors', () => {
+        dirloop.main();
+        expect(logger.error).calledWith('Command failed in tmp');
+      });
+    });
   });
 });

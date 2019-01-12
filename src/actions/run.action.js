@@ -45,7 +45,7 @@ module.exports = function runAction(subDir, cliArgs) {
 
   if (dryRun) {
     logger.log(`Would have run command ${args.join(' ')} in ${absDir}`);
-    return;
+    return false;
   }
 
   logger.verbose(`Running command in ${absDir}`);
@@ -67,4 +67,6 @@ module.exports = function runAction(subDir, cliArgs) {
       logger.log(`${subDir},${stdout.trim()}`);
     }
   }
+
+  return !(!error && !status);
 };

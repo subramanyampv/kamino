@@ -13,7 +13,7 @@ describe('run', () => {
   let cliArgs = null;
 
   function act(name = 'tmp') {
-    run(name, cliArgs);
+    return run(name, cliArgs);
   }
 
   beforeEach(() => {
@@ -50,9 +50,10 @@ describe('run', () => {
     });
 
     it('should log what would have happened', () => {
-      act();
+      const result = act();
       expect(logger.log).calledOnceWith('Would have run command echo --hello in /c/tmp');
       expect(childProcess.spawnSync).not.called;
+      expect(result).to.be.false;
     });
   });
 
@@ -64,7 +65,7 @@ describe('run', () => {
     });
 
     it('should run the command', () => {
-      act();
+      const result = act();
       expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
       expect(childProcess.spawnSync).calledOnceWith(
         'echo',
@@ -75,6 +76,7 @@ describe('run', () => {
           shell: true,
         },
       );
+      expect(result).to.be.false;
     });
   });
 
@@ -86,7 +88,7 @@ describe('run', () => {
     });
 
     it('should run the command', () => {
-      act();
+      const result = act();
       expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
       expect(childProcess.spawnSync).calledOnceWith(
         'echo',
@@ -97,6 +99,7 @@ describe('run', () => {
           shell: false,
         },
       );
+      expect(result).to.be.false;
     });
   });
 
@@ -109,8 +112,9 @@ describe('run', () => {
     });
 
     it('should report an error', () => {
-      act();
+      const result = act();
       expect(logger.error).calledOnceWith('Command failed: ENOENT');
+      expect(result).to.be.true;
     });
   });
 
@@ -123,8 +127,9 @@ describe('run', () => {
     });
 
     it('should report an error', () => {
-      act();
+      const result = act();
       expect(logger.error).calledOnceWith('Command returned exit code 1');
+      expect(result).to.be.true;
     });
   });
 
@@ -139,7 +144,7 @@ describe('run', () => {
     });
 
     it('should run the command', () => {
-      act();
+      const result = act();
       expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
       expect(childProcess.spawnSync).calledOnceWith(
         'echo',
@@ -151,6 +156,7 @@ describe('run', () => {
         },
       );
       expect(logger.log).calledOnceWith('tmp,13');
+      expect(result).to.be.false;
     });
   });
 
@@ -166,7 +172,7 @@ describe('run', () => {
     });
 
     it('should run the command', () => {
-      act();
+      const result = act();
       expect(logger.verbose).calledOnceWith('Running command in /c/tmp');
       expect(childProcess.spawnSync).calledOnceWith(
         'echo',
@@ -178,6 +184,7 @@ describe('run', () => {
         },
       );
       expect(logger.log).calledOnceWith('tmp,2');
+      expect(result).to.be.false;
     });
   });
 });
