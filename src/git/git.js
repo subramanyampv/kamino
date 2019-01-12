@@ -19,6 +19,19 @@ class Git {
     }
   }
 
+  versionExists(version) {
+    const result = spawnSync('git', ['tag', '--sort=-v:refname'], {
+      cwd: this.dir,
+      encoding: 'utf8',
+    });
+
+    if (result.status) {
+      throw new Error('Could not get git tags');
+    }
+
+    return result.stdout.split(/\s/).filter(x => !!x).map(x => x.replace('v', '')).includes(version);
+  }
+
   latestVersion() {
     const result = spawnSync('git', ['tag', '--sort=-v:refname'], {
       cwd: this.dir,
@@ -67,33 +80,6 @@ class Git {
   }
 }
 
-class DryRunGit extends Git {
-  add(file) {
-    console.log(`Would have added file ${file} in dir ${this.dir}`);
-  }
-
-  commit(message) {
-    console.log(`Would have committed in dir ${this.dir} with message ${message}`);
-  }
-
-  tag(version) {
-    console.log(`Would have tagged version ${version} as tag v${version} in dir ${this.dir}`);
-  }
-
-  push() {
-    console.log(`Would have pushed in dir ${this.dir}`);
-  }
-}
-
-/**
- * Creates a new git object.
- * @param {string} dir The git directory
- * @param {boolean} dryRun If true, the git object will be read-only
- */
-function factory(dir, dryRun) {
-  return dryRun ? new DryRunGit(dir) : new Git(dir);
-}
-
 module.exports = {
-  factory,
+  Git,
 };

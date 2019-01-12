@@ -1,5 +1,7 @@
+const fs = require('fs');
 const path = require('path');
 const { updatePomFiles } = require('./pom');
+const { createGit } = require('./git');
 
 /**
  * @typedef UpdateOptions
@@ -7,8 +9,6 @@ const { updatePomFiles } = require('./pom');
  * @property {string} dir The directory with the git repository.
  * @property {string} currentVersion The current version.
  * @property {string} newVersion The new version.
- * @property {typeof import("fs")} fs The file system object.
- * @property {*} git The git object.
  */
 
 /**
@@ -19,7 +19,7 @@ const { updatePomFiles } = require('./pom');
 async function updateTextFile(opts, file) {
   const result = [];
   const {
-    fs, dir, currentVersion, newVersion,
+    dir, currentVersion, newVersion,
   } = opts;
   const fullPath = path.join(dir, file);
   if (fs.existsSync(fullPath)) {
@@ -36,13 +36,13 @@ async function updateTextFile(opts, file) {
 
 /**
  * Updates the version in the project files and adds modified files to git.
- * @param {UpdateOptions} opts The update options.
+ * @param {Git} git The git object.
  * @param {function(): Promise<string[]>} getModifiedFilesAsync A function that collects modified
  * files.
  */
-async function updateAndAdd(opts, getModifiedFilesAsync) {
+async function updateAndAdd(git, getModifiedFilesAsync) {
   const files = await getModifiedFilesAsync();
-  files.forEach(f => opts.git.add(f));
+  files.forEach(f => git.add(f));
 }
 
 /**
@@ -50,8 +50,9 @@ async function updateAndAdd(opts, getModifiedFilesAsync) {
  * @param {UpdateOptions} opts The update options.
  */
 async function updateProjectFiles(opts) {
-  await updateAndAdd(opts, () => updatePomFiles(opts));
-  await updateAndAdd(opts, () => updateTextFile(opts, 'README.md'));
+  const git = createGit(opts.dir);
+  await updateAndAdd(git, () => updatePomFiles(opts));
+  await updateAndAdd(git, () => updateTextFile(opts, 'README.md'));
 }
 
 module.exports = {

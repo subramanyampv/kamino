@@ -55,11 +55,14 @@ version with the new version.
 
 ## Options
 
-- `-help`: shows information about the program
-- `-version`: The desired version e.g. 1.3.0
-- `-dir`: Optional: the directory of the project to version (defaults to current
-  directory)
-- `-message`: Optional: a commit message to specify when committing project
-  files. Defaults to "Bumping version x.y.z"
-- `-no-commit`: Does not commit or create the tag (dry run)
-- `-no-push`: Does not push to remote (dry run)
+-  `-V, --version`        :  output the version number
+-  `-v <version>`         :  The new version to use. Must be semver and not leave gaps from previous version.
+-  `-s --source <source>` :  The source of the tag information. Valid values are git, pom. (default: "git")
+-  `--dir [dir]`          :  The directory to run the command in (default: ".")
+-  `--message [message]`  :  An optional commit message
+-  `--dry-run`            :  Do not perform any changes, see what would happen
+-  `--no-commit`          :  Do not commit
+-  `--no-push`            :  Do not push
+-  `--re-tag`             :  Create and push a tag for an existing version
+-  `--verbose`            :  Increase logging verbosity
+-  `-h, --help`           : output usage information
