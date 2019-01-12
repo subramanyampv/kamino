@@ -108,11 +108,11 @@ describe('lib', () => {
     dirloop.main();
 
     expect(run.runCommand).calledWith(
-      sinon.match({ name: 'tmp' }),
+      'tmp',
       cliArgs,
     );
     expect(run.runCommand).calledWith(
-      sinon.match({ name: 'temp' }),
+      'temp',
       cliArgs,
     );
     expect(run.runCommand).calledTwice;

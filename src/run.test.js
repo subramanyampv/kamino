@@ -14,7 +14,7 @@ describe('run', () => {
   let setJsonAction;
 
   function act() {
-    run.runCommand({ name: 'tmp' }, cliArgs);
+    run.runCommand('tmp', cliArgs);
   }
 
   beforeEach(() => {
@@ -78,7 +78,7 @@ describe('run', () => {
     it('should run the command', () => {
       act();
       expect(runAction).calledOnceWith(
-        { name: 'tmp' },
+        'tmp',
         cliArgs,
       );
       expect(setJsonAction).not.called;
@@ -93,7 +93,7 @@ describe('run', () => {
     it('should set the json', () => {
       act();
       expect(setJsonAction).calledOnceWith(
-        { name: 'tmp' },
+        'tmp',
         cliArgs,
       );
       expect(runAction).not.called;

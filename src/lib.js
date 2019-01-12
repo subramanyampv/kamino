@@ -9,7 +9,7 @@ function main() {
   logger.setVerboseEnabled(!!cliArgs.verbose);
   fs.readdirSync(cliArgs.dir, { withFileTypes: true })
     .filter(f => isMatchingDir(f, cliArgs))
-    .forEach(f => runCommand(f, cliArgs));
+    .forEach(f => runCommand(f.name, cliArgs));
 }
 
 module.exports = {

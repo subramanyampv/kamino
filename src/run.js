@@ -3,7 +3,12 @@ const logger = require('@ngeor/js-cli-logger');
 const runAction = require('./actions/run.action');
 const setJsonAction = require('./actions/set-json.action');
 
-function runCommand(file, cliArgs) {
+/**
+ * Runs a command in the given subdirectory.
+ * @param {string} subDir The subdirectory.
+ * @param {*} cliArgs The CLI arguments.
+ */
+function runCommand(subDir, cliArgs) {
   const {
     dir,
     args,
@@ -11,11 +16,11 @@ function runCommand(file, cliArgs) {
   } = cliArgs;
 
   if (setJson) {
-    setJsonAction(file, cliArgs);
+    setJsonAction(subDir, cliArgs);
   } else if (args && args.length) {
-    runAction(file, cliArgs);
+    runAction(subDir, cliArgs);
   } else {
-    const absDir = path.resolve(dir, file.name);
+    const absDir = path.resolve(dir, subDir);
     logger.log(absDir);
   }
 }

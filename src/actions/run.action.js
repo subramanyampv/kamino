@@ -32,7 +32,7 @@ function runCommand(cliArgs, absDir) {
   );
 }
 
-module.exports = function runAction(file, cliArgs) {
+module.exports = function runAction(subDir, cliArgs) {
   const {
     dir,
     dryRun,
@@ -41,7 +41,7 @@ module.exports = function runAction(file, cliArgs) {
     lineCount,
   } = cliArgs;
 
-  const absDir = path.resolve(dir, file.name);
+  const absDir = path.resolve(dir, subDir);
 
   if (dryRun) {
     logger.log(`Would have run command ${args.join(' ')} in ${absDir}`);
@@ -62,9 +62,9 @@ module.exports = function runAction(file, cliArgs) {
 
   if (csv) {
     if (lineCount) {
-      logger.log(`${file.name},${stdout.split(/[\r\n]/).map(x => x.trim()).filter(x => !!x).length}`);
+      logger.log(`${subDir},${stdout.split(/[\r\n]/).map(x => x.trim()).filter(x => !!x).length}`);
     } else {
-      logger.log(`${file.name},${stdout.trim()}`);
+      logger.log(`${subDir},${stdout.trim()}`);
     }
   }
 };

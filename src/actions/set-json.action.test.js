@@ -35,17 +35,13 @@ describe('set-json.action', () => {
       setJson: 'package.json;j.color=\'blue\'',
     };
 
-    const file = {
-      name: 'tmp',
-    };
-
     path.resolve.withArgs('/c', 'tmp', 'package.json').returns('/c/tmp/package.json');
     fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns(JSON.stringify({
       color: 'red',
     }));
 
     // act
-    setJsonAction(file, cliArgs);
+    setJsonAction('tmp', cliArgs);
 
     // assert
     assert({
@@ -61,10 +57,6 @@ describe('set-json.action', () => {
       setJson: 'package.json;j.nyc.reporter=j.nyc.reporter.filter(x=>x!==\'text-summary\').concat([\'text\'])',
     };
 
-    const file = {
-      name: 'tmp',
-    };
-
     path.resolve.withArgs('/c', 'tmp', 'package.json').returns('/c/tmp/package.json');
     fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns(JSON.stringify({
       nyc: {
@@ -77,7 +69,7 @@ describe('set-json.action', () => {
     }));
 
     // act
-    setJsonAction(file, cliArgs);
+    setJsonAction('tmp', cliArgs);
 
     // assert
     assert({
@@ -99,17 +91,13 @@ describe('set-json.action', () => {
       setJson: 'package.json;j.color=\'red\'',
     };
 
-    const file = {
-      name: 'tmp',
-    };
-
     path.resolve.withArgs('/c', 'tmp', 'package.json').returns('/c/tmp/package.json');
     fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns(JSON.stringify({
       color: 'red',
     }));
 
     // act
-    setJsonAction(file, cliArgs);
+    setJsonAction('tmp', cliArgs);
 
     // assert
     expect(fs.writeFileSync).not.called;
@@ -124,17 +112,13 @@ describe('set-json.action', () => {
       setJson: 'package.json;j.color=\'blue\'',
     };
 
-    const file = {
-      name: 'tmp',
-    };
-
     path.resolve.withArgs('/c', 'tmp', 'package.json').returns('/c/tmp/package.json');
     fs.readFileSync.withArgs('/c/tmp/package.json', 'utf8').returns(JSON.stringify({
       color: 'red',
     }));
 
     // act
-    setJsonAction(file, cliArgs);
+    setJsonAction('tmp', cliArgs);
 
     // assert
     expect(fs.writeFileSync).not.called;

@@ -13,7 +13,7 @@ describe('run', () => {
   let cliArgs = null;
 
   function act(name = 'tmp') {
-    run({ name }, cliArgs);
+    run(name, cliArgs);
   }
 
   beforeEach(() => {

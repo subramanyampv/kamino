@@ -4,7 +4,7 @@ const path = require('path');
 const os = require('os');
 const logger = require('@ngeor/js-cli-logger');
 
-module.exports = function setJsonAction(file, cliArgs) {
+module.exports = function setJsonAction(subDir, cliArgs) {
   const {
     dir,
     dryRun,
@@ -16,7 +16,7 @@ module.exports = function setJsonAction(file, cliArgs) {
     jsonQuery,
   ] = setJson.split(';', 2);
 
-  const resolvedFilename = path.resolve(dir, file.name, filename);
+  const resolvedFilename = path.resolve(dir, subDir, filename);
 
   const json = JSON.parse(fs.readFileSync(resolvedFilename, 'utf8'));
   const originalJson = _.cloneDeep(json);
