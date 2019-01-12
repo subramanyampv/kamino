@@ -12,9 +12,33 @@ yart is yet another release tool
 You can use yart to automatically bump up the version of a project in a
 consistent way, ensuring no gaps exist in SemVer sequences.
 
-Currently only Maven projects are supported.
+## Workflow
 
-## Usage
+- You have a git repository.
+- You use git tags for versioning.
+- Tags are in the format vMajor.Minor.Patch (e.g. v1.2.3).
+- You work directly in the master branch.
+- You have committed some new changes and want to create a new version.
+
+If you run `yart -v minor`, it will:
+
+- determine the current version from the latest git tag
+- derive the desired version by incrementing the minor SemVer component
+- update project files that reference the old version (see further down about Files) and commit them
+- create the git tag
+- push
+
+## Motivation
+
+The inspiration comes from `npm version minor` which does more or less the same, but for npm projects.
+
+I find it cumbersome to achieve the same with Maven projects where I can get as far as:
+
+```
+mvn build-helper:parse-version versions:set -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} versions:commit
+```
+
+## Installation
 
 You can use yart without installing it with `npx @ngeor/yart`. If you prefer, you
 can install it with `npm i -g @ngeor/yart` and then run it with `yart`.
