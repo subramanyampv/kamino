@@ -2,6 +2,7 @@ language: python
 python:
   - "3.6"
 script:
+  - python -m unittest
   - python setup.py sdist
 deploy:
   provider: pypi
