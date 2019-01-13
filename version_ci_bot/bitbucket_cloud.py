@@ -17,8 +17,9 @@ class BitbucketCloud:
 
     url = f'https://api.bitbucket.org/2.0/repositories/{self.owner}/{self.slug}/refs/tags?q=name+%3D+%22{tag}%22'
 
-    req = urllib.request.Request(url)
-    req.add_header('Authorization', f'Basic {self._basic_auth()}')
+    req = urllib.request.Request(url, headers={
+        'Authorization': f'Basic {self._basic_auth()}'
+    })
     with urllib.request.urlopen(req) as f:
       if f.status != 200:
         raise ValueError(
@@ -47,8 +48,10 @@ class BitbucketCloud:
 
     data = json.dumps(body).encode('ascii')
 
-    req = urllib.request.Request(url, data=data, method='POST')
-    req.add_header('Authorization', f'Basic {self._basic_auth()}')
+    req = urllib.request.Request(url, data=data, headers={
+        'Authorization': f'Basic {self._basic_auth()}',
+        'Content-Type': 'application/json'
+    }, method='POST')
 
     with urllib.request.urlopen(req) as f:
       if f.status < 200 or f.status >= 300:

@@ -77,9 +77,11 @@ class TagExistsTestCase(unittest.TestCase):
     # assert
     self.assertTrue(result)
     MockRequest.assert_called_with(
-        'https://api.bitbucket.org/2.0/repositories/acme/project/refs/tags?q=name+%3D+%22v1.2.3%22')
-    MockRequest.return_value.add_header.assert_called_with(
-        'Authorization', 'Basic cm9vdDpzZWNyZXQ=')
+        'https://api.bitbucket.org/2.0/repositories/acme/project/refs/tags?q=name+%3D+%22v1.2.3%22',
+        headers={
+            'Authorization': 'Basic cm9vdDpzZWNyZXQ=',
+        }
+    )
     mock_url_open.assert_called_with(MockRequest.return_value)
 
   @patch('urllib.request.urlopen')
@@ -144,7 +146,7 @@ class CreateTagTestCase(unittest.TestCase):
 
   @patch('urllib.request.urlopen')
   @patch('urllib.request.Request')
-  def test_tag_exists(self, MockRequest, mock_url_open):
+  def test_create(self, MockRequest, mock_url_open):
     # arrange
     mock_successful_request(mock_url_open, '')
 
@@ -155,9 +157,11 @@ class CreateTagTestCase(unittest.TestCase):
     MockRequest.assert_called_with(
         'https://api.bitbucket.org/2.0/repositories/acme/project/refs/tags',
         data=b'{"name": "v1.2.3", "target": {"hash": "ab-cd-ef"}}',
+        headers={
+            'Authorization': 'Basic cm9vdDpzZWNyZXQ=',
+            'Content-Type': 'application/json'
+        },
         method='POST')
-    MockRequest.return_value.add_header.assert_called_with(
-        'Authorization', 'Basic cm9vdDpzZWNyZXQ=')
     mock_url_open.assert_called_with(MockRequest.return_value)
 
   @patch('urllib.request.urlopen')
