@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 
 class CITestCase(unittest.TestCase):
-  @patch.dict(os.environ, {})
+  @patch.dict(os.environ, {'CI': ''})
   def test_not_ci(self):
     with self.assertRaisesRegex(ValueError, 'Should only run in CI environments'):
       ensure_tag_does_not_exist()
