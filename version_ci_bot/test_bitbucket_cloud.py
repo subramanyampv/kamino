@@ -40,6 +40,30 @@ class BitbucketCloudTestCase(unittest.TestCase):
     }
     ''')
 
+  def test_missing_username(self, mock):
+    self.api.username = ''
+    with self.assertRaisesRegex(ValueError, 'Bitbucket username is not specified'):
+      self.api.tag_exists('v1.2.3')
+
+  def test_missing_password(self, mock):
+    self.api.password = ''
+    with self.assertRaisesRegex(ValueError, 'Bitbucket password is not specified'):
+      self.api.tag_exists('v1.2.3')
+
+  def test_missing_owner(self, mock):
+    self.api.owner = ''
+    with self.assertRaisesRegex(ValueError, 'Bitbucket owner is not specified'):
+      self.api.tag_exists('v1.2.3')
+
+  def test_missing_slug(self, mock):
+    self.api.slug = ''
+    with self.assertRaisesRegex(ValueError, 'Repository slug is not specified'):
+      self.api.tag_exists('v1.2.3')
+
+  def test_missing_tag(self, mock):
+    with self.assertRaisesRegex(ValueError, 'Tag is not specified'):
+      self.api.tag_exists('')
+
   def test_tag_exists(self, mock):
     # arrange
     mock_opener = mock.return_value
