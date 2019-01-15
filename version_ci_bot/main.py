@@ -12,6 +12,23 @@ def is_ci():
     return False
 
 
+def ensure_ci():
+  if not is_ci():
+    raise ValueError('Should only run in CI environments')
+
+
+def create_bitbucket_cloud():
+  '''
+  Create an instance of BitbucketCloud and set its properties from environment variables.
+  '''
+  bitbucket_cloud = version_ci_bot.bitbucket_cloud.BitbucketCloud()
+  bitbucket_cloud.owner = version_ci_bot.bitbucket_pipelines.repo_owner()
+  bitbucket_cloud.slug = version_ci_bot.bitbucket_pipelines.repo_slug()
+  bitbucket_cloud.username = os.environ['BITBUCKET_USERNAME']
+  bitbucket_cloud.password = os.environ['BITBUCKET_PASSWORD']
+  return bitbucket_cloud
+
+
 def ensure_tag_does_not_exist(cwd='.'):
   '''
   Ensures that the version specified in the project file does not already
@@ -22,22 +39,13 @@ def ensure_tag_does_not_exist(cwd='.'):
   Additionally, it ensures that the project version does not leave gaps
   in the SemVer sequence.
   '''
-
-  if not is_ci():
-    raise ValueError('Should only run in CI environments')
-
+  ensure_ci()
   pom_xml_path = os.path.join(cwd, 'pom.xml')
   if not os.path.isfile(pom_xml_path):
     raise ValueError(f'pom.xml not found in directory {cwd}')
 
   pom_version = version_ci_bot.pom.read_version(pom_xml_path)
-
-  bitbucket_cloud = version_ci_bot.bitbucket_cloud.BitbucketCloud()
-  bitbucket_cloud.owner = version_ci_bot.bitbucket_pipelines.repo_owner()
-  bitbucket_cloud.slug = version_ci_bot.bitbucket_pipelines.repo_slug()
-  bitbucket_cloud.username = os.environ['BITBUCKET_USERNAME']
-  bitbucket_cloud.password = os.environ['BITBUCKET_PASSWORD']
-
+  bitbucket_cloud = create_bitbucket_cloud()
   if bitbucket_cloud.tag_exists(f'v{pom_version}'):
     raise ValueError(
         f'Version {pom_version} is already tagged. Please bump the version in pom.xml')
@@ -52,21 +60,13 @@ def create_tag(cwd='.'):
   '''
   Creates a new tag based on the version specified in the project file.
   '''
-  if not is_ci():
-    raise ValueError('Should only run in CI environments')
-
+  ensure_ci()
   pom_xml_path = os.path.join(cwd, 'pom.xml')
   if not os.path.isfile(pom_xml_path):
     raise ValueError(f'pom.xml not found in directory {cwd}')
 
   pom_version = version_ci_bot.pom.read_version(pom_xml_path)
-
-  bitbucket_cloud = version_ci_bot.bitbucket_cloud.BitbucketCloud()
-  bitbucket_cloud.owner = version_ci_bot.bitbucket_pipelines.repo_owner()
-  bitbucket_cloud.slug = version_ci_bot.bitbucket_pipelines.repo_slug()
-  bitbucket_cloud.username = os.environ['BITBUCKET_USERNAME']
-  bitbucket_cloud.password = os.environ['BITBUCKET_PASSWORD']
-
+  bitbucket_cloud = create_bitbucket_cloud()
   bitbucket_cloud.create_tag(
       f'v{pom_version}', version_ci_bot.bitbucket_pipelines.commit())
 
