@@ -51,6 +51,7 @@ class EnsureTagDoesNotExistTestCase(unittest.TestCase):
     Happy flow: the version defined in pom.xml does not exist
     '''
     MockApi.return_value.tag_exists.return_value = False
+    MockApi.return_value.get_biggest_tag.return_value = 'v1.2.2'
     ensure_tag_does_not_exist(cwd='test/pom')
     MockApi.return_value.tag_exists.assert_called_with('v1.2.3')
     self.assertEqual(MockApi.return_value.owner, 'acme')
@@ -81,8 +82,15 @@ class CreateTagTestCase(unittest.TestCase):
 
   @patch.dict(os.environ, all_variables)
   @patch('version_ci_bot.bitbucket_cloud.BitbucketCloud')
-  def test_pom_tag_exists(self, MockApi):
+  def test_pom_create_tag(self, MockApi):
+    # arrange
+    MockApi.return_value.tag_exists.return_value = False
+    MockApi.return_value.get_biggest_tag.return_value = 'v1.2.2'
+
+    # act
     create_tag(cwd='test/pom')
+
+    # assert
     MockApi.return_value.create_tag.assert_called_with('v1.2.3', 'abc-def-g')
     self.assertEqual(MockApi.return_value.owner, 'acme')
     self.assertEqual(MockApi.return_value.slug, 'project')

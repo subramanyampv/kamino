@@ -3,7 +3,7 @@ import os
 import version_ci_bot.pom
 import version_ci_bot.bitbucket_cloud
 import version_ci_bot.bitbucket_pipelines
-
+from version_ci_bot.semver import SemVer
 
 def is_ci():
   try:
@@ -44,28 +44,27 @@ def ensure_tag_does_not_exist(cwd='.'):
   if not os.path.isfile(pom_xml_path):
     raise ValueError(f'pom.xml not found in directory {cwd}')
 
-  pom_version = version_ci_bot.pom.read_version(pom_xml_path)
+  pom_version = SemVer.parse(version_ci_bot.pom.read_version(pom_xml_path))
   bitbucket_cloud = create_bitbucket_cloud()
   if bitbucket_cloud.tag_exists(f'v{pom_version}'):
     raise ValueError(
         f'Version {pom_version} is already tagged. Please bump the version in pom.xml')
 
-  # TODO: check for semver gap
+  biggest_tag = SemVer.parse(bitbucket_cloud.get_biggest_tag().replace('v', ''))
+  biggest_tag.ensure_can_bump_to(pom_version)
+
   # TODO: multimodule pom sanity check of child versions
   # TODO: package.json, setup.py
   # TODO: github
+
+  return pom_version
 
 
 def create_tag(cwd='.'):
   '''
   Creates a new tag based on the version specified in the project file.
   '''
-  ensure_ci()
-  pom_xml_path = os.path.join(cwd, 'pom.xml')
-  if not os.path.isfile(pom_xml_path):
-    raise ValueError(f'pom.xml not found in directory {cwd}')
-
-  pom_version = version_ci_bot.pom.read_version(pom_xml_path)
+  pom_version = ensure_tag_does_not_exist(cwd)
   bitbucket_cloud = create_bitbucket_cloud()
   bitbucket_cloud.create_tag(
       f'v{pom_version}', version_ci_bot.bitbucket_pipelines.commit())
