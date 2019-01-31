@@ -18,4 +18,4 @@ alias sortpom='mvn com.github.ekryd.sortpom:sortpom-maven-plugin:sort'
 # clang-format
 alias clang-format-java='find . -type f -name "*.java" -exec clang-format -i {} \;'
 # npm version
-alias npm-bump npm version --no-git-tag-version
+alias npm-bump='npm version --no-git-tag-version'
