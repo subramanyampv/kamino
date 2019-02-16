@@ -1,0 +1,22 @@
+# Inspired by https://github.com/Haacked/dotfiles/blob/master/git/.gitconfig.aliases
+#
+# Include this in your own .gitconfig by using the
+# [include] directive with the path to this file
+#
+# [include]
+#    path = ~/.gitconfig_include
+#
+# If you don't have any existing includes, you can add this via the following command
+#
+#   git config --global include.path ~/.gitconfig_include
+#
+
+[alias]
+    ec = config --global -e
+    up = !git checkout master && git fetch -p -t && git pull --rebase
+    nuke=!git up && git clean -dfx && bclean
+    amend=commit --amend
+    pf=push --force-with-lease
+[filter "clang-format-java"]
+    clean = clang-format -assume-filename=test.java
+    smudge = cat
