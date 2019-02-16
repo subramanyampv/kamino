@@ -3,7 +3,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 
 const {
-    expect
+  expect,
 } = chai;
 
 /**
@@ -12,54 +12,54 @@ const {
  * @returns {string} The response.
  */
 function consumeResponse(requestHandler) {
-    const req = {};
-    let result = '';
-    const res = {
-        send: (html) => {
-            // capture the response
-            result = html;
-        },
-    };
+  const req = {};
+  let result = '';
+  const res = {
+    send: (html) => {
+      // capture the response
+      result = html;
+    },
+  };
 
-    requestHandler(req, res);
-    return result;
+  requestHandler(req, res);
+  return result;
 }
 
 describe('index', () => {
-    let sandbox;
+  let sandbox;
 
-    beforeEach(() => {
-        sandbox = sinon.createSandbox();
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    delete process.env.APP_VERSION;
+  });
+
+  it('should print the current app version', () => {
+    // arrange
+    const expressInstance = {
+      get: (path, handler) => {
+        // this stub implementation captures the handler
+        expressInstance.get[path] = handler;
+      },
+      listen: sandbox.stub(),
+    };
+
+    const express = () => expressInstance;
+    const packageJson = {};
+    process.env.APP_VERSION = '1.2.3-beta';
+
+    // act
+    proxyquire('../../index', {
+      express,
+      './package.json': packageJson,
     });
 
-    afterEach(() => {
-        sandbox.restore();
-        delete process.env.APP_VERSION;
-    });
-
-    it('should print the current app version', () => {
-        // arrange
-        const expressInstance = {
-            get: (path, handler) => {
-                // this stub implementation captures the handler
-                expressInstance.get[path] = handler;
-            },
-            listen: sandbox.stub(),
-        };
-
-        const express = () => expressInstance;
-        const packageJson = {};
-        process.env.APP_VERSION = '1.2.3-beta';
-
-        // act
-        proxyquire('../../index', {
-            express,
-            './package.json': packageJson,
-        });
-
-        // assert
-        const handler = expressInstance.get['/version'];
-        expect(handler).to.be.a('function');
-        expect(consumeResponse(handler)).to.eql('1.2.3-beta');
-    });
+    // assert
+    const handler = expressInstance.get['/version'];
+    expect(handler).to.be.a('function');
+    expect(consumeResponse(handler)).to.eql('1.2.3-beta');
+  });
 });

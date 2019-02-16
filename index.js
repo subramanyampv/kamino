@@ -21,7 +21,7 @@ app.get('/', (req, res) => res.send(`
 app.get('/version', (req, res) => res.send(process.env.APP_VERSION));
 
 app.listen(
-    port,
-    () => console.log('Example app listening on port 3000!')
+  port,
+  () => console.log('Example app listening on port 3000!'),
 );
 /* eslint-enable no-console */
