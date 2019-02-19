@@ -12,4 +12,3 @@ npm --no-git-tag-version version patch
 
 git commit -am "Version bump"
 git push -u origin $1
-
