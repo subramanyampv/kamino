@@ -8,8 +8,10 @@ import fixer
 # page size for paginated REST API requests
 PAGE_SIZE = 10
 
+
 class WPBot:
     '''WordPress Bot'''
+
     def __init__(self):
         self.oauth_token = ''
         self.site = ''
@@ -21,7 +23,7 @@ class WPBot:
         has_more = True
         print("ID\tSlug\tName\tCount")
         while has_more:
-            payload = {'page' : page}
+            payload = {'page': page}
             response = requests.get(
                 f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/tags',
                 headers={'Authorization': 'Bearer ' + self.oauth_token},
@@ -30,7 +32,8 @@ class WPBot:
             json = response.json()
 
             for tag in json:
-                print(f"{tag['id']}\t{tag['slug']}\t{tag['name']}\t{tag['count']}")
+                print(
+                    f"{tag['id']}\t{tag['slug']}\t{tag['name']}\t{tag['count']}")
 
             has_more = len(json) >= PAGE_SIZE
             page = page + 1
@@ -61,7 +64,8 @@ class WPBot:
                 print("")
 
         self._post_loop(callback)
-        print('Showed %d posts (%d total)' % (stats['total_shown_posts'], stats['total_posts']))
+        print('Showed %d posts (%d total)' %
+              (stats['total_shown_posts'], stats['total_posts']))
 
     def fix_posts(self):
         '''Batch fixing of posts'''
@@ -81,13 +85,12 @@ class WPBot:
             print('\nOriginal content:\n%s' % content)
             print('\n\nModified content:\n%s' % fixed_content)
 
-
             if not self.dry_run:
                 print('Modifying content...')
                 result = requests.post(
                     f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
                     headers={'Authorization': 'Bearer ' + self.oauth_token},
-                    data={'content' : fixed_content})
+                    data={'content': fixed_content})
                 result.raise_for_status()
 
         if self.dry_run:
@@ -99,7 +102,7 @@ class WPBot:
         response = requests.get(
             f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
             headers={'Authorization': 'Bearer ' + self.oauth_token},
-            params={'context' : 'edit'})
+            params={'context': 'edit'})
 
         json = response.json()
         post = json
@@ -122,7 +125,7 @@ class WPBot:
         response = requests.get(
             f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
             headers={'Authorization': 'Bearer ' + self.oauth_token},
-            params={'context' : 'edit'})
+            params={'context': 'edit'})
 
         json = response.json()
         post = json
@@ -144,7 +147,7 @@ class WPBot:
                 result = requests.post(
                     f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts/{post_id}',
                     headers={'Authorization': 'Bearer ' + self.oauth_token},
-                    data={'content' : fixed_content})
+                    data={'content': fixed_content})
                 result.raise_for_status()
                 print("modified post!")
         print("")
@@ -159,7 +162,7 @@ class WPBot:
             response = requests.get(
                 f'https://public-api.wordpress.com/wp/v2/sites/{self.site}/posts',
                 headers={'Authorization': 'Bearer ' + self.oauth_token},
-                params={'context' : 'edit', 'page': page})
+                params={'context': 'edit', 'page': page})
 
             json = response.json()
             for post in json:
@@ -190,6 +193,7 @@ class WPBot:
         else:
             print(f'Unsupported command: {args.command}')
 
+
 def _get_oauth_token(client_id, client_secret):
     oauth_token = _get_cached_oauth_token()
     if not oauth_token:
@@ -197,6 +201,7 @@ def _get_oauth_token(client_id, client_secret):
         oauth_token = oauth_retriever.get_oauth_token()
         _cache_oauth_token(oauth_token)
     return oauth_token
+
 
 def _get_cached_oauth_token():
     try:
@@ -206,9 +211,11 @@ def _get_cached_oauth_token():
         print('Cached OAuth token not found')
         return None
 
+
 def _cache_oauth_token(oauth_token):
     with open('oauth.txt', 'w') as file:
         file.write(oauth_token)
+
 
 if __name__ == "__main__":
     WPBot().cli()

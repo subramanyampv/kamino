@@ -3,8 +3,10 @@ import unittest
 
 import args_parser
 
+
 class BasicTestCase(unittest.TestCase):
     '''Basic unit tests for argument parsing'''
+
     def test_no_args_should_fail(self):
         '''Parser should fail when no arguments are given'''
         exception = False
@@ -14,8 +16,10 @@ class BasicTestCase(unittest.TestCase):
             exception = True
         self.assertTrue(exception)
 
+
 class DryRunTestCase(unittest.TestCase):
     '''Unit tests for dry run feature'''
+
     def test_dry_run_on(self):
         '''With --dry-run'''
         args = args_parser.parse_args(['--dry-run', 'list-tags'])
@@ -26,8 +30,10 @@ class DryRunTestCase(unittest.TestCase):
         args = args_parser.parse_args(['list-tags'])
         self.assertFalse(args.dry_run)
 
+
 class CommandsTestCase(unittest.TestCase):
     '''Supported commands'''
+
     def test_list_tags(self):
         '''list-tags command'''
         args = args_parser.parse_args(['list-tags'])
@@ -42,6 +48,7 @@ class CommandsTestCase(unittest.TestCase):
         '''fix-posts command'''
         args = args_parser.parse_args(['fix-posts'])
         self.assertEqual('fix-posts', args.command)
+
 
 if __name__ == '__main__':
     unittest.main()

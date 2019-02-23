@@ -3,6 +3,8 @@
 import re
 import html
 # pylint: disable=too-few-public-methods
+
+
 class RegexFixerBase:
     '''
     Base class for fixers with a regex
@@ -20,6 +22,7 @@ class RegexFixerBase:
             content,
             flags=re.S)
 
+
 class SpanFixer(RegexFixerBase):
     '''
     Fixes span elements with code class.
@@ -29,6 +32,7 @@ class SpanFixer(RegexFixerBase):
         super().__init__(
             r'<span class="code">(.+?)</span>',
             r'<code>\1</code>')
+
 
 class PreCodeFixer(RegexFixerBase):
     '''
@@ -40,6 +44,7 @@ class PreCodeFixer(RegexFixerBase):
             r'<pre[^>]*><code>[\r\n]*(.+?)[\r\n]*</code></pre>',
             r'\n[code]\n\1\n[/code]\n')
 
+
 class PrePrettyprintFixer(RegexFixerBase):
     '''
     Fixes pre elements with prettyprint class
@@ -50,6 +55,7 @@ class PrePrettyprintFixer(RegexFixerBase):
             r'<pre class="prettyprint">[\r\n]*(.+?)[\r\n]*</pre>',
             r'\n[code]\n\1\n[/code]\n')
 
+
 class EmptyParagraphFixer(RegexFixerBase):
     '''Fixes empty paragraphs'''
 
@@ -57,6 +63,7 @@ class EmptyParagraphFixer(RegexFixerBase):
         super().__init__(
             r'<p>\s*</p>',
             r'\n')
+
 
 class BlockquotePreFixer(RegexFixerBase):
     '''
@@ -67,6 +74,7 @@ class BlockquotePreFixer(RegexFixerBase):
         super().__init__(
             r'<blockquote>\s*<pre>\s*(.+?)\s*</pre>\s*</blockquote>',
             r'\n[code]\n\1\n[/code]\n')
+
 
 class DivPreCodeFixer(RegexFixerBase):
     '''
@@ -81,6 +89,7 @@ class DivPreCodeFixer(RegexFixerBase):
             r'\n[code]\n\1\n[/code]\n'
         )
 
+
 class PreFixer(RegexFixerBase):
     '''
     Fixes remaining pre elements
@@ -92,6 +101,7 @@ class PreFixer(RegexFixerBase):
             r'\n[code]\n\1\n[/code]\n'
         )
 
+
 class StripCodeHighlighterFixer(RegexFixerBase):
     '''
     Convert <code class="highlighter-rouge"></code> to <code>
@@ -101,6 +111,7 @@ class StripCodeHighlighterFixer(RegexFixerBase):
         super().__init__(
             r'<code class="[^"]+">(.+?)</code>',
             r'<code>\1</code>')
+
 
 class HtmlEncodeFixer(RegexFixerBase):
     '''
@@ -112,6 +123,7 @@ class HtmlEncodeFixer(RegexFixerBase):
             r'\[code[^\]]*\](.+?)\[/code\]',
             lambda match: _unescape_html(match[0])
         )
+
 
 def _unescape_html(content):
     '''Unescapes HTML fully'''
@@ -125,6 +137,7 @@ def _unescape_html(content):
             current = unescaped
 
     return current
+
 
 def _unescape_double_html(content):
     '''Unescapes double encoded HTML'''
@@ -146,6 +159,7 @@ def _unescape_double_html(content):
     # return the one before it got stable
     return previous
 
+
 CLASSES = [
     BlockquotePreFixer,
     DivPreCodeFixer,
@@ -155,12 +169,14 @@ CLASSES = [
     EmptyParagraphFixer,
     StripCodeHighlighterFixer,
     PreFixer,
-    #HtmlEncodeFixer
+    # HtmlEncodeFixer
 ]
+
 
 def is_fixable(content):
     '''Checks if the given content can be repaired'''
     return content != fix_post_content(content)
+
 
 def fix_post_content(content):
     '''Repairs post content by converting pre tags to [code] snippets'''
