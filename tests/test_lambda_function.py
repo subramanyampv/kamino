@@ -6,6 +6,7 @@ import requests_mock
 
 import lambda_function
 
+
 @requests_mock.Mocker()
 class LambdaTestCase(unittest.TestCase):
     '''
@@ -38,7 +39,8 @@ class LambdaTestCase(unittest.TestCase):
         }
 
         # act
-        result = lambda_function.lambda_handler_with_environment(event, environment)
+        result = lambda_function.lambda_handler_with_environment(
+            event, environment)
 
         # assert
         self.assertDictEqual(result, {
@@ -82,7 +84,8 @@ class LambdaTestCase(unittest.TestCase):
         }
 
         # act
-        result = lambda_function.lambda_handler_with_environment(event, environment)
+        result = lambda_function.lambda_handler_with_environment(
+            event, environment)
 
         # assert
         self.assertDictEqual(result, {
@@ -125,12 +128,14 @@ class LambdaTestCase(unittest.TestCase):
         }
 
         # act
-        result = lambda_function.lambda_handler_with_environment(event, environment)
+        result = lambda_function.lambda_handler_with_environment(
+            event, environment)
 
         # assert
         self.assertDictEqual(result, {
             'result': 'Not a supported space'
         })
+
 
 if __name__ == '__main__':
     unittest.main()

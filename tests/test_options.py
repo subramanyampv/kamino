@@ -5,6 +5,7 @@ import unittest
 
 import lambda_function
 
+
 class OptionsTestCase(unittest.TestCase):
     '''
     Unit tests for the Options class
@@ -124,6 +125,7 @@ class OptionsTestCase(unittest.TestCase):
         parent_page_id = options.parent_page_id('XY-100')
 
         self.assertEqual(0, parent_page_id)
+
 
 if __name__ == '__main__':
     unittest.main()

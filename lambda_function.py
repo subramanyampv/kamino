@@ -7,6 +7,7 @@ import json
 import requests
 from requests.auth import HTTPBasicAuth
 
+
 def extract_space_key(issue_key):
     """
     Extracts the space key out of an issue key.
@@ -16,6 +17,8 @@ def extract_space_key(issue_key):
     return issue_key.split('-')[0]
 
 # pylint: disable=too-few-public-methods
+
+
 class Options:
     """
     The options of the function.
@@ -34,7 +37,8 @@ class Options:
 
         self.base_url = environment['ATLASSIAN_CLOUD_NAME']
         if not self.base_url:
-            raise ValueError('Missing environment variable ATLASSIAN_CLOUD_NAME')
+            raise ValueError(
+                'Missing environment variable ATLASSIAN_CLOUD_NAME')
 
         self.username = environment['USERNAME']
         if not self.username:
@@ -55,7 +59,8 @@ class Options:
 
         space_key = extract_space_key(issue_key)
         for space_config in self.spaces.split(','):
-            [configured_space_key, configured_page_id] = space_config.split('=')
+            [configured_space_key,
+                configured_page_id] = space_config.split('=')
             if configured_space_key == space_key:
                 return int(configured_page_id)
 
@@ -68,6 +73,7 @@ def view_page_url(base_url, page_id):
     Gets the URL of a Confluence page
     """
     return f"https://{base_url}.atlassian.net/wiki/pages/viewpage.action?pageId={page_id}"
+
 
 def create_page(options, issue_key, summary):
     """
@@ -213,6 +219,7 @@ def create_page(options, issue_key, summary):
     result.raise_for_status()
     return create_page_response
 
+
 def lambda_handler_with_environment(event, environment):
     '''
     Processes the JIRA event
@@ -236,6 +243,8 @@ def lambda_handler_with_environment(event, environment):
     }
 
 # pylint: disable=unused-argument
+
+
 def lambda_handler(event, context):
     """
     Gets updates from JIRA when an issue is created.
