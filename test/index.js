@@ -22,7 +22,6 @@ describe('app', () => {
         '.gitignore',
         '.travis.yml',
         '.editorconfig',
-        'CHANGELOG.md',
         'README.md',
 
         'SomeLib.sln',
@@ -64,33 +63,6 @@ describe('app', () => {
     }
 
     /**
-     * Converts dates in files.
-     */
-    class DateHandler {
-      /**
-       * Checks if the file might contain the present date.
-       * @param {string} filename - The filename to check.
-       * @returns {boolean} A value indicating whether the file is
-       * expected to contain the present date.
-       */
-      shouldHandle(filename) {
-        const basename = path.basename(filename);
-        return basename === 'CHANGELOG.md';
-      }
-
-      transformActualData(actualData) {
-        return actualData.replace(
-          new Date().toISOString().substr(0, 10),
-          '2017-08-01',
-        ); // the date of the test data
-      }
-
-      transformExpectedData(expectedData) {
-        return expectedData;
-      }
-    }
-
-    /**
      * Converts years in files.
      */
     class YearHandler {
@@ -126,7 +98,6 @@ describe('app', () => {
         .map(f => path.relative(expectedDataDirectory, f));
       const handlers = [
         new GuidHandler(),
-        new DateHandler(),
         new YearHandler(),
       ];
       expectedFiles.forEach((fixtureFile) => {

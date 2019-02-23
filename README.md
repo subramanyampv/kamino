@@ -39,7 +39,6 @@ The default test command invokes `gulp`.
 To create a new release:
 
 - Make sure the version is correct in `package.json` and `package-lock.json`
-- Prepare changelog so that items listed in `Unreleased` are moved to the new version
 - Push changes to master
 - Create a tag
 - Push the tag
