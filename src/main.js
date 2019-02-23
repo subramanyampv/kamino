@@ -29,7 +29,7 @@ function reTag(cliArgs, currentVersion) {
 
   // push?
   if (cliArgs.push) {
-    git.push('push');
+    git.push();
   }
 }
 
@@ -65,7 +65,7 @@ async function main() {
 
     // push?
     if (cliArgs.push) {
-      git.push('follow');
+      git.push();
     }
   }
 }

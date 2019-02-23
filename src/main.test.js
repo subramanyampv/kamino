@@ -118,7 +118,7 @@ describe('main (integration test)', () => {
 
     // assert
     expect(git.tag).calledOnceWith('0.9.2');
-    expect(git.push).calledOnceWith('push');
+    expect(git.push).calledOnce;
   });
 
   it('should tag on a folder with multi-module pom', async () => {
@@ -154,6 +154,6 @@ describe('main (integration test)', () => {
     expect(git.add).calledThrice;
     expect(git.commit).calledOnceWith('Bumping version 3.13.0');
     expect(git.tag).calledOnceWith('3.13.0');
-    expect(git.push).calledOnceWith('follow');
+    expect(git.push).calledOnce;
   });
 });

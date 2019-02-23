@@ -67,7 +67,7 @@ describe('git', () => {
       childProcess.spawnSync.returns({});
 
       // act
-      git.push('follow');
+      git.push();
 
       // assert
       expect(childProcess.spawnSync).calledOnceWith(
@@ -77,56 +77,13 @@ describe('git', () => {
       );
     });
 
-    it('should push and push tags', () => {
-      // arrange
-      const git = new Git('.');
-      childProcess.spawnSync.returns({});
-
-      // act
-      git.push('push');
-
-      // assert
-      expect(childProcess.spawnSync).calledOnceWith(
-        'git',
-        ['push', '--tags'],
-        { cwd: '.' },
-      );
-    });
-
-    it('should push and ignore tags', () => {
-      // arrange
-      const git = new Git('.');
-      childProcess.spawnSync.returns({});
-
-      // act
-      git.push('none');
-
-      // assert
-      expect(childProcess.spawnSync).calledOnceWith(
-        'git',
-        ['push'],
-        { cwd: '.' },
-      );
-    });
-
-    it('should throw if tag mode is invalid', () => {
-      // arrange
-      const git = new Git('.');
-
-      // act and assert
-      expect(() => git.push()).to.throw('Invalid tag mode');
-
-      // assert
-      expect(childProcess.spawnSync).not.called;
-    });
-
     it('should throw if push failed', () => {
       // arrange
       const git = new Git('.');
       childProcess.spawnSync.returns({ status: 1 });
 
       // act and assert
-      expect(() => git.push('follow')).to.throw('Could not push');
+      expect(() => git.push()).to.throw('Could not push');
 
       // assert
       expect(childProcess.spawnSync).calledOnceWith(

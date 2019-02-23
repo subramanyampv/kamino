@@ -71,24 +71,9 @@ class Git {
 
   /**
    * Pushes changes.
-   * @param {('none'|'push'|'follow')} tagMode Specifies how tags should be treated.
    */
-  push(tagMode) {
-    let args = [];
-    switch (tagMode) {
-      case 'push':
-        args = ['push', '--tags'];
-        break;
-      case 'follow':
-        args = ['push', '--follow-tags'];
-        break;
-      case 'none':
-        args = ['push'];
-        break;
-      default:
-        throw new Error(`Invalid tag mode: ${tagMode}`);
-    }
-
+  push() {
+    const args = ['push', '--follow-tags'];
     const result = spawnSync('git', args, {
       cwd: this.dir,
     });
