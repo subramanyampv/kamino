@@ -1,57 +1,50 @@
 '''
 Unit tests for the lambda function
 '''
-import unittest
 import requests_mock
 
 import lambda_function
 
 
-@requests_mock.Mocker()
-class LambdaTestCase(unittest.TestCase):
+def test_not_kdd_issue():
     '''
-    Unit tests for the lambda function
+    Tests receiving notification for a non KDD issue
     '''
 
-    # pylint: disable=unused-argument
-    def test_not_kdd_issue(self, mocker):
-        '''
-        Tests receiving notification for a non KDD issue
-        '''
-
-        event = {
-            'body': '''{
-                "issue": {
-                    "key": "IG-100",
-                    "fields": {
-                        "summary": "A normal ticket"
-                    }
+    event = {
+        'body': '''{
+            "issue": {
+                "key": "IG-100",
+                "fields": {
+                    "summary": "A normal ticket"
                 }
             }
-            '''
         }
-
-        environment = {
-            'ATLASSIAN_CLOUD_NAME': 'hello',
-            'USERNAME': 'username',
-            'PASSWORD': 'password',
-            'SPACES': 'S1=12,XYZ=900'
-        }
-
-        # act
-        result = lambda_function.lambda_handler_with_environment(
-            event, environment)
-
-        # assert
-        self.assertDictEqual(result, {
-            'result': 'Not a KDD issue'
-        })
-    # pylint: enable=unused-argument
-
-    def test_kdd_issue(self, mocker):
         '''
-        Test creating a KDD issue
-        '''
+    }
+
+    environment = {
+        'ATLASSIAN_CLOUD_NAME': 'hello',
+        'USERNAME': 'username',
+        'PASSWORD': 'password',
+        'SPACES': 'S1=12,XYZ=900'
+    }
+
+    # act
+    result = lambda_function.lambda_handler_with_environment(
+        event, environment)
+
+    # assert
+    assert result == {
+        'result': 'Not a KDD issue'
+    }
+
+
+def test_kdd_issue():
+    '''
+    Test creating a KDD issue
+    '''
+    with requests_mock.Mocker() as mocker:
         mocker.register_uri(
             'POST',
             'https://hello.atlassian.net/wiki/rest/api/content',
@@ -88,14 +81,16 @@ class LambdaTestCase(unittest.TestCase):
             event, environment)
 
         # assert
-        self.assertDictEqual(result, {
+        assert result == {
             'id': 42
-        })
+        }
 
-    def test_unsupported_space(self, mocker):
-        '''
-        Test creating a KDD issue for an unknown space
-        '''
+
+def test_unsupported_space():
+    '''
+    Test creating a KDD issue for an unknown space
+    '''
+    with requests_mock.Mocker() as mocker:
         mocker.register_uri(
             'POST',
             'https://hello.atlassian.net/wiki/rest/api/content',
@@ -132,10 +127,6 @@ class LambdaTestCase(unittest.TestCase):
             event, environment)
 
         # assert
-        self.assertDictEqual(result, {
+        assert result == {
             'result': 'Not a supported space'
-        })
-
-
-if __name__ == '__main__':
-    unittest.main()
+        }

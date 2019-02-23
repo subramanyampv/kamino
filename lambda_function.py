@@ -59,8 +59,10 @@ class Options:
 
         space_key = extract_space_key(issue_key)
         for space_config in self.spaces.split(','):
-            [configured_space_key,
-                configured_page_id] = space_config.split('=')
+            [
+                configured_space_key,
+                configured_page_id
+            ] = space_config.split('=')
             if configured_space_key == space_key:
                 return int(configured_page_id)
 

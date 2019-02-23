@@ -2,6 +2,7 @@
 A bot that automatically creates a Confluence page when a Jira ticket is created.
 
 [![Build Status](https://travis-ci.org/ngeor/kddbot.svg?branch=master)](https://travis-ci.org/ngeor/kddbot)
+[![Coverage Status](https://coveralls.io/repos/github/ngeor/kddbot/badge.svg?branch=master)](https://coveralls.io/github/ngeor/kddbot?branch=master)
 
 ![kddbot logo](kddbot-256px.png?raw=true)
 

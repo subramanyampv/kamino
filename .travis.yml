@@ -1,13 +1,13 @@
 language: python
 python:
-  - "3.6"
+  - '3.6'
 install:
   - pip install -r requirements.txt
-  - pip install pylint coverage
+  - pip install -r requirements_dev.txt
 script:
   - pylint *.py
-  - pylint tests
-  - python -m unittest
-  - coverage run --omit='/home/travis/virtualenv/*' -m unittest
-  - coverage report --fail-under=95
+  - pylint tests/*.py
+  - coverage run -m pytest
   - coverage html
+  - coverage report
+  - coveralls
