@@ -32,3 +32,6 @@ alias npm-bump='npm version --no-git-tag-version'
 function pingdom() {
   while true; do curl -I $1; sleep 2; done
 }
+
+# python make
+alias pmake='pylint *.py && pylint tests/*.py && python -m pytest && coverage run -m pytest && coverage html && coverage report'
