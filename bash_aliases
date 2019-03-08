@@ -35,3 +35,6 @@ function pingdom() {
 
 # python make
 alias pmake='pylint *.py && pylint tests/*.py && python -m pytest && coverage run -m pytest && coverage html && coverage report'
+
+# build and install archetype
+alias archmake='mvn clean install archetype:update-local-catalog'
