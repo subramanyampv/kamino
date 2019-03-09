@@ -12,11 +12,18 @@
 #
 
 [alias]
+    co = checkout
     ec = config --global -e
-    up = !git checkout master && git fetch -p -t && git pull --rebase
-    nuke=!git up && git clean -dfx && bclean
-    amend=commit --amend
-    pf=push --force-with-lease
+    up = !git pull --rebase --prune
+    cob = checkout -b
+    amend = commit --amend
+    pf = push --force-with-lease
+    # delete branches without failing (it fails when there are no branches to delete)
+    bclean = "!f() { git branch -l | grep -v master | xargs git branch -D; return 0; }; f"
+    # checkout master, get latest, delete branches
+    bdone = "!f() { git checkout master && git up && git bclean; }; f"
+    # wipe out everything and get master
+    nuke = !git reset HEAD --hard && git clean -dfx && git bdone
 [filter "clang-format-java"]
     clean = clang-format -assume-filename=test.java
     smudge = cat
