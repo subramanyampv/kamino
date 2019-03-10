@@ -1,7 +1,7 @@
 clone-all
 =========
 
-Automatically clone all your GitHub repositories.
+Automatically clone all your GitHub and Bitbucket Cloud repositories.
 
 [![Build Status](https://travis-ci.org/ngeor/clone-all.svg?branch=master)](https://travis-ci.org/ngeor/clone-all)
 [![npm (scoped)](https://img.shields.io/npm/v/@ngeor/clone-all.svg)](https://www.npmjs.com/package/@ngeor/clone-all)
@@ -26,15 +26,6 @@ npx @ngeor/clone-all --provider github --username ngeor --output ./repositories/
 ```
 
 This will clone all the repositories of the `ngeor` user into the `repositoris` folder.
-If the repositories are already cloned, it will pull instead.
-
-### Creating bundles
-
-In addition to cloning, you can also create git bundles for your repositories in a separate directory.
-
-```
-npx @ngeor/clone-all --provider github --username ngeor --output ./repositories/ --bundle-dir ./bundles/
-```
 
 ### Listing repository information
 
@@ -63,7 +54,6 @@ Command Line Options
 *   --username: the user owning the repositories
 *   --protocol: specify the cloning protocol (https or ssh)
 *   --ssh-username: specify a different username for cloning over ssh (instead of `git@`)
-*   --no-pagination: don't fetch all repositories but only the first ones GitHub returns
 *   --no-forks: Do not clone forked repositories
 *   --no-archived: Do not clone archived repositories
 
@@ -77,9 +67,6 @@ Bitbucket Cloud options:
 ### Cloning options
 
 *   --output: the folder in which to clone the repositories
-*   --bundle-dir: creates bundles of the cloned repositories in the given directory
-*   --no-clone: Do not clone missing repositories, only pull the ones that are already present
-*   --no-pull: Do not pull existing repositories, only clone the ones that are missing locally
 
 ### List options
 
