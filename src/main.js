@@ -41,6 +41,12 @@ async function main() {
   initFs(cliArgs.dryRun);
   initGit(cliArgs.dryRun);
 
+  // ensure there are no pending changes
+  const git = createGit(cliArgs.dir);
+  if (git.hasChanges()) {
+    throw new Error('There are pending changes. Please commit or stash them first.');
+  }
+
   // validate semver
   const currentVersion = await getCurrentVersion(cliArgs);
   if (cliArgs.reTag) {
@@ -54,11 +60,10 @@ async function main() {
   await updateProjectFiles({
     dir: cliArgs.dir,
     currentVersion,
-    newVersion,
+    newVersion
   });
 
   // commit?
-  const git = createGit(cliArgs.dir);
   if (cliArgs.commit) {
     git.commit(cliArgs.message || `Bumping version ${newVersion}`);
     git.tag(newVersion);
@@ -71,5 +76,5 @@ async function main() {
 }
 
 module.exports = {
-  main,
+  main
 };

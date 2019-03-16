@@ -15,5 +15,5 @@ function initGit(dryRun) {
 
 module.exports = {
   createGit,
-  initGit,
+  initGit
 };

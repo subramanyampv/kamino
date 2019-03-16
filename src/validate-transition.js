@@ -10,7 +10,7 @@ function splitSemVer(version) {
 const bumpers = {
   major: parts => `${parts[0] + 1}.0.0`,
   minor: parts => `${parts[0]}.${parts[1] + 1}.0`,
-  patch: parts => `${parts[0]}.${parts[1]}.${parts[2] + 1}`,
+  patch: parts => `${parts[0]}.${parts[1]}.${parts[2] + 1}`
 };
 
 /**
@@ -50,5 +50,5 @@ function validateTransition(oldVersion, newVersion) {
 }
 
 module.exports = {
-  validateTransition,
+  validateTransition
 };

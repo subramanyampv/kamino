@@ -8,7 +8,7 @@ function getLatestVersionFromGit(dir) {
 
 function getCurrentVersion(cliArgs) {
   const {
-    dir, source,
+    dir, source
   } = cliArgs;
 
   let result;
@@ -27,5 +27,5 @@ function getCurrentVersion(cliArgs) {
 }
 
 module.exports = {
-  getCurrentVersion,
+  getCurrentVersion
 };

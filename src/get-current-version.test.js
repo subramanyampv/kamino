@@ -13,7 +13,7 @@ describe('getCurrentVersion', () => {
     pomModule = sinon.stub(require('./pom'));
     const getCurrentVersionModule = proxyquire('./get-current-version', {
       './git': gitModule,
-      './pom': pomModule,
+      './pom': pomModule
     });
 
     // eslint-disable-next-line prefer-destructuring
@@ -25,7 +25,7 @@ describe('getCurrentVersion', () => {
   it('should get the current version from git', async () => {
     // arrange
     const git = {
-      latestVersion: sinon.stub(),
+      latestVersion: sinon.stub()
     };
 
     gitModule.createGit.withArgs('/tmp').returns(git);
@@ -34,7 +34,7 @@ describe('getCurrentVersion', () => {
     // act and assert
     expect(await getCurrentVersion({
       dir: '/tmp',
-      source: 'git',
+      source: 'git'
     })).to.equal('1.2.3');
   });
 
@@ -45,7 +45,7 @@ describe('getCurrentVersion', () => {
     // act and assert
     expect(await getCurrentVersion({
       dir: '/tmp',
-      source: 'pom',
+      source: 'pom'
     })).to.equal('1.2.3');
   });
 });

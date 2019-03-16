@@ -86,7 +86,7 @@ class PomVisitor extends SaxWriter {
  */
 async function updatePomFiles(opts) {
   const {
-    dir, currentVersion, newVersion,
+    dir, currentVersion, newVersion
   } = opts;
   const pomFilePath = path.join(dir, 'pom.xml');
   const pomVisitor = new PomVisitor(dir, currentVersion, newVersion);
@@ -100,5 +100,5 @@ async function updatePomFiles(opts) {
 }
 
 module.exports = {
-  updatePomFiles,
+  updatePomFiles
 };

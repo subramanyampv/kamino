@@ -12,5 +12,5 @@ function initFs(dryRun) {
 }
 
 module.exports = {
-  initFs,
+  initFs
 };

@@ -15,7 +15,7 @@ describe('git', () => {
     childProcess = sinon.stub(require('child_process'));
 
     gitModule = proxyquire('./git', {
-      child_process: childProcess,
+      child_process: childProcess
     });
 
     // eslint-disable-next-line prefer-destructuring

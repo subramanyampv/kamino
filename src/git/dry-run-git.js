@@ -20,5 +20,5 @@ class DryRunGit extends Git {
 }
 
 module.exports = {
-  DryRunGit,
+  DryRunGit
 };

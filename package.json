@@ -54,6 +54,7 @@
   "bin": "src/yart.js",
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.3",
     "eslint": "^5.15.2",
     "eslint-config-airbnb-base": "^13.1.0",

@@ -3,5 +3,5 @@ const { SaxWriter } = require('./sax-writer');
 
 module.exports = {
   SaxVisitor,
-  SaxWriter,
+  SaxWriter
 };

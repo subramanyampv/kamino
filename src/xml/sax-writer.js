@@ -60,5 +60,5 @@ class SaxWriter extends SaxVisitor {
 }
 
 module.exports = {
-  SaxWriter,
+  SaxWriter
 };

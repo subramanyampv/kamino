@@ -65,5 +65,5 @@ class SaxVisitor {
 }
 
 module.exports = {
-  SaxVisitor,
+  SaxVisitor
 };

@@ -19,7 +19,7 @@ const { createGit } = require('./git');
 async function updateTextFile(opts, file) {
   const result = [];
   const {
-    dir, currentVersion, newVersion,
+    dir, currentVersion, newVersion
   } = opts;
   const fullPath = path.join(dir, file);
   if (fs.existsSync(fullPath)) {
@@ -56,5 +56,5 @@ async function updateProjectFiles(opts) {
 }
 
 module.exports = {
-  updateProjectFiles,
+  updateProjectFiles
 };

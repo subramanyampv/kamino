@@ -3,5 +3,5 @@ const { updatePomFiles } = require('./update-pom-files');
 
 module.exports = {
   getPomVersion,
-  updatePomFiles,
+  updatePomFiles
 };

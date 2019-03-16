@@ -39,7 +39,7 @@ describe('updatePomFiles', () => {
         result = await updatePomFiles({
           dir: testDir,
           currentVersion: '0.9.2',
-          newVersion: '1.0.0',
+          newVersion: '1.0.0'
         });
       });
 
@@ -62,7 +62,7 @@ describe('updatePomFiles', () => {
         result = await updatePomFiles({
           dir: testDir,
           currentVersion: '0.9.3',
-          newVersion: '1.0.0',
+          newVersion: '1.0.0'
         });
       });
 
@@ -90,7 +90,7 @@ describe('updatePomFiles', () => {
     const pomDirs = [
       testDir,
       path.join(testDir, 'bar-child-module'),
-      path.join(testDir, 'foo-child-module'),
+      path.join(testDir, 'foo-child-module')
     ];
 
     const pomInputFiles = pomDirs.map(d => path.join(d, 'pom.xml'));
@@ -105,7 +105,7 @@ describe('updatePomFiles', () => {
       // store contents of pom
       originalPomContents = pomInputFiles.map(p => ({
         file: p,
-        contents: fs.readFileSync(p, 'utf8'),
+        contents: fs.readFileSync(p, 'utf8')
       }));
     });
 
@@ -122,7 +122,7 @@ describe('updatePomFiles', () => {
         result = await updatePomFiles({
           dir: testDir,
           currentVersion: '3.12.0',
-          newVersion: '3.13.0',
+          newVersion: '3.13.0'
         });
       });
 
@@ -130,7 +130,7 @@ describe('updatePomFiles', () => {
         expect(result).to.eql([
           'pom.xml',
           path.join('foo-child-module', 'pom.xml'),
-          path.join('bar-child-module', 'pom.xml'),
+          path.join('bar-child-module', 'pom.xml')
         ]);
       });
 

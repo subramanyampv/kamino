@@ -20,5 +20,5 @@ function getPomVersion(dir) {
 }
 
 module.exports = {
-  getPomVersion,
+  getPomVersion
 };

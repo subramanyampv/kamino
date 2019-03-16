@@ -11,7 +11,7 @@ class Git {
 
   add(file) {
     const result = spawnSync('git', ['add', file], {
-      cwd: this.dir,
+      cwd: this.dir
     });
 
     if (result.status) {
@@ -22,7 +22,7 @@ class Git {
   versionExists(version) {
     const result = spawnSync('git', ['tag', '--sort=-v:refname'], {
       cwd: this.dir,
-      encoding: 'utf8',
+      encoding: 'utf8'
     });
 
     if (result.status) {
@@ -35,7 +35,7 @@ class Git {
   latestVersion() {
     const result = spawnSync('git', ['tag', '--sort=-v:refname'], {
       cwd: this.dir,
-      encoding: 'utf8',
+      encoding: 'utf8'
     });
 
     if (result.status) {
@@ -47,7 +47,7 @@ class Git {
 
   commit(message) {
     const result = spawnSync('git', ['commit', '-m', message], {
-      cwd: this.dir,
+      cwd: this.dir
     });
 
     if (result.status) {
@@ -58,9 +58,9 @@ class Git {
   tag(version) {
     const result = spawnSync(
       'git', [
-        'tag', '-m', `Releasing version ${version}`, `v${version}`,
+        'tag', '-m', `Releasing version ${version}`, `v${version}`
       ], {
-        cwd: this.dir,
+        cwd: this.dir
       },
     );
 
@@ -75,15 +75,29 @@ class Git {
   push() {
     const args = ['push', '--follow-tags'];
     const result = spawnSync('git', args, {
-      cwd: this.dir,
+      cwd: this.dir
     });
 
     if (result.status) {
       throw new Error('Could not push');
     }
   }
+
+  /**
+   * Checks if the given repository has pending changes.
+   * This uses `git diff-index --quiet HEAD --` which will fail
+   * if there are pending changes.
+   */
+  hasChanges() {
+    const result = spawnSync(
+      'git',
+      ['diff-index', '--quiet', 'HEAD', '--'],
+      { cwd: this.dir },
+    );
+    return result.status !== 0;
+  }
 }
 
 module.exports = {
-  Git,
+  Git
 };
