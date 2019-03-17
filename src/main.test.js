@@ -59,9 +59,51 @@ describe('main (integration test)', () => {
         });
 
         describe('and not tagged', () => {
-          it('should create the first tag', async () => {
+          it('should create the first tag with patch', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', 'patch'];
             await main();
             expect(git.latestVersion()).to.eql('0.0.1');
+          });
+
+          it('should create the first tag with 0.0.0', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', '0.0.0'];
+            await main();
+            expect(git.latestVersion()).to.eql('0.0.0');
+          });
+
+          it('should create the first tag with 0.0.1', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', '0.0.1'];
+            await main();
+            expect(git.latestVersion()).to.eql('0.0.1');
+          });
+
+          it('should create the first tag with minor', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', 'minor'];
+            await main();
+            expect(git.latestVersion()).to.eql('0.1.0');
+          });
+
+          it('should create the first tag with 0.1.0', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', '0.1.0'];
+            await main();
+            expect(git.latestVersion()).to.eql('0.1.0');
+          });
+
+          it('should create the first tag with major', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', 'major'];
+            await main();
+            expect(git.latestVersion()).to.eql('1.0.0');
+          });
+
+          it('should create the first tag with 1.0.0', async () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', '1.0.0'];
+            await main();
+            expect(git.latestVersion()).to.eql('1.0.0');
+          });
+
+          it('should not accept other tags as first tags', () => {
+            process.argv = ['node', 'main.js', '--dir', tmpdir, '--no-push', '-v', '2.0.0'];
+            return expect(main()).to.be.rejectedWith('The first tag must be one of 0.0.0, 0.0.1, 0.1.0, 1.0.0.');
           });
         });
 

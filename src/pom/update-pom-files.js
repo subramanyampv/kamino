@@ -49,6 +49,8 @@ class PomVisitor extends SaxWriter {
   }
 
   async process(filename) {
+    // TODO it should pick up properties that match the version, based on a pattern for
+    // safety or interactively via prompt.
     const pomResult = await super.process(filename);
     let result = [];
     if (pomResult) {

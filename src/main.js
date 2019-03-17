@@ -14,15 +14,7 @@ function requireNoVersionsAtHead(git) {
   }
 }
 
-async function main() {
-  // parse arguments
-  const cliArgs = parse();
-
-  // create objects for dryRun
-  initFs(cliArgs.dryRun);
-  initGit(cliArgs.dryRun);
-
-  const git = createGit(cliArgs.dir);
+function basicGitSanityChecks(git) {
   if (!git.isGitRepository()) {
     throw new Error('Not a git repository.');
   }
@@ -41,6 +33,21 @@ async function main() {
   if (currentGitVersion && !isSemVerFormat(currentGitVersion)) {
     throw new Error(`Current git version ${currentGitVersion} is not SemVer.`);
   }
+
+  return currentGitVersion;
+}
+
+async function main() {
+  // parse arguments
+  const cliArgs = parse();
+
+  // create objects for dryRun
+  // TODO don't patch standard fs method for dry run
+  initFs(cliArgs.dryRun);
+  initGit(cliArgs.dryRun);
+
+  const git = createGit(cliArgs.dir);
+  const currentGitVersion = basicGitSanityChecks(git);
 
   const pomExists = fs.existsSync(path.join(cliArgs.dir, 'pom.xml'));
   let pomVersion = null;
@@ -62,8 +69,25 @@ async function main() {
       newVersion = pomVersion;
       // TODO: check cliArgs.V
     } else {
-      newVersion = '0.0.1';
-      // TODO: check cliArgs.V
+      newVersion = cliArgs.V || '0.0.1';
+      if (newVersion === 'major') {
+        newVersion = '1.0.0';
+      } else if (newVersion === 'minor') {
+        newVersion = '0.1.0';
+      } else if (newVersion === 'patch') {
+        newVersion = '0.0.1';
+      }
+
+      const allowedVersions = [
+        '0.0.0',
+        '0.0.1',
+        '0.1.0',
+        '1.0.0'
+      ];
+
+      if (!allowedVersions.includes(newVersion)) {
+        throw new Error(`The first tag must be one of ${allowedVersions.join(', ')}.`);
+      }
     }
   } else if (pomVersion) {
     if (currentGitVersion === pomVersion) {
