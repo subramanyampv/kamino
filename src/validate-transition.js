@@ -23,6 +23,27 @@ function allowedNextSemVer(version) {
   return ['patch', 'minor', 'major'].map(b => bumpers[b](parts));
 }
 
+function isAllowedTransition(oldVersion, newVersion) {
+  if (!newVersion) {
+    throw new Error('newVersion is mandatory');
+  }
+
+  if (!isSemVerFormat(newVersion)) {
+    throw new Error(`newVersion ${newVersion} is not semver`);
+  }
+
+  if (!oldVersion) {
+    return ['0.0.0', '0.0.1', '0.1.0', '1.0.0'].includes(newVersion);
+  }
+
+  if (!isSemVerFormat(oldVersion)) {
+    throw new Error(`oldVersion ${oldVersion} is not semver`);
+  }
+
+  const allowedNext = allowedNextSemVer(oldVersion);
+  return allowedNext.includes(newVersion);
+}
+
 function validateTransition(oldVersion, newVersion) {
   if (!newVersion) {
     throw new Error('Please provide version');
@@ -50,5 +71,7 @@ function validateTransition(oldVersion, newVersion) {
 }
 
 module.exports = {
+  isAllowedTransition,
+  isSemVerFormat,
   validateTransition
 };

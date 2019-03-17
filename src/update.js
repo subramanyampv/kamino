@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const { updatePomFiles } = require('./pom');
-const { createGit } = require('./git');
 
 /**
  * @typedef UpdateOptions
@@ -47,10 +46,10 @@ async function updateAndAdd(git, getModifiedFilesAsync) {
 
 /**
  * Updates the version in the project files.
+ * @param {Git} git - The git client.
  * @param {UpdateOptions} opts The update options.
  */
-async function updateProjectFiles(opts) {
-  const git = createGit(opts.dir);
+async function updateProjectFiles(git, opts) {
   await updateAndAdd(git, () => updatePomFiles(opts));
   await updateAndAdd(git, () => updateTextFile(opts, 'README.md'));
 }

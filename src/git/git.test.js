@@ -39,7 +39,7 @@ describe('git', () => {
       expect(childProcess.spawnSync).calledOnceWith(
         'git',
         ['add', 'test.txt'],
-        { cwd: '.' },
+        { cwd: '.', encoding: 'utf8' },
       );
     });
 
@@ -55,7 +55,7 @@ describe('git', () => {
       expect(childProcess.spawnSync).calledOnceWith(
         'git',
         ['add', 'test.txt'],
-        { cwd: '.' },
+        { cwd: '.', encoding: 'utf8' },
       );
     });
   });
@@ -73,7 +73,7 @@ describe('git', () => {
       expect(childProcess.spawnSync).calledOnceWith(
         'git',
         ['push', '--follow-tags'],
-        { cwd: '.' },
+        { cwd: '.', encoding: 'utf8' },
       );
     });
 
@@ -89,7 +89,7 @@ describe('git', () => {
       expect(childProcess.spawnSync).calledOnceWith(
         'git',
         ['push', '--follow-tags'],
-        { cwd: '.' },
+        { cwd: '.', encoding: 'utf8' },
       );
     });
   });

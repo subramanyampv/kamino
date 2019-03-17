@@ -26,13 +26,10 @@ function parse() {
     .version(version)
     .option('-v <version>', 'The new version to use. Must be semver and not leave gaps from '
       + 'previous version. It can also be one of major, minor, patch to automatically increment to the next version.')
-    .option('-s --source <source>', 'The source of the tag information. Valid values are git, pom.', /^(git|pom)$/, 'git')
     .option('--dir [dir]', 'The directory to run the command in', '.')
     .option('--message [message]', 'An optional commit message')
     .option('--dry-run', 'Do not perform any changes, see what would happen')
-    .option('--no-commit', 'Do not commit')
     .option('--no-push', 'Do not push')
-    .option('--re-tag', 'Create and push a tag for an existing version')
     .option('--verbose', 'Increase logging verbosity')
     .parse(process.argv);
 

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { SaxWriter } = require('../xml');
+const { checkArg } = require('../utils');
 
 class ChildPomVisitor extends SaxWriter {
   constructor(newVersion, moduleName) {
@@ -29,9 +30,9 @@ class PomVisitor extends SaxWriter {
   constructor(dir, currentVersion, newVersion) {
     super();
     this.childModules = [];
-    this.dir = dir;
-    this.currentVersion = currentVersion;
-    this.newVersion = newVersion;
+    this.dir = checkArg(dir, 'dir');
+    this.currentVersion = checkArg(currentVersion, 'currentVersion');
+    this.newVersion = checkArg(newVersion, 'newVersion');
   }
 
   onText(text) {

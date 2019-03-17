@@ -10,7 +10,7 @@ class PomVersionFinder extends SaxVisitor {
 }
 
 /**
- * Gets the version defined in a pom file.
+ * Gets a promise that resolves into the version defined in a pom file.
  * @param {string} dir The directory containing the pom file.
  */
 function getPomVersion(dir) {
