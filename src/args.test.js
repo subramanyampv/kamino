@@ -22,7 +22,7 @@ describe('args', () => {
 
       // assert
       expect(args.V).to.be.undefined;
-      expect(args.dir).to.eql('.');
+      expect(args.dir).to.equal('.');
       expect(args.message).to.be.undefined;
       expect(args.dryRun).to.be.undefined;
       expect(args.push).to.be.true;

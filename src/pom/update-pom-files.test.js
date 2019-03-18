@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { expect } = require('chai');
+const chai = require('chai');
 const { updatePomFiles } = require('./update-pom-files');
+
+const { expect } = chai;
+chai.use(require('../../test/test-utils'));
 
 describe('updatePomFiles', () => {
   describe('simple', () => {
@@ -44,13 +47,11 @@ describe('updatePomFiles', () => {
       });
 
       it('should return the pom.xml in the list of modified files', () => {
-        expect(result).to.eql(['pom.xml']);
+        expect(result).to.have.members(['pom.xml']);
       });
 
       it('should modify the pom.xml', () => {
-        expect(
-          fs.readFileSync(pomFilePath, 'utf8'),
-        ).to.eql(fs.readFileSync(path.join(testDir, 'pom-expected.xml'), 'utf8'));
+        expect(pomFilePath).to.have.sameContentsWith(path.join(testDir, 'pom-expected.xml'));
       });
     });
 
@@ -73,7 +74,7 @@ describe('updatePomFiles', () => {
       it('should not modify the pom.xml', () => {
         expect(
           fs.readFileSync(pomFilePath, 'utf8'),
-        ).to.eql(originalPomContents);
+        ).to.equal(originalPomContents);
       });
     });
   });
@@ -127,7 +128,7 @@ describe('updatePomFiles', () => {
       });
 
       it('should return the pom.xml files in the list of modified files', () => {
-        expect(result).to.eql([
+        expect(result).to.have.members([
           'pom.xml',
           path.join('foo-child-module', 'pom.xml'),
           path.join('bar-child-module', 'pom.xml')
@@ -138,9 +139,7 @@ describe('updatePomFiles', () => {
         it(`should modify the pom.xml in ${d}`, () => {
           const inputPom = path.join(d, 'pom.xml');
           const expectedPom = path.join(d, 'pom-expected.xml');
-          expect(
-            fs.readFileSync(inputPom, 'utf8'),
-          ).to.eql(fs.readFileSync(expectedPom, 'utf8'));
+          expect(inputPom).to.have.sameContentsWith(expectedPom);
         });
       });
     });
