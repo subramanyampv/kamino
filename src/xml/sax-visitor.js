@@ -1,6 +1,7 @@
 const fs = require('fs');
 const sax = require('sax');
 const { TagStack } = require('./tag-stack');
+const { checkArg } = require('../utils');
 
 class SaxVisitor {
   constructor() {
@@ -9,7 +10,7 @@ class SaxVisitor {
 
   process(filename) {
     // initialize variables
-    this.filename = filename;
+    this.filename = checkArg(filename, 'filename is required');
     this.result = null;
 
     // create SAX stream

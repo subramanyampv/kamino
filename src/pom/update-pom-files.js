@@ -1,78 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { SaxWriter } = require('../xml');
-const { checkArg } = require('../utils');
-
-class ChildPomVisitor extends SaxWriter {
-  constructor(newVersion, moduleName) {
-    super();
-    this.newVersion = newVersion;
-    this.moduleName = moduleName;
-  }
-
-  onText(text) {
-    if (this.tagStack.isAtPath('project', 'parent', 'version')) {
-      this.write(this.newVersion);
-      this.result = path.join(this.moduleName, 'pom.xml');
-    } else {
-      super.onText(text);
-    }
-  }
-}
-
-function updateChildPomFile(dir, newVersion, moduleName) {
-  const pomFilePath = path.join(dir, moduleName, 'pom.xml');
-  const childPomVisitor = new ChildPomVisitor(newVersion, moduleName);
-  return childPomVisitor.process(pomFilePath);
-}
-
-class PomVisitor extends SaxWriter {
-  constructor(dir, currentVersion, newVersion) {
-    super();
-    this.childModules = [];
-    this.dir = checkArg(dir, 'dir');
-    this.currentVersion = checkArg(currentVersion, 'currentVersion');
-    this.newVersion = checkArg(newVersion, 'newVersion');
-  }
-
-  onText(text) {
-    if (this.tagStack.isAtPath('project', 'version') && text === this.currentVersion) {
-      this.write(this.newVersion);
-      this.result = 'pom.xml';
-    } else {
-      if (this.tagStack.isAtPath('project', 'modules', 'module')) {
-        this.childModules.push(text);
-      }
-
-      super.onText(text);
-    }
-  }
-
-  async process(filename) {
-    // TODO it should pick up properties that match the version, based on a pattern for
-    // safety or interactively via prompt.
-    const pomResult = await super.process(filename);
-    let result = [];
-    if (pomResult) {
-      result.push(pomResult);
-      result = result.concat(
-        await Promise.all(
-          this.childModules.map(childModule => this.updateChildModule(childModule)),
-        ),
-      );
-    }
-
-    return result;
-  }
-
-  updateChildModule(childModule) {
-    return updateChildPomFile(
-      this.dir,
-      this.newVersion,
-      childModule,
-    );
-  }
-}
+const { dom, updateXml } = require('../xml');
 
 /**
  * @typedef UpdateOptions
@@ -92,11 +20,24 @@ async function updatePomFiles(opts) {
     dir, currentVersion, newVersion
   } = opts;
   const pomFilePath = path.join(dir, 'pom.xml');
-  const pomVisitor = new PomVisitor(dir, currentVersion, newVersion);
   let result = [];
 
   if (fs.existsSync(pomFilePath)) {
-    result = await pomVisitor.process(pomFilePath);
+    const contents = await dom(pomFilePath);
+    const modules = contents && contents.project
+      && contents.project.modules && contents.project.modules.module;
+    if (contents.project.version === currentVersion) {
+      result.push('pom.xml');
+      await updateXml(pomFilePath, { project: { version: newVersion } });
+    }
+
+    if (modules && modules.length) {
+      await Promise.all(modules.map(module => updateXml(
+        path.join(dir, module, 'pom.xml'),
+        { project: { parent: { version: newVersion } } }
+      )));
+      result = result.concat(modules.map(module => path.join(module, 'pom.xml')));
+    }
   }
 
   return result;

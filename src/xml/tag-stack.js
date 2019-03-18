@@ -3,20 +3,6 @@ class TagStack {
     this.stack = [];
   }
 
-  isAtPath(...args) {
-    if (this.stack.length !== args.length) {
-      return false;
-    }
-    let i = 0;
-    while (i < this.stack.length) {
-      if (this.stack[i] !== args[i]) {
-        return false;
-      }
-      i += 1;
-    }
-    return true;
-  }
-
   /**
    * Pushes a tag in the stack.
    * @param {string} tagName The name of tag.

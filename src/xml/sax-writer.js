@@ -51,6 +51,7 @@ class SaxWriter extends SaxVisitor {
   process(filename) {
     return super.process(filename).then((result) => {
       if (result) {
+        // TODO this should not be here but in other classes
         fs.writeFileSync(filename, this.out.buffer);
       }
 

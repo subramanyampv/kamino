@@ -1,11 +1,7 @@
-const { SaxVisitor } = require('./sax-visitor');
-const { SaxWriter } = require('./sax-writer');
 const dom = require('./dom');
+const updateXml = require('./update-xml');
 
-// TODO make SaxVisitor and SaxWriter private
-// TODO add update(xmlFile, values) function
 module.exports = {
-  SaxVisitor,
-  SaxWriter,
-  dom
+  dom,
+  updateXml
 };
