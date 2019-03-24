@@ -4,7 +4,10 @@ const { parse } = require('./args');
 const { updateProjectFiles } = require('./update');
 const { initFs } = require('./fs-factory');
 const { createGit, initGit } = require('./git');
-const { isAllowedTransition, isSemVerFormat, validateTransition } = require('./validate-transition');
+const {
+  SemVer,
+  NextSemVer
+} = require('./validate-transition');
 const { getPomVersion } = require('./pom');
 
 function requireNoVersionsAtHead(git) {
@@ -14,32 +17,105 @@ function requireNoVersionsAtHead(git) {
   }
 }
 
-function basicGitSanityChecks(git) {
+function requireNextVersion(nextSemVer) {
+  if (!nextSemVer.isDefined) {
+    throw new Error('Please specify the version with -v.');
+  }
+}
+
+function requireMasterBranch(git) {
+  const branch = git.currentBranch();
+  if (branch !== 'master') {
+    throw new Error('Only the master branch can be tagged.');
+  }
+}
+
+async function basicGitSanityChecks(git) {
   if (!git.isGitRepository()) {
     throw new Error('Not a git repository.');
   }
 
-  if (git.hasChanges()) {
+  if (await git.hasChanges()) {
     throw new Error('There are pending changes. Please commit or stash them first.');
-  }
-
-  const currentBranch = git.currentBranch();
-  if (currentBranch !== 'master') {
-    throw new Error(`The current branch must be master, but it was ${currentBranch}.`);
   }
 
   // validate semver
   const currentGitVersion = git.latestVersion();
-  if (currentGitVersion && !isSemVerFormat(currentGitVersion)) {
+  try {
+    return new SemVer(currentGitVersion);
+  } catch (e) {
     throw new Error(`Current git version ${currentGitVersion} is not SemVer.`);
   }
+}
 
-  return currentGitVersion;
+async function handlePomTag(currentGitVersion, git, pomVersion) {
+  // this means the user is trying to tag the version specified in pom.xml
+  const tag = currentGitVersion.validateTransition(pomVersion).value;
+  requireMasterBranch(git);
+  requireNoVersionsAtHead(git);
+  git.tag(tag);
+}
+
+async function handlePomBump(cliArgs, currentGitVersion, git, nextSemVer, pomVersion) {
+  if (!pomVersion.equals(currentGitVersion)) {
+    const msg = currentGitVersion.isDefined
+      ? `Version cannot be specified when git tag (${currentGitVersion.value}) does not match pom.xml version (${pomVersion.value}).`
+      : 'No existing git tags found. Please skip the -v argument to tag the version defined in pom.xml.';
+    throw new Error(msg);
+  }
+
+  // this means the user is trying to update pom.xml with a new version
+  const newVersion = nextSemVer.bump(currentGitVersion);
+
+  // process files
+  await updateProjectFiles(git, {
+    dir: cliArgs.dir,
+    currentVersion: currentGitVersion.value,
+    newVersion: newVersion.value
+  });
+
+  git.commit(cliArgs.message || `Bumping version ${newVersion.value}.`);
+  const currentBranch = git.currentBranch();
+  if (currentBranch === 'master') {
+    git.tag(newVersion.value);
+  }
+}
+
+async function handlePomProject(cliArgs, currentGitVersion, git, nextSemVer) {
+  const pomVersionText = await getPomVersion(cliArgs.dir);
+  let pomVersion;
+  try {
+    pomVersion = new SemVer(pomVersionText);
+  } catch (e) {
+    throw new Error(`Version ${pomVersionText} defined in pom.xml is not SemVer.`);
+  }
+
+  if (!pomVersion.isDefined) {
+    throw new Error('Could not determine version of pom.xml.');
+  }
+
+  if (nextSemVer.isDefined) {
+    await handlePomBump(cliArgs, currentGitVersion, git, nextSemVer, pomVersion);
+  } else {
+    await handlePomTag(currentGitVersion, git, pomVersion);
+  }
+}
+
+async function handleDefaultProject(currentGitVersion, git, nextSemVer) {
+  requireNextVersion(nextSemVer);
+  const newVersion = nextSemVer.bump(currentGitVersion);
+  requireMasterBranch(git);
+  requireNoVersionsAtHead(git);
+  git.tag(newVersion.value);
 }
 
 async function main() {
   // parse arguments
   const cliArgs = parse();
+
+  // we allow one possibility for an empty `V` in case we're
+  // tagging a manually bumped pom.xml
+  const nextSemVer = new NextSemVer(cliArgs.V);
 
   // create objects for dryRun
   // TODO don't patch standard fs method for dry run
@@ -47,90 +123,18 @@ async function main() {
   initGit(cliArgs.dryRun);
 
   const git = createGit(cliArgs.dir);
-  const currentGitVersion = basicGitSanityChecks(git);
-
+  const currentGitVersion = await basicGitSanityChecks(git);
   const pomExists = fs.existsSync(path.join(cliArgs.dir, 'pom.xml'));
-  let pomVersion = null;
   if (pomExists) {
-    pomVersion = await getPomVersion(cliArgs.dir);
-    if (!pomVersion) {
-      throw new Error('Could not determine version of pom.xml.');
-    }
-
-    if (!isSemVerFormat(pomVersion)) {
-      throw new Error(`Version ${pomVersion} defined in pom.xml is not SemVer.`);
-    }
-  }
-
-  let newVersion = null;
-  if (!currentGitVersion) {
-    // no tags exist
-    if (pomVersion) {
-      newVersion = pomVersion;
-      // TODO: check cliArgs.V
-    } else {
-      newVersion = cliArgs.V || '0.0.1';
-      if (newVersion === 'major') {
-        newVersion = '1.0.0';
-      } else if (newVersion === 'minor') {
-        newVersion = '0.1.0';
-      } else if (newVersion === 'patch') {
-        newVersion = '0.0.1';
-      }
-
-      const allowedVersions = [
-        '0.0.0',
-        '0.0.1',
-        '0.1.0',
-        '1.0.0'
-      ];
-
-      if (!allowedVersions.includes(newVersion)) {
-        throw new Error(`The first tag must be one of ${allowedVersions.join(', ')}.`);
-      }
-    }
-  } else if (pomVersion) {
-    if (currentGitVersion === pomVersion) {
-      // ok, we need to commit and bump
-      newVersion = validateTransition(currentGitVersion, cliArgs.V);
-
-      // process files
-      await updateProjectFiles(git, {
-        dir: cliArgs.dir,
-        currentVersion: currentGitVersion,
-        newVersion
-      });
-
-      git.commit(cliArgs.message || `Bumping version ${newVersion}.`);
-    } else {
-      // no need to commit as long as pom.xml is ahead of git tag
-      if (!isAllowedTransition(currentGitVersion, pomVersion)) {
-        throw new Error(`Version mismatch between git tag (${currentGitVersion}) and pom (${pomVersion}).`);
-      }
-
-      // TODO: check cliArgs.V
-
-      // check the current commit is not tagged already
-      requireNoVersionsAtHead(git);
-
-      newVersion = pomVersion;
-    }
+    await handlePomProject(cliArgs, currentGitVersion, git, nextSemVer);
   } else {
-    // no pom.xml
-    // check the current commit is not tagged already
-    requireNoVersionsAtHead(git);
-    newVersion = validateTransition(currentGitVersion, cliArgs.V);
+    await handleDefaultProject(currentGitVersion, git, nextSemVer);
   }
-
-  // check the current commit is not tagged already
-  git.tag(newVersion);
 
   // push?
   if (cliArgs.push) {
     git.push();
   }
-
-  return newVersion;
 }
 
 module.exports = {

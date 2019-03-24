@@ -1,17 +1,23 @@
 const { expect } = require('chai');
-const { validateTransition } = require('./validate-transition');
+const { SemVer, NextSemVer } = require('./validate-transition');
 
 describe('validate-transition', () => {
+  function validateTransition(from, to) {
+    const s = new SemVer(from);
+    const n = new NextSemVer(to);
+    return n.bump(s).value;
+  }
+
   it('should throw if new version is empty', () => {
-    expect(() => validateTransition('1.0.0', '')).to.throw('Please provide version');
+    expect(() => validateTransition('1.0.0', '')).to.throw('version is not defined');
   });
 
   it('should throw if old version is not semver', () => {
-    expect(() => validateTransition('1.0.c', '1.0.1')).to.throw('Existing version 1.0.c is not semver');
+    expect(() => validateTransition('1.0.c', '1.0.1')).to.throw('Version 1.0.c is not SemVer.');
   });
 
   it('should throw if new version is not semver', () => {
-    expect(() => validateTransition('1.0.0', '1.0.x')).to.throw('Version 1.0.x is not semver');
+    expect(() => validateTransition('1.0.0', '1.0.x')).to.throw('Unsupported next version: 1.0.x');
   });
 
   it('should throw if new version leaves a semver gap', () => {

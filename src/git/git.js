@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 
+// TODO switch all to async
 class Git {
   /**
    * Creates a new instance of this class.
@@ -23,6 +24,54 @@ class Git {
     return spawnSync('git', args, { cwd: this.dir, encoding: 'utf8' });
   }
 
+  runAsync(args) {
+    return new Promise((resolve, reject) => {
+      const childProcess = spawn('git', args, { cwd: this.dir, encoding: 'utf8' });
+
+      let stdout = '';
+      childProcess.stdout.on('data', (data) => {
+        stdout += data;
+      });
+
+      childProcess.on('close', (status) => {
+        resolve({
+          status,
+          stdout
+        });
+      });
+
+      childProcess.on('error', (err) => {
+        reject(err);
+      });
+    });
+  }
+
+  checkAsync(args, errorMessage) {
+    return new Promise((resolve, reject) => {
+      const childProcess = spawn('git', args, { cwd: this.dir, encoding: 'utf8' });
+
+      let stdout = '';
+      childProcess.stdout.on('data', (data) => {
+        stdout += data;
+      });
+
+      childProcess.on('close', (status) => {
+        if (status) {
+          reject(new Error(`${errorMessage}: ${stdout}`));
+        }
+
+        resolve({
+          status,
+          stdout
+        });
+      });
+
+      childProcess.on('error', (err) => {
+        reject(err);
+      });
+    });
+  }
+
   /**
    * Runs a git command and throws an error if it fails.
    * Returns the result of `spawnSync`.
@@ -42,8 +91,16 @@ class Git {
     this.check(['init'], 'Could not init');
   }
 
+  initAsync() {
+    return this.checkAsync(['init'], 'Could not init');
+  }
+
   add(file) {
     this.check(['add', file], 'Could not add');
+  }
+
+  addAsync(file) {
+    return this.checkAsync(['add', file], 'Could not add');
   }
 
   tags() {
@@ -76,6 +133,10 @@ class Git {
     return this.check(['commit', '-m', message], 'Could not commit');
   }
 
+  commitAsync(message) {
+    return this.checkAsync(['commit', '-m', message], 'Could not commit');
+  }
+
   tag(version) {
     return this.check([
       'tag', '-m', `Releasing version ${version}`, `v${version}`
@@ -94,8 +155,8 @@ class Git {
    * This uses `git diff-index --quiet HEAD --` which will fail
    * if there are pending changes.
    */
-  hasChanges() {
-    const { status } = this.run(['diff-index', '--quiet', 'HEAD', '--']);
+  async hasChanges() {
+    const { status } = await this.runAsync(['diff-index', '--quiet', 'HEAD', '--']);
     return status !== 0;
   }
 
@@ -105,6 +166,11 @@ class Git {
 
   currentBranch() {
     const { stdout } = this.check(['rev-parse', '--abbrev-ref', 'HEAD'], 'Could not determine current branch');
+    return stdout.trim();
+  }
+
+  currentSha() {
+    const { stdout } = this.check(['rev-parse', 'HEAD'], 'Could not parse current SHA-1');
     return stdout.trim();
   }
 }

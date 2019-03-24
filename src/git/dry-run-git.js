@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const { Git } = require('./git');
 
+// TODO switch all to async
 class DryRunGit extends Git {
   add(file) {
     console.log(`Would have added file ${file} in dir ${this.dir}`);
