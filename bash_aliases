@@ -38,3 +38,7 @@ alias pmake='pylint *.py && pylint tests/*.py && python -m pytest && coverage ru
 
 # build and install archetype
 alias archmake='mvn clean install archetype:update-local-catalog'
+
+# Switcing between different ssh profiles
+alias ssh-personal='rm -rf ~/.ssh && cp -R ~/.ssh-personal ~/.ssh'
+alias ssh-work='rm -rf ~/.ssh && cp -R ~/.ssh-work ~/.ssh'
