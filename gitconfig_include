@@ -18,6 +18,8 @@
     cob = checkout -b
     amend = commit --amend
     pf = push --force-with-lease
+    # add all changes, amend existing commit, push force with lease
+    wip = "!f() { git commit -a --amend --no-edit && git pf; }; f"
     # delete branches without failing (it fails when there are no branches to delete)
     bclean = "!f() { git branch -l | grep -v master | xargs git branch -D; return 0; }; f"
     # checkout master, get latest, delete branches
