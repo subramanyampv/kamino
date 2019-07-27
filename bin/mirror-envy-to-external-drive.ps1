@@ -18,6 +18,8 @@ function CopyDir
 }
 
 CopyDir ".ssh"
+CopyDir ".ssh-personal"
+CopyDir ".ssh-work"
 CopyDir "Archive"
 CopyDir "Documents"
 CopyDir "DOSBOX"
