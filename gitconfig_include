@@ -12,15 +12,26 @@
 #
 
 [alias]
-    co = checkout
     ec = config --global -e
-    up = !git pull --rebase --prune
+    #
+    # Start a new branch
+    #
+    co = checkout
     cob = checkout -b
+    # start a new branch out of freshly fetched master, stashing changes in between
+    start = "!f() { git stash && git fetch -p -t && git checkout -b $1 origin/master && git stash pop; }; f"
+    #
+    # Working in a branch
+    #
+    up = !git pull --rebase --prune
     amend = commit --amend
-    pf = push --force-with-lease
     # add all changes, amend existing commit, push force with lease
+    pf = push --force-with-lease
     wip = "!f() { git commit -a --amend --no-edit && git pf; }; f"
-    # delete branches without failing (it fails when there are no branches to delete)
+    #
+    # Clean up
+    #
+    # delete local branches without failing (it fails when there are no branches to delete)
     bclean = "!f() { git branch -l | grep -v master | xargs git branch -D; return 0; }; f"
     # checkout master, get latest, delete branches
     bdone = "!f() { git checkout master && git up && git bclean; }; f"
