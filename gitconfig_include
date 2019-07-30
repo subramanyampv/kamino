@@ -19,7 +19,7 @@
     co = checkout
     cob = checkout -b
     # start a new branch out of freshly fetched master, stashing changes in between
-    start = "!f() { git stash && git fetch -p -t && git checkout -b $1 origin/master && git stash pop; }; f"
+    start = "!f() { git stash && git fetch -p -t && git checkout master && git pull && git checkout -b $1 && git stash pop; }; f"
     #
     # Working in a branch
     #
