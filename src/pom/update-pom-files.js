@@ -32,11 +32,11 @@ async function updatePomFiles(opts) {
     }
 
     if (modules && modules.length) {
-      await Promise.all(modules.map(module => updateXml(
+      await Promise.all(modules.map((module) => updateXml(
         path.join(dir, module, 'pom.xml'),
         { project: { parent: { version: newVersion } } }
       )));
-      result = result.concat(modules.map(module => path.join(module, 'pom.xml')));
+      result = result.concat(modules.map((module) => path.join(module, 'pom.xml')));
     }
   }
 

@@ -41,7 +41,7 @@ async function updateTextFile(opts, file) {
  */
 async function updateAndAdd(git, getModifiedFilesAsync) {
   const files = await getModifiedFilesAsync();
-  files.forEach(f => git.add(f));
+  files.forEach((f) => git.add(f));
 }
 
 /**

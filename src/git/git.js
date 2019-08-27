@@ -105,20 +105,20 @@ class Git {
 
   tags() {
     const { stdout } = this.check(['tag', '--sort=-v:refname'], 'Could not get git tags');
-    return stdout.split(/\s/).filter(x => !!x);
+    return stdout.split(/\s/).filter((x) => !!x);
   }
 
   tagsAtHead() {
     const { stdout } = this.check(['tag', '--points-at', 'HEAD', '--sort=-v:refname'], 'Could not get git tags');
-    return stdout.split(/\s/).filter(x => !!x);
+    return stdout.split(/\s/).filter((x) => !!x);
   }
 
   versions() {
-    return this.tags().filter(x => x.startsWith('v')).map(x => x.replace('v', ''));
+    return this.tags().filter((x) => x.startsWith('v')).map((x) => x.replace('v', ''));
   }
 
   versionsAtHead() {
-    return this.tagsAtHead().filter(x => x.startsWith('v')).map(x => x.replace('v', ''));
+    return this.tagsAtHead().filter((x) => x.startsWith('v')).map((x) => x.replace('v', ''));
   }
 
   versionExists(version) {
@@ -126,7 +126,7 @@ class Git {
   }
 
   latestVersion() {
-    return this.versions().find(x => !!x);
+    return this.versions().find((x) => !!x);
   }
 
   commit(message) {

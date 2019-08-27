@@ -35,8 +35,8 @@ class PomVersionFinder extends SaxVisitor {
 function consolidateTextNodes(node) {
   return {
     name: node.name,
-    text: node.children.filter(x => typeof x === 'string').join(''),
-    children: node.children.filter(x => typeof x === 'object').map(x => consolidateTextNodes(x))
+    text: node.children.filter((x) => typeof x === 'string').join(''),
+    children: node.children.filter((x) => typeof x === 'object').map((x) => consolidateTextNodes(x))
   };
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 const bumpCodes = ['patch', 'minor', 'major'];
 
 function isSemVerFormat(version) {
@@ -13,7 +14,7 @@ function splitSemVer(version) {
     throw new Error(`Version ${version} is not SemVer.`);
   }
 
-  return version.split('.').map(x => parseInt(x, 10));
+  return version.split('.').map((x) => parseInt(x, 10));
 }
 
 class SemVer {
@@ -73,7 +74,7 @@ class SemVer {
 
   get validNextVersions() {
     if (this.isDefined) {
-      return bumpCodes.map(c => this.bumpByCode(c));
+      return bumpCodes.map((c) => this.bumpByCode(c));
     }
 
     const allZeroes = new SemVer([0, 0, 0]);
@@ -86,7 +87,7 @@ class SemVer {
    */
   canTransitionTo(potentialNextVersion) {
     const validTransitions = this.validNextVersions;
-    return validTransitions.some(x => x.equals(potentialNextVersion));
+    return validTransitions.some((x) => x.equals(potentialNextVersion));
   }
 
   /**
@@ -99,7 +100,7 @@ class SemVer {
     }
 
     const validTransitions = this.validNextVersions;
-    throw new Error(`Version ${potentialNextVersion.value} is not allowed. Use one of ${validTransitions.map(x => x.value).join(', ')}.`);
+    throw new Error(`Version ${potentialNextVersion.value} is not allowed. Use one of ${validTransitions.map((x) => x.value).join(', ')}.`);
   }
 }
 

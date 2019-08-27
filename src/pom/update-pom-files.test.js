@@ -94,7 +94,7 @@ describe('updatePomFiles', () => {
       path.join(testDir, 'foo-child-module')
     ];
 
-    const pomInputFiles = pomDirs.map(d => path.join(d, 'pom.xml'));
+    const pomInputFiles = pomDirs.map((d) => path.join(d, 'pom.xml'));
 
     /**
      * The original contents of the pom.xml under test.
@@ -104,7 +104,7 @@ describe('updatePomFiles', () => {
 
     beforeEach(() => {
       // store contents of pom
-      originalPomContents = pomInputFiles.map(p => ({
+      originalPomContents = pomInputFiles.map((p) => ({
         file: p,
         contents: fs.readFileSync(p, 'utf8')
       }));
@@ -112,7 +112,7 @@ describe('updatePomFiles', () => {
 
     afterEach(() => {
       // restore pom.xml to its original contents
-      originalPomContents.forEach(x => fs.writeFileSync(x.file, x.contents, 'utf8'));
+      originalPomContents.forEach((x) => fs.writeFileSync(x.file, x.contents, 'utf8'));
     });
 
     describe('when the version in the pom matches the current version', () => {

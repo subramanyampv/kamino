@@ -20,7 +20,7 @@ class SaxWriter extends SaxVisitor {
   onOpenTag(tag) {
     super.onOpenTag(tag);
     this.write(`<${tag.name}`);
-    Object.keys(tag.attributes).forEach(key => this.write(` ${key}="${escapeQuotes(tag.attributes[key])}"`));
+    Object.keys(tag.attributes).forEach((key) => this.write(` ${key}="${escapeQuotes(tag.attributes[key])}"`));
     this.write('>');
   }
 
@@ -38,10 +38,10 @@ class SaxWriter extends SaxVisitor {
     super.subscribe();
 
     // the rest of the events go as-is
-    this.saxStream.on('doctype', text => this.write(text));
-    this.saxStream.on('cdata', data => this.write(`<![CDATA[${data}]]>`));
-    this.saxStream.on('comment', comment => this.write(`<!--${comment}-->`));
-    this.saxStream.on('processinginstruction', i => this.write(`<?${i.name} ${i.body}?>`));
+    this.saxStream.on('doctype', (text) => this.write(text));
+    this.saxStream.on('cdata', (data) => this.write(`<![CDATA[${data}]]>`));
+    this.saxStream.on('comment', (comment) => this.write(`<!--${comment}-->`));
+    this.saxStream.on('processinginstruction', (i) => this.write(`<?${i.name} ${i.body}?>`));
   }
 
   write(str) {

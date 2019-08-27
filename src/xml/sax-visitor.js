@@ -21,7 +21,7 @@ class SaxVisitor {
 
     return new Promise((resolve, reject) => {
       // on error reject promise
-      this.saxStream.on('error', e => reject(e));
+      this.saxStream.on('error', (e) => reject(e));
 
       // on end resolve promise with discovered result
       this.saxStream.on('end', () => {

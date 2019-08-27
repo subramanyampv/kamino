@@ -1,8 +1,8 @@
 const { Git } = require('./git');
 const { DryRunGit } = require('./dry-run-git');
 
-const createNormal = dir => new Git(dir);
-const createDryRun = dir => new DryRunGit(dir);
+const createNormal = (dir) => new Git(dir);
+const createDryRun = (dir) => new DryRunGit(dir);
 let createGit = createNormal;
 
 /**
