@@ -20,11 +20,11 @@ function tabsToSpaces(contents) {
  */
 function buildCopier(fs, context, indentationCharacter) {
   // default processor using ejs
-  const defaultProcessor = contents => ejs.render(contents.toString(), context);
+  const defaultProcessor = (contents) => ejs.render(contents.toString(), context);
 
   // if indentation is spaces, convert tabs to spaces
   const indentingProcessor = indentationCharacter === 'tabs'
-    ? defaultProcessor : contents => ejs.render(tabsToSpaces(contents.toString()), context);
+    ? defaultProcessor : (contents) => ejs.render(tabsToSpaces(contents.toString()), context);
 
   /**
      * Selects the processor to use for the given filename.
