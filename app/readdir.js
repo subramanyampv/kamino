@@ -19,7 +19,7 @@ function isDirectory(dirname) {
 function readdirSyncRecursive(dirname) {
   const contents = fs.readdirSync(dirname);
   let result = [];
-  contents.map(f => path.join(dirname, f)).forEach((f) => {
+  contents.map((f) => path.join(dirname, f)).forEach((f) => {
     if (isDirectory(f)) {
       result = result.concat(readdirSyncRecursive(f));
     } else {

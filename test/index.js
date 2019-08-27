@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+/* eslint-disable class-methods-use-this, max-classes-per-file */
 const path = require('path');
 const fs = require('fs');
 const helpers = require('yeoman-test');
@@ -95,7 +95,7 @@ describe('app', () => {
     function templateTests() {
       const expectedDataDirectory = path.join(__dirname, 'data');
       const expectedFiles = readdirSyncRecursive(expectedDataDirectory)
-        .map(f => path.relative(expectedDataDirectory, f));
+        .map((f) => path.relative(expectedDataDirectory, f));
       const handlers = [
         new GuidHandler(),
         new YearHandler(),
