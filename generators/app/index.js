@@ -33,7 +33,7 @@ class NpmGenerator extends Generator {
       shebang: this.answers.bin ? `#!/usr/bin/env node${EOL}` : '',
     };
 
-    files.getFiles().forEach(f => this.fs.copyTpl(
+    files.getFiles().forEach((f) => this.fs.copyTpl(
       this.templatePath(f.src),
       this.destinationPath(f.dest),
       context,

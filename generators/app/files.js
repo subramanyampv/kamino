@@ -18,7 +18,7 @@ function getFiles() {
     path.join('src', 'index.test.js'),
   ];
 
-  return files.map(f => ({
+  return files.map((f) => ({
     src: f,
     dest: mapLeadingUnderscore(f),
   }));
