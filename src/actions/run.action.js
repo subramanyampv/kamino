@@ -62,7 +62,7 @@ module.exports = function runAction(subDir, cliArgs) {
 
   if (csv) {
     if (lineCount) {
-      logger.log(`${subDir},${stdout.split(/[\r\n]/).map(x => x.trim()).filter(x => !!x).length}`);
+      logger.log(`${subDir},${stdout.split(/[\r\n]/).map((x) => x.trim()).filter((x) => !!x).length}`);
     } else {
       logger.log(`${subDir},${stdout.trim()}`);
     }

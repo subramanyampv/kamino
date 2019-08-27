@@ -12,7 +12,7 @@ const filters = [
   'eval-js',
 ];
 
-const filterIncludes = filters.map(f => `./filters/${f}.filter`);
+const filterIncludes = filters.map((f) => `./filters/${f}.filter`);
 
 describe('filter', () => {
   const file = {};
@@ -33,7 +33,7 @@ describe('filter', () => {
 
     stubs = Object.assign(
       {},
-      ...filterIncludes.map(f => makeStubFilter(f)),
+      ...filterIncludes.map((f) => makeStubFilter(f)),
     );
 
     filter = proxyquire('./filter', stubs);
