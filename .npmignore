@@ -1,5 +1,9 @@
-**/*.test.js
-.travis.yml
 .nyc_output/
+.*
+tsconfig.json
 coverage/
-test/
+docs/
+dist/**/*.test.js
+dist/**/*.js.map
+dist/test/
+src/

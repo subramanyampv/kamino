@@ -89,3 +89,20 @@ version with the new version.
 -  `--no-push`            :  Do not push
 -  `--verbose`            :  Increase logging verbosity
 -  `-h, --help`           : output usage information
+
+## Developing
+
+### Folder Structure
+
+```
+- src
+  |- main              source code and unit tests
+     |
+     |- file.ts        source code
+     \- file.test.ts   unit test
+  \- test              additional test files
+     |
+     |- features       cucumber tests
+     |- fixtures       test data
+     \- utils          test utilities
+```
