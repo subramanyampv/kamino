@@ -42,3 +42,6 @@ alias archmake='mvn clean install archetype:update-local-catalog'
 # Switcing between different ssh profiles
 alias ssh-personal='rm -rf ~/.ssh && cp -R ~/.ssh-personal ~/.ssh'
 alias ssh-work='rm -rf ~/.ssh && cp -R ~/.ssh-work ~/.ssh'
+
+alias plantuml-start='docker run --rm --name plantuml -d -p 8080:8080 plantuml/plantuml-server:jetty'
+alias plantuml-stop='docker stop plantuml'
