@@ -1,0 +1,45 @@
+{
+  "name": "ts-swagger-codegen",
+  "version": "0.0.1",
+  "description": "Swagger code generator (in TypeScript)",
+  "main": "index.js",
+  "scripts": {
+    "build-ts": "tsc",
+    "watch:ts": "tsc -w",
+    "eslint": "eslint src/**/*.ts",
+    "watch:eslint": "nodemon -w src -e ts -x \"npm run --silent eslint\"",
+
+    "pretest": "npm run eslint",
+
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/ts-swagger-codegen.git"
+  },
+  "keywords": [
+    "swagger",
+    "openapi"
+  ],
+  "author": "Nikolaos Georgiou",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ngeor/ts-swagger-codegen/issues"
+  },
+  "homepage": "https://github.com/ngeor/ts-swagger-codegen#readme",
+
+  "eslintIgnore": [
+    "coverage/"
+  ],
+
+  "devDependencies": {
+    "@types/node": "^12.7.5",
+    "@typescript-eslint/eslint-plugin": "^2.3.0",
+    "@typescript-eslint/parser": "^2.3.0",
+    "eslint": "^6.4.0",
+    "nodemon": "^1.19.2",
+    "ts-node": "^8.4.1",
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.3"
+  }
+}
