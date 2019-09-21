@@ -8,10 +8,8 @@
     "watch:ts": "tsc -w",
     "eslint": "eslint src/**/*.ts",
     "watch:eslint": "nodemon -w src -e ts -x \"npm run --silent eslint\"",
-
     "pretest": "npm run eslint",
-
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -27,17 +25,18 @@
     "url": "https://github.com/ngeor/ts-swagger-codegen/issues"
   },
   "homepage": "https://github.com/ngeor/ts-swagger-codegen#readme",
-
   "eslintIgnore": [
     "coverage/"
   ],
-
   "devDependencies": {
+    "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
     "@typescript-eslint/eslint-plugin": "^2.3.0",
     "@typescript-eslint/parser": "^2.3.0",
     "eslint": "^6.4.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.2",
+    "ts-jest": "^24.1.0",
     "ts-node": "^8.4.1",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.3"
