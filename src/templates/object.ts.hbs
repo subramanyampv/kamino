@@ -1,0 +1,12 @@
+// {{ fileName }}
+{{#each imports}}
+import { {{ typeName }} } from "./{{ fileName }}";
+{{/each}}
+{{#if imports}}
+
+{{/if}}
+export interface {{ typeName }} {
+  {{#each properties}}
+  {{ name }}{{#unless required}}?{{/unless}}: {{ type }};
+  {{/each}}
+}

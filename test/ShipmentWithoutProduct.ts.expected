@@ -1,0 +1,10 @@
+// ShipmentWithoutProduct.ts
+import { Address } from "./Address";
+import { Parcel } from "./Parcel";
+
+export interface ShipmentWithoutProduct {
+  sender: Address;
+  recipient: Address;
+  delivery?: Address;
+  parcels: Parcel[];
+}

@@ -9,7 +9,7 @@ module.exports = {
       "ignoreStrings": true,
       "ignoreTemplateLiterals": true
     }],
-    "max-lines": ["error", 100],
-    "max-lines-per-function": ["error", 20],
+    "max-lines": ["error", 200],
+    "max-lines-per-function": ["error", 30],
   }
 };

@@ -9,18 +9,28 @@ describe("read pricing.yml", () => {
     result = generate("test/pricing.yml");
   });
 
-  test("read pricing.yml", () => {
-    const expected = readFileSync("test/Carrier.ts.expected", {
-      encoding: "utf8"
-    });
+  const expectedDefinitions = [
+    "Address",
+    "Carrier",
+    "Parcel",
+    "PriceResult",
+    "ProductDefinition",
+    "Shipment",
+    "ShipmentWithoutProduct"
+  ];
 
-    expect(result["Carrier.ts"]).toEqual(expected);
+  test("all definitions are mapped", () => {
+    const expected = expectedDefinitions.map(d => `${d}.ts`).sort();
+    expect(Object.keys(result).sort()).toEqual(expected);
   });
 
-  test("ProductDefinition", () => {
-    const expected = readFileSync("test/ProductDefinition.ts.expected", {
-      encoding: "utf8"
+  expectedDefinitions.forEach(d => {
+    test(d, () => {
+      const expected = readFileSync(`test/${d}.ts.expected`, {
+        encoding: "utf8"
+      });
+
+      expect(result[`${d}.ts`]).toEqual(expected);
     });
-    expect(result["ProductDefinition.ts"]).toEqual(expected);
   });
 });

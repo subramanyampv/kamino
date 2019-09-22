@@ -1,5 +1,5 @@
 // ProductDefinition.ts
-import { Carrier } from "./carrier";
+import { Carrier } from "./Carrier";
 
 export interface ProductDefinition {
   carrier: Carrier;
