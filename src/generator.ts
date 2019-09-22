@@ -25,10 +25,9 @@ function formatObjectTemplate(
 function formatEnum(
   key: string,
   fileName: string,
-  definition: swagger.Definition,
-  api: swagger.SwaggerDocument
+  definition: swagger.EnumDefinition
 ): string {
-  const _enum: string[] = definition.enum as string[];
+  const _enum: string[] = definition.enum;
   const enumTemplate: templates.EnumTemplate = {
     fileName,
     typeName: key,
@@ -40,93 +39,117 @@ function formatEnum(
   return formatEnumTemplate(enumTemplate);
 }
 
-function mapPrimitive(type: string): string {
-  if (type === "integer") {
-    return "number";
+class ObjectParser {
+  private imports: templates.Import[] = [];
+  private properties: templates.Property[] = [];
+
+  constructor(
+    private key: string,
+    private fileName: string,
+    private definition: swagger.ObjectDefinition
+  ) {}
+
+  process(): templates.ObjectTemplate {
+    const swaggerProperties = this.definition.properties;
+
+    Object.keys(swaggerProperties).map(p =>
+      this.mapSwaggerProperty(p, swaggerProperties[p])
+    );
+
+    return {
+      fileName: this.fileName,
+      typeName: this.key,
+      properties: this.properties,
+      imports: this.imports
+    };
   }
 
-  return type;
-}
-
-function resolveType(property: swagger.Property): string {
-  if (property.type) {
-    return mapPrimitive(property.type);
+  private mapSwaggerProperty(name: string, property: swagger.Property): void {
+    this.properties.push({
+      name,
+      type: this.resolveType(property),
+      required:
+        !!this.definition.required && this.definition.required.includes(name)
+    });
   }
 
-  if (property.$ref) {
+  private collectReferencedType(name: string): void {
+    if (!this.imports.find(p => p.fileName === name)) {
+      this.imports.push({
+        typeName: name,
+        fileName: name
+      });
+    }
+  }
+
+  private mapPrimitive(type: swagger.PropertyType): string {
+    if (type === "integer") {
+      return "number";
+    }
+
+    return type;
+  }
+
+  private splitRef(ref: string): string {
     // something like #/definitions/Carrier
-    const parts = property.$ref.split("/");
-    return parts[parts.length - 1];
+    const prefix = "#/definitions/";
+    if (ref.startsWith(prefix)) {
+      const result = ref.substring(prefix.length);
+      this.collectReferencedType(result);
+      return result;
+    }
+
+    return "";
   }
 
-  return "string";
-}
+  private resolveArrayType(t: swagger.Property): string {
+    if (swagger.isRefProperty(t)) {
+      return this.splitRef(t.$ref) + "[]";
+    }
 
-function mapSwaggerProperty(
-  name: string,
-  property: swagger.Property,
-  definition: swagger.Definition
-): templates.Property {
-  return {
-    name,
-    type: resolveType(property),
-    required: !!definition.required && definition.required.includes(name)
-  };
-}
+    if (swagger.isTypeProperty(t)) {
+      return t.type + "[]";
+    }
 
-function collectImports(properties: {
-  [name: string]: swagger.Property;
-}): templates.Import[] {
-  return Object.keys(properties).map(p => properties[p])
-    .map(p => p.$ref || "")
-    .map(h => h.split("/"))
-    .filter(parts => parts.length > 1)
-    .map(parts => parts[parts.length - 1])
-    .map(p => ({
-      typeName: p,
-      fileName: p
-    }));
+    return "unsupported[]";
+  }
+
+  private resolveType(property: swagger.Property): string {
+    if (swagger.isRefProperty(property)) {
+      return this.splitRef(property.$ref);
+    }
+
+    if (swagger.isTypeProperty(property)) {
+      if (swagger.isArrayProperty(property)) {
+        return this.resolveArrayType(property.items);
+      }
+
+      return this.mapPrimitive(property.type);
+    }
+
+    return "string";
+  }
 }
 
 function formatObject(
   key: string,
   fileName: string,
-  definition: swagger.Definition,
-  api: swagger.SwaggerDocument
+  definition: swagger.ObjectDefinition
 ): string {
-  const swaggerProperties = definition.properties;
-  const templateProperties = !swaggerProperties
-    ? []
-    : Object.keys(swaggerProperties).map(p =>
-        mapSwaggerProperty(p, swaggerProperties[p], definition)
-      );
-
-  const imports: templates.Import[] = !swaggerProperties
-    ? []
-    : collectImports(swaggerProperties);
-  const objectTemplate: templates.ObjectTemplate = {
-    fileName,
-    typeName: key,
-    properties: templateProperties,
-    imports
-  };
+  const parser = new ObjectParser(key, fileName, definition);
+  const objectTemplate = parser.process();
   return formatObjectTemplate(objectTemplate);
 }
 
 function format(
   key: string,
   fileName: string,
-  definition: swagger.Definition,
-  api: swagger.SwaggerDocument
+  definition: swagger.Definition
 ): string {
-  const type = definition.type;
-  const _enum = definition.enum;
-  if (type === "string" && _enum) {
-    return formatEnum(key, fileName, definition, api);
-  }
-
-  if (type === "object") {
-    return formatObject(key, fileName, definition, api);
+  if (swagger.isEnumDefinition(definition)) {
+    return formatEnum(key, fileName, definition);
+  } else if (swagger.isObjectDefinition(definition)) {
+    return formatObject(key, fileName, definition);
   }
 
   return "";
@@ -138,17 +161,17 @@ function format(
  * has paths as keys and file contents as values.
  * @param specFile The input Swagger file.
  */
-export function generate(specFile: string): { [id: string]: string } {
+export function generate(specFile: string): StringDictionary {
   const contents = readFileSync(specFile, { encoding: "utf8" });
   const api = safeLoad(contents) as swagger.SwaggerDocument;
   const { definitions } = api;
 
-  const result: { [id: string]: string } = {};
+  const result: StringDictionary = {};
 
   Object.keys(definitions).forEach(key => {
     const fileName = `${key}.ts`;
     const definition = definitions[key];
-    result[fileName] = format(key, fileName, definition, api);
+    result[fileName] = format(key, fileName, definition);
   });
 
   return result;
