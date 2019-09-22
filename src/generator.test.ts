@@ -1,26 +1,26 @@
 /* eslint-disable max-lines-per-function */
-import { generate } from "./generator";
+import { StringDictionary, generate } from "./generator";
+import { readFileSync } from "fs";
 
-test("read pricing.yml", () => {
-  const result = generate("test/pricing.yml");
-  expect(result["Carrier.ts"]).toEqual(
-    `// Carrier.ts
-export enum Carrier {
-  TNT = "TNT",
-  PostNL = "PostNL"
-}
-`
-  );
+describe("read pricing.yml", () => {
+  let result: StringDictionary;
 
-  expect(result["ProductDefinition.ts"]).toEqual(
-    `// ProductDefinition.ts
-import { Carrier } from "./carrier";
+  beforeAll(() => {
+    result = generate("test/pricing.yml");
+  });
 
-export interface ProductDefinition {
-  carrier: Carrier;
-  productId: string;
-  title?: string;
-}
-`
-  );
+  test("read pricing.yml", () => {
+    const expected = readFileSync("test/Carrier.ts.expected", {
+      encoding: "utf8"
+    });
+
+    expect(result["Carrier.ts"]).toEqual(expected);
+  });
+
+  test("ProductDefinition", () => {
+    const expected = readFileSync("test/ProductDefinition.ts.expected", {
+      encoding: "utf8"
+    });
+    expect(result["ProductDefinition.ts"]).toEqual(expected);
+  });
 });

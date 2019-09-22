@@ -1,0 +1,8 @@
+// ProductDefinition.ts
+import { Carrier } from "./carrier";
+
+export interface ProductDefinition {
+  carrier: Carrier;
+  productId: string;
+  title?: string;
+}
