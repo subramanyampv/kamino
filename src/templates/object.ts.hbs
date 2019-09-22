@@ -5,7 +5,11 @@ import { {{ typeName }} } from "./{{ fileName }}";
 {{#if imports}}
 
 {{/if}}
-export interface {{ typeName }} {
+export interface {{ typeName }}
+{{~#if baseTypes}} extends {{#each baseTypes ~}}
+{{ typeName }}{{#unless @last}}, {{/unless}}
+{{~/each}}
+{{~/if}} {
   {{#each properties}}
   {{ name }}{{#unless required}}?{{/unless}}: {{ type }};
   {{/each}}

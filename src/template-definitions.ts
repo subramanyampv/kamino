@@ -36,4 +36,5 @@ export interface ObjectTemplate {
   typeName: string;
   properties: Property[];
   imports: Import[];
+  baseTypes: Import[];
 }

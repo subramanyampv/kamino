@@ -10,7 +10,7 @@ export interface SwaggerDocument {
   host: string;
   basePath: string;
   paths: { [path: string]: Path };
-  definitions: { [definition: string]: Definition };
+  definitions: { [definition: string]: Property };
 }
 
 export interface Path {
@@ -22,53 +22,62 @@ export interface PathVerb {
   operationId: string;
 }
 
-export type DefinitionType = "string" | "object";
-
-export interface Definition {
-  type: DefinitionType;
-}
-
-export interface ObjectDefinition extends Definition {
-  required?: string[];
-  properties: { [name: string]: Property };
-}
-
-export function isObjectDefinition(d: Definition): d is ObjectDefinition {
-  return "properties" in d;
-}
-
-export interface HasRef {
-  $ref: string;
-}
-
-export interface ComposedObjectDefinition extends Definition {
-  allOf: (HasRef | ObjectDefinition)[];
-}
-
-export function isComposedObjectDefinition(
-  d: Definition
-): d is ComposedObjectDefinition {
-  return "allOf" in d;
-}
-
-export interface EnumDefinition extends Definition {
-  enum: string[];
-}
-
-export function isEnumDefinition(d: Definition): d is EnumDefinition {
-  return d.type === "string" && "enum" in d;
-}
-
 export type PropertyType = "string" | "array" | "integer" | "number" | "object";
 
 export interface Property {
   description?: string;
 }
 
-export interface RefProperty extends Property, HasRef {}
+/**
+ * An enum e.g.
+ * ```yaml
+ * Order:
+ *   type: string
+ *   enum:
+ *     - ASC
+ *     - DESC
+ * ```
+ */
+export interface EnumProperty extends Property {
+  enum: string[];
+}
+
+export function isEnumProperty(p: Property): p is EnumProperty {
+  return "enum" in p;
+}
+
+/**
+ * An object that consists of other properties.
+ */
+export interface ObjectProperty extends Property {
+  required?: string[];
+  properties: { [name: string]: Property };
+}
+
+export function isObjectProperty(p: Property): p is ObjectProperty {
+  return "properties" in p;
+}
+
+/**
+ * A property that points to a different type.
+ */
+export interface RefProperty extends Property {
+  $ref: string;
+}
 
 export function isRefProperty(p: Property): p is RefProperty {
   return "$ref" in p;
+}
+
+/**
+ * A property that is composed of other definitions.
+ */
+export interface CompositeProperty extends Property {
+  allOf: (RefProperty | ObjectProperty)[];
+}
+
+export function isCompositeProperty(p: Property): p is CompositeProperty {
+  return "allOf" in p;
 }
 
 export interface TypeProperty extends Property {
@@ -81,12 +90,16 @@ export function isTypeProperty(p: Property): p is TypeProperty {
   return "type" in p;
 }
 
+export function isSimpleTypeProperty(p: Property): p is TypeProperty {
+  return isTypeProperty(p) && p.type !== "object" && p.type !== "array";
+}
+
 export interface ArrayProperty extends TypeProperty {
   items: Property;
   minItems?: number;
   maxItems?: number;
 }
 
-export function isArrayProperty(p: TypeProperty): p is ArrayProperty {
-  return p.type === "array" && "items" in p;
+export function isArrayProperty(p: Property): p is ArrayProperty {
+  return isTypeProperty(p) && p.type === "array" && "items" in p;
 }
