@@ -45,3 +45,7 @@ alias ssh-work='rm -rf ~/.ssh && cp -R ~/.ssh-work ~/.ssh'
 
 alias plantuml-start='docker run --rm --name plantuml -d -p 8080:8080 plantuml/plantuml-server:jetty'
 alias plantuml-stop='docker stop plantuml'
+alias elastic-start='docker run --rm -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.3.2'
+alias elastic-stop='docker stop elasticsearch'
+alias kibana-start='docker run --rm -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.3.2'
+alias kibana-stop='docker stop kibana'
