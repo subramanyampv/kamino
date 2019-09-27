@@ -1,5 +1,4 @@
-generator-nodejs
-=========
+# generator-nodejs
 
 A Yeoman generator for nodeJS libraries
 

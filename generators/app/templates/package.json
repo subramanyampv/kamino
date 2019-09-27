@@ -5,13 +5,17 @@
   "main": "src/index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "nyc mocha src/*.test.js src/**/*test.js",
     "postversion": "git push --follow-tags",
     "clean": "rimraf coverage",
     "eslint": "eslint .",
+    <% if (testFramework === 'mocha') { %>
+    "test": "nyc mocha src/*.test.js src/**/*test.js",
     "mocha": "mocha src/*.test.js src/**/*test.js",
     "nyc": "nyc mocha src/*.test.js src/**/*test.js",
     "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
+    <% } else if (testFramework === 'jest') { %>
+    "test": "jest",
+    <% } %>
     "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
   },
   "repository": {
@@ -30,6 +34,7 @@
   "eslintIgnore": [
     "coverage/"
   ],
+  <% if (testFramework === 'mocha') { %>
   "nyc": {
     "check-coverage": true,
     "per-file": false,
@@ -47,5 +52,6 @@
     ],
     "all": true
   },
+  <% } %>
   "dependencies": {}
 }

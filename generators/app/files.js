@@ -1,5 +1,9 @@
 const path = require('path');
 
+/**
+ * Converts leading underscores to dots.
+ * @param {string} file The filename to map
+ */
 function mapLeadingUnderscore(file) {
   return file.replace('_', '.');
 }
@@ -15,15 +19,15 @@ function getFiles() {
     'package.json',
     'README.md',
     path.join('src', 'index.js'),
-    path.join('src', 'index.test.js'),
+    path.join('src', 'index.test.js')
   ];
 
-  return files.map((f) => ({
-    src: f,
-    dest: mapLeadingUnderscore(f),
+  return files.map((src) => ({
+    src,
+    dest: mapLeadingUnderscore(src)
   }));
 }
 
 module.exports = {
-  getFiles,
+  getFiles
 };
