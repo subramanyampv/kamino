@@ -1,24 +1,23 @@
 language: node_js
 sudo: false
 node_js:
-  - lts/*
+- lts/*
 cache:
   directories:
-    - node_modules
+  - node_modules
 script:
-  - npm test
-  - npm run typedoc
-  - npm pack
-  - npm link
-  - yart --version
+- npm test
+- npm run typedoc
+- npm pack
+- npm link
+- yart --version
 after_success:
-  - npm run coveralls
+- npm run coveralls
 deploy:
-  skip_cleanup: true
   provider: npm
   email: Nikolaos.Georgiou@gmail.com
   api_key:
-    secure: O7OOfm2j1msl9g4qHwJBBrZ92RRVtZk+Np+xTx0tKqJmsSjbojZ9mLVhd9dzPQjwjW6kQCyqmU5JN92StImUZ32J1yb1EN4WSx5T7QzHtrPWTGaoyTj6YMt2d2noXpU+m9KtPoyHAE7D6WHqG60m8IbaE/egMSunO/bQI5PtPQgn84l9YYWjSYY5PPuts9hvjCpS6I3YZIcaGY4zYvYB37pxahjg/EVljoL+Dc22KuQu+kqg6J1RVHyJasGsLJnKV/i74eOMERDJH3FwYqW5Mf23aa3YyA3n4oA+NeZJGqjQEVfig4Q849cCLiqK5ADQzkHFm4nco1RJ4dSJ7O23BnX2ODq9rvpIfUDF9b1+TJmYi/fzNCCL+Qb4FE+rbidl7YH7p9zTY7UIGHQnB6+igFsiCHdDY2hYgHENyDlUfa/oI3d98f0Hv+IXbrBVkl8ICYqEzbGGlu6u9PqcV1PyoAvJzSb4uWOe+Xw7xwxym168NfO4X23fKZiOEN4/rZ+ghuu2be4UlFqC7wHYrzjXffy1L1bH0RpE4/7KcnbXOOy3OBIXRX8UutTEz2p8OCvpQVAx22k1Oui7NRB6IHDdlokwd52YjomdYunJikxEW9fwxU4jznvP4thHTBw7UNtOSopkhb3yOdljVMQH8aXiXRNtXnvtk0lTEO1Yl9u2w70=
+    secure: yRAfb4vj6nTIGFzCEaiblQ47KXi1QcO0HIlu+Yu9hSQWMUqRCJSZycu9VMeiSSFhiyWSmJC+dOhCD6Q6O92L87+HJo1AWGZTmLhqT54AHUZp8Hy/DsmMWpqJJgyOabb8vbc/qpmyip49H5/GrO+5ni+ttmvQb8RgjfDFPmdjAgT3weHTN/VyFrSw2bfQeKvV7HXG8OKci4peb48738Zp+HDIOoAttF8Ewj/dJTD/tkpeDyaN14Y0ANlyD9p2/hx7yivoWJVWCbprU1dpYTNO+3YOm1NekF88R5ZMz1rXPVSM3H5mCEB3BfYUEXjzQ+A2Gcx4bCliClwcmNgjoJv6zieLxSMOuAFLrwvsxH1xd81r6YlFg/6ADaXcIadiTnR37+IlvEZ1UGoDBpVwqGMd/BZrrmX62OydF5ifGS145acHglaV0PO8q2+9kqqhp5BLeB4ONet9mULxNUsh/BPzJboD0ZUDMRNc9tPBota952zuACbnuA6ZUF5Kw5zXNBtnBgROVpti6QNg/GCJhxFTzTb6zIKHFYaqQWyK4cncKWREyYq1Gj/FiTgY4/TOKv7DipAvF9Apvk79ZAR3W9Xo4zdYtwcjHj6/Dh9WcGkqXGJLMpruZimFeaLD8Ghrv1BNxBDctqw0UvvqikkJMI4JrEk902bSRxZpQxBMJYWHzUc=
   on:
     tags: true
     repo: ngeor/yart
