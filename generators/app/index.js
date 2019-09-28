@@ -4,8 +4,18 @@ const Generator = require('yeoman-generator');
 const files = require('./files');
 
 class NpmGenerator extends Generator {
+  constructor(args, opts) {
+    super(args, opts);
+    this.argument('name', { type: 'string', required: false });
+    this.argument('description', { type: 'string', required: false });
+    this.argument('scope', { type: 'string', required: false });
+    this.option('bin');
+    this.argument('githubUsername', { type: 'string', required: false });
+    this.argument('testFramework', { type: 'string', required: false });
+  }
+
   async prompting() {
-    this.answers = await this.prompt([
+    const prompts = [
       {
         type: 'input',
         name: 'name',
@@ -47,11 +57,15 @@ class NpmGenerator extends Generator {
           }
         ]
       }
-    ]);
+    ];
+
+    const promptsWithoutOptions = prompts.filter((p) => !this.options[p.name]);
+    this.answers = await this.prompt(promptsWithoutOptions);
   }
 
   writing() {
     const context = {
+      ...this.options,
       ...this.answers,
       scopedName: this.answers.scope
         ? `${this.answers.scope}/${this.answers.name}`
