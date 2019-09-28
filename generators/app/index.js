@@ -60,12 +60,14 @@ class NpmGenerator extends Generator {
     ];
 
     const promptsWithoutOptions = prompts.filter((p) => !this.options[p.name]);
-    this.answers = await this.prompt(promptsWithoutOptions);
+    this.answers = {
+      ...this.options,
+      ...await this.prompt(promptsWithoutOptions)
+    };
   }
 
   writing() {
     const context = {
-      ...this.options,
       ...this.answers,
       scopedName: this.answers.scope
         ? `${this.answers.scope}/${this.answers.name}`
