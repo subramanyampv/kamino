@@ -5,13 +5,13 @@ script:
   - npm i -g yo
   - npm link
   - >
-    mkdir -p /tmp/test1 && cd /tmp/test1 &&
+    mkdir -p /tmp/test1 && pushd /tmp/test1 &&
     yo @ngeor/nodejs --name hello --description oops --scope "@ngeor" --bin --githubUsername ngeor --testFramework jest &&
-    npm test
+    npm test && popd
   - >
-    mkdir -p /tmp/test2 && cd /tmp/test2 &&
+    mkdir -p /tmp/test2 && pushd /tmp/test2 &&
     yo @ngeor/nodejs --name hello --description oops --scope "@ngeor" --bin --githubUsername ngeor --testFramework mocha &&
-    npm test
+    npm test && popd
 node_js:
   - lts/*
 after_success:
