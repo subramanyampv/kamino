@@ -1,6 +1,6 @@
 package net.ngeor.t3.settings;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 
