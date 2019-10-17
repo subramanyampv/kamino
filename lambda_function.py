@@ -16,6 +16,18 @@ def extract_space_key(issue_key):
 
     return issue_key.split('-')[0]
 
+
+def require_env(environment, key):
+    """
+    Returns the environment value identified by the given key.
+    If not found or if empty, an error will be thrown.
+    """
+
+    result = environment[key]
+    if not result:
+        raise ValueError(f'Missing environment variable {key}')
+    return result
+
 # pylint: disable=too-few-public-methods
 
 
@@ -35,22 +47,10 @@ class Options:
         You can pass os.environ as the argument.
         """
 
-        self.base_url = environment['ATLASSIAN_CLOUD_NAME']
-        if not self.base_url:
-            raise ValueError(
-                'Missing environment variable ATLASSIAN_CLOUD_NAME')
-
-        self.username = environment['USERNAME']
-        if not self.username:
-            raise ValueError('Missing environment variable USERNAME')
-
-        self.password = environment['PASSWORD']
-        if not self.password:
-            raise ValueError('Missing environment variable PASSWORD')
-
-        self.spaces = environment['SPACES']
-        if not self.spaces:
-            raise ValueError('Missing environment variable SPACES')
+        self.base_url = require_env(environment, 'ATLASSIAN_CLOUD_NAME')
+        self.username = require_env(environment, 'USERNAME')
+        self.password = require_env(environment, 'PASSWORD')
+        self.spaces = require_env(environment, 'SPACES')
 
     def parent_page_id(self, issue_key):
         """
@@ -75,6 +75,54 @@ def view_page_url(base_url, page_id):
     Gets the URL of a Confluence page
     """
     return f"https://{base_url}.atlassian.net/wiki/pages/viewpage.action?pageId={page_id}"
+
+
+def add_decisions_label(base_url, new_page_id, auth):
+    """
+    Adds the 'decisions' label to the newly created page.
+    """
+    print('Marking page with label decisions')
+    result = requests.post(
+        f'https://{base_url}.atlassian.net/wiki/rest/api/content/{new_page_id}/label',
+        auth=auth,
+        headers={
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        json=[
+            {
+                'name': 'decisions'
+            }
+        ])
+    result.raise_for_status()
+
+
+def link_from_jira_to_confluence(base_url, issue_key, new_page_id, auth):
+    """
+    Adds a link in the JIRA ticket that points to the newly created Confluence page.
+    """
+    print('Linking from jira to confluence')
+    result = requests.post(
+        f'https://{base_url}.atlassian.net/rest/api/2/issue/{issue_key}/remotelink',
+        auth=auth,
+        headers={
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        json={
+            "globalId": f"appId=cf551dd2-cf83-37ca-a19c-62fffd328e08&pageId={new_page_id}",
+            "application": {
+                "type": "com.atlassian.confluence",
+                "name": "System Confluence"
+            },
+            "relationship": "Wiki Page",
+            "object": {
+                "url": view_page_url(base_url, new_page_id),
+                "title": "Wiki Page"
+            }
+        }
+    )
+    result.raise_for_status()
 
 
 def create_page(options, issue_key, summary):
@@ -181,44 +229,10 @@ def create_page(options, issue_key, summary):
     print(f'Page created {new_page_id}')
 
     # add label 'decisions'
-    print('Marking page with label decision')
-    result = requests.post(
-        f'https://{base_url}.atlassian.net/wiki/rest/api/content/{new_page_id}/label',
-        auth=auth,
-        headers={
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        json=[
-            {
-                'name': 'decisions'
-            }
-        ])
-    result.raise_for_status()
+    add_decisions_label(base_url, new_page_id, auth)
 
     # create link from jira to confluence page
-    print('Linking from jira to confluence')
-    result = requests.post(
-        f'https://{base_url}.atlassian.net/rest/api/2/issue/{issue_key}/remotelink',
-        auth=auth,
-        headers={
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        json={
-            "globalId": f"appId=cf551dd2-cf83-37ca-a19c-62fffd328e08&pageId={new_page_id}",
-            "application": {
-                "type": "com.atlassian.confluence",
-                "name": "System Confluence"
-            },
-            "relationship": "Wiki Page",
-            "object": {
-                "url": view_page_url(base_url, new_page_id),
-                "title": "Wiki Page"
-            }
-        }
-    )
-    result.raise_for_status()
+    link_from_jira_to_confluence(base_url, issue_key, new_page_id, auth)
     return create_page_response
 
 
