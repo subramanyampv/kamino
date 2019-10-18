@@ -1,13 +1,13 @@
 package BlogHelm.buildTypes
 
-import jetbrains.buildServer.configs.kotlin.v2018_1.BuildType
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildFeatures.sshAgent
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildFeatures.vcsLabeling
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.dockerCommand
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
-import jetbrains.buildServer.configs.kotlin.v2018_1.failureConditions.BuildFailureOnMetric
-import jetbrains.buildServer.configs.kotlin.v2018_1.failureConditions.failOnMetricChange
-import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.vcs
+import jetbrains.buildServer.configs.kotlin.v2018_2.BuildType
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildFeatures.sshAgent
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildFeatures.vcsLabeling
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.dockerCommand
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.exec
+import jetbrains.buildServer.configs.kotlin.v2018_2.failureConditions.BuildFailureOnMetric
+import jetbrains.buildServer.configs.kotlin.v2018_2.failureConditions.failOnMetricChange
+import jetbrains.buildServer.configs.kotlin.v2018_2.triggers.vcs
 
 object BlogHelm_CommitStage : BuildType({
     uuid = "3f8adc5d-5b14-4a13-9ecd-70b624f828de"

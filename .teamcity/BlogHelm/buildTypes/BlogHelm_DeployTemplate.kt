@@ -1,8 +1,8 @@
 package BlogHelm.buildTypes
 
-import jetbrains.buildServer.configs.kotlin.v2018_1.*
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.script
+import jetbrains.buildServer.configs.kotlin.v2018_2.*
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.exec
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.script
 
 object BlogHelm_DeployTemplate : Template({
     uuid = "bdb9db38-14a7-4b33-a762-f84f97141b1c"

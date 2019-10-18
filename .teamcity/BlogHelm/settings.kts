@@ -1,6 +1,6 @@
 package BlogHelm
 
-import jetbrains.buildServer.configs.kotlin.v2018_1.*
+import jetbrains.buildServer.configs.kotlin.v2018_2.*
 
 /*
 The settings script is an entry point for defining a single
@@ -31,5 +31,5 @@ node (Plugins -> teamcity-configs -> teamcity-configs:generate),
 the 'Debug' option is available in the context menu for the task.
 */
 
-version = "2018.1"
+version = "2019.1"
 project(BlogHelm.Project)

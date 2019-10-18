@@ -1,7 +1,7 @@
 package BlogHelm.buildTypes
 
-import jetbrains.buildServer.configs.kotlin.v2018_1.*
-import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
+import jetbrains.buildServer.configs.kotlin.v2018_2.*
+import jetbrains.buildServer.configs.kotlin.v2018_2.triggers.finishBuildTrigger
 
 object BlogHelm_DeployAcceptance : BuildType({
     uuid = "b39778ac-2a13-46db-ab56-5b17798e4a84"

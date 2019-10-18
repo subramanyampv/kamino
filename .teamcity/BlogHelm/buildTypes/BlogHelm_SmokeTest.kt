@@ -1,9 +1,9 @@
 package BlogHelm.buildTypes
 
 import BlogHelm.vcsRoots.BlogHelm_BlogHelm
-import jetbrains.buildServer.configs.kotlin.v2018_1.*
-import jetbrains.buildServer.configs.kotlin.v2018_1.buildSteps.exec
-import jetbrains.buildServer.configs.kotlin.v2018_1.triggers.finishBuildTrigger
+import jetbrains.buildServer.configs.kotlin.v2018_2.*
+import jetbrains.buildServer.configs.kotlin.v2018_2.buildSteps.exec
+import jetbrains.buildServer.configs.kotlin.v2018_2.triggers.finishBuildTrigger
 
 object BlogHelm_SmokeTest : BuildType({
     uuid = "d555deaf-076e-4997-8756-95da85e8d785"
