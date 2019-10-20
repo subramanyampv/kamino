@@ -1,4 +1,10 @@
+const debug = process.env.DEBUG === '1';
+const ci = !!process.env.CI || !!process.env.TEAMCITY_VERSION;
+
 exports.config = {
+  debug,
+  execArgv: debug ? ['--inspect'] : [],
+
   //
   // ====================
   // Runner Configuration
@@ -60,9 +66,8 @@ exports.config = {
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
 
-      // TODO headless only on Docker
       'goog:chromeOptions': {
-        args: ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1280,800'],
+        args: ci ? ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1280,800'] : [],
       },
     },
   ],

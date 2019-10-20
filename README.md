@@ -67,13 +67,37 @@ docker run --rm -v $(pwd):/src -w /src node:10-jessie chown -R $(id -u):$(id -g)
 
 ## CI Pipeline
 
-TODO improve section
+### Commit stage
 
+- Diagnostics (print system info, docker version, current path, user id)
+- Ensure feature branch is ahead of master
+- Determine version using GitVersion
+- Ensure package.json version is aligned with GitVersion and package-lock.json
+- npm install
 - Linting (ESLint)
 - Unit tests with code coverage (mocha/nyc)
+- Build Docker image
+- Helm init, lint, and package
 - Browser tests (webdriver io)
+
+Artifacts:
+
+- Helm chart (\*.tgz)
+- Helm environment values overrides (values-\*.yaml)
+
+Using TeamCity:
+
+- the build breaks if code coverage drops
+- the commit is tagged if on master branch
+
+### Smoke test
+
 - Smoke test Docker image
-- Functional tests
+
+### Deployment
+
+- Deploy using Helm
+- Post deployment functional tests against actual environments
 
 ## Versioning and GitVersion
 
@@ -140,9 +164,6 @@ Visit http://teamcity.local/ to configure TeamCity.
   the check interval to 30'' and the quiet period to 5''.
 
 TODO npm caching implementation
-
-TODO artifact pack functional tests and npm dependencies to run wdio tests
-post-deployment without needing the source code
 
 ### DNS
 

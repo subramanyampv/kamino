@@ -1,18 +1,25 @@
 #!/bin/bash
 # Ensure the current branch is ahead of master.
 # If the current branch conflicts with master branch, the build will fail.
-set -e
+set -ex
 
-# TODO do not run for master branch
-
-# TODO do not perform ssh-keyscan if github.com is already known
-
+# Prevent host key verification error
 mkdir -p ~/.ssh
 ssh-keyscan -H github.com > ~/.ssh/known_hosts
 
+IS_SHALLOW=$(git rev-parse --is-shallow-repository)
+if [[ "$IS_SHALLOW" == "true" ]]; then
+  GIT_FETCH_ARGS="--unshallow"
+else
+  GIT_FETCH_ARGS=""
+fi
+
 # make sure we have master branch and tags
 # fetching tags will allow GitVersion to operate correctly
-git fetch --tags origin
+git fetch $GIT_FETCH_ARGS --tags origin
 
-# merge master into current feature branch
-git merge origin/master
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$BRANCH" != "master" ]]; then
+  # merge master into current feature branch
+  git merge origin/master
+fi

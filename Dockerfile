@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM node:10-alpine
 EXPOSE 3000
 RUN mkdir /app
 WORKDIR /app
