@@ -39,12 +39,14 @@ spec:
               port: http
             initialDelaySeconds: 90
             periodSeconds: 10
+            timeoutSeconds: 5
           readinessProbe:
             tcpSocket:
               path: /
               port: http
             initialDelaySeconds: 90
             periodSeconds: 10
+            timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -52,8 +54,8 @@ spec:
               name: data
       volumes:
         - name: data
-          hostPath:
-            path: /opt/teamcity-server/datadir
+          persistentVolumeClaim:
+            claimName: {{ include "teamcity.fullname" . }}-claim
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -110,24 +112,32 @@ spec:
           volumeMounts:
             - mountPath: /var/run/docker.sock
               name: docker-sock
+            - mountPath: /opt/buildagent/work
+              name: buildagent-work
           livenessProbe:
             tcpSocket:
               path: /
               port: http
             initialDelaySeconds: 90
             periodSeconds: 10
+            timeoutSeconds: 5
           readinessProbe:
             tcpSocket:
               path: /
               port: http
             initialDelaySeconds: 90
             periodSeconds: 10
+            timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
+        # needed for running GitVersion as a Docker image
+        - name: buildagent-work
+          hostPath:
+            path: /opt/buildagent/work
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

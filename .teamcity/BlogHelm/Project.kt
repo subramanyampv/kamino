@@ -29,9 +29,9 @@ object Project : Project({
         param("docker.registry", "")
         param("docker.server", "")
         param("docker.username", "")
-        param("lachlanevenson.k8s-helm.tag", "v2.8.2")
+        param("lachlanevenson.k8s-helm.tag", "v2.15.0")
         param("app.name", "blog-helm")
-        param("ci.image", "node:8-jessie") // node:8-slim cannot install phantomjs
+        param("ci.image", "node:10-jessie") // node:8-slim cannot install phantomjs
     }
 
     features {

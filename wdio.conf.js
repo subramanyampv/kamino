@@ -47,6 +47,7 @@ exports.config = {
   // https://docs.saucelabs.com/reference/platforms-configurator
   //
   capabilities: [
+    // TODO add firefox support
     {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
@@ -58,6 +59,11 @@ exports.config = {
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
       // excludeDriverLogs: ['bugreport', 'server'],
+
+      // TODO headless only on Docker
+      'goog:chromeOptions': {
+        args: ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1280,800'],
+      },
     },
   ],
   //

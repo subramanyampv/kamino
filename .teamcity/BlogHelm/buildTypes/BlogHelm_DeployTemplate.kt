@@ -16,8 +16,7 @@ object BlogHelm_DeployTemplate : Template({
     params {
         text("app.env", "", label = "Environment", description = "Select the environment to deploy to",
               regex = "^test|acc|prod${'$'}", validationMessage = "Must be one of test acc prod")
-        param("app.host", "")
-        param("app.baseurl", "http://%app.host%")
+        param("app.baseurl", "http://blog-helm-%app.env%-blog-helm")
         param("app.version.url", "%app.baseurl%/version")
     }
 
@@ -34,17 +33,11 @@ object BlogHelm_DeployTemplate : Template({
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
-        exec {
-            name = "Wait until the correct version is available"
-            path = "ci-scripts/wait-for-version.sh"
-            arguments = "%app.version.url% %build.number%"
-        }
+
         exec {
             name = "Run WebdriverIO tests"
-            path = "npm"
-            arguments = "run wdio -- -b %app.baseurl%"
-            dockerImage = "%ci.image%"
-            dockerRunParameters = "--rm"
+            path = "ci-scripts/wdio.sh"
+            arguments = "%app.baseurl%"
         }
     }
 
@@ -71,7 +64,7 @@ object BlogHelm_DeployTemplate : Template({
         feature {
             type = "xml-report-plugin"
             param("xmlReportParsing.reportType", "junit")
-            param("xmlReportParsing.reportDirs", "test-reports/WD*.xml")
+            param("xmlReportParsing.reportDirs", "test-reports/ci-wdio*.xml")
             param("xmlReportParsing.verboseOutput", "true")
         }
     }

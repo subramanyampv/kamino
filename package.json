@@ -1,6 +1,6 @@
 {
   "name": "blog-helm",
-  "version": "2.5.0",
+  "version": "3.0.1",
   "description": "An example hello world application to show Docker and Helm",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
     "start": "node index.js",
     "wdio": "wdio",
     "nyc": "nyc npm test",
-    "nyc-junit": "nyc npm run test-junit"
+    "nyc-junit": "nyc npm run test-junit",
+    "start-wdio": "concurrently -k -s first npm:start npm:wdio"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
     "@wdio/sync": "^5.15.1",
     "chai": "^4.2.0",
     "chromedriver": "^77.0.0",
+    "concurrently": "^5.0.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
@@ -54,6 +56,7 @@
     ],
     "exclude": [
       "wdio.conf.js",
+      "ci-scripts/*.js",
       "coverage/**/*.js",
       "test/**/*.js"
     ]

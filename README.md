@@ -1,6 +1,12 @@
 # blog-helm
 
-An example hello world application to show Docker and Helm
+An example hello world application to show Docker and Helm.
+
+Requirements:
+
+- node 10
+- minikube 1.4.0
+- Helm 2.15.0
 
 ## Standalone usage
 
@@ -24,7 +30,7 @@ npm run wdio
 To run tests against an app at a different base URL:
 
 ```
-npm run wdio -- -b http://some.other.url/
+npm run wdio -- --baseUrl http://some.other.url/
 ```
 
 ## Docker usage
@@ -44,19 +50,19 @@ docker run -p 3000:3000 blog-helm
 To lint the app using Docker:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-jessie npm run lint
+docker run --rm -v $(pwd):/src -w /src node:10-jessie npm run lint
 ```
 
 For the XML report:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-jessie npm run lint-junit
+docker run --rm -v $(pwd):/src -w /src node:10-jessie npm run lint-junit
 ```
 
 Correct user permissions if needed with:
 
 ```
-docker run --rm -v $(pwd):/src -w /src node:8-jessie chown -R $(id -u):$(id -g) test-reports
+docker run --rm -v $(pwd):/src -w /src node:10-jessie chown -R $(id -u):$(id -g) test-reports
 ```
 
 ## CI Pipeline
@@ -67,10 +73,16 @@ TODO improve section
 - Unit tests with code coverage (mocha/nyc)
 - Browser tests (webdriver io)
 - Smoke test Docker image
+- Functional tests
 
 ## Versioning and GitVersion
 
-TODO
+Version is determined by GitVersion. Builds are tagged on master on the Commit
+Stage.
+
+```
+docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0 /repo /showvariable SemVer
+```
 
 ## Setting up minikube
 
@@ -121,10 +133,16 @@ Visit http://teamcity.local/ to configure TeamCity.
   - Store secure values outside of VCS
   - Settings format: Kotlin
   - at the prompt, select "Import settings from VCS"
+- Set an environment variable on the root project named `KUBECTL_CONFIG` which
+  will contain the base64 encoded contents of your kube config. You can create
+  that value with `kubectl config view --flatten | base64 -w 0`
+- In order to speed up git polling, go to Administration | Global Settings. Set
+  the check interval to 30'' and the quiet period to 5''.
 
-Set an environment variable on the root project named `KUBECTL_CONFIG` which
-will contain the base64 encoded contents of your kube config. You can create
-that value with `kubectl config view --flatten | base64 -w 0`
+TODO npm caching implementation
+
+TODO artifact pack functional tests and npm dependencies to run wdio tests
+post-deployment without needing the source code
 
 ### DNS
 
@@ -150,4 +168,7 @@ The IP needs to match minikube's IP, which you can get with `minikube ip`.
 
 ## Setting up Jenkins
 
-TODO
+TODO Jenkins
+
+TODO Single script build and deploy locally (i.e. without TeamCity but with
+minikube)

@@ -43,6 +43,13 @@ object BlogHelm_CommitStage : BuildType({
             path = "ci-scripts/version.sh"
         }
         exec {
+            name = "Check package.json version"
+            path = "node"
+            arguments = "ci-scripts/package-json-version.js %build.number%"
+            dockerImage = "%ci.image%"
+            dockerRunParameters = "--rm"
+        }
+        exec {
             name = "Install dependencies (npm install)"
             path = "npm"
             arguments = "install"
@@ -94,6 +101,13 @@ object BlogHelm_CommitStage : BuildType({
             arguments = "package --debug --version %build.number% ./helm/%app.name%"
             dockerImage = "lachlanevenson/k8s-helm:%lachlanevenson.k8s-helm.tag%"
             dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
+        }
+        exec {
+            name = "Functional Tests"
+            path = "npm"
+            arguments = "run start-wdio"
+            dockerImage = "ngeor/node-chrome:v77.0.3865.120"
+            dockerRunParameters = "--rm"
         }
     }
 

@@ -31,9 +31,24 @@ fi
 
 mkdir -p $HOME/.kube
 echo "$KUBE_CONFIG" | base64 -d > $HOME/.kube/config
-helm upgrade --install blog-helm-${APP_ENV} \
-    ./artifacts/blog-helm-${IMAGE_TAG}.tgz \
-    --set image.tag=${IMAGE_TAG} \
-    --values ./artifacts/values-${APP_ENV}.yaml \
-    --debug \
-    --wait
+
+RELEASE_NAME="blog-helm-${APP_ENV}"
+EXISTS=$(helm list $RELEASE_NAME | wc -l)
+if [ $EXISTS -eq 0 ]; then
+  echo "Installing helm chart $RELEASE_NAME"
+  helm install \
+      ./artifacts/blog-helm-${IMAGE_TAG}.tgz \
+      --name $RELEASE_NAME \
+      --set image.tag=${IMAGE_TAG} \
+      --values ./artifacts/values-${APP_ENV}.yaml \
+      --debug \
+      --wait
+else
+  echo "Upgrading helm chart $RELEASE_NAME"
+  helm upgrade $RELEASE_NAME \
+      ./artifacts/blog-helm-${IMAGE_TAG}.tgz \
+      --set image.tag=${IMAGE_TAG} \
+      --values ./artifacts/values-${APP_ENV}.yaml \
+      --debug \
+      --wait
+fi

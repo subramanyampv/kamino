@@ -10,13 +10,12 @@ VERSION_MODE=${1:-GitVersion}
 # Default mode is GitVersion.
 # It uses the GitVersion utility to determine the semantic version.
 function gitVersion {
-  docker pull ngeor/gitversion
+  docker pull gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0
   IMAGE_TAG=$(docker run --rm \
     -u $(id -u):$(id -g) \
-    -v /opt/buildagent/system/git:/opt/buildagent/system/git \
     -v $(pwd):/repo \
-    ngeor/gitversion \
-    /showvariable SemVer)
+    gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0 \
+    /repo /showvariable SemVer)
 }
 
 # In PackageJson mode, semantic version comes from package.json.
