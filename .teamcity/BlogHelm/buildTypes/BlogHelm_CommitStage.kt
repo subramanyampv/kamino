@@ -103,11 +103,18 @@ object BlogHelm_CommitStage : BuildType({
             dockerRunParameters = "--rm -v %teamcity.build.workingDir%/.helm:/root/.helm"
         }
         exec {
-            name = "Functional Tests"
+            name = "Functional Tests (Chrome)"
             path = "npm"
             arguments = "run start-wdio"
             dockerImage = "ngeor/node-chrome:v77.0.3865.120"
             dockerRunParameters = "--rm"
+        }
+        exec {
+            name = "Functional Tests (Firefox)"
+            path = "npm"
+            arguments = "run start-wdio"
+            dockerImage = "ngeor/node-firefox"
+            dockerRunParameters = "--rm -e BROWSER_NAME=firefox"
         }
     }
 

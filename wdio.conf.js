@@ -1,6 +1,44 @@
 const debug = process.env.DEBUG === '1';
 const ci = !!process.env.CI || !!process.env.TEAMCITY_VERSION;
 
+function getBrowserConfig() {
+  const firefoxConfig = {
+    capabilities: [
+      {
+        browserName: 'firefox',
+        'moz:firefoxOptions': {
+          args: ci ? ['--headless'] : [],
+        },
+      },
+    ],
+    services: ['geckodriver'],
+    geckoDriverArgs: [],
+  };
+
+  const chromeConfig = {
+    capabilities: [
+      {
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: ci ? ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1280,800'] : [],
+        },
+      },
+    ],
+    services: ['chromedriver'],
+  };
+
+  const browserName = process.env.BROWSER_NAME || 'chrome';
+
+  const browsersConfig = {
+    firefox: firefoxConfig,
+    chrome: chromeConfig,
+  };
+
+  return browsersConfig[browserName];
+}
+
+const browserConfig = getBrowserConfig();
+
 exports.config = {
   debug,
   execArgv: debug ? ['--inspect'] : [],
@@ -52,25 +90,8 @@ exports.config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://docs.saucelabs.com/reference/platforms-configurator
   //
-  capabilities: [
-    // TODO add firefox support
-    {
-      // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-      // grid with only 5 firefox instances available you can make sure that not more than
-      // 5 instances get started at a time.
-      maxInstances: 5,
-      //
-      browserName: 'chrome',
-      // If outputDir is provided WebdriverIO can capture driver session logs
-      // it is possible to configure which logTypes to include/exclude.
-      // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
-      // excludeDriverLogs: ['bugreport', 'server'],
+  ...browserConfig,
 
-      'goog:chromeOptions': {
-        args: ci ? ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1280,800'] : [],
-      },
-    },
-  ],
   //
   // ===================
   // Test Configurations
@@ -114,13 +135,6 @@ exports.config = {
   //
   // Default request retries count
   connectionRetryCount: 3,
-  //
-  // Test runner services
-  // Services take over a specific job you don't want to take care of. They enhance
-  // your test setup with almost no effort. Unlike plugins, they don't add new
-  // commands. Instead, they hook themselves up into the test process.
-  services: ['chromedriver'],
-
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
   // see also: https://webdriver.io/docs/frameworks.html
@@ -140,8 +154,8 @@ exports.config = {
     [
       'junit', {
         outputDir: './test-reports',
-        outputFileFormat: function outputFileFormat() {
-          return 'ci-wdio.xml';
+        outputFileFormat: function outputFileFormat(options) {
+          return `ci-wdio-${options.cid}-${options.capabilities.browserName}.xml`;
         },
       },
     ],
