@@ -50,10 +50,14 @@ pipeline {
       agent {
         docker { image "node:lts" }
       }
-
       steps {
         sh "npm run lint-junit"
         sh "npm run nyc-junit"
+      }
+      post {
+        always {
+          junit "**/test-reports/ci-*.xml"
+        }
       }
     }
 
@@ -64,7 +68,14 @@ pipeline {
             docker { image "ngeor/node-chrome:v77.0.3865.120"}
           }
           steps {
+            // in case it runs in an agent where we haven't run npm i yet
+            sh "npm i"
             sh "npm run start-wdio"
+          }
+          post {
+            always {
+              junit "**/test-reports/ci-*.xml"
+            }
           }
         }
 
@@ -76,7 +87,14 @@ pipeline {
             BROWSER_NAME = "firefox"
           }
           steps {
+            // in case it runs in an agent where we haven't run npm i yet
+            sh "npm i"
             sh "npm run start-wdio"
+          }
+          post {
+            always {
+              junit "**/test-reports/ci-*.xml"
+            }
           }
         }
       }
@@ -105,7 +123,6 @@ pipeline {
       }
       post {
         always{
-          junit "**/test-reports/ci-*.xml"
           archiveArtifacts artifacts: "artifacts/*${version}.tgz", fingerprint: true
           archiveArtifacts artifacts: "artifacts/values-*.yaml", fingerprint: true
         }
@@ -207,8 +224,14 @@ pipeline {
       }
       agent any
       steps {
-        sh "git tag -m 'Releasing version ${version}' v${version}"
-        sh "git push --follow-tags"
+        sshagent(['ENVY']) {
+          sh """
+          git config user.email nikolaos.georgiou@gmail.com
+          git config user.name "Nikolaos Georgiou"
+          git tag -m "Releasing version ${version}" v${version}
+          git push --tags
+          """
+        }
       }
     }
   }
