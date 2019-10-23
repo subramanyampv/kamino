@@ -189,7 +189,22 @@ The IP needs to match minikube's IP, which you can get with `minikube ip`.
 
 ## Setting up Jenkins
 
-TODO Jenkins
+- Install the helm chart (`./helm/jenkins`).
+- Go to http://jenkins.local/ (you need to add this to your HOSTS file)
+- Copy the admin password from the pod logs and login
+- Install suggested plugins
+- Create first admin account, continue with configuration
+- Install plugin
+  [Build Name and Description Setter](https://plugins.jenkins.io/build-name-setter).
+- Optional: Install Blue Ocean plugin
+- Create new multi-branch pipeline project named `blog-helm`
+- Define the following checkout behaviours:
+
+  - Fetch tags
+  - Checkout to matching local branch
+  - Specify ref specs `+refs/heads/*:refs/remotes/@{remote}/*`
+
+- Create a credential named `kubectl_config` (see TeamCity section for info)
 
 TODO Single script build and deploy locally (i.e. without TeamCity but with
 minikube)

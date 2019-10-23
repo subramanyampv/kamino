@@ -2,20 +2,23 @@
 # Determine the current version.
 # Supported strategy is controlled via the first parameter.
 
-set -x
-set -e
+set -ex
 
 VERSION_MODE=${1:-GitVersion}
 
 # Default mode is GitVersion.
 # It uses the GitVersion utility to determine the semantic version.
 function gitVersion {
-  docker pull gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0
-  IMAGE_TAG=$(docker run --rm \
-    -u $(id -u):$(id -g) \
-    -v $(pwd):/repo \
-    gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0 \
-    /repo /showvariable SemVer)
+  if [ -x "$(command -v dotnet)" ]; then
+    IMAGE_TAG=$(dotnet /app/GitVersion.dll /showvariable SemVer /nocache /nonormalize /nofetch)
+  else
+    docker pull gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0
+    IMAGE_TAG=$(docker run --rm \
+      -u $(id -u):$(id -g) \
+      -v $(pwd):/repo \
+      gittools/gitversion:5.0.2-linux-ubuntu-18.04-netcoreapp3.0 \
+      /repo /showvariable SemVer /nocache /nonormalize /nofetch)
+  fi
 }
 
 # In PackageJson mode, semantic version comes from package.json.
@@ -81,15 +84,17 @@ if [ -z "$IMAGE_TAG" ]; then
   exit 1
 fi
 
-echo "Docker image tag will be $IMAGE_TAG"
+if [ -n "$TEAMCITY_VERSION" ]; then
+  # Running in TeamCity
+  # inject environment variable for next steps
+  echo "##teamcity[setParameter name='env.IMAGE_TAG' value='$IMAGE_TAG']"
 
-set +x
-
-# inject environment variable for next steps
-echo "##teamcity[setParameter name='env.IMAGE_TAG' value='$IMAGE_TAG']"
-
-# Set build number of TeamCity (better UX).
-# When mode is TeamCity that's already set.
-if [ "$VERSION_MODE" != "TeamCity" ]; then
-  echo "##teamcity[buildNumber '$IMAGE_TAG']"
+  # Set build number of TeamCity (better UX).
+  # When mode is TeamCity that's already set.
+  if [ "$VERSION_MODE" != "TeamCity" ]; then
+    echo "##teamcity[buildNumber '$IMAGE_TAG']"
+  fi
+else
+  # Not running in TeamCity
+  echo "$IMAGE_TAG"
 fi

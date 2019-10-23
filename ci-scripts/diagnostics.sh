@@ -1,6 +1,11 @@
 #!/bin/bash
 set -ex
-lsb_release -cdir
+
+if [ -x "$(command -v lsb_release)" ]; then
+  lsb_release -cdir
+fi
+
 docker version
 pwd
 id
+git --version

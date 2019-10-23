@@ -7,16 +7,14 @@ set -ex
 mkdir -p ~/.ssh
 ssh-keyscan -H github.com > ~/.ssh/known_hosts
 
-IS_SHALLOW=$(git rev-parse --is-shallow-repository)
-if [[ "$IS_SHALLOW" == "true" ]]; then
-  GIT_FETCH_ARGS="--unshallow"
-else
-  GIT_FETCH_ARGS=""
-fi
-
 # make sure we have master branch and tags
-# fetching tags will allow GitVersion to operate correctly
-git fetch $GIT_FETCH_ARGS --tags origin
+# fetching tags and master branch will allow GitVersion to operate correctly
+
+if [ -z "$JENKINS_URL" ]; then
+  # for Jenkins, we already have the full git info
+  git fetch
+  git fetch --tags
+fi
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 if [[ "$BRANCH" != "master" ]]; then
