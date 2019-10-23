@@ -196,6 +196,7 @@ The IP needs to match minikube's IP, which you can get with `minikube ip`.
 - Create first admin account, continue with configuration
 - Install plugin
   [Build Name and Description Setter](https://plugins.jenkins.io/build-name-setter).
+- Install plugin SSH Agent.
 - Optional: Install Blue Ocean plugin
 - Create new multi-branch pipeline project named `blog-helm`
 - Define the following checkout behaviours:
