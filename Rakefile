@@ -5,8 +5,8 @@ require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
 RSpec::Core::RakeTask.new(:test) do |rspec|
-  rspec.pattern = 'test/**/*_spec.rb'
-  rspec.rspec_opts = '-r ./test/_helper/helper -f documentation'
+  rspec.pattern = 'spec/**/*_spec.rb'
+  rspec.rspec_opts = '-r ./spec/_helper/helper -f documentation'
 end
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
