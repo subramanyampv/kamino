@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'delegate'
+require "delegate"
 
 # A helper that deals with files.
 class FileSystem
@@ -9,13 +9,13 @@ class FileSystem
   end
 
   def write(file, contents)
-    File.open(file, 'w') do |f|
+    File.open(file, "w") do |f|
       f.puts(contents)
     end
   end
 
   def append(file, contents)
-    File.open(file, 'a') do |f|
+    File.open(file, "a") do |f|
       f.puts("\n" + contents)
     end
   end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'commands/command_factory'
+require "commands/command_factory"
 
 RSpec.describe Commands do
-  describe '#create_command' do
-    it 'should create a command with just options' do
+  describe "#create_command" do
+    it "should create a command with just options" do
       options = {
-        command: 'create',
-        hello: 'world',
+        command: "create",
+        hello: "world",
         provider: :github
       }
       command = Commands.create_command(options)

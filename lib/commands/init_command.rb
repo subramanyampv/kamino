@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../repo_providers/factory'
-require_relative '../file_system'
-require_relative '../git'
-require_relative '../travis'
+require_relative "../repo_providers/factory"
+require_relative "../file_system"
+require_relative "../git"
+require_relative "../travis"
 
 module Commands
   # Initializes an existing repository.
@@ -29,7 +29,7 @@ module Commands
         commit_message = commit_message(init_result)
         push(commit_message) if commit_message
       else
-        puts 'Repo does not exist'
+        puts "Repo does not exist"
       end
     end
 
@@ -37,14 +37,14 @@ module Commands
 
     def commit_message(init_result)
       commit_messages = {
-        created: 'Added README',
-        added_badge: 'Added Travis badge to README'
+        created: "Added README",
+        added_badge: "Added Travis badge to README"
       }
       commit_messages[init_result]
     end
 
     def push(commit_message)
-      @git.add 'README.md'
+      @git.add "README.md"
       @git.commit commit_message
       @git.push
     end
@@ -53,7 +53,7 @@ module Commands
     # If it does not exist, it will be created.
     # It is exists, it will be updated to satisfy the requested options.
     def init_readme
-      readme_file = File.join(@git.working_dir, 'README.md')
+      readme_file = File.join(@git.working_dir, "README.md")
       if @file_system.file?(readme_file)
         append_badge(readme_file) if @options[:travis_badge]
       else
@@ -65,7 +65,7 @@ module Commands
     def append_badge(readme_file)
       badge = @travis.badge
       if @file_system.line_exist?(readme_file, badge)
-        puts 'Readme already exists and has badge, skipping'
+        puts "Readme already exists and has badge, skipping"
       else
         @file_system.append(readme_file, badge)
         :added_badge
@@ -75,7 +75,7 @@ module Commands
     # Creates a new README file.
     # Optionally adds the Travis badge.
     def create_readme(readme_file)
-      puts 'Creating new readme file'
+      puts "Creating new readme file"
       contents = <<~HERE
         # #{@options[:name]}
         #{@options[:description]}

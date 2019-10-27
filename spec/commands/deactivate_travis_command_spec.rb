@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require 'commands/deactivate_travis_command'
+require "commands/deactivate_travis_command"
 
 RSpec.describe Commands::DeactivateTravisCommand do
   before(:example) do
     options = {
-      name: 'dummy'
+      name: "dummy"
     }
-    @travis = double('travis')
+    @travis = double("travis")
     expect(TravisFactory).to receive(:create)
       .with(options)
       .and_return(@travis)
     @command = Commands::DeactivateTravisCommand.new(options)
   end
 
-  describe '#run' do
-    it 'should deactivate the repo' do
+  describe "#run" do
+    it "should deactivate the repo" do
       expect(@travis).to receive(:sync).ordered
       expect(@travis).to receive(:deactivate_repo)
         .ordered

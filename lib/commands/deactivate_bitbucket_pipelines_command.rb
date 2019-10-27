@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../repo_providers/factory'
+require_relative "../repo_providers/factory"
 
 module Commands
   # Deactivates a repository in Bitbucket Pipelines.

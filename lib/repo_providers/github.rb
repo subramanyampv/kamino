@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'net/http'
-require_relative '../basic_auth'
-require_relative '../repo'
-require_relative '../rest_client'
+require "json"
+require "net/http"
+require_relative "../basic_auth"
+require_relative "../repo"
+require_relative "../rest_client"
 
 module RepoProviders
   # GitHub repository provider.
@@ -28,7 +28,8 @@ module RepoProviders
       @rest_client.get(url, basic_auth: basic_auth)
       true
     rescue RestClientError => e
-      raise e unless e.code.to_s == '404'
+      raise e unless e.code.to_s == "404"
+
       false
     end
 
@@ -39,7 +40,7 @@ module RepoProviders
         description: options[:description],
         auto_init: true,
         gitignore_template: gitignore_template(options),
-        license_template: 'mit'
+        license_template: "mit"
       }
       @rest_client.post(url, body, basic_auth: basic_auth)
     end
@@ -65,15 +66,15 @@ module RepoProviders
     end
 
     def base_url
-      'https://api.github.com'
+      "https://api.github.com"
     end
 
     def gitignore_template(options)
       language = options[:language]
-      if language == 'python'
-        'Python'
+      if language == "python"
+        "Python"
       else
-        'Maven'
+        "Maven"
       end
     end
   end

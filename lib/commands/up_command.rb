@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative './activate_bitbucket_pipelines_command'
-require_relative './activate_travis_command'
-require_relative './create_command'
-require_relative './init_command'
+require_relative "./activate_bitbucket_pipelines_command"
+require_relative "./activate_travis_command"
+require_relative "./create_command"
+require_relative "./init_command"
 
 module Commands
   # Creates a new repository and activates CI.

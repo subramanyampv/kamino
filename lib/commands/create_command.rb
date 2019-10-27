@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../repo_providers/factory'
+require_relative "../repo_providers/factory"
 
 module Commands
   # Creates a new repository.
@@ -12,7 +12,7 @@ module Commands
 
     def run
       if @provider.repo_exist?
-        puts 'Repo already exists'
+        puts "Repo already exists"
       else
         @provider.create_repo(@options)
       end

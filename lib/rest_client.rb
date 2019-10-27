@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'net/http'
+require "json"
+require "net/http"
 
 # Utility class to simplify REST calls
 class RestClient
@@ -18,7 +18,7 @@ class RestClient
   end
 
   def delete(url, basic_auth: nil, headers: nil)
-    act(url, Net::HTTP::Delete, '', basic_auth, headers)
+    act(url, Net::HTTP::Delete, "", basic_auth, headers)
   end
 
   private
@@ -30,7 +30,7 @@ class RestClient
   def act(url, method, body, basic_auth, headers)
     uri = URI(url)
     req = method.new(uri)
-    req.content_type = 'application/json'
+    req.content_type = "application/json"
     apply_basic_auth req, basic_auth
     apply_headers req, headers if headers
     req.body = body if body
@@ -39,6 +39,7 @@ class RestClient
 
   def apply_basic_auth(req, basic_auth)
     return if !basic_auth || basic_auth.empty?
+
     req.basic_auth basic_auth.username, basic_auth.password
   end
 
@@ -58,7 +59,7 @@ class RestClient
 
   def handle_response_with_body(res)
     case res
-    when Net::HTTPSuccess then
+    when Net::HTTPSuccess
       safe_parse_json res.body
     else
       raise RestClientError.new(res.code, res.message, res.body)

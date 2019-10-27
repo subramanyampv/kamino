@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'delegate'
-require_relative './shell'
+require "delegate"
+require_relative "./shell"
 
 # Handles git operations. Requires the git executable on the PATH.
 class Git
@@ -17,7 +17,7 @@ class Git
   # Stages changes of a git repository.
   # +pattern+:: Specifies which changes to stage.
   # By default, all changes will be staged.
-  def add(pattern = '.')
+  def add(pattern = ".")
     system "git add #{pattern}"
   end
 
@@ -31,7 +31,7 @@ class Git
     ensure_clone_dir_exists
     if Dir.exist?(working_dir)
       ensure_remotes_match
-      system 'git pull' unless empty_repo?
+      system "git pull" unless empty_repo?
     else
       @shell.system(
         "git clone #{@clone_url}", chdir: @clone_dir
@@ -41,7 +41,7 @@ class Git
 
   # Pushes changes of a git repository to the remote.
   def push
-    system 'git push'
+    system "git push"
   end
 
   def working_dir
@@ -52,12 +52,12 @@ class Git
 
   # Gets the remote URL of the origin.
   def remote_url
-    @shell.backticks 'git remote get-url origin', chdir: working_dir
+    @shell.backticks "git remote get-url origin", chdir: working_dir
   end
 
   # Checks if this is an empty repo with no remote ref to pull from
   def empty_repo?
-    result = @shell.backticks('git branch -la', chdir: working_dir)
+    result = @shell.backticks("git branch -la", chdir: working_dir)
     result.to_s.empty?
   end
 
@@ -78,7 +78,7 @@ end
 
 # Decorator for Git that cancels out all operations that cause changes.
 class DryRunGitDecorator < SimpleDelegator
-  def add(pattern = '.')
+  def add(pattern = ".")
     puts "Would have added files with pattern #{pattern}"
   end
 
@@ -87,7 +87,7 @@ class DryRunGitDecorator < SimpleDelegator
   end
 
   def push
-    puts 'Would have pushed changes'
+    puts "Would have pushed changes"
   end
 end
 

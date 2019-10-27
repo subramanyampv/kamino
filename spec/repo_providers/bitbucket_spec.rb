@@ -1,44 +1,44 @@
 # frozen_string_literal: true
 
-require 'repo_providers/bitbucket'
-require 'rest_client'
+require "repo_providers/bitbucket"
+require "rest_client"
 
 RSpec.describe RepoProviders::Bitbucket do
   before(:example) do
-    @rest_client = double('rest_client')
+    @rest_client = double("rest_client")
     expect(RestClient).to receive(:new).and_return(@rest_client)
     @bitbucket = RepoProviders::Bitbucket.new
-    @bitbucket.name = 'instarepo'
-    @bitbucket.owner = 'ngeor'
-    @bitbucket.username = 'user'
-    @bitbucket.password = 'password'
+    @bitbucket.name = "instarepo"
+    @bitbucket.owner = "ngeor"
+    @bitbucket.username = "user"
+    @bitbucket.password = "password"
   end
 
-  describe '#create_repo' do
-    it 'should create the repo' do
+  describe "#create_repo" do
+    it "should create the repo" do
       # arrange
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo"
       expected_body = {
-        scm: 'git',
+        scm: "git",
         is_private: true,
-        description: 'My brand new repo',
-        language: 'java',
-        fork_policy: 'no_forks',
+        description: "My brand new repo",
+        language: "java",
+        fork_policy: "no_forks",
         mainbranch: {
-          type: 'branch',
-          name: 'master'
+          type: "branch",
+          name: "master"
         }
       }
 
-      expected_basic_auth = BasicAuth.new('user', 'password')
+      expected_basic_auth = BasicAuth.new("user", "password")
       allow(@rest_client).to receive(:post)
         .with(url, expected_body, basic_auth: expected_basic_auth)
         .and_return(test: 42)
 
       # act
       repo = @bitbucket.create_repo(
-        description: 'My brand new repo',
-        language: 'java'
+        description: "My brand new repo",
+        language: "java"
       )
 
       # assert
@@ -46,10 +46,10 @@ RSpec.describe RepoProviders::Bitbucket do
     end
   end
 
-  describe '#delete_repo' do
-    it 'should delete the repo' do
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+  describe "#delete_repo" do
+    it "should delete the repo" do
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo"
+      expected_basic_auth = BasicAuth.new("user", "password")
       allow(@rest_client).to receive(:delete)
         .with(url, basic_auth: expected_basic_auth)
         .and_return(nil)
@@ -57,60 +57,60 @@ RSpec.describe RepoProviders::Bitbucket do
     end
   end
 
-  describe '#repo_exist?' do
-    it 'should return true when repo exists' do
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+  describe "#repo_exist?" do
+    it "should return true when repo exists" do
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo"
+      expected_basic_auth = BasicAuth.new("user", "password")
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: expected_basic_auth)
-        .and_return(name: 'instarepo')
+        .and_return(name: "instarepo")
       expect(@bitbucket.repo_exist?).to be true
     end
 
-    it 'should return false when repo does not exist' do
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+    it "should return false when repo does not exist" do
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo"
+      expected_basic_auth = BasicAuth.new("user", "password")
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: expected_basic_auth)
-        .and_raise(RestClientError.new('404', 'oops', 'not found'))
+        .and_raise(RestClientError.new("404", "oops", "not found"))
       expect(@bitbucket.repo_exist?).to be false
     end
 
-    it 'should raise an exception when repo is forbidden' do
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+    it "should raise an exception when repo is forbidden" do
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo"
+      expected_basic_auth = BasicAuth.new("user", "password")
       allow(@rest_client).to receive(:get)
         .with(url, basic_auth: expected_basic_auth)
-        .and_raise(RestClientError.new('403', 'oops', 'not found'))
+        .and_raise(RestClientError.new("403", "oops", "not found"))
       expect { @bitbucket.repo_exist? }.to raise_error(RestClientError)
     end
   end
 
-  describe '#clone_url' do
-    it 'should use ssh by default' do
+  describe "#clone_url" do
+    it "should use ssh by default" do
       expect(@bitbucket.clone_url).to eq(
-        'git@bitbucket.org:ngeor/instarepo.git'
+        "git@bitbucket.org:ngeor/instarepo.git"
       )
     end
 
-    it 'should use ssh explicitly' do
+    it "should use ssh explicitly" do
       expect(@bitbucket.clone_url(use_ssh: true)).to eq(
-        'git@bitbucket.org:ngeor/instarepo.git'
+        "git@bitbucket.org:ngeor/instarepo.git"
       )
     end
 
-    it 'should support https' do
+    it "should support https" do
       expect(@bitbucket.clone_url(use_ssh: false)).to eq(
-        'https://user@bitbucket.org/ngeor/instarepo.git'
+        "https://user@bitbucket.org/ngeor/instarepo.git"
       )
     end
   end
 
-  describe '#activate_repo' do
-    it 'should activate' do
+  describe "#activate_repo" do
+    it "should activate" do
       # arrange
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo/pipelines_config'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo/pipelines_config"
+      expected_basic_auth = BasicAuth.new("user", "password")
       expect(@rest_client).to receive(:put)
         .with(url, { enabled: true }, basic_auth: expected_basic_auth)
         .and_return(42)
@@ -123,11 +123,11 @@ RSpec.describe RepoProviders::Bitbucket do
     end
   end
 
-  describe '#deactivate_repo' do
-    it 'should deactivate' do
+  describe "#deactivate_repo" do
+    it "should deactivate" do
       # arrange
-      url = 'https://api.bitbucket.org/2.0/repositories/ngeor/instarepo/pipelines_config'
-      expected_basic_auth = BasicAuth.new('user', 'password')
+      url = "https://api.bitbucket.org/2.0/repositories/ngeor/instarepo/pipelines_config"
+      expected_basic_auth = BasicAuth.new("user", "password")
       expect(@rest_client).to receive(:put)
         .with(url, { enabled: false }, basic_auth: expected_basic_auth)
         .and_return(42)

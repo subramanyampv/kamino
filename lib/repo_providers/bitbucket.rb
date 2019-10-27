@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'net/http'
-require_relative '../basic_auth'
-require_relative '../repo'
-require_relative '../rest_client'
+require "json"
+require "net/http"
+require_relative "../basic_auth"
+require_relative "../repo"
+require_relative "../rest_client"
 
 module RepoProviders
   # Bitbucket Cloud repository provider.
@@ -20,14 +20,14 @@ module RepoProviders
     def create_repo(options)
       # https://developer.atlassian.com/bitbucket/api/2/reference/resource/repositories/%7Busername%7D/%7Brepo_slug%7D#post
       body = {
-        scm: 'git',
+        scm: "git",
         is_private: true,
         description: options[:description],
         language: options[:language],
-        fork_policy: 'no_forks',
+        fork_policy: "no_forks",
         mainbranch: {
-          type: 'branch',
-          name: 'master'
+          type: "branch",
+          name: "master"
         }
       }
       @rest_client.post(repo_url, body, basic_auth: basic_auth)
@@ -41,8 +41,9 @@ module RepoProviders
     def repo_exist?
       @rest_client.get(repo_url, basic_auth: basic_auth)
       true
-    rescue RestClientError => ex
-      raise ex unless ex.code.to_s == '404'
+    rescue RestClientError => e
+      raise e unless e.code.to_s == "404"
+
       false
     end
 
@@ -59,7 +60,7 @@ module RepoProviders
       body = {
         enabled: true
       }
-      url = repo_url + '/pipelines_config'
+      url = repo_url + "/pipelines_config"
       @rest_client.put(url, body, basic_auth: basic_auth)
     end
 
@@ -68,14 +69,14 @@ module RepoProviders
       body = {
         enabled: false
       }
-      url = repo_url + '/pipelines_config'
+      url = repo_url + "/pipelines_config"
       @rest_client.put(url, body, basic_auth: basic_auth)
     end
 
     private
 
     def base_url
-      'https://api.bitbucket.org/2.0'
+      "https://api.bitbucket.org/2.0"
     end
 
     def repo_url

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../travis'
+require_relative "../travis"
 
 module Commands
   # Activates a repository in Travis.

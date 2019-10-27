@@ -2,7 +2,7 @@
 
 # Wrapper for Kernel.` and Kernel.system for easier unit testing
 class Shell
-  def backticks(cmd, chdir: '')
+  def backticks(cmd, chdir: "")
     if chdir && !chdir.empty?
       Dir.chdir(chdir) do
         do_backticks cmd
@@ -12,8 +12,8 @@ class Shell
     end
   end
 
-  def system(cmd, chdir: '.')
-    raise ArgumentError, 'empty chdir' if !chdir || chdir.empty?
+  def system(cmd, chdir: ".")
+    raise ArgumentError, "empty chdir" if !chdir || chdir.empty?
     raise "Error running #{cmd}" unless Kernel.system(
       cmd, chdir: chdir
     )

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './deactivate_bitbucket_pipelines_command'
-require_relative './deactivate_travis_command'
-require_relative './delete_command'
+require_relative "./deactivate_bitbucket_pipelines_command"
+require_relative "./deactivate_travis_command"
+require_relative "./delete_command"
 
 module Commands
   # Deactivates CI and deletes an existing repository.

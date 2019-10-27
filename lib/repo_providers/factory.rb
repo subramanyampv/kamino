@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './github'
-require_relative './bitbucket'
-require_relative './dry_run'
+require_relative "./github"
+require_relative "./bitbucket"
+require_relative "./dry_run"
 
 # Module regarding git repository providers.
 module RepoProviders
