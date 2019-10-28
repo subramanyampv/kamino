@@ -31,12 +31,18 @@ class Git
     ensure_clone_dir_exists
     if Dir.exist?(working_dir)
       ensure_remotes_match
-      system "git pull" unless empty_repo?
+      pull
     else
-      @shell.system(
-        "git clone #{@clone_url}", chdir: @clone_dir
-      )
+      clone
     end
+  end
+
+  def pull
+    system "git pull"
+  end
+
+  def clone
+    @shell.system("git clone #{@clone_url}", chdir: @clone_dir)
   end
 
   # Pushes changes of a git repository to the remote.
@@ -44,8 +50,20 @@ class Git
     system "git push"
   end
 
+  # Gets the working directory of the repository.
   def working_dir
     File.join(@clone_dir, @repo_name)
+  end
+
+  # Configures the username and email of the repository.
+  def configure(username, email)
+    system "git config user.name #{username}"
+    system "git config user.email #{email}"
+  end
+
+  # Checks out a new branch
+  def checkout_new_branch(branch_name)
+    system "git checkout -b #{branch_name}"
   end
 
   private

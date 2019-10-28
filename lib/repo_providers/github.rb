@@ -7,6 +7,28 @@ require_relative "../repo"
 require_relative "../rest_client"
 
 module RepoProviders
+  # Handles the response of getting repositories
+  class ReposResponseHandler
+    def self.handle_response(res)
+      case res
+      when Net::HTTPSuccess
+        repositories = JSON.parse(res.body)
+        # <https://api.github.com/user/461097/repos?page=2>; rel="next", <https://api.github.com/user/461097/repos?page=4>; rel="last"
+        # @type [String]
+        link = res.header[:link]
+        # @type [String]
+        next_link = link.split(",")
+                        .map(&:strip)
+                        .select { |p| p.end_with?("rel=\"next\"") }
+                        .first
+        next_link = next_link.slice(1, next_link.index(">") - 1) if next_link
+        [repositories, next_link]
+      else
+        raise RestClientError.new(res.code, res.message, res.body)
+      end
+    end
+  end
+
   # GitHub repository provider.
   class GitHub
     def initialize
@@ -16,11 +38,30 @@ module RepoProviders
     include BasicAuthMixin
     include RepoMixin
 
-    def repos
-      # curl -u username:password 'https://api.github.com/user/repos'
-      # if 2FA is on, password needs to replaced by personal access token
-      url = "#{base_url}/user/repos"
-      @rest_client.get(url, basic_auth: basic_auth)
+    def get_repos_next_page(url)
+      @rest_client.get(
+        url,
+        basic_auth: basic_auth,
+        headers: { "Accept" => "application/vnd.github.v3+json" },
+        response_handler: ReposResponseHandler
+      )
+    end
+
+    def get_repos_first_page(username)
+      url = "#{base_url}/users/#{username}/repos"
+      get_repos_next_page(url)
+    end
+
+    def repos(username)
+      result = []
+      repositories, next_link = get_repos_first_page(username)
+      result += repositories
+      while next_link
+        repositories, next_link = get_repos_next_page(next_link)
+        result += repositories
+      end
+
+      repositories
     end
 
     def repo_exist?
@@ -57,6 +98,31 @@ module RepoProviders
       else
         "https://github.com/#{slug}.git"
       end
+    end
+
+    def get_pull_requests(username, repo_name)
+      url = "#{base_url}/repos/#{username}/#{repo_name}/pulls"
+      @rest_client.get(url, basic_auth: basic_auth)
+    end
+
+    def create_pr(username, repo_name, branch_name, title)
+      url = "#{base_url}/repos/#{username}/#{repo_name}/pulls"
+      body = {
+        title: title,
+        head: branch_name,
+        base: "master"
+      }
+      @rest_client.post(url, body, basic_auth: basic_auth)
+    end
+
+    # Merges a PR.
+    # @param pr_url [String] The canonical URL of a pull request
+    def merge_pr(pr_url)
+      @rest_client.put("#{pr_url}/merge", basic_auth: basic_auth)
+    end
+
+    def get_any(url)
+      @rest_client.get(url, basic_auth: basic_auth)
     end
 
     private

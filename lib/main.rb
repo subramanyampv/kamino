@@ -10,7 +10,9 @@ require_relative "commands/deactivate_travis_command"
 require_relative "commands/delete_command"
 require_relative "commands/down_command"
 require_relative "commands/init_command"
+require_relative "commands/merge_pull_requests_command"
 require_relative "commands/up_command"
+require_relative "commands/update_license_command"
 
 # CLI built with Thor. Parses CLI arguments and calls commands.
 class MyApp < Thor
@@ -95,6 +97,16 @@ class MyApp < Thor
     Commands::InitCommand.new(options).run
   end
 
+  desc "merge-pull-requests", "Merges pull requests on multiple repositories"
+  method_option :name, type: :string, required: false, desc: "The name of the repository. If not given, it will run for all repositories."
+  method_option :owner, type: :string, required: true, desc: "The owner of the repository"
+  method_option :username, type: :string, required: true, desc: "Username for accessing repository provider API"
+  method_option :password, type: :string, required: true, desc: "Password for accessing repository provider API"
+  method_option :merge_empty_status, type: :boolean, desc: "Merge PRs even if they do not have a status reported by a CI tool"
+  def merge_pull_requests
+    Commands::MergePullRequestsCommand.new(options).run
+  end
+
   desc "up", "Creates and initializes an existing git repository"
   method_option :name, type: :string, required: true, desc: "The name of the repository"
   method_option :owner, type: :string, required: true, desc: "The owner of the repository"
@@ -107,6 +119,15 @@ class MyApp < Thor
   method_option :travis_badge, type: :boolean, desc: "Add Travis Badge in the README.md file"
   def up
     Commands::UpCommand.new(options).run
+  end
+
+  desc "update-license", "Updates copyright license on multiple repositories"
+  method_option :name, type: :string, required: false, desc: "The name of the repository. If not given, it will run for all repositories."
+  method_option :owner, type: :string, required: true, desc: "The owner of the repository"
+  method_option :username, type: :string, required: true, desc: "Username for accessing repository provider API"
+  method_option :password, type: :string, required: true, desc: "Password for accessing repository provider API"
+  def update_license
+    Commands::UpdateLicenseCommand.new(options).run
   end
 end
 
