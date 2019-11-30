@@ -33,10 +33,10 @@ module.exports = {
     cursorAccentColor: '#000',
 
     // `'BEAM'` for |, `'UNDERLINE'` for _, `'BLOCK'` for █
-    cursorShape: 'BLOCK',
+    cursorShape: 'BEAM',
 
     // set to `true` (without backticks and without quotes) for blinking cursor
-    cursorBlink: false,
+    cursorBlink: true,
 
     // color of the text
     foregroundColor: '#fff',
@@ -110,8 +110,9 @@ module.exports = {
     shellArgs: ['--command=usr/bin/bash.exe', '-l', '-i'],
 
     // for environment variables
-    env: {TERM: 'cygwin'
-},
+    env: {
+      TERM: 'cygwin'
+    },
 
     // set to `false` for no bell
     bell: 'SOUND',
@@ -130,6 +131,7 @@ module.exports = {
     // bellSoundURL: 'http://example.com/bell.mp3',
 
     // for advanced config flags please refer to https://hyper.is/#cfg
+
   },
 
   // a list of plugins to fetch and install from npm
