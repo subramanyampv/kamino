@@ -29,21 +29,21 @@
     "coverage/"
   ],
   "devDependencies": {
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^24.0.25",
     "@types/js-yaml": "^3.12.1",
-    "@types/node": "^12.7.5",
-    "@typescript-eslint/eslint-plugin": "^2.3.0",
-    "@typescript-eslint/parser": "^2.3.0",
-    "eslint": "^6.4.0",
+    "@types/node": "^13.1.6",
+    "@typescript-eslint/eslint-plugin": "^2.15.0",
+    "@typescript-eslint/parser": "^2.15.0",
+    "eslint": "^6.8.0",
     "jest": "^24.9.0",
     "js-yaml": "^3.13.1",
-    "nodemon": "^1.19.2",
-    "ts-jest": "^24.1.0",
-    "ts-node": "^8.4.1",
-    "typedoc": "^0.15.0",
-    "typescript": "^3.6.3"
+    "nodemon": "^2.0.2",
+    "ts-jest": "^24.3.0",
+    "ts-node": "^8.6.1",
+    "typedoc": "^0.16.2",
+    "typescript": "^3.7.4"
   },
   "dependencies": {
-    "handlebars": "^4.2.1"
+    "handlebars": "^4.7.1"
   }
 }
