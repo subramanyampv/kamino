@@ -1,6 +1,6 @@
 {
   "name": "ts-swagger-codegen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Swagger code generator (in TypeScript)",
   "main": "index.js",
   "scripts": {
