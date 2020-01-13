@@ -1,6 +1,6 @@
 {
   "name": "@ngeor/yart",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "yet another release tool",
   "main": "dist/main/yart.js",
   "bin": "dist/main/yart.js",
