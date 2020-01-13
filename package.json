@@ -1,6 +1,6 @@
 {
   "name": "generator-csharp-nuget-lib",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Yeoman generator for a C# library that publishes a NuGet package. Includes a unit test project.",
   "main": "app/index.js",
   "repository": "ngeor/generator-csharp-nuget-lib",
