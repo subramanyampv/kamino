@@ -1,0 +1,14 @@
+language: generic
+cache:
+  directories:
+    - $HOME/.m2
+    - ./bprr-ui/node-modules
+before_script:
+  - nvm install --lts
+  - nvm use --lts
+script:
+  - mvn verify -B
+  # TODO npm test
+  - cd bprr-ui && npm i && npm build
+after_success:
+  - mvn coveralls:report

@@ -1,0 +1,5 @@
+# When shell scripts end in CRLF, bash gives a cryptic error message
+*.sh text eol=lf
+# git config --global filter.clang-format-java.clean 'clang-format -assume-filename=test.java'
+# git config --global filter.clang-format-java.smudge cat
+*.java filter=clang-format-java

@@ -1,0 +1,6 @@
+language: java
+jdk: oraclejdk11
+script:
+  - mvn -B verify
+after_success:
+  - mvn coveralls:report
