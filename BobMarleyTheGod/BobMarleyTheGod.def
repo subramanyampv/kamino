@@ -1,0 +1,4 @@
+DESCRIPTION 'Bob Marley Screen Saver'
+EXPORTS
+	ScreenSaverProc
+	ScreenSaverConfigureDialog
