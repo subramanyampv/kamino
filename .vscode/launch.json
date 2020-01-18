@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    {
+        "name": "RSpec - all",
+        "type": "Ruby",
+        "request": "launch",
+        "program": "C:\\Ruby26-x64\\bin\\rspec",
+        "args": [
+            "-I",
+            "${workspaceRoot}"
+        ]
+    },
+        {
+            "name": "Debug Local File",
+            "type": "Ruby",
+            "request": "launch",
+            "program": "${workspaceRoot}/lib/update_license_main.rb",
+            "args": [
+                "-u",
+                "ngeor",
+                "-p",
+                "c2b6c107dfd5c38822dd26be830289a185ca016d",
+                "-r",
+                "icqfriends"
+            ]
+        }
+    ]
+}
