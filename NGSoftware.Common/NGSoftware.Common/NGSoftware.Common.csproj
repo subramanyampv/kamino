@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DebugType>Full</DebugType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>7.0.0</Version>
+    <AssemblyVersion>7.0.0</AssemblyVersion>
+    <Authors>Nikolaos Georgiou</Authors>
+    <Company>Nikolaos Georgiou</Company>
+    <Copyright>Copyright (C) 2010-2018 Nikolaos Georgiou</Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ngeor/NGSoftware.Common</PackageProjectUrl>
+    <Description>Various .NET utilities</Description>
+    <RepositoryUrl>https://github.com/ngeor/NGSoftware.Common</RepositoryUrl>
+    <PackageTags>NGSoftware.Common</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\NGSoftware.Common.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\NGSoftware.Common.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

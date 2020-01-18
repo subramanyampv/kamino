@@ -1,0 +1,20 @@
+language: csharp
+dotnet: 2.0.0
+mono: none
+solution: NGSoftware.Common.sln
+install:
+- dotnet restore NGSoftware.Common.sln
+script:
+- dotnet build /p:Configuration=Release
+- dotnet test /p:Configuration=Release NGSoftware.Common.Tests
+- dotnet pack /p:Configuration=Release
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: dotnet nuget push ./NGSoftware.Common/bin/Release/NGSoftware.Common.*.nupkg
+    --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+  on:
+    tags: true
+env:
+  global:
+    secure: M6dEoQhXqxz8Bx9SuN3sYF6d/er6nZb9CUdk9lFwGUb2GDcjkdgLGY6nmJVfqiM6OxyCOyCzr9NexEEvOhNKjOA3LVsKFebnht6xGS9/7/+jANuCzZJp4SIkJf99NW1JocmTPvSa8oN2KgZsCA9PT+ZXBlYHfnaHJeRjvNCmdhTPvSK8ZuGcY2TGjK8WBYglj531GZ1NjsfboLCEi63xYz4tU9V7F+9o0iTNOWMakEnRSsuLBC0Re1jl4T1ax3AcrhkJ3+RShYVzXkNZaEKvEhshIKgrAqBDME/iB7gviAH6CKKHDURloeOCbjTOpNsu7E0reZgmGTRXa4urRm21SFTu52jAxdk/tXmCJm1p7nHnMR0+TjDZ8HpdcqJy168QyDeExxLaDwlVtxCwF0BvQzJrEzg4Ssk4AjBtbxr18cyYvA+Qc7lfLbUflXOCeuK64vAkvc/MLdyK033NBCjy38f9wQIZt3gQ1ZVMrWdsl+v8WWjaZzL7LRrwILfHVzbZjs6F0XllPLG3TC27zN8awToDIor69T8TvJ/7UF4D1W5LMcwRbRosZuUbeB3zu+gqyw2I/Wqn6pnfLNBVItXhd27gvhCSNgxKRP/YZllwSwqY+7Diaz6tXnRcYbxn8QWPjzVTtE1yg0xh3MADuCAKR31tP46J9NdvZDsZOw0CMEU=

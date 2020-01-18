@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <!-- The configuration and platform will be used to determine which
+         assemblies to include from solution and project documentation
+         sources -->
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0bc59898-981e-46e8-bc5d-3a2f1b67ffc9}</ProjectGuid>
+    <SHFBSchemaVersion>1.9.3.0</SHFBSchemaVersion>
+    <!-- AssemblyName, Name, and RootNamespace are not used by SHFB but Visual
+         Studio adds them anyway -->
+    <AssemblyName>Documentation</AssemblyName>
+    <RootNamespace>Documentation</RootNamespace>
+    <Name>Documentation</Name>
+    <!-- SHFB properties -->
+    <OutputPath>.\Help\</OutputPath>
+    <HtmlHelpName>w3c-nant-documentation</HtmlHelpName>
+    <Language>en-US</Language>
+    <HelpFileFormat>HtmlHelp1, Website</HelpFileFormat>
+    <FrameworkVersion>.NET 4.0.30319</FrameworkVersion>
+    <DocumentationSources>
+      <DocumentationSource sourceFile="..\W3CValidationTasks.Core\bin\Release\W3CValidationTasks.Core.dll" />
+      <DocumentationSource sourceFile="..\W3CValidationTasks.Core\bin\Release\W3CValidationTasks.Core.xml" />
+      <DocumentationSource sourceFile="..\W3CValidationTasks\bin\Release\W3CValidationTasks.dll" />
+      <DocumentationSource sourceFile="..\W3CValidationTasks\bin\Release\W3CValidationTasks.xml" />
+    </DocumentationSources>
+    <NamingMethod>MemberName</NamingMethod>
+    <HelpTitle>w3c-nant</HelpTitle>
+    <NamespaceSummaries>
+      <NamespaceSummaryItem name="W3CValidationTasks" isDocumented="True">The root namespace of the w3c-nant project.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="W3CValidationTasks.Core" isDocumented="True">This assembly is not depending on NAnt. This way the functionality it exposes can also be used in other projects.</NamespaceSummaryItem></NamespaceSummaries>
+  </PropertyGroup>
+  <!-- There are no properties for these groups.  AnyCPU needs to appear in
+       order for Visual Studio to perform the build.  The others are optional
+       common platform types that may appear. -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|Win32' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|Win32' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\References\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NAnt.Core">
+      <HintPath>..\References\NAnt.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <!-- Import the SHFB build targets -->
+  <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />
+</Project>

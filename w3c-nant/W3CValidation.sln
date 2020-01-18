@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W3CValidationTasks", "W3CValidationTasks\W3CValidationTasks.csproj", "{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W3CValidationTasks.Core", "W3CValidationTasks.Core\W3CValidationTasks.Core.csproj", "{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "W3CValidationTasks.MSBuild", "W3CValidationTasks.MSBuild\W3CValidationTasks.MSBuild.csproj", "{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}.Release|x86.Build.0 = Release|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5667358C-3ABB-4A53-9D0D-C118FF0DCC57}.Release|x86.ActiveCfg = Release|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Debug|x86.Build.0 = Debug|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Release|x86.ActiveCfg = Release|Any CPU
+		{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.FileWidth = 80
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal

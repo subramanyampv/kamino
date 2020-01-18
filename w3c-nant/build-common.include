@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<project name="build-common">
+	<description>Common build targets</description>
+
+	<!--
+	Load the semantic version from a file.
+	Set the properties semanticVersion and assemblyVersion accordingly.
+	-->
+	<target name="loadVersion">
+
+		<if test="${environment::variable-exists('BUILD_NUMBER')}">
+			<property name="buildNumber" value="${environment::get-variable('BUILD_NUMBER')}" />
+		</if>
+
+		<if test="${environment::variable-exists('SEMANTIC_VERSION')}">
+			<property name="semanticVersion" value="${environment::get-variable('SEMANTIC_VERSION')}" />
+		</if>
+
+		<if test="${not property::exists('buildNumber')}">
+			<fail message="Property buildNumber not found. Perhaps BUILD_NUMBER environment variable is missing?" />
+		</if>
+
+		<if test="${not property::exists('semanticVersion')}">
+			<fail message="Property semanticVersion not found. Perhaps SEMANTIC_VERSION environment variable is missing?" />
+		</if>
+
+		<property name="assemblyVersion" value="${semanticVersion}.${buildNumber}" />
+	</target>
+
+	<!--
+	Replace the version inside all AssemblyInfo.cs files with the property assemblyVersion.
+	-->
+	<target name="patchAssemblyInfo" depends="loadVersion">
+		<if test="${not property::exists('assemblyVersion')}">
+			<fail message="Property assemblyVersion not set." />
+		</if>
+
+		<script language="C#">
+			<code>
+				<![CDATA[
+					[TaskName("tokenReplace")]
+					public class TokenReplaceTask : Task
+					{
+						[TaskAttribute("file", Required = true)]
+						public string SourceFileName
+						{
+							get;
+							set;
+						}
+
+						[TaskAttribute("tofile", Required = true)]
+						public string DestinationFileName
+						{
+							get;
+							set;
+						}
+
+						[TaskAttribute("token", Required = true)]
+						public string Token
+						{
+							get;
+							set;
+						}
+
+						[TaskAttribute("replacement", Required = true)]
+						public string Replacement
+						{
+							get;
+							set;
+						}
+
+						protected override void ExecuteTask()
+						{
+							string content = File.ReadAllText(SourceFileName);
+							content = System.Text.RegularExpressions.Regex.Replace(content, Token, Replacement);
+							File.WriteAllText(DestinationFileName, content);
+						}
+					}
+				]]>
+			</code>
+		</script>
+
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="**/AssemblyInfo.cs" />
+				</items>
+			</in>
+			<do>
+				<property name="infilename" value="${filename}.in" />
+				<move file="${filename}" tofile="${infilename}" />
+				<tokenReplace file="${infilename}" tofile="${filename}" token="(\d+\.\d+\.\d+\.\d+)|(\d+\.\d+\.\d+\.\*)" replacement="${assemblyVersion}" />
+			</do>
+		</foreach>
+	</target>
+
+	<!--
+	Revert the patching of AssemblyInfo.cs files
+	-->
+	<target name="revertPatchAssemblyInfo">
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="**/AssemblyInfo.cs.in" />
+				</items>
+			</in>
+			<do>
+				<property name="originalfilename" value="${string::substring(filename, 0, string::get-length(filename) - 3)}" />
+				<move file="${filename}" tofile="${originalfilename}" overwrite="true" />
+			</do>
+		</foreach>
+	</target>
+
+	<!--
+	Call msbuild.
+	If the property configuration exists, it is used as the Configuration parameter.
+	-->
+	<target name="msbuild">
+		<choose>
+			<when test="${platform::is-unix()}">
+				<property name="buildprogram" value="xbuild" />
+			</when>
+			<when test="${platform::is-windows()}">
+				<property name="buildprogram" value="msbuild" />
+			</when>
+			<otherwise>
+				<fail message="Unsupported build platform." />
+			</otherwise>
+		</choose>
+
+		<choose>
+			<when test="${property::exists('configuration')}">
+				<exec program="${buildprogram}"
+				      commandline="/p:Configuration=${configuration}" />
+			</when>
+			<otherwise>
+				<exec program="${buildprogram}" />
+			</otherwise>
+		</choose>
+	</target>
+
+	<!--
+	Run NUnit2 unit tests.
+	Tests are found in assemblies whose name ends in Tests.
+	-->
+	<target name="nunit2-test">
+		<nunit2>
+			<formatter type="Xml" usefile="true" extension=".xml"/>
+			<test>
+				<assemblies>
+					<include name="**/${output.dir}/*Tests.dll" />
+				</assemblies>
+			</test>
+		</nunit2>
+	</target>
+
+	<target name="find-nuget">
+		<if test="${not property::exists('nuget.exe')}">
+			<choose>
+				<when test="${platform::is-unix()}">
+					<!--
+					a nuget script must exist in the PATH for this to work
+					-->
+					<property name="nuget.exe" value="nuget" />
+				</when>
+				<when test="${platform::is-windows()}">
+					<!--
+					use NuGet.exe from .nuget folder
+					-->
+					<property name="nuget.exe" value=".nuget/NuGet.exe" />
+				</when>
+				<otherwise>
+					<fail message="Unsupported build platform." />
+				</otherwise>
+			</choose>
+		</if>
+	</target>
+</project>

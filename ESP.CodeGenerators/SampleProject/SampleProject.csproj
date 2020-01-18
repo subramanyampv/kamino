@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="labels.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="labels.xml">
+      <Generator>EPiLabelResourceGenerator</Generator>
+      <LastGenOutput>labels.resources.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="IBackend.cs">
+      <Generator>CacheProviderGenerator</Generator>
+      <LastGenOutput>IBackend.designer.cs</LastGenOutput>
+    </Compile>
+    <Compile Update="IBackend.designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IBackend.cs</DependentUpon>
+    </Compile>
+    <Compile Update="labels.resources.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>labels.xml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

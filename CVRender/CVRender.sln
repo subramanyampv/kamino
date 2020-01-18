@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CVRender.Web", "CVRender.Web\CVRender.Web.csproj", "{46D05687-EB9B-4885-9A14-1BDC8BBB253B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CVRender", "CVRender\CVRender.csproj", "{BD17C766-DF9E-4117-A8CB-2BAA8FE6D9B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CVRender.Tests", "CVRender.Tests\CVRender.Tests.csproj", "{FDABDD4B-8BF5-4E4A-B977-400D0CE04D4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{184005A4-82D4-489E-BD9C-390DFEBC074D}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46D05687-EB9B-4885-9A14-1BDC8BBB253B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D05687-EB9B-4885-9A14-1BDC8BBB253B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D05687-EB9B-4885-9A14-1BDC8BBB253B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D05687-EB9B-4885-9A14-1BDC8BBB253B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD17C766-DF9E-4117-A8CB-2BAA8FE6D9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD17C766-DF9E-4117-A8CB-2BAA8FE6D9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD17C766-DF9E-4117-A8CB-2BAA8FE6D9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD17C766-DF9E-4117-A8CB-2BAA8FE6D9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDABDD4B-8BF5-4E4A-B977-400D0CE04D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDABDD4B-8BF5-4E4A-B977-400D0CE04D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDABDD4B-8BF5-4E4A-B977-400D0CE04D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDABDD4B-8BF5-4E4A-B977-400D0CE04D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0296DB36-1A0D-4464-8D96-3E186079CB7E}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = CVRender.Web\CVRender.Web.csproj
+	EndGlobalSection
+EndGlobal

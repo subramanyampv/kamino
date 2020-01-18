@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project name="W3CValidationTasks" basedir="." default="">
+	<description>W3CValidationTasks build script</description>
+
+	<!-- mdoc path -->
+	<property name="mdoc" value="/usr/local/bin/mdoc" />
+
+	<property name="configuration" value="Debug" />
+
+	<property name="output.dir" value="bin/${configuration}" />
+
+	<property name="package.name" value="w3c-nant" />
+
+	<include buildfile="build-common.include" />
+
+	<target name="allRelease" depends="patchAssemblyInfo, build, test, doc, dist, nuget, revertPatchAssemblyInfo">
+	</target>
+
+	<target name="build" depends="msbuild">
+	</target>
+
+	<target name="test" depends="build">
+	</target>
+
+	<target name="doc" depends="build">
+		<if test="${platform::is-unix()}">
+			<if test="${property::exists('mdoc')}">
+				<exec
+					workingdir="${project::get-name()}/${output.dir}"
+					program="${mdoc}"
+					commandline="update -i ${project::get-name()}.xml -o ${project::get-name()}/en ${project::get-name()}.dll ${project::get-name()}.Core.dll" />
+
+				<exec
+					workingdir="${project::get-name()}/${output.dir}"
+					program="${mdoc}"
+					commandline="update -i ${project::get-name()}.Core.xml -o ${project::get-name()}/en ${project::get-name()}.dll ${project::get-name()}.Core.dll" />
+
+				<exec
+					workingdir="${project::get-name()}/${output.dir}"
+					program="${mdoc}"
+					commandline="export-html -o htmldocs ${project::get-name()}/en" />
+			</if>
+		</if>
+	</target>
+
+	<target name="dist" depends="build, test, doc">
+		<mkdir dir="dist" />
+
+		<!-- package binaries -->
+		<zip zipfile="dist/${package.name}-${semanticVersion}.zip">
+			<fileset basedir="${project::get-name()}/${output.dir}">
+				<include name="${project::get-name()}*.xml" />
+				<include name="${project::get-name()}*.dll" />
+			</fileset>
+		</zip>
+
+		<!-- package html docs -->
+		<zip zipfile="dist/${package.name}-help-${semanticVersion}.zip">
+			<fileset basedir="${project::get-name()}/${output.dir}/htmldocs">
+				<include name="**/*.html" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="nuget" depends="find-nuget">
+
+	</target>
+
+</project>

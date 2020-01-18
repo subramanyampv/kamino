@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="description" content="SourceForge presents the W3C Nant Validation Tasks project. W3C Nant Validation Tasks is an open source application. SourceForge provides the world&#39;s largest selection of Open Source Software. C# library that validates HTML and CSS against the online W3C validation services. NAnt tasks to embed the validation in the build process." />
+	<meta name="keywords" content="Open Source, Software, Development, Developers, Projects, Downloads, OSTG, VA Software, SF.net, SourceForge, C#, Quality Assurance, 4 - Beta, Developers, W3C Nant Validation Tasks,w3c-nant" />
+    <title>w3c-nant - W3C Nant Validation Tasks</title>
+</head>
+<style>
+<!--
+body { font-family: sans-serif; }
+//-->
+</style>
+<body>
+	<h1>w3c-nant</h1>
+	<p>NAnt tasks library for W3C validation and more.</p>
+	<h2>Links</h2>
+	<ul>
+		<li>
+			<a href="http://sourceforge.net/projects/w3c-nant/">Project home page on SourceForge</a>
+		</li>
+		<li>
+			<a href="api/">Online API docs</a>
+		</li>
+		<li>
+			<a href="http://sourceforge.net/projects/w3c-nant/files">Download</a>
+		</li>
+		<li>
+			<a href="http://sourceforge.net/projects/w3c-nant/support">Get support</a>
+		</li>
+	</ul>
+	
+	<h2>NAnt Tasks included</h2>
+	<h3>validateHtml - validate HTML against online W3C services</h3>
+	<p>Example:</p>
+	<pre>
+		&lt;validateHtml url="http://my-valid-page.com/" /&gt;
+	</pre>
+	
+	<h3>validateCss - validate CSS against online W3C services</h3>
+	<p>Example:</p>
+	<pre>
+		&lt;validateCss
+			url="http://my-valid-page.com/"
+			profile="css3"
+			vendorExtensionsAsWarnings="true"/&gt;
+	</pre>
+	
+	<h3>ftpUpload - upload files to an FTP server</h3>
+	<p>Example:</p>
+	<pre>
+		&lt;ftpUpload host="ftp.myserver.com" username="root" password="r00t" todir="/"&gt;
+			&lt;fileset basedir="dist"&gt;
+				&lt;include name="**/*" /&gt;
+				&lt;exclude name="**/*.config" /&gt;
+			&lt;/fileset&gt;
+		&lt;/ftpUpload&gt;
+	</pre>
+	
+	<h3>ftpDelete - delete a file on an FTP server</h3>
+	<p>Example:</p>
+	<pre>
+		&lt;ftpDelete host="ftp.myserver.com" username="root" password="r00t" file="app_offline.htm" /&gt;
+	</pre>
+</body>
+</html>

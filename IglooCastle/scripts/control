@@ -1,0 +1,9 @@
+Package: igloocastle
+Version: 1.0-0
+Section: misc
+Priority: optional
+Architecture: all
+Depends: mono-complete (>= 4.2.0)
+Maintainer: Nikolaos Georgiou <Nikolaos.Georgiou@gmail.com>
+Description: IglooCastle
+ IglooCastle generates HTML documentation for .NET applications.

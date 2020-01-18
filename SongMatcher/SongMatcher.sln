@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongMatcher", "SongMatcher\SongMatcher.csproj", "{63DB7D66-C818-4E3F-ADB4-2FC2C9A75CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongMatcher.Tests", "SongMatcher.Tests\SongMatcher.Tests.csproj", "{45D9D3CF-9528-4744-AD78-F8EA8AA7DAC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63DB7D66-C818-4E3F-ADB4-2FC2C9A75CE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63DB7D66-C818-4E3F-ADB4-2FC2C9A75CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63DB7D66-C818-4E3F-ADB4-2FC2C9A75CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63DB7D66-C818-4E3F-ADB4-2FC2C9A75CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45D9D3CF-9528-4744-AD78-F8EA8AA7DAC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45D9D3CF-9528-4744-AD78-F8EA8AA7DAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45D9D3CF-9528-4744-AD78-F8EA8AA7DAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45D9D3CF-9528-4744-AD78-F8EA8AA7DAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

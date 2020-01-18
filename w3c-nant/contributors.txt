@@ -1,0 +1,4 @@
+List of people who have contributed code to the project:
+Nikolaos Georgiou
+Rob Richardson
+
