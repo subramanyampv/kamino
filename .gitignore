@@ -7,4 +7,13 @@ target/
 
 # jar files
 *.jar
+
+# Maven versions plugin
 pom.xml.versionsBackup
+
+# VSCode
+.vscode/
+bin/
+
+# For some projects
+node_modules/
