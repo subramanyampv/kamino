@@ -9,7 +9,6 @@ package org.jcms.xml;
 import java.io.FilterWriter;
 import java.io.Writer;
 
-
 /**
  * @author ngeor
  */

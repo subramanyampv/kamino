@@ -1,8 +1,5 @@
 package zfs.snapshot.trimmer;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -10,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

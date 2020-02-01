@@ -2,9 +2,7 @@
 
 A Maven plugin which enforces filename conventions.
 
-[![Build Status](https://travis-ci.org/ngeor/yak4j-filename-conventions-maven-plugin.svg?branch=master)](https://travis-ci.org/ngeor/yak4j-filename-conventions-maven-plugin)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.ngeor/yak4j-filename-conventions-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.ngeor%22%20AND%20a:%22yak4j-filename-conventions-maven-plugin%22)
-[![Coverage Status](https://coveralls.io/repos/github/ngeor/yak4j-filename-conventions-maven-plugin/badge.svg?branch=master)](https://coveralls.io/github/ngeor/yak4j-filename-conventions-maven-plugin?branch=master)
 
 ## Maven
 

@@ -15,7 +15,6 @@ import java.util.Vector;
 import org.jcms.model.IDEntity;
 import org.jcms.model.User;
 
-
 /**
  * @author ngeor
  */

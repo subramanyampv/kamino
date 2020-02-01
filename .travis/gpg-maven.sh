@@ -2,10 +2,10 @@
 set -e # break on error
 
 # Import GPG key
-gpg --passphrase=${GPG_PASSPHRASE} --no-use-agent --output - ./travis/keys.asc | gpg --import
+gpg --passphrase=${GPG_PASSPHRASE} --no-use-agent --output - ../.travis/keys.asc | gpg --import
 
 # Run maven
-mvn -B -s ./travis/settings.xml -P gpg -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} clean $1
+mvn -B -s ../.travis/settings.xml -P gpg -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} clean $1
 
 # cleanup GPG keys
 gpg --fingerprint --with-colons ${GPG_KEY} |\

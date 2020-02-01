@@ -35,11 +35,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-
 /**
  * @author ngeor
  */
-
 public class XHtmlFilter implements Filter {
 
     private final boolean debug = false;
@@ -176,14 +174,12 @@ public class XHtmlFilter implements Filter {
         return sFile;
     }
 
-
     /**
      * Return the filter configuration object for this filter.
      */
     public FilterConfig getFilterConfig() {
         return this.filterConfig;
     }
-
 
     /**
      * Set the filter configuration object for this filter.
@@ -200,7 +196,6 @@ public class XHtmlFilter implements Filter {
      */
     public void destroy() {
     }
-
 
     /**
      * Init method for this filter.
@@ -440,5 +435,3 @@ public class XHtmlFilter implements Filter {
         }
     }
 }
-
-

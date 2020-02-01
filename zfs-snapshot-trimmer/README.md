@@ -1,9 +1,6 @@
 # zfs-snapshot-trimmer
 Remove older zfs snapshots.
 
-[![Build Status](https://travis-ci.org/ngeor/zfs-snapshot-trimmer.svg?branch=master)](https://travis-ci.org/ngeor/zfs-snapshot-trimmer)
-[![Coverage Status](https://coveralls.io/repos/github/ngeor/zfs-snapshot-trimmer/badge.svg?branch=master)](https://coveralls.io/github/ngeor/zfs-snapshot-trimmer?branch=master)
-
 It keeps:
 
 * all snapshots of the current month
@@ -25,4 +22,3 @@ or use the shell script: zfs-snapshot-trimmer.sh
 Parameters:
 
 * --dry-run: It will not actually delete snapshots but it will print what it would have deleted.
-

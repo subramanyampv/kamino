@@ -1,8 +1,6 @@
 # jHangMan
 Hangman game as a Java applet (legacy project)
 
-[![Build Status](https://travis-ci.org/ngeor/jHangMan.svg?branch=master)](https://travis-ci.org/ngeor/jHangMan)
-
 ## How to run the applet
 
 - Generate package and site (`mvn package site`)
