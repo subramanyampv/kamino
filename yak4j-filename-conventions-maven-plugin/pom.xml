@@ -43,14 +43,14 @@
     plugins
     -->
     <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
-    <checkstyle-rules.version>3.3.0</checkstyle-rules.version>
-    <checkstyle.version>8.24</checkstyle.version>
-    <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-    <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+    <checkstyle-rules.version>3.5.0</checkstyle-rules.version>
+    <checkstyle.version>8.29</checkstyle.version>
+    <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+    <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
-    <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
     <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
-    <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
+    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -58,7 +58,7 @@
     <!--
     dependencies for maven plugins
     -->
-    <maven-core.version>3.6.2</maven-core.version>
+    <maven-core.version>3.6.3</maven-core.version>
     <maven-plugin-plugin.version>3.6.0</maven-plugin-plugin.version>
     <!--
     jacoco thresholds

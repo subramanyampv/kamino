@@ -17,9 +17,9 @@
   </modules>
   <properties>
     <java.version>11</java.version>
-    <checkstyle.version>8.22</checkstyle.version>
+    <checkstyle.version>8.29</checkstyle.version>
     <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
-    <checkstyle.rules.version>3.1.0</checkstyle.rules.version>
+    <checkstyle.rules.version>3.5.0</checkstyle.rules.version>
     <!-- todo improve limits -->
     <jacoco.unit-tests.limit.instruction-ratio>80%</jacoco.unit-tests.limit.instruction-ratio>
     <jacoco.unit-tests.limit.branch-ratio>80%</jacoco.unit-tests.limit.branch-ratio>
