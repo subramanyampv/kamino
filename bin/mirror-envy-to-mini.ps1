@@ -40,8 +40,8 @@ CopyDir "Projects"
 CopyDir "vbox"
 CopyDir "Videos"
 
-robocopy "$SRC" "$DST" ".bash_aliases" ".bash_profile" ".bashrc"
+robocopy "$SRC" "$DST" ".bash_aliases" ".bash_profile" ".bashrc" ".vimrc"
 
 CopyAnyDir "C:\Windows\Fonts" "$DST\Fonts"
 CopyAnyDir "C:\opt" "$DST\opt"
-CopyAnyDir "C:\Users\ngeor\AppData\Roaming\Code\User\snippets" "$DST\VSCodeSnippets"
+CopyAnyDir "C:\Users\ngeor\AppData\Roaming\Code\User" "$DST\VSCode"
