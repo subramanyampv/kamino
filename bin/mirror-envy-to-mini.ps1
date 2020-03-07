@@ -35,6 +35,12 @@ foreach ($item in $items)
   CopyDir $item.Name
 }
 
+$items = Get-ChildItem $SRC | Where-Object {$_.name -like ".Idea*" }
+foreach ($item in $items)
+{
+  CopyDir $item.Name
+}
+
 CopyDir "Pictures"
 CopyDir "Projects"
 CopyDir "vbox"
