@@ -1,5 +1,7 @@
 unit NGWindows;
 
+{$MODE Delphi}
+
 interface
 
 uses Windows, Messages;
@@ -17,8 +19,8 @@ function SimpleDlgProc(Wnd: HWND; Msg: UINT; wp: WPARAM; lp: LPARAM): BOOL; stdc
 implementation
 
 resourcestring
-  ErrorMsg = 'Σφάλμα';
-  InfoMsg  = 'Πληροφορίες';
+  ErrorMsg = 'Error';
+  InfoMsg  = 'Information';
 
 function MsgBox(Wnd: HWND; Text, Title: string; Flags: Integer): Integer;
 begin

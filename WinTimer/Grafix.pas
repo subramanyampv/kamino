@@ -1,5 +1,7 @@
 Unit Grafix;
 
+{$MODE Delphi}
+
 interface
 
 Uses Windows;

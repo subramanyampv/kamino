@@ -1,5 +1,7 @@
 Unit WinTimerCtl;
 
+{$MODE Delphi}
+
 interface
 
 Uses Windows, Messages, Grafix;

@@ -1,5 +1,7 @@
 program WinTimer;
 
+{$MODE Delphi}
+
 uses
   Windows,
   Messages,
@@ -10,13 +12,13 @@ uses
   ConfigureBox in 'ConfigureBox.pas',
   Grafix in 'Grafix.pas';
 
-{$R WinTimer!.Res}
+{$R WinTimer.res}
 
 const
   MainWndClassName = 'WinTimerClass';
   WM_TRAYICON      = WM_USER + 2;
   ID_FirstIcon     = 1000;
-  IDI_Main = 1;
+  IDI_Main         = '1';
   ID_ABOUT         = 102;
   ID_CONFIGURE     = 103;
 
@@ -36,27 +38,31 @@ procedure MainWnd_Create(Wnd: HWND);
 var
   t: TNotifyIconData;
   SysMenu: HMENU;
+  hIcon: HANDLE;
+  hInst: HANDLE;
 begin
   { Make sure MainWnd is equal to Wnd }
   MainWnd:=Wnd;
 
   { Create the taskbar icon }
   t.cbSize:=SizeOf(t);
-  t.Wnd:=Wnd;
+  t.hWnd:=Wnd;
   t.uCallBackMessage:=WM_TRAYICON;
   t.uID:=ID_FirstIcon;
   t.uFlags:=NIF_ICON Or NIF_MESSAGE;
-  t.hIcon:=LoadIcon(HInstance, PChar(1));
-  Shell_NotifyIcon(NIM_ADD, @t);
+  hInst := HInstance;
+  hIcon := LoadIcon(hInst, IDI_MAIN);
+  t.hIcon := hIcon;
+  Shell_NotifyIconA(NIM_ADD, @t);
 
   { Modify my system menu }
   SysMenu:=GetMyMenu;
   DeleteMenu(SysMenu, SC_SIZE, MF_BYCOMMAND);
-  InsertMenu(SysMenu, 0, MF_BYPOSITION or MF_STRING, SC_RESTORE, '’νοιγμα');
-  InsertMenu(SysMenu, 1, MF_BYPOSITION or MF_STRING, SC_MINIMIZE, 'Απόκρυψη');
+  InsertMenu(SysMenu, 0, MF_BYPOSITION or MF_STRING, SC_RESTORE, 'Restore');
+  InsertMenu(SysMenu, 1, MF_BYPOSITION or MF_STRING, SC_MINIMIZE, 'Minimize');
   AppendMenu(SysMenu, MF_SEPARATOR, 0, nil);
-  AppendMenu(SysMenu, 0, ID_ABOUT, 'Πληροφορίες...');
-  AppendMenu(SysMenu, 0, ID_CONFIGURE, 'Ρυθμίσεις...');
+  AppendMenu(SysMenu, 0, ID_ABOUT, 'About...');
+  AppendMenu(SysMenu, 0, ID_CONFIGURE, 'Configure...');
 
   { Create the actual control }
   CreateWinTimerCtl(Wnd, -1, 8, 8);
@@ -90,9 +96,9 @@ var
   t: TNotifyIconData;
 begin
   t.cbSize:=SizeOf(t);
-  t.Wnd:=MainWnd;
+  t.hWnd:=MainWnd;
   t.uID:=ID_FirstIcon;
-  Shell_NotifyIcon(NIM_DELETE, @t);
+  Shell_NotifyIconA(NIM_DELETE, @t);
   PostQuitMessage(0);
 end;
 
@@ -121,11 +127,11 @@ var
   t: TNotifyIconData;
 begin
   t.cbSize:=SizeOf(t);
-  t.Wnd:=Wnd;
+  t.hWnd:=Wnd;
   t.uID:=ID_FirstIcon;
   t.uFlags:=NIF_TIP;
   LStrCpy(t.szTip, PChar(lp));
-  Shell_NotifyIcon(NIM_MODIFY, @t);
+  Shell_NotifyIconA(NIM_MODIFY, @t);
 end;
 
 procedure MainWnd_InitMenu(AMenu: HMENU);
@@ -194,7 +200,7 @@ begin
   With WndClass Do Begin
     lpfnWndProc:= @MainWndProc;
     hInstance:= System.MainInstance;
-    hIcon:= LoadIcon(HInstance, PChar(IDI_MAIN));
+    hIcon:= LoadIcon(HInstance, IDI_MAIN);
     hCursor:= LoadCursor(0, IDC_Arrow);
     hbrBackground:= COLOR_BTNFACE+1;
     lpszClassName:= MainWndClassName;
@@ -230,7 +236,7 @@ begin
     begin
       InitCommonControls;
       MainWnd:=CreateWindowEx(WS_EX_TOOLWINDOW,
-               MainWndClassName, 'Ξυπνητήρι', WS_OVERLAPPEDWINDOW,
+               MainWndClassName, 'WinTimer', WS_OVERLAPPEDWINDOW,
                CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
                0, 0, HInstance, nil);
       ShowWindow(MainWnd, CmdShow);

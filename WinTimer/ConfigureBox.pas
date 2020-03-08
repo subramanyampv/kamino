@@ -1,5 +1,7 @@
 unit ConfigureBox;
 
+{$MODE Delphi}
+
 interface
 
 const
