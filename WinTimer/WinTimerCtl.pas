@@ -13,8 +13,6 @@ const
   WTN_Timer = WM_User + 1;
   DigitWidth = 28;
   DigitHeight = 50;
-  DigitCount = 8;
-  WinTimerWidth = DigitCount*DigitWidth + 5;
   WinTimerHeight = DigitHeight + 5;
 
 
@@ -23,11 +21,30 @@ procedure RegisterWinTimerControl;
 function WinTimerControlProc(Wnd: HWnd; Msg: UINT; wp: WPARAM; lp: LPARAM): LRESULT; stdcall;
 procedure GetTimerText(Wnd: HWND; Buf: PChar);
 function CreateWinTimerCtl(AParent: HWND; AnID, ALeft, ATop: Integer): HWND;
+function WinTimerWidth: Integer;
+function DigitCount: Integer;
 
 implementation
 
+Uses Math;
+
 const
   ResName = 'DIGDISP';
+
+function DigitCount: Integer;
+var
+  hours: Integer;
+  hourDigits: Integer;
+begin
+  hours := GetTickCount Div (1000 * 3600);
+  hourDigits := Max(2, Round(log10(hours)));
+  Result := 6 + hourDigits;
+end;
+
+function WinTimerWidth: Integer;
+begin
+  Result := DigitCount * DigitWidth + 5;
+end;
 
 function CreateWinTimerCtl(AParent: HWND; AnID, ALeft, ATop: Integer): HWND;
 begin
@@ -57,18 +74,21 @@ end;
 procedure WinTimerControl_Paint(Wnd: HWND);
 var
   PS: TPaintStruct;
-  Buf: array [0..DigitCount] of Char;
+  Buf: AnsiString;
   b: Integer;
   Pic: HBitmap;
 
 begin
+  b := DigitCount;
   BeginPaint(Wnd, PS);
-
-  GetTimerText(Wnd, Buf);
+  SetLength(Buf, b);
+  GetTimerText(Wnd, PChar(Buf));
   Pic:=GetProp(Wnd, propImage);
 
-  For b:=0 to DigitCount - 1 Do
-    DrawPartOfBitmap(PS.hDC, Pic, (Ord(Buf[b])-48)*28, 0, 28, 50, b*28 + 2, 2, 0, 0, False);
+  while b > 0 do begin
+    DrawPartOfBitmap(PS.hDC, Pic, (Ord(Buf[b])-48)*28, 0, 28, 50, (b-1)*28 + 2, 2, 0, 0, False);
+    b := b - 1;
+  end;
 
   EndPaint(Wnd, PS);
 end;

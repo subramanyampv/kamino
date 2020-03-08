@@ -34,6 +34,20 @@ begin
   Result:=GetSystemMenu(MainWnd, False);
 end;
 
+procedure ResizeWindow(Wnd: HWND);
+var
+  clientRect: TRect;
+  windowRect: TRect;
+begin
+  { Update my size }
+  GetClientRect(Wnd, clientRect);
+  GetWindowRect(Wnd, windowRect);
+  SetWindowPos(Wnd, 0, 0, 0,
+    WinTimerWidth + 16 + windowRect.Width - clientRect.Width,
+    WinTimerHeight + 16 + windowRect.Height - clientRect.Height,
+    SWP_NOMOVE or SWP_NOZORDER or SWP_NOREDRAW or SWP_NOACTIVATE);
+end;
+
 procedure MainWnd_Create(Wnd: HWND);
 var
   t: TNotifyIconData;
@@ -67,11 +81,7 @@ begin
   { Create the actual control }
   CreateWinTimerCtl(Wnd, -1, 8, 8);
 
-  { Update my size }
-  SetWindowPos(Wnd, 0, 0, 0,
-    WinTimerWidth + 16 + 2 * GetSystemMetrics(SM_CXDLGFRAME),
-    WinTimerHeight + 16 + GetSystemMetrics(SM_CYDLGFRAME)*2 + GetSystemMetrics(SM_CYSMSIZE),
-    SWP_NOMOVE or SWP_NOZORDER or SWP_NOREDRAW or SWP_NOACTIVATE);
+  ResizeWindow(Wnd);
 end;
 
 procedure MainWnd_Restore;
@@ -89,6 +99,14 @@ end;
 procedure MainWnd_Minimize;
 begin
   ShowWindow(MainWnd, SW_HIDE);
+end;
+
+procedure MainWnd_ToggleShow;
+begin
+  if IsWindowVisible(MainWnd) then
+    MainWnd_Minimize
+  else
+    MainWnd_Restore;
 end;
 
 procedure MainWnd_Destroy;
@@ -109,7 +127,7 @@ begin
   If wp=ID_FirstIcon Then
   Case lp Of
     WM_LBUTTONUP:
-      MainWnd_Restore;
+      MainWnd_ToggleShow;
     WM_RBUTTONUP:
       if IsWindowEnabled(Wnd) then
         begin
@@ -237,9 +255,8 @@ begin
       InitCommonControls;
       MainWnd:=CreateWindowEx(WS_EX_TOOLWINDOW,
                MainWndClassName, 'WinTimer', WS_OVERLAPPEDWINDOW,
-               CW_USEDEFAULT, CW_USEDEFAULT, 0, 0,
+               CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
                0, 0, HInstance, nil);
-      ShowWindow(MainWnd, CmdShow);
       MainLoop;
     end;
 end.
