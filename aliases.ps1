@@ -15,3 +15,5 @@ function sortpom {
 function syncpom {
     mvn yak4j-sync-archetype:sync@sync
 }
+
+New-Alias which get-command

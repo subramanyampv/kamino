@@ -45,3 +45,5 @@ alias elastic-start='docker run --rm -d --name elasticsearch -p 9200:9200 -p 930
 alias elastic-stop='docker stop elasticsearch'
 alias kibana-start='docker run --rm -d --name kibana --link elasticsearch:elasticsearch -p 5601:5601 docker.elastic.co/kibana/kibana:7.3.2'
 alias kibana-stop='docker stop kibana'
+
+alias cls=clear
