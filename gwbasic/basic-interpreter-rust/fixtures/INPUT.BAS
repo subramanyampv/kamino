@@ -1,2 +1,0 @@
-INPUT N
-PRINT N
