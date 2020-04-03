@@ -92,9 +92,10 @@ public class KubeConfig {
 
         public static class ClusterInfo {
             private String server;
-
             private String certificateAuthority;
+            private String certificateAuthorityData;
 
+            @JsonProperty("server")
             public String getServer() {
                 return server;
             }
@@ -110,6 +111,15 @@ public class KubeConfig {
 
             public void setCertificateAuthority(String certificateAuthority) {
                 this.certificateAuthority = certificateAuthority;
+            }
+
+            @JsonProperty("certificate-authority-data")
+            public String getCertificateAuthorityData() {
+                return certificateAuthorityData;
+            }
+
+            public void setCertificateAuthorityData(String certificateAuthorityData) {
+                this.certificateAuthorityData = certificateAuthorityData;
             }
         }
     }
@@ -187,7 +197,9 @@ public class KubeConfig {
 
         public static class UserInfo {
             private String clientCertificate;
+            private String clientCertificateData;
             private String clientKey;
+            private String clientKeyData;
             private Exec exec;
 
             @JsonProperty("client-certificate")
@@ -199,6 +211,15 @@ public class KubeConfig {
                 this.clientCertificate = clientCertificate;
             }
 
+            @JsonProperty("client-certificate-data")
+            public String getClientCertificateData() {
+                return clientCertificateData;
+            }
+
+            public void setClientCertificateData(String clientCertificateData) {
+                this.clientCertificateData = clientCertificateData;
+            }
+
             @JsonProperty("client-key")
             public String getClientKey() {
                 return clientKey;
@@ -206,6 +227,15 @@ public class KubeConfig {
 
             public void setClientKey(String clientKey) {
                 this.clientKey = clientKey;
+            }
+
+            @JsonProperty("client-key-data")
+            public String getClientKeyData() {
+                return clientKeyData;
+            }
+
+            public void setClientKeyData(String clientKeyData) {
+                this.clientKeyData = clientKeyData;
             }
 
             public Exec getExec() {
