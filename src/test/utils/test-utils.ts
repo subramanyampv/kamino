@@ -33,4 +33,4 @@ export function testUtils(chai): void {
       true
     );
   });
-};
+}

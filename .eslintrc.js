@@ -138,6 +138,12 @@ module.exports = {
     // Allow expect(blah).to.be.true;
     "no-unused-expressions": ["off"],
     "require-await": ["error"],
-    "yoda": ["error"]
+    "yoda": ["error"],
+
+    /**
+     * Typescript
+     */
+    "@typescript-eslint/no-var-requires": ["warn"],
+    "@typescript-eslint/ban-types": ["warn"]
   }
 };
