@@ -49,12 +49,6 @@ Docker images that launch GW-Basic and QBasic using DOSBox.
 
 See the [related README](https://github.com/ngeor/dockerfiles/tree/master/basic) for more information.
 
-## dockerv
-
-A utility for easier working with Docker volumes on Windows 10 Home.
-
-See the [related README](https://github.com/ngeor/dockerfiles/tree/master/dockerv) for more information.
-
 ## Building and releasing
 
 To avoid rebuilding everything, images will only be built if:
