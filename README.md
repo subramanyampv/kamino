@@ -70,6 +70,6 @@ is translated to:
 
 ## Installing
 
-The latest binaries can be found in the [releases](./releases).
+The latest binaries can be found in the [releases](https://github.com/ngeor/dockerv/releases).
 
 To build from source, use Rust and run `cargo install -path .`.
