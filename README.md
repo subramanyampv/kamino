@@ -2,6 +2,8 @@
 
 > dockerv is a wrapper for docker with better volume support
 
+[![Build Status](https://travis-ci.org/ngeor/dockerv.svg?branch=master)](https://travis-ci.org/ngeor/dockerv)
+
 ## Prerequisites
 
 - Windows 10 Home
@@ -68,6 +70,6 @@ is translated to:
 
 ## Installing
 
-The latest binary is in the [releases](https://github.com/ngeor/dockerfiles/releases/download/v0.1.0-dockerv/dockerv.exe).
+The latest binaries can be found in the [releases](./releases).
 
 To build from source, use Rust and run `cargo install -path .`.
