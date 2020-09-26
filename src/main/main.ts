@@ -124,7 +124,7 @@ export async function main(): Promise<void> {
    * We allow one possibility for an empty `V` in case we're
    * Tagging a manually bumped pom.xml
    */
-  const nextSemVer = new NextSemVer(cliArgs.V);
+  const nextSemVer = new NextSemVer(cliArgs.v);
 
   // Create objects for dryRun
   const fs = initFs(cliArgs.dryRun);

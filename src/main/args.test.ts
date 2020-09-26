@@ -24,7 +24,7 @@ describe('args', () => {
       const args = parse();
 
       // Assert
-      expect(args.V).to.be.undefined;
+      expect(args.v).to.be.undefined;
       expect(args.dir).to.equal('.');
       expect(args.message).to.be.undefined;
       expect(args.dryRun).to.be.undefined;
@@ -75,7 +75,7 @@ describe('args', () => {
       const args = parse();
 
       // Assert
-      expect(args.V).to.equal('patch');
+      expect(args.v).to.equal('patch');
     });
   });
 });

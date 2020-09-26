@@ -4,7 +4,7 @@ const { name, version } = require('../../package.json');
 
 export interface CLIArguments {
   source: string;
-  V: string;
+  v: string;
   dir: string;
   message?: string;
   dryRun: boolean;
