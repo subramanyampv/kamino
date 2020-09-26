@@ -93,7 +93,6 @@ describe('run', () => {
       expect(result).to.be.false;
     });
 
-
     it('should return true if the command failed', () => {
       // arrange
       runAction.returns(true);
