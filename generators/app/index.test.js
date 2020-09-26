@@ -87,8 +87,8 @@ describe('index', () => {
       });
     });
 
-    it('shoud have the shebang on the main file', () => {
-      assert.fileContent('src/index.js', /^#!\/usr\/bin\/env node\sfunction/);
+    it('should have the shebang on the main file', () => {
+      assert.fileContent('src/index.js', /^#!\/usr\/bin\/env node\s+function/);
     });
   });
 

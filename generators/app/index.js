@@ -80,7 +80,7 @@ class NpmGenerator extends Generator {
       .forEach((f) => this.fs.copyTpl(
         this.templatePath(f.src),
         this.destinationPath(f.dest),
-        context,
+        context
       ));
 
     this._addBinScriptToPackageJson();
@@ -121,7 +121,7 @@ class NpmGenerator extends Generator {
         'jsdoc',
         'rimraf'
       ].concat(testDependencies),
-      { 'save-dev': true },
+      { 'save-dev': true }
     );
   }
 }
