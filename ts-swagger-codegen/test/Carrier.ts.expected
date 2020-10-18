@@ -1,0 +1,5 @@
+// Carrier.ts
+export enum Carrier {
+  TNT = "TNT",
+  PostNL = "PostNL"
+}
