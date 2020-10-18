@@ -1,0 +1,17 @@
+language: node_js
+sudo: false
+node_js:
+- lts/*
+after_success:
+- npm run coveralls
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: vMymBTf/D85zdCvUxu+ZjTmUqdaqTZKr2K2Y8VnTWVGh39LEPzC7bBf0Hzm/0NpI7VqNDp2crU5pr4xx49c8e5veTBLYqJMEQuT7EfDwI7HtFU5XouRh8CAx9jFh0RiTmttmhkgGXms1sPqTuIGlmuQKBs7FlAfUdjZCoDDlVBIphazidWz/+wjz70E6b+F3XRh0Ponl8TNgbl+xIe2i/ujyzmeJHZn/SQfNuNz7Mrp2azSHW0fIAzkmfxPHBljZlYvQ/yqiUmH9V9A2ts2FvxmnD9fL5lUE87u5F9FOJO1yHBwONgDyaB7coMoU9YJ6thkkG44clZuZzzeRDCgnczPCleyJaf6BU/+luRdwrLrb7FrHrcUzl7RAJPPUdM7/VidTahI5i3jWVAYcJu1mWOepapfjZQkK72Sdn09B2SdYP+LZJn1ep6D4v+fyjDJXa9myFkZhrlJVLEowbOkeGeeAb0nAx0S4XooE2QY5GOPl6W1+sk6cg8bymUQEbSk3qQgI/ExosAR1Gz4lMofduNSyDOrhyqteycKbH+D2h2s4VGeu7RSiEExYrwTxfHY6R2h6w8O4jGflRrR8V5zLRo54cZsF8/C5EpRmbgVDbCYodV7m1safArDl2oWVgTClUFflAkfM5FstPsiw0CBNrYyi8/DAYFklc+/RdJ1WIOc=
+  on:
+    tags: true
+    repo: ngeor/js-cli-logger
