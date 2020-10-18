@@ -1,0 +1,35 @@
+{
+	"js test header": {
+		"prefix": "th",
+		"body": [
+			"const proxyquire = require('proxyquire').noCallThru();",
+			"const sinon = require('sinon');",
+			"const chai = require('chai');",
+			"",
+			"const { expect } = chai;",
+			"chai.use(require('sinon-chai'));",
+			"",
+			"describe('$1', () => {",
+			"\tlet $1Module;",
+			"",
+			"\tbeforeEach(() => {",
+			"\t\t$1Module = proxyquire('./$2', {",
+			"\t\t});",
+			"\t});",
+			"",
+			"\tafterEach(() => {",
+			"\t\tsinon.restore();",
+			"\t});",
+			"});",
+		],
+		"description": "test header including proxyquire, chai, sinon",
+	},
+	"expect to be true": {
+		"prefix": "etbt",
+		"body": "expect($1).to.be.true;"
+	},
+	"expect to be false": {
+		"prefix": "etbf",
+		"body": "expect($1).to.be.false;"
+	}
+}
