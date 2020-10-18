@@ -1,0 +1,5 @@
+[run]
+# whether to measure branch coverage in addition to statement coverage.
+branch = True
+source = .
+omit = tests/*.py
