@@ -1,0 +1,17 @@
+language: node_js
+sudo: false
+node_js:
+- lts/*
+after_success:
+- npm run coveralls
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: Yp6Bk/cZVtdBp1bagaXY3yMZpIitg3gDqzGIESfEH14VXI3DWGzruxSYBayviZYRwEQRvV3VuiZJ2eENnN/vBNxfgKpQ2iNq3n6YA4NB8szTmjq1IMowM1ovAWc8ahjC745MRllVITgMxn4K/CpSj0tO2xncWUxWpjLMUlfc4ObdWCuPL803FyhG4kBFT8xKZxGSHk2W30Y7gyX2udUpYXYUqvepEbGLpJoLbz8MyaIipoZS3fNk6/EKfRMsIjXyH6VdXVHfm/7N7DnqWBSP66ocyNua0kD33guHVH7JTNEOSBAToZpDjIYA+mRottkQ+rYk6B6I2YjhcuSAgEyeqa+h6mL1bot/tmFODEMqObBvU1WtPIIthaGszm+I7CFtU9ajg6+CepC5nN0R8+muN/xxvUBoV9sM34D27VMiCKeXPgxfa3XSSe0MAJ5bUsBuVnjctxMPEnGQqmpw36sH8H4svd4aBZCdFgDlhWjDqeV0h/E/7VMos635z2Yk/DFlK+AQq+rcS1OSDVS/GpqiOLocsKP15JZ0nmX5viqv+i1apoyTcb27BIsacAECJss7WIwK7WhZhduIQv3GoCnfgGBiOS0lRQETLiIwfCuzbqvFcBuUijV+0Xr0woBM64+rPJwJQSo1JpUJagBxzMff8iUYiS5Q+xnkg1ZH8G306+o=
+  on:
+    tags: true
+    repo: ngeor/dirloop
