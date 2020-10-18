@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_key_invisible_mode"
+        android:title="@string/pref_invisible_mode_title" />
+    <PreferenceCategory
+        android:title="@string/pref_first_player_title"
+        android:key="pref_key_first_player">
+        <ListPreference
+            android:defaultValue="@string/pref_first_player_symbol_default"
+            android:entries="@array/pref_player_symbols"
+            android:entryValues="@array/pref_player_symbols"
+            android:key="pref_key_first_player_symbol"
+            android:summary="%s"
+            android:title="@string/pref_first_player_symbol_title"/>
+        <ListPreference
+            android:defaultValue="@string/pref_first_player_type_default"
+            android:entries="@array/pref_player_types"
+            android:entryValues="@array/pref_player_types_values"
+            android:key="pref_key_first_player_type"
+            android:summary="%s"
+            android:title="@string/pref_first_player_type_title"/>
+        <ListPreference
+            android:defaultValue="@string/pref_first_player_ai_level_default"
+            android:entries="@array/pref_ai_level_entries"
+            android:entryValues="@array/pref_ai_level_values"
+            android:key="pref_key_first_player_ai_level"
+            android:summary="%s"
+            android:title="@string/pref_first_player_ai_level_title"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_second_player_title"
+        android:key="pref_key_second_player">
+        <ListPreference
+            android:defaultValue="@string/pref_second_player_symbol_default"
+            android:entries="@array/pref_player_symbols"
+            android:entryValues="@array/pref_player_symbols"
+            android:key="pref_key_second_player_symbol"
+            android:summary="%s"
+            android:title="@string/pref_second_player_symbol_title"/>
+
+        <ListPreference
+            android:defaultValue="@string/pref_second_player_type_default"
+            android:entries="@array/pref_player_types"
+            android:entryValues="@array/pref_player_types_values"
+            android:key="pref_key_second_player_type"
+            android:summary="%s"
+            android:title="@string/pref_second_player_type_title"/>
+        <ListPreference
+            android:defaultValue="@string/pref_second_player_ai_level_default"
+            android:entries="@array/pref_ai_level_entries"
+            android:entryValues="@array/pref_ai_level_values"
+            android:key="pref_key_second_player_ai_level"
+            android:summary="%s"
+            android:title="@string/pref_second_player_ai_level_title"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

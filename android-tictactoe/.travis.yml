@@ -1,0 +1,17 @@
+language: android
+sudo: false
+
+android:
+  components:
+    - build-tools-29.0.2
+    - android-29
+    - extra
+  licenses:
+    - 'android-sdk-license-.+'
+
+script:
+  - ./gradlew build # by default it is build connectedCheck
+
+after_success:
+  - cat ./app/build/reports/lint-results.html
+  - ./gradlew clean jacocoTestReport coveralls

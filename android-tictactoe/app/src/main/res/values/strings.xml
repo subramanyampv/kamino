@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">T3</string>
+    <string name="state_not_started">Welcome to tic tac toe!</string>
+    <string name="state_waiting_for_human">Waiting for player…</string>
+    <string name="state_waiting_for_cpu">Waiting for CPU…</string>
+    <string name="state_game_over_draw">Game over! It\'s a draw!</string>
+    <string name="state_game_over_human_wins">Game over! You win!</string>
+    <string name="state_game_over_cpu_wins">Game over! You lost!</string>
+    <string name="restart">Restart</string>
+
+    <string name="pref_first_player_title">First player settings</string>
+    <string name="pref_first_player_symbol_title">Symbol of first player</string>
+    <string name="pref_first_player_symbol_default">X</string>
+    <string name="pref_first_player_type_title">Type of first player</string>
+    <string name="pref_first_player_type_default">HUMAN</string>
+    <string name="pref_first_player_ai_level_title">Difficulty</string>
+    <string name="pref_first_player_ai_level_default">EASY</string>
+
+    <string name="pref_second_player_title">Second player settings</string>
+    <string name="pref_second_player_symbol_title">Symbol of second player</string>
+    <string name="pref_second_player_symbol_default">O</string>
+    <string name="pref_second_player_type_title">Type of second player</string>
+    <string name="pref_second_player_type_default">CPU</string>
+    <string name="pref_second_player_ai_level_title">Difficulty</string>
+    <string name="pref_second_player_ai_level_default">EASY</string>
+    <string name="info_updated_other_player">Opponent player adjusted</string>
+    <string name="pref_invisible_mode_title">Invisible Mode</string>
+    <string name="settings">Settings</string>
+
+    <string name="err_could_not_find_move">Could not find move!</string>
+    <string name="err_async_cancel">AI cancelled!</string>
+</resources>
