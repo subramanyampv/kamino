@@ -1,0 +1,27 @@
+# git
+.git/
+.gitignore
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# npm
+node_modules/
+
+# VS Code
+.vscode/
+
+# build pipeline
+.teamcity/
+
+# helm
+helm/
+
+# build artifacts
+test-reports/
+.nyc_output/
+coverage/
+
+# ignore support folder for server
+teamcity-server/

@@ -1,0 +1,5 @@
+# Values for the test environment.
+ingress:
+  hosts:
+    - test.blog-helm.local
+env: test
