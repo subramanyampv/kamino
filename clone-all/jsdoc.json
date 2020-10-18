@@ -1,0 +1,11 @@
+{
+    "source": {
+        "includePattern": ".+\\.js$",
+        "excludePattern": "node_modules"
+    },
+    "templates": {
+        "default": {
+            "outputSourceFiles": false
+        }
+    }
+}

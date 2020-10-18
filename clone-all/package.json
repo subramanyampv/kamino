@@ -1,0 +1,72 @@
+{
+  "name": "@ngeor/clone-all",
+  "version": "6.0.2",
+  "description": "Clones all public git repositories",
+  "main": "lib/main.js",
+  "bin": "lib/main.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "nyc mocha lib/*.test.js lib/**/*test.js",
+    "clean": "rimraf coverage",
+    "eslint": "eslint .",
+    "mocha": "mocha lib/*.test.js lib/**/*test.js",
+    "nyc": "nyc mocha lib/*.test.js lib/**/*test.js",
+    "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
+    "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/clone-all.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/clone-all/issues"
+  },
+  "homepage": "https://github.com/ngeor/clone-all#readme",
+  "dependencies": {
+    "@ngeor/js-cli-logger": "^0.2.3",
+    "commander": "^6.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.1.0",
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "jsdoc": "^3.6.6",
+    "mocha": "^8.1.3",
+    "nyc": "^15.1.0",
+    "proxyquire": "^2.1.3",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.0.3",
+    "sinon-chai": "^3.5.0"
+  },
+  "engines": {
+    "node": ">=10.14.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintIgnore": [
+    "coverage/"
+  ],
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 99,
+    "statements": 99,
+    "functions": 96,
+    "branches": 98,
+    "include": [
+      "index.js",
+      "lib/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "html",
+      "text"
+    ],
+    "all": true
+  }
+}
