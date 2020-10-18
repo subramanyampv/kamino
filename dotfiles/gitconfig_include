@@ -1,0 +1,42 @@
+# Inspired by https://github.com/Haacked/dotfiles/blob/master/git/.gitconfig.aliases
+#
+# Include this in your own .gitconfig by using the
+# [include] directive with the path to this file
+#
+# [include]
+#    path = ~/.gitconfig_include
+#
+# If you don't have any existing includes, you can add this via the following command
+#
+#   git config --global include.path ~/.gitconfig_include
+#
+
+[alias]
+    ec = config --global -e
+    #
+    # Start a new branch
+    #
+    co = checkout
+    cob = checkout -b
+    # start a new branch out of freshly fetched master, stashing changes in between
+    start = "!f() { git stash && git fetch -p -t && git checkout master && git pull && git checkout -b $1 && git stash pop; }; f"
+    #
+    # Working in a branch
+    #
+    up = !git pull --rebase --prune
+    amend = commit --amend
+    # add all changes, amend existing commit, push force with lease
+    pf = push --force-with-lease
+    wip = "!f() { git commit -a --amend --no-edit && git pf; }; f"
+    #
+    # Clean up
+    #
+    # delete local branches without failing (it fails when there are no branches to delete)
+    bclean = "!f() { git branch -l | grep -v master | xargs git branch -D; return 0; }; f"
+    # checkout master, get latest, delete branches
+    bdone = "!f() { git checkout master && git up && git bclean; }; f"
+    # wipe out everything and get master
+    nuke = !git reset HEAD --hard && git clean -dfx && git bdone
+[filter "clang-format-java"]
+    clean = clang-format -assume-filename=test.java
+    smudge = cat
