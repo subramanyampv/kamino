@@ -1,0 +1,22 @@
+language: rust
+rust:
+- stable
+before_script:
+- rustup target add x86_64-pc-windows-gnu
+script:
+- cargo build --verbose
+- cargo build --verbose --target x86_64-pc-windows-gnu
+- cargo test --verbose
+- cargo build --release --verbose
+- cargo build --release --verbose --target x86_64-pc-windows-gnu
+deploy:
+  provider: releases
+  api_key:
+    secure: jVa91NZ4zs5G+TfWOtm/hiBZyD05M9rcic33/ts4G/KsfwdEOllJoEb+HBkUB4yle0a15A3LcOJNByJPjslt9JOed5zRIZs3g7+rccwyDKj6JCYQV9m0uAOB6BPkmZVXhTP65cPiEv/YKdAT32dG+RdZAfpSpRb7j49bV0wdfJfk6r7o7KK4VSgzOoTVecBuMkQQn699uGpkhlCH/1p1hLZ8B6Xfie4xWSD3h2nnAy/rjRPm9olzmDRbTLHNBeeJL621E7Y5lI0MgaQpGEbAzfiXfDore1hPub3zpea2ZMKMN31H93SajLUHulaYtDu7DZzLRkfjbh5GLnS786vumdJtm48ud0CBBwOIJgZ9epYb43GB2+9O4u80yMfF2cwJ6Nxmf9egqSYV9igL7MQIepGEYniW8NlFpsUcd9QxnGQgxcGVzywPwsCS/0Wn4rrFKKhKhjbKwzt+ni73SRBJCTbXR8TD4U8dPmuOika3l0i8Nbne6VnGlwqyzknL8vPpjdnSO9W+nXpfgMwQ5muoa7CD9vI4gbSDXnEBAEjLWrlYLupAP1wWHqZ7MTQFyjcHjnchYzwzQzqQXvAnv2a9lieyhjIUYWmw7hyZ0XZ6RRhBmBdaj0CwFo0duUFf1h/2GTnz3S5Lv+zFCweGOmsVZuAmz5kT3Z3X7hghNsEV85E=
+  file:
+  - "./target/release/dockerv"
+  - "./target/x86_64-pc-windows-gnu/release/dockerv.exe"
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
