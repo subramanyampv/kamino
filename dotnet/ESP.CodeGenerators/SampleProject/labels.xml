@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<languages>
+  <language>
+    <en>
+      <error>An error has occured.</error>
+      <question>Are you sure you want to {0}?</question>
+    </en>
+  </language>
+</languages>

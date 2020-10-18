@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/cli /usr/local/lib/igloocastle/IglooCastle.CLI.exe "$@"

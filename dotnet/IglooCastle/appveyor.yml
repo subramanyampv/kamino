@@ -1,0 +1,11 @@
+version: 0.0.{build}
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: TvJCq0pxX0xRd2ONrYoEGUznBAT5Hruq/oZU8PpwoQ71bO1t7L4hvKz51j4q4Tkc
+before_build:
+  - nuget restore
+test:
+  assemblies:
+    - IglooCastle.Tests.dll
+after_test:
+  - cmd: .\after_test.cmd

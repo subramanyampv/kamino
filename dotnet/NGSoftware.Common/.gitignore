@@ -1,0 +1,8 @@
+.DS_Store
+bin/
+obj/
+.idea/
+.vs/
+coverage/
+packages/
+opencover.xml

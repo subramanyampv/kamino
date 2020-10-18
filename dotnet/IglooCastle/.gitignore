@@ -1,0 +1,11 @@
+.vs/
+Debug/
+Release/
+packages/
+*.user
+coverage/
+TestResult.xml
+OpenCoverResults.xml
+node_modules/
+.DS_Store
+.idea/

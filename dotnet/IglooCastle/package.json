@@ -1,0 +1,25 @@
+{
+  "name": "igloocastle",
+  "version": "1.0.0",
+  "description": "IglooCastle build utility",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/IglooCastle.git"
+  },
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ngeor/IglooCastle/issues"
+  },
+  "homepage": "https://github.com/ngeor/IglooCastle#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "through2": "^2.0.3"
+  }
+}

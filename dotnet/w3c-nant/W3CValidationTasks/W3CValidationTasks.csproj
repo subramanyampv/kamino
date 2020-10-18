@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D3A36F1-A535-452B-B4DE-411FFB5C9E4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>W3CValidationTasks</RootNamespace>
+    <AssemblyName>W3CValidationTasks</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DocumentationFile>bin\Debug\W3CValidationTasks.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DocumentationFile>bin\Release\W3CValidationTasks.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+    <Reference Include="NAnt.Core">
+      <HintPath>..\packages\NAnt.Core.0.92\lib\net40\NAnt.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FtpTaskBase.cs" />
+    <Compile Include="FtpDeleteTask.cs" />
+    <Compile Include="FtpUploadTask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegexReplaceTask.cs" />
+    <Compile Include="ValidateHtmlTask.cs" />
+    <Compile Include="ValidateCssTask.cs" />
+    <Compile Include="W3CTaskBase.cs" />
+    <Compile Include="DotNetExecuteTask.cs" />
+    <Compile Include="MSXBuildTask.cs" />
+    <Compile Include="ExternalProgramTaskBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\W3CValidationTasks.Core\W3CValidationTasks.Core.csproj">
+      <Project>{A273A1A4-4C5F-495C-BFD9-E8E7AF4F725E}</Project>
+      <Name>W3CValidationTasks.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
