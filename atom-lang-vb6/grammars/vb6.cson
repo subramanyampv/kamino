@@ -1,0 +1,408 @@
+fileTypes: [
+  'cls'
+  'frm'
+]
+name: 'Visual Basic 6'
+patterns: [
+
+  #
+  # Metadata on top of the file
+  #
+
+  # VERSION 5.00
+  # VERSION 1.0 CLASS
+  {
+    captures:
+      '1':
+        name: 'keyword.other.version.vb6'
+      '2':
+        patterns: [
+          {
+            include: '#positive-floats'
+          }
+          {
+            include: '#illegal'
+          }
+        ]
+      '3':
+        patterns: [
+          {
+            match: '\\bCLASS\\b'
+            name: 'keyword.other.version.class.vb6'
+          }
+          {
+            include: '#illegal'
+          }
+        ]
+    match: '^(VERSION)\\s+(\\S+)\\s*(.+)?$'
+    name: 'meta.version.vb6'
+  }
+
+  # Attribute Name = Literal
+  {
+    captures:
+      '1':
+        name: 'keyword.other.attribute.vb6'
+      '2':
+        patterns: [
+          {
+            include: '#key-value'
+          }
+          {
+            include: '#illegal'
+          }
+        ]
+    match: '^((?i:)Attribute)\\s+(.+)$'
+    name: 'meta.attribute.vb6'
+  }
+
+  {
+    include: '#begin-end'
+  }
+
+  #
+  # VB6
+  #
+
+  # Option Explicit
+  {
+    begin: '^(?i:(option))\\s+(?=(\\w+))'
+    beginCaptures:
+      '1':
+        name: 'keyword.other.option.vb6'
+    end: '$'
+    name: 'meta.other.option.vb6'
+    patterns: [
+      {
+        match: '\\b(?i:(explicit))\\b'
+        name: 'keyword.other.explicit.vb6'
+      }
+      {
+        match: '.*'
+        name: 'invalid.illegal.option.vb6'
+      }
+    ]
+  }
+
+    # Implements Something
+    {
+      match: '^(?i:(implements))\\s+(\\w+)(.*)$'
+      name: 'meta.other.implements.vb6'
+      captures:
+        '1':
+          name: 'keyword.other.implements.vb6'
+        '2':
+          name: 'storage.type.interface.vb6'
+          patterns: [
+            {
+              include: '#interface-names'
+            }
+          ]
+        '3':
+          name: 'invalid.illegal.extra.vb6'
+    }
+
+  # Sub Hello()
+  {
+    captures:
+      '1':
+        name: 'storage.type.function.vb6'
+      '2':
+        name: 'entity.name.function.vb6'
+    match: '\\b(?i:(sub|function))\\s+(\\w+)\\b'
+    name: 'meta.function.vb6'
+  }
+
+  # Dim variable As Type
+  # Dim variable(5) As String
+  # Dim variable As New Collection
+  #
+  {
+    begin: '\\b(Dim)\\s+(\\w+)\\s+(As)\\s+(\\w+)'
+    end: '$'
+    beginCaptures:
+      '1':
+        name: 'keyword.operator.dim.vb6'
+      '2':
+        name: 'variable.name.vb6'
+        patterns: [
+          {
+            include: '#variable-names'
+          }
+        ]
+      '3':
+        name: 'keyword.operator.as.vb6'
+      '4':
+        name: 'storage.type.vb6'
+        patterns: [
+          {
+            include: '#variable-types'
+          }
+        ]
+    name: 'meta.variable.declaration.vb6'
+    patterns: [
+      {
+        include: '#space'
+      }
+      {
+        include: '#comments'
+      }
+      {
+        include: '#illegal'
+      }
+    ]
+  }
+
+
+  # more constants
+  {
+    match: '(?i)\\b(True|False|Nothing)\\b'
+    name: 'constant.language.vb6'
+  }
+
+  # keywords
+  {
+    match: '(?i)\\b(If|Then|Else|ElseIf|End If|While|Wend|Do|Loop|For|To|Next|Each|Select|End Select|Case|Exit|On Error Resume Next)\\b'
+    name: 'keyword.control.vb6'
+  }
+
+  # operators
+  {
+    match: '(?i)\\b(Not|And|Or)\\b'
+    name: 'keyword.operator.vb6'
+  }
+
+  {
+    match: '='
+    name: 'keyword.operator.assignment.vb6'
+  }
+
+  # built-in types
+  {
+    match: '(?i)\\b(Dim|ReDim|Set|New)\\b'
+    name: 'storage.type.var.vb6'
+  }
+
+  # private, public, etc
+  {
+    match: '(?i:\\b(Private|Public|Const|ByRef|ByVal)\\b)'
+    name: 'storage.modifier.vb6'
+  }
+
+  # built-in types
+  {
+    match: '(?i)\\b(String|Integer|Long|Boolean|Variant|Collection)\\b'
+    name: 'storage.type.vb6'
+  }
+
+  # sub, function
+  {
+    match: '(?i)\\b(Sub|Function|Property (Let|Get|Set)|End Sub|End Function|End Property)\\b'
+    name: 'storage.type.function.vb6'
+  }
+
+  # string functions
+  {
+    match: '(?i)\\b(Left|Right|Mid|InStr|Chr|Len|Split|LCase|UCase)\\('
+    captures:
+      '1':
+        name: 'support.function.vb6'
+  }
+
+  # other functions
+  {
+    match: '(?i)\\b(RGB|LBound|UBound)\\('
+    captures:
+      '1':
+        name: 'support.function.vb6'
+  }
+
+  {
+    include: '#constants'
+  }
+
+  {
+    include: '#comments'
+  }
+]
+
+repository:
+  space:
+    match: '\\s+'
+    name: 'punctuation.whitespace.vb6'
+
+  # 1.0 (decimal part mandatory)
+  'positive-floats':
+    match: '[0-9]+\\.[0-9]+'
+    name: 'constant.numeric.vb6'
+
+  numbers:
+    match: '[\\+\\-]?[0-9]+(\.[0-9]+)?'
+    name: 'constant.numeric.vb6'
+
+  truefalse:
+    match: '\\b(?i:(true|false))\\b'
+    name: 'constant.boolean.vb6'
+
+  strings:
+    begin: '"'
+    end: '"'
+    name: 'string.quoted.double.vb6'
+    beginCaptures:
+      '0':
+        name: 'punctuation.definition.string.begin.vb6'
+    endCaptures:
+      '0':
+        name: 'punctuation.definition.string.end.vb6'
+
+  literals:
+    name: 'meta.literal.vb6'
+    patterns: [
+      {
+        include: '#numbers'
+      }
+      {
+        include: '#strings'
+      }
+      {
+        include: '#truefalse'
+      }
+    ]
+
+  constants:
+    patterns: [
+      # support constants
+      {
+        match: '(?i)\\b(vbCrLf)\\b'
+        name: 'support.constant.vb6'
+      }
+      {
+        include: '#literals'
+      }
+    ]
+
+  comments:
+    patterns: [
+      {
+        begin: '\''
+        end: '$'
+        beginCaptures:
+          '0':
+            name: 'punctuation.definition.comment.vb6'
+        name: 'comment.line.vb6'
+      }
+    ]
+
+  'begin-end':
+    begin: '^\\s*(?i:(BEGIN))(\\s+([\\w\\.]+)\\s+(\\w+))?'
+    beginCaptures:
+      '1':
+        name: 'keyword.other.begin.vb6'
+      '3':
+        name: 'storage.type.other.vb6'
+      '4':
+        name: 'variable.other.vb6'
+    end: '\\b(?i:(END))\\b'
+    endCaptures:
+      '1':
+        name: 'keyword.other.end.vb6'
+    patterns: [
+      {
+        include: '#begin-end'
+      }
+      {
+        include: '#key-value'
+      }
+    ]
+    name: 'meta.properties.vb6'
+
+  'key-value':
+    begin: '\\b(\\w+)\\s*(=)'
+    end: '$'
+    beginCaptures:
+      '1':
+        name: 'variable.key.vb6'
+      '2':
+        name: 'keyword.operator.assignment.vb6'
+    patterns: [
+      {
+        include: '#comments'
+      }
+      {
+        include: '#space'
+      }
+      {
+        include: '#literals'
+      }
+      {
+        include: '#illegal'
+      }
+    ]
+    name: 'meta.key-value.vb6'
+
+  'interface-names':
+    patterns: [
+      {
+        include: '#reserved-interface-names'
+      }
+      {
+        include: '#generic-names'
+      }
+    ]
+  'reserved-interface-names':
+    patterns: [
+      {
+        include: '#reserved-names'
+      }
+      {
+        include: '#reserved-types'
+      }
+      {
+        include: '#reserved-values'
+      }
+    ]
+  'variable-names':
+    patterns: [
+      {
+        include: '#reserved-interface-names'
+      }
+      {
+        match: 'm[A-Za-z_0-9]+'
+        name: 'variable.instance.vb6'
+      }
+      {
+        include: '#generic-names'
+      }
+    ]
+  'variable-types':
+    patterns: [
+      {
+        include: '#reserved-names'
+        name: 'invalid.illegal.type.vb6'
+      }
+      {
+        include: '#known-types'
+      }
+      {
+        include: '#generic-names'
+      }
+    ]
+  'generic-names':
+    match: '[A-Za-z_][A-Za-z0-9_]*'
+  'reserved-names':
+    match: '(?i)\\b(implements|dim|redim|as|for|next|if|else|end|exit|option|explicit|while|wend|do|loop|sub|function|property|get|let|set|private|public|on|error|resume|goto)\\b'
+    name: 'invalid.illegal.reserved.vb6'
+  'known-types':
+    name: 'storage.type.primitive.vb6'
+    match: '(?i)\\b(string|integer|boolean|long|variant)\\b'
+  'reserved-types':
+    name: 'invalid.illegal.reserved.vb6'
+    match: '(?i)\\b(string|integer|boolean|long|variant)\\b'
+  'reserved-values':
+    match: '(?i)\\b(true|false)\\b'
+    name: 'invalid.illegal.reserved.vb6'
+  'illegal':
+    match: '.+'
+    name: 'invalid.illegal.vb6'
+
+scopeName: 'source.vb6'
