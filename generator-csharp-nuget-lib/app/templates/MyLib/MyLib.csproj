@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DebugType>Full</DebugType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version><%= version %></Version>
+    <AssemblyVersion><%= version %></AssemblyVersion>
+    <Authors><%= companyName %></Authors>
+    <Company><%= companyName %></Company>
+    <Copyright>Copyright (C) <%= year %> <%= companyName %></Copyright>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/<%= user %>/<%= name %></PackageProjectUrl>
+    <Description><%= description %></Description>
+    <RepositoryUrl>https://github.com/<%= user %>/<%= name %></RepositoryUrl>
+    <PackageTags><%= name %></PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\<%= name %>.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\<%= name %>.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

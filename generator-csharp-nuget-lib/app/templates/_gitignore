@@ -1,0 +1,13 @@
+bin/
+obj/
+*.suo
+*.user
+packages/
+*.swp
+*.userprefs
+*.nupkg
+.idea/
+.vs/
+
+.DS_Store
+Thumbs.db

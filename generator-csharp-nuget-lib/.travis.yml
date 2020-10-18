@@ -1,0 +1,17 @@
+language: node_js
+sudo: false
+node_js:
+- lts/*
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: slpEQ3xsBeYzaDMtpPOdn0lqd9+YrGPMNcGcITHi5TLaqY6/R1PoGzpZet6Ek9efBdOWXEYCg+HCLuWqlD+5x4+k6GP3xRGsAmm4qbWCXKrEmecGPh5xCowRCKxbLVdpd3T38Nv1T4Ph9pGpwyEbnM3Iy+EdWhUYiVVd+IHroKVWLB3mmIh3T9vJl2TiYQ3J/CWa6uz2EWmWTtUpfzuMYPF4krf5JAvr3PnJLSVMswAG6kPzSLZE6MiXv1BzSX+iEt6sQirH0mSfMkI6AKK4iGoiA82IvuC/BF23KSWMSgFcq7w5DhBMWKg7EFiI/RIT3VOh1eN6j4GVhhn7tT29JtLkfw+FU6xktndKks3uW6p8Do3uV4Vx8j45ooI/F3N2szi9kONN22ktwQP4bzyIdcZa3dpo2lyNj/X3DDDagGkRnZZv10m2q/F72AGMCzS8cNvZftaWn1/M6nAImr1I65xLDgD+r2qg4a0pVUmtTv9OpfGpwn+CXgg2ikz/EsxnIuUYMkEu/1tF4LKM9d93ZmcVNIMmpJ299pn3O0/gwnexUiuTrJ7BtJJXLLIKNzvj2omW6eSKSwIKzMpH7yih+Bgm+blWns/jFK70kJtN1zYNjIvUoQcQYSlAw6yCQOwV5X9CXUwwAKGrAk31H8LozNLinxkJ/6aWEYOp5J+kptQ=
+  on:
+    tags: true
+    repo: ngeor/generator-csharp-nuget-lib
+after_success:
+- npm run coveralls
