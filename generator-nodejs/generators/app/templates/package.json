@@ -1,0 +1,57 @@
+{
+  "name": "<%= scopedName %>",
+  "version": "0.1.0",
+  "description": "<%= description %>",
+  "main": "src/index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "postversion": "git push --follow-tags",
+    "clean": "rimraf coverage",
+    "eslint": "eslint .",
+    <% if (testFramework === 'mocha') { %>
+    "test": "nyc mocha src/*.test.js src/**/*test.js",
+    "mocha": "mocha src/*.test.js src/**/*test.js",
+    "nyc": "nyc mocha src/*.test.js src/**/*test.js",
+    "coveralls": "npm run nyc && nyc report --reporter=text-lcov | coveralls",
+    <% } else if (testFramework === 'jest') { %>
+    "test": "jest",
+    <% } %>
+    "jsdoc": "jsdoc -r -c ./jsdoc.json -d jsdoc ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/<%= name %>.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ngeor/<%= name %>/issues"
+  },
+  "homepage": "https://github.com/ngeor/<%= name %>#readme",
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintIgnore": [
+    "coverage/"
+  ],
+  <% if (testFramework === 'mocha') { %>
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 99,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99,
+    "include": [
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "all": true
+  },
+  <% } %>
+  "dependencies": {}
+}

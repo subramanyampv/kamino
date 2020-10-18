@@ -1,0 +1,29 @@
+language: node_js
+script:
+  - npm i
+  - npm test
+  - npm i -g yo
+  - npm link
+  - >
+    mkdir -p /tmp/test1 && pushd /tmp/test1 &&
+    yo @ngeor/nodejs --name hello --description oops --scope "@ngeor" --bin --githubUsername ngeor --testFramework jest &&
+    npm test && popd
+  - >
+    mkdir -p /tmp/test2 && pushd /tmp/test2 &&
+    yo @ngeor/nodejs --name hello --description oops --scope "@ngeor" --bin --githubUsername ngeor --testFramework mocha &&
+    npm test && popd
+node_js:
+  - lts/*
+after_success:
+  - npm run coveralls
+cache:
+  directories:
+    - node_modules
+deploy:
+  provider: npm
+  email: Nikolaos.Georgiou@gmail.com
+  api_key:
+    secure: zxx/kjHZGo38sTU92CE1XcveCuXqq2A0k7r+GHPR9WhtFgDECpv+uBcBxMZdC77corej0ZqUnqjpT3egaSpQSVZQ9+ScfDECrvRHuw9EYuD9Tt3juTdoGpL9oaYPdE7/KRHsFdFrd2g0T6MMxSgP6I83NKczXdTP/SsDPySCrEiT05OqiFh3EUKvALIJlqMvysPCd//MD5QJzVPBmyh1p3Vd8p/I1+AP8bKvEgFBpM1xqR26Y2KpqV5aM05Or+0wfIMjJCUnPYuxBSWrzgzqX6bG62LJPSWQxIsPNEMR+80mB5462qNKD6YXZVMumf4ARQnl8pCYk5yYuA4qGy8WzFc2V3nrGLDFgpLA9qfq9YYY/+60blBQN6RlBpgp0i45ulqB0pIFknW7nko3SOoZe60AaZ2R+weksY8IEPAC5/vTTfVtGwHot88mDLZwNQxqEjw4fEW4OyTIOURsKxwnKQon5YDfeYfl5OBcJeF0uOXC+qi2psYtclwAsOosneZBzovEJXoQiY4fDn4dq50Zvw/ug1uwbh/Z3sO4Fy7q1kv7b2VsfWIo3rChaeRKOHx9tzphriP+ZB5wy2Aki7inHuTksJP1X9U+S1XZgLITPdy82D3fjrL+f7aTCiT0b5+eIqsaFi84UAzgDfZU52HcuZed767f66MoWn0xsw2khu0=
+  on:
+    tags: true
+    repo: ngeor/generator-nodejs

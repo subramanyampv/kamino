@@ -1,0 +1,5 @@
+.travis.yml
+.nyc_output/
+coverage/
+**/*.test.js
+!**/templates/**/*.test.js

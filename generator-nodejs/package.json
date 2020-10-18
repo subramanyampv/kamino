@@ -1,0 +1,61 @@
+{
+  "name": "@ngeor/generator-nodejs",
+  "version": "0.5.3",
+  "description": "A Yeoman generator for nodeJS libraries",
+  "main": "generators/app/index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "nyc mocha generators/app/*.test.js",
+    "postversion": "git push --follow-tags",
+    "eslint": "eslint .",
+    "mocha": "mocha generators/app/*.test.js",
+    "nyc": "nyc mocha generators/app/*.test.js"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "files": [
+    "generators/app"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngeor/generator-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ngeor/generator-nodejs/issues"
+  },
+  "homepage": "https://github.com/ngeor/generator-nodejs#readme",
+  "author": "Nikolaos Georgiou",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "yeoman-generator": "^4.12.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "mocha": "^8.1.3",
+    "nyc": "^15.1.0",
+    "yeoman-assert": "^3.1.1",
+    "yeoman-test": "^3.0.0"
+  },
+  "eslintIgnore": [
+    "templates/"
+  ],
+  "nyc": {
+    "check-coverage": true,
+    "per-file": false,
+    "lines": 99,
+    "statements": 99,
+    "functions": 99,
+    "branches": 99,
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ]
+  }
+}
