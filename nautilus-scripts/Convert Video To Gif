@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# input file
+VIDEO="$@"
+
+# output file
+OUTPUT="$@.gif"
+
+# temporary folder
+TMP=/tmp/convert-video-to-gif/
+
+# temporary folder for jpegs
+TMP_JPEG=$TMP/output/
+
+TMP_UNOPTIMIZED_GIF=$TMP/unoptimized.gif
+
+# create folder
+rm -rf $TMP
+mkdir $TMP
+
+mplayer -ao null "$VIDEO" -vo jpeg:outdir=$TMP_JPEG
+convert $TMP_JPEG/* $TMP_UNOPTIMIZED_GIF
+convert $TMP_UNOPTIMIZED_GIF -fuzz 10% -layers Optimize $OUTPUT
+
+zenity --info --text="Finished converting $VIDEO, result is at $OUTPUT"
+

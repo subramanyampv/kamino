@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# input file
+IN="$@"
+
+# output file
+OUTPUT="$@-resized-480w"
+
+mkdir $OUTPUT
+for i in $(find $IN -type f); do
+	o=$OUTPUT/$(basename "$i")
+	convert $i -resize 480x360 $o
+done
+
+zenity --info --text="Finished converting $IN, result is at $OUTPUT"
+

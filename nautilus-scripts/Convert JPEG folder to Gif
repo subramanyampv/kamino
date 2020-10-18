@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# input file
+IN="$@"
+
+# output file
+OUTPUT="$@.gif"
+
+convert $IN/* $OUTPUT
+
+zenity --info --text="Finished converting $IN, result is at $OUTPUT"
+

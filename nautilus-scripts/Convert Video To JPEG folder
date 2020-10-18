@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# process one video ($1) and create a folder containing JPEG files
+function process {
+	local filename="$1"
+	
+	if [ ! -f "$filename" ]; then
+		zenity --error --text "File $filename not found or not a file."
+		return 1
+	fi
+	
+	if [ ! -s "$filename" ]; then
+		zenity --error --text "File $filename is empty."
+		return 1
+	fi
+	
+	local dirname=$(dirname "$filename")
+	local basename=$(basename "$filename")
+	local filenameWithoutExtension="${basename%.*}"
+	local outdir="$dirname/$filenameWithoutExtension-jpegs"
+		
+	mplayer -ao null "$filename" -vo jpeg:outdir="$outdir"
+	if [ $? -eq 0 ] && [ -d "$outdir" ]; then
+		zenity --info --text "Finished converting $filename into JPEGs into folder $outdir"
+	else
+		zenity --error --text "$filename could not be processed."
+	fi
+}
+
+# collect all files in an array
+# this array is needed because mplayer somehow breaks the while loop
+declare -a filenames
+while read filename; do
+	if [ -n "$filename" ]; then
+		filenames+=("$filename")
+	fi
+done < <(echo "$NAUTILUS_SCRIPT_SELECTED_FILE_PATHS")
+
+# process all files
+for filename in "${filenames[@]}"; do
+	process "$filename"
+done
+
